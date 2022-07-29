@@ -54,4 +54,6 @@ public class AgoraLrcConfigModel: NSObject {
     public var isHiddenBottomMask: Bool = false
     /// 歌词滚动位置
     public var lyricsScrollPosition: UITableView.ScrollPosition = .middle
+    /// 歌词方向 默认从左往右
+    public var lrcDirectionRight = false
 }

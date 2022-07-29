@@ -24,6 +24,7 @@ class AgoraMusicLrcCell: UITableViewCell {
 
     var lrcConfig: AgoraLrcConfigModel? {
         didSet {
+            lrcLabel.directionRight = lrcConfig?.lrcDirectionRight ?? false
             lrcLabel.textColor = lrcConfig?.lrcNormalColor
             lrcLabel.lrcDrawingColor = lrcConfig?.lrcDrawingColor
             lrcLabel.font = lrcConfig?.lrcFontSize
@@ -47,6 +48,7 @@ class AgoraMusicLrcCell: UITableViewCell {
     }
 
     func setupMusicLrcProgress(with progress: CGFloat) {
+        
         lrcLabel.progress = progress
     }
 
@@ -95,6 +97,7 @@ class AgoraMusicLrcCell: UITableViewCell {
 
 class AgoraLrcLabel: UILabel {
     var lrcDrawingColor: UIColor?
+    var directionRight = false
     var progress: CGFloat = 0 {
         didSet {
             setNeedsDisplay()
@@ -123,7 +126,7 @@ class AgoraLrcLabel: UILabel {
                 path.addRect(fillRect)
             } else if leftProgress > 0 {
                 if (index != lines - 1) || (maxWidth <= bounds.width) {
-                    fillRect = CGRect(x: 0,
+                    fillRect = CGRect(x: directionRight ? maxWidth - (maxWidth * leftProgress) : 0,
                                       y: padingTop + CGFloat(index) * font.lineHeight,
                                       width: maxWidth * leftProgress,
                                       height: font.lineHeight)
