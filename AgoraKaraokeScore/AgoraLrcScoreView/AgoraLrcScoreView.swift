@@ -201,11 +201,10 @@ public class AgoraLrcScoreView: UIView {
                 self.scoreView?.lrcSentence = senences.sentences
                 self.lrcView?.lrcConfig?.isDrag = false
             }
-            self.downloadDelegate?.downloadLrcFinished?(url: url)
             let totalTime = self.delegate?.getTotalTime() ?? 0
             self.scoreView?.setTotalTime(totalTime: totalTime)
             self.lrcView?.lrcConfig = self.config?.lrcConfig
-            
+            self.downloadDelegate?.downloadLrcFinished?(url: url)
         }, failure: {
             self.lrcView?.lrcDatas = []
             self.config?.lrcConfig?.isHiddenWatitingView = true

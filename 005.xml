@@ -1,1284 +1,1393 @@
-<?xml version="1.0" encoding="utf-8">
+<?xml version="1.0" encoding="UTF-8"?>
 <song>
-	<!--∏Ë«˙√˚-->
-	<!--—›≥™’ﬂ-->
-	<general>
-		<name>ÕÀ∫Û</name>
-		<singer>÷‹Ω‹¬◊</singer>
-		<!--∏Ë«˙µƒ¿‡–Õ(1.øÏ∏Ë£¨2.¬˝∏Ë)-->
-		<type>1</type>
-	</general>
-<midi_lrc>
-	<paragraph>
-		<sentence>
-			<tone begin="20.2376" end="20.7176" pitch="252" pronounce="tian" lang="1">
-				<word>ÃÏ</word>
-			</tone>
-			<tone begin="20.7176" end="21.1777" pitch="252" pronounce="kong" lang="1">
-				<word>ø’</word>
-			</tone>
-			<tone begin="21.1777" end="21.6676" pitch="252" pronounce="hui" lang="1">
-				<word>ª“</word>
-			</tone>
-			<tone begin="21.6676" end="21.9676" pitch="252" pronounce="de" lang="1">
-				<word>µ√</word>
-			</tone>
-			<tone begin="21.9676" end="22.4876" pitch="319" pronounce="xiang" lang="1">
-				<word>œÒ</word>
-			</tone>
-			<tone begin="22.4876" end="23.0527" pitch="319" pronounce="ku" lang="1">
-				<word>øﬁ</word>
-			</tone>
-			<tone begin="23.0527" end="23.2696" pitch="319" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="23.2696" end="23.987" pitch="319" pronounce="guo" lang="1">
-				<word>π˝</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="24.8576" end="25.2276" pitch="203" pronounce="li" lang="1">
-				<word>¿Î</word>
-			</tone>
-			<tone begin="25.2276" end="25.7776" pitch="254" pronounce="kai" lang="1">
-				<word>ø™</word>
-			</tone>
-			<tone begin="25.7776" end="26.0176" pitch="253" pronounce="ni" lang="1">
-				<word>ƒ„</word>
-			</tone>
-			<tone begin="26.0176" end="26.5076" pitch="232" pronounce="yi" lang="1">
-				<word>“‘</word>
-			</tone>
-			<tone begin="26.5076" end="27.0355" pitch="257" pronounce="hou" lang="1">
-				<word>∫Û</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="27.6576" end="27.9176" pitch="190" pronounce="bing" lang="1">
-				<word>≤¢</word>
-			</tone>
-			<tone begin="27.9176" end="28.5254" pitch="243" pronounce="mei" lang="1">
-				<word>√ª</word>
-			</tone>
-			<tone begin="28.5254" end="28.8852" pitch="264" pronounce="you" lang="1">
-				<word>”–</word>
-			</tone>
-			<tone begin="29.4976" end="29.8076" pitch="223" pronounce="geng" lang="1">
-				<word>∏¸</word>
-			</tone>
-			<tone begin="29.8076" end="30.2737" pitch="223" pronounce="zi" lang="1">
-				<word>◊‘</word>
-			</tone>
-			<tone begin="30.2737" end="30.5376" pitch="213" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="30.5376" end="31.2849" pitch="213" pronounce="you" lang="1">
-				<word>”…</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="31.9676" end="32.3976" pitch="204" pronounce="suan" lang="1">
-				<word>À·</word>
-			</tone>
-			<tone begin="32.3976" end="32.9976" pitch="204" pronounce="suan" lang="1">
-				<word>À·</word>
-			</tone>
-			<tone begin="32.9976" end="33.1976" pitch="204" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="33.1976" end="33.6876" pitch="244" pronounce="kong" lang="1">
-				<word>ø’</word>
-			</tone>
-			<tone begin="33.6876" end="34.3572" pitch="244" pronounce="qi" lang="1">
-				<word>∆¯</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="34.7476" end="35.1676" pitch="88" pronounce="xiu" lang="1">
-				<word>–·</word>
-			</tone>
-			<tone begin="35.1676" end="35.7476" pitch="252" pronounce="chu" lang="1">
-				<word>≥ˆ</word>
-			</tone>
-			<tone begin="35.7476" end="36.0876" pitch="261" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="36.0876" end="36.6276" pitch="257" pronounce="men" lang="1">
-				<word>√«</word>
-			</tone>
-			<tone begin="36.6276" end="36.8376" pitch="216" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="36.8376" end="37.4476" pitch="142" pronounce="ju" lang="1">
-				<word>æ‡</word>
-			</tone>
-			<tone begin="37.4476" end="38.021" pitch="142" pronounce="li" lang="1">
-				<word>¿Î</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="38.4476" end="38.7076" pitch="289" pronounce="yi" lang="1">
-				<word>“ª</word>
-			</tone>
-			<tone begin="38.7076" end="39.0274" pitch="289" pronounce="mu" lang="1">
-				<word>ƒª</word>
-			</tone>
-			<tone begin="39.0274" end="39.3276" pitch="289" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="39.3276" end="39.6476" pitch="289" pronounce="zhui" lang="1">
-				<word>◊∂</word>
-			</tone>
-			<tone begin="39.6476" end="40.2976" pitch="289" pronounce="xin" lang="1">
-				<word>–ƒ</word>
-			</tone>
-			<tone begin="40.2976" end="40.4776" pitch="289" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="40.4776" end="40.9676" pitch="150" pronounce="jie" lang="1">
-				<word>Ω·</word>
-			</tone>
-			<tone begin="40.9676" end="41.643" pitch="150" pronounce="ju" lang="1">
-				<word>æ÷</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="41.9576" end="42.5076" pitch="202" pronounce="xiang" lang="1">
-				<word>œÒ</word>
-			</tone>
-			<tone begin="42.5076" end="42.8776" pitch="307" pronounce="hu" lang="1">
-				<word>∫Ù</word>
-			</tone>
-			<tone begin="42.8776" end="43.4676" pitch="307" pronounce="xi" lang="1">
-				<word>Œ¸</word>
-			</tone>
-			<tone begin="43.4676" end="43.8976" pitch="300" pronounce="ban" lang="1">
-				<word>∞„</word>
-			</tone>
-			<tone begin="43.8976" end="44.2476" pitch="300" pronounce="wu" lang="1">
-				<word>Œﬁ</word>
-			</tone>
-			<tone begin="44.2476" end="45.6876" pitch="323" pronounce="fa" lang="1">
-				<word>∑®</word>
-			</tone>
-			<tone begin="45.6876" end="46.0676" pitch="141" pronounce="ting" lang="1">
-				<word>Õ£</word>
-			</tone>
-			<tone begin="46.0676" end="47.0544" pitch="284" pronounce="xi" lang="1">
-				<word>œ¢</word>
-			</tone>
-		</sentence>
-	</paragraph>
-	<paragraph>
-		<sentence>
-			<tone begin="49.3176" end="49.8376" pitch="243" pronounce="chou" lang="1">
-				<word>≥È</word>
-			</tone>
-			<tone begin="49.8376" end="50.2476" pitch="243" pronounce="ti" lang="1">
-				<word>ÃÎ</word>
-			</tone>
-			<tone begin="50.2476" end="50.7576" pitch="261" pronounce="fan" lang="1">
-				<word>∑∫</word>
-			</tone>
-			<tone begin="50.7576" end="51.1876" pitch="274" pronounce="huang" lang="1">
-				<word>ª∆</word>
-			</tone>
-			<tone begin="51.1876" end="51.4676" pitch="274" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="51.4676" end="51.9376" pitch="313" pronounce="ri" lang="1">
-				<word>»’</word>
-			</tone>
-			<tone begin="51.9376" end="53.014" pitch="158" pronounce="ji" lang="1">
-				<word>º«</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="53.8476" end="54.3576" pitch="200" pronounce="zha" lang="1">
-				<word>’•</word>
-			</tone>
-			<tone begin="54.3576" end="54.8276" pitch="200" pronounce="gan" lang="1">
-				<word>∏…</word>
-			</tone>
-			<tone begin="54.8276" end="55.0876" pitch="288" pronounce="le" lang="1">
-				<word>¡À</word>
-			</tone>
-			<tone begin="55.0876" end="55.5385" pitch="233" pronounce="hui" lang="1">
-				<word>ªÿ</word>
-			</tone>
-			<tone begin="55.5385" end="56.1973" pitch="233" pronounce="yi" lang="1">
-				<word>“‰</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="56.6176" end="56.8876" pitch="294" pronounce="na" lang="1">
-				<word>ƒ«</word>
-			</tone>
-			<tone begin="56.8876" end="57.5585" pitch="294" pronounce="xiao" lang="1">
-				<word>–¶</word>
-			</tone>
-			<tone begin="57.5585" end="57.8476" pitch="294" pronounce="rong" lang="1">
-				<word>»›</word>
-			</tone>
-			<tone begin="57.8476" end="58.4476" pitch="251" pronounce="shi" lang="1">
-				<word> «</word>
-			</tone>
-			<tone begin="58.4476" end="59.1276" pitch="328" pronounce="xia" lang="1">
-				<word>œƒ</word>
-			</tone>
-			<tone begin="59.1276" end="60.4233" pitch="152" pronounce="ji" lang="1">
-				<word>ºæ</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="61.2076" end="61.6376" pitch="295" pronounce="ni" lang="1">
-				<word>ƒ„</word>
-			</tone>
-			<tone begin="61.6376" end="62.0576" pitch="306" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="62.0576" end="62.3772" pitch="388" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="62.3772" end="62.7776" pitch="365" pronounce="guo" lang="1">
-				<word>π˝</word>
-			</tone>
-			<tone begin="62.7776" end="63.3087" pitch="359" pronounce="qu" lang="1">
-				<word>»•</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="63.8876" end="64.2276" pitch="338" pronounce="bei" lang="1">
-				<word>±ª</word>
-			</tone>
-			<tone begin="64.2276" end="64.7176" pitch="338" pronounce="shun" lang="1">
-				<word>À≥</word>
-			</tone>
-			<tone begin="64.7176" end="65.1029" pitch="338" pronounce="shi" lang="1">
-				<word> ±</word>
-			</tone>
-			<tone begin="65.1029" end="65.2576" pitch="304" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="65.2576" end="65.7476" pitch="136" pronounce="zhen" lang="1">
-				<word>’Î</word>
-			</tone>
-			<tone begin="65.7476" end="65.9811" pitch="291" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="65.9811" end="66.4176" pitch="337" pronounce="wang" lang="1">
-				<word>Õ¸</word>
-			</tone>
-			<tone begin="66.4176" end="66.9243" pitch="337" pronounce="ji" lang="1">
-				<word>º«</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="67.4776" end="67.9476" pitch="160" pronounce="que" lang="1">
-				<word>»±</word>
-			</tone>
-			<tone begin="67.9476" end="68.4576" pitch="249" pronounce="yang" lang="1">
-				<word>—ı</word>
-			</tone>
-			<tone begin="68.4576" end="68.92" pitch="249" pronounce="guo" lang="1">
-				<word>π˝</word>
-			</tone>
-			<tone begin="68.92" end="69.3276" pitch="216" pronounce="hou" lang="1">
-				<word>∫Û</word>
-			</tone>
-			<tone begin="69.3276" end="69.6276" pitch="216" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="69.6276" end="69.9976" pitch="145" pronounce="ai" lang="1">
-				<word>∞Æ</word>
-			</tone>
-			<tone begin="69.9976" end="70.6896" pitch="145" pronounce="qing" lang="1">
-				<word>«È</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="71.1076" end="71.5197" pitch="134" pronounce="cu" lang="1">
-				<word>¥÷</word>
-			</tone>
-			<tone begin="71.5197" end="71.9196" pitch="148" pronounce="xin" lang="1">
-				<word>–ƒ</word>
-			</tone>
-			<tone begin="71.9196" end="72.1276" pitch="262" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="72.1276" end="72.5776" pitch="232" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="72.5776" end="72.9976" pitch="221" pronounce="yan" lang="1">
-				<word>—€</word>
-			</tone>
-			<tone begin="72.9976" end="73.4076" pitch="245" pronounce="lei" lang="1">
-				<word>¿·</word>
-			</tone>
-			<tone begin="73.4076" end="74.8276" pitch="245" pronounce="shi" lang="1">
-				<word> «</word>
-			</tone>
-			<tone begin="74.8276" end="75.2068" pitch="193" pronounce="duo" lang="1">
-				<word>∂‡</word>
-			</tone>
-			<tone begin="75.2068" end="75.9609" pitch="321" pronounce="yu" lang="1">
-				<word>”‡</word>
-			</tone>
-		</sentence>
-	</paragraph>
-	<paragraph>
-		<sentence>
-			<tone begin="76.6504" end="77.0776" pitch="210" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="77.0776" end="77.5776" pitch="308" pronounce="zhi" lang="1">
-				<word>÷™</word>
-			</tone>
-			<tone begin="77.5776" end="78.0076" pitch="301" pronounce="dao" lang="1">
-				<word>µ¿</word>
-			</tone>
-			<tone begin="78.0076" end="78.3483" pitch="303" pronounce="ni" lang="1">
-				<word>ƒ„</word>
-			</tone>
-			<tone begin="78.3483" end="78.4976" pitch="303" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="78.4976" end="78.9057" pitch="263" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="78.9057" end="79.3576" pitch="263" pronounce="dou" lang="1">
-				<word>∂º</word>
-			</tone>
-			<tone begin="79.3576" end="79.6376" pitch="237" pronounce="mei" lang="1">
-				<word>√ª</word>
-			</tone>
-			<tone begin="79.6376" end="79.9501" pitch="299" pronounce="you" lang="1">
-				<word>”–</word>
-			</tone>
-			<tone begin="79.9501" end="80.5576" pitch="380" pronounce="cuo" lang="1">
-				<word>¥Ì</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="80.7376" end="81.0976" pitch="279" pronounce="zhi" lang="1">
-				<word>÷ª</word>
-			</tone>
-			<tone begin="81.0976" end="81.6376" pitch="294" pronounce="shi" lang="1">
-				<word> «</word>
-			</tone>
-			<tone begin="81.6376" end="81.9675" pitch="301" pronounce="wang" lang="1">
-				<word>Õ¸</word>
-			</tone>
-			<tone begin="81.9675" end="82.1076" pitch="301" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="82.1076" end="82.4076" pitch="301" pronounce="le" lang="1">
-				<word>¡À</word>
-			</tone>
-			<tone begin="82.4076" end="83.0076" pitch="238" pronounce="zen" lang="1">
-				<word>‘ı</word>
-			</tone>
-			<tone begin="83.0076" end="83.2376" pitch="238" pronounce="me" lang="1">
-				<word>√¥</word>
-			</tone>
-			<tone begin="83.2376" end="83.6976" pitch="301" pronounce="tui" lang="1">
-				<word>ÕÀ</word>
-			</tone>
-			<tone begin="83.6976" end="84.1512" pitch="355" pronounce="hou" lang="1">
-				<word>∫Û</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="84.3276" end="84.7176" pitch="302" pronounce="xin" lang="1">
-				<word>–≈</word>
-			</tone>
-			<tone begin="84.7176" end="85.2676" pitch="158" pronounce="shi" lang="1">
-				<word> ƒ</word>
-			</tone>
-			<tone begin="85.2676" end="85.5529" pitch="327" pronounce="dan" lang="1">
-				<word>µ©</word>
-			</tone>
-			<tone begin="85.5529" end="85.7376" pitch="327" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="85.7376" end="86.1776" pitch="327" pronounce="dan" lang="1">
-				<word>µ©</word>
-			</tone>
-			<tone begin="86.1776" end="86.6576" pitch="327" pronounce="gei" lang="1">
-				<word>∏¯</word>
-			</tone>
-			<tone begin="86.6576" end="86.8676" pitch="254" pronounce="le" lang="1">
-				<word>¡À</word>
-			</tone>
-			<tone begin="86.8676" end="87.3432" pitch="254" pronounce="cheng" lang="1">
-				<word>≥–</word>
-			</tone>
-			<tone begin="87.3432" end="87.7924" pitch="254" pronounce="nuo" lang="1">
-				<word>≈µ</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="87.9576" end="88.4576" pitch="286" pronounce="que" lang="1">
-				<word>»¥</word>
-			</tone>
-			<tone begin="88.4576" end="88.7576" pitch="320" pronounce="bei" lang="1">
-				<word>±ª</word>
-			</tone>
-			<tone begin="88.7576" end="89.3476" pitch="254" pronounce="shi" lang="1">
-				<word> ±</word>
-			</tone>
-			<tone begin="89.3476" end="89.8085" pitch="254" pronounce="jian" lang="1">
-				<word>º‰</word>
-			</tone>
-			<tone begin="89.8085" end="90.2976" pitch="125" pronounce="pu" lang="1">
-				<word>∆À</word>
-			</tone>
-			<tone begin="90.2976" end="90.5176" pitch="239" pronounce="le" lang="1">
-				<word>¡À</word>
-			</tone>
-			<tone begin="90.5176" end="91.0165" pitch="239" pronounce="kong" lang="1">
-				<word>ø’</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="91.4276" end="91.6176" pitch="244" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="91.6176" end="92.1276" pitch="296" pronounce="zhi" lang="1">
-				<word>÷™</word>
-			</tone>
-			<tone begin="92.1276" end="92.5576" pitch="296" pronounce="dao" lang="1">
-				<word>µ¿</word>
-			</tone>
-			<tone begin="92.5576" end="92.8693" pitch="296" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="92.8693" end="93.0176" pitch="296" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="93.0176" end="93.4676" pitch="240" pronounce="men" lang="1">
-				<word>√«</word>
-			</tone>
-			<tone begin="93.4676" end="93.9176" pitch="240" pronounce="dou" lang="1">
-				<word>∂º</word>
-			</tone>
-			<tone begin="93.9176" end="94.1776" pitch="228" pronounce="mei" lang="1">
-				<word>√ª</word>
-			</tone>
-			<tone begin="94.1776" end="94.5309" pitch="252" pronounce="you" lang="1">
-				<word>”–</word>
-			</tone>
-			<tone begin="94.5309" end="95.0468" pitch="369" pronounce="cuo" lang="1">
-				<word>¥Ì</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="95.2676" end="95.6276" pitch="369" pronounce="zhi" lang="1">
-				<word>÷ª</word>
-			</tone>
-			<tone begin="95.6276" end="96.1276" pitch="369" pronounce="shi" lang="1">
-				<word> «</word>
-			</tone>
-			<tone begin="96.1276" end="96.4261" pitch="369" pronounce="fang" lang="1">
-				<word>∑≈</word>
-			</tone>
-			<tone begin="96.4261" end="96.5676" pitch="369" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="96.5676" end="97.0312" pitch="236" pronounce="shou" lang="1">
-				<word> ÷</word>
-			</tone>
-			<tone begin="97.0312" end="97.5747" pitch="243" pronounce="hui" lang="1">
-				<word>ª·</word>
-			</tone>
-			<tone begin="97.5747" end="97.8276" pitch="221" pronounce="bi" lang="1">
-				<word>±»</word>
-			</tone>
-			<tone begin="97.8276" end="98.0276" pitch="261" pronounce="jiao" lang="1">
-				<word>Ωœ</word>
-			</tone>
-			<tone begin="98.0276" end="98.7255" pitch="377" pronounce="hao" lang="1">
-				<word>∫√</word>
-			</tone>
-			<tone begin="98.7255" end="99.1259" pitch="352" pronounce="guo" lang="1">
-				<word>π˝</word>
-			</tone>
-			<tone begin="99.1259" end="99.304" pitch="352" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="99.304" end="99.8363" pitch="323" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="99.8363" end="100.301" pitch="324" pronounce="" lang="1">
-				<word></word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="102.018" end="102.331" pitch="347" pronounce="zui" lang="1">
-				<word>◊Ó</word>
-			</tone>
-			<tone begin="102.331" end="102.647" pitch="347" pronounce="mei" lang="1">
-				<word>√¿</word>
-			</tone>
-			<tone begin="102.647" end="102.961" pitch="347" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="102.961" end="103.298" pitch="347" pronounce="ai" lang="1">
-				<word>∞Æ</word>
-			</tone>
-			<tone begin="103.298" end="103.742" pitch="144" pronounce="qing" lang="1">
-				<word>«È</word>
-			</tone>
-			<tone begin="103.848" end="104.372" pitch="144" pronounce="hui" lang="1">
-				<word>ªÿ</word>
-			</tone>
-			<tone begin="104.372" end="104.869" pitch="261" pronounce="yi" lang="1">
-				<word>“‰</word>
-			</tone>
-			<tone begin="104.869" end="105.268" pitch="242" pronounce="li" lang="1">
-				<word>¿Ô</word>
-			</tone>
-			<tone begin="105.268" end="105.733" pitch="242" pronounce="dai" lang="1">
-				<word>¥˝</word>
-			</tone>
-			<tone begin="105.733" end="105.948" pitch="239" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="105.948" end="108.905" pitch="248" pronounce="xu" lang="1">
-				<word>–¯</word>
-			</tone>
-		</sentence>
-	</paragraph>
-	<paragraph>
-		<sentence>
-			<tone begin="122.029" end="122.548" pitch="252" pronounce="tian" lang="1">
-				<word>ÃÏ</word>
-			</tone>
-			<tone begin="122.548" end="123.038" pitch="252" pronounce="kong" lang="1">
-				<word>ø’</word>
-			</tone>
-			<tone begin="123.038" end="123.478" pitch="252" pronounce="hui" lang="1">
-				<word>ª“</word>
-			</tone>
-			<tone begin="123.478" end="123.778" pitch="252" pronounce="de" lang="1">
-				<word>µ√</word>
-			</tone>
-			<tone begin="123.778" end="124.338" pitch="319" pronounce="xiang" lang="1">
-				<word>œÒ</word>
-			</tone>
-			<tone begin="124.338" end="124.898" pitch="319" pronounce="ku" lang="1">
-				<word>øﬁ</word>
-			</tone>
-			<tone begin="124.898" end="125.218" pitch="319" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="125.218" end="125.771" pitch="319" pronounce="guo" lang="1">
-				<word>π˝</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="126.628" end="127.058" pitch="203" pronounce="li" lang="1">
-				<word>¿Î</word>
-			</tone>
-			<tone begin="127.058" end="127.558" pitch="254" pronounce="kai" lang="1">
-				<word>ø™</word>
-			</tone>
-			<tone begin="127.558" end="128.038" pitch="253" pronounce="ni" lang="1">
-				<word>ƒ„</word>
-			</tone>
-			<tone begin="128.038" end="128.468" pitch="232" pronounce="yi" lang="1">
-				<word>“‘</word>
-			</tone>
-			<tone begin="128.468" end="128.896" pitch="257" pronounce="hou" lang="1">
-				<word>∫Û</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="129.358" end="129.808" pitch="190" pronounce="bing" lang="1">
-				<word>≤¢</word>
-			</tone>
-			<tone begin="129.808" end="130.278" pitch="243" pronounce="mei" lang="1">
-				<word>√ª</word>
-			</tone>
-			<tone begin="130.278" end="130.756" pitch="264" pronounce="you" lang="1">
-				<word>”–</word>
-			</tone>
-			<tone begin="131.168" end="131.651" pitch="223" pronounce="geng" lang="1">
-				<word>∏¸</word>
-			</tone>
-			<tone begin="131.651" end="132.125" pitch="223" pronounce="zi" lang="1">
-				<word>◊‘</word>
-			</tone>
-			<tone begin="132.125" end="132.364" pitch="213" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="132.364" end="132.989" pitch="213" pronounce="you" lang="1">
-				<word>”…</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="133.808" end="134.158" pitch="204" pronounce="suan" lang="1">
-				<word>À·</word>
-			</tone>
-			<tone begin="134.158" end="134.828" pitch="204" pronounce="suan" lang="1">
-				<word>À·</word>
-			</tone>
-			<tone begin="134.828" end="135.108" pitch="204" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="135.108" end="135.508" pitch="244" pronounce="kong" lang="1">
-				<word>ø’</word>
-			</tone>
-			<tone begin="135.508" end="136.198" pitch="244" pronounce="qi" lang="1">
-				<word>∆¯</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="136.538" end="137.008" pitch="88" pronounce="xiu" lang="1">
-				<word>–·</word>
-			</tone>
-			<tone begin="137.008" end="137.568" pitch="252" pronounce="chu" lang="1">
-				<word>≥ˆ</word>
-			</tone>
-			<tone begin="137.568" end="138.033" pitch="261" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="138.033" end="138.478" pitch="257" pronounce="men" lang="1">
-				<word>√«</word>
-			</tone>
-			<tone begin="138.478" end="138.698" pitch="216" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="138.698" end="139.248" pitch="142" pronounce="ju" lang="1">
-				<word>æ‡</word>
-			</tone>
-			<tone begin="139.248" end="139.651" pitch="142" pronounce="li" lang="1">
-				<word>¿Î</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="140.308" end="140.688" pitch="289" pronounce="yi" lang="1">
-				<word>“ª</word>
-			</tone>
-			<tone begin="140.688" end="140.996" pitch="289" pronounce="mu" lang="1">
-				<word>ƒª</word>
-			</tone>
-			<tone begin="140.996" end="141.168" pitch="289" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="141.168" end="141.498" pitch="289" pronounce="zhui" lang="1">
-				<word>◊∂</word>
-			</tone>
-			<tone begin="141.498" end="142.118" pitch="289" pronounce="xin" lang="1">
-				<word>–ƒ</word>
-			</tone>
-			<tone begin="142.118" end="142.358" pitch="289" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="142.358" end="142.828" pitch="150" pronounce="jie" lang="1">
-				<word>Ω·</word>
-			</tone>
-			<tone begin="142.828" end="143.281" pitch="150" pronounce="ju" lang="1">
-				<word>æ÷</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="143.768" end="144.378" pitch="202" pronounce="xiang" lang="1">
-				<word>œÒ</word>
-			</tone>
-			<tone begin="144.378" end="144.758" pitch="307" pronounce="hu" lang="1">
-				<word>∫Ù</word>
-			</tone>
-			<tone begin="144.758" end="145.288" pitch="307" pronounce="xi" lang="1">
-				<word>Œ¸</word>
-			</tone>
-			<tone begin="145.288" end="145.738" pitch="300" pronounce="ban" lang="1">
-				<word>∞„</word>
-			</tone>
-			<tone begin="145.738" end="146.151" pitch="300" pronounce="wu" lang="1">
-				<word>Œﬁ</word>
-			</tone>
-			<tone begin="146.151" end="147.558" pitch="323" pronounce="fa" lang="1">
-				<word>∑®</word>
-			</tone>
-			<tone begin="147.558" end="147.798" pitch="141" pronounce="ting" lang="1">
-				<word>Õ£</word>
-			</tone>
-			<tone begin="147.798" end="148.703" pitch="284" pronounce="xi" lang="1">
-				<word>œ¢</word>
-			</tone>
-		</sentence>
-	</paragraph>
-	<paragraph>
-		<sentence>
-			<tone begin="151.128" end="151.648" pitch="243" pronounce="chou" lang="1">
-				<word>≥È</word>
-			</tone>
-			<tone begin="151.648" end="152.128" pitch="243" pronounce="ti" lang="1">
-				<word>ÃÎ</word>
-			</tone>
-			<tone begin="152.128" end="152.568" pitch="261" pronounce="fan" lang="1">
-				<word>∑∫</word>
-			</tone>
-			<tone begin="152.568" end="153.018" pitch="274" pronounce="huang" lang="1">
-				<word>ª∆</word>
-			</tone>
-			<tone begin="153.018" end="153.264" pitch="274" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="153.264" end="153.748" pitch="313" pronounce="ri" lang="1">
-				<word>»’</word>
-			</tone>
-			<tone begin="153.748" end="154.823" pitch="158" pronounce="ji" lang="1">
-				<word>º«</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="155.693" end="156.168" pitch="200" pronounce="zha" lang="1">
-				<word>’•</word>
-			</tone>
-			<tone begin="156.168" end="156.647" pitch="200" pronounce="gan" lang="1">
-				<word>∏…</word>
-			</tone>
-			<tone begin="156.647" end="156.917" pitch="288" pronounce="le" lang="1">
-				<word>¡À</word>
-			</tone>
-			<tone begin="156.917" end="157.438" pitch="233" pronounce="hui" lang="1">
-				<word>ªÿ</word>
-			</tone>
-			<tone begin="157.438" end="158.016" pitch="233" pronounce="yi" lang="1">
-				<word>“‰</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="158.42" end="158.718" pitch="294" pronounce="na" lang="1">
-				<word>ƒ«</word>
-			</tone>
-			<tone begin="158.718" end="159.395" pitch="294" pronounce="xiao" lang="1">
-				<word>–¶</word>
-			</tone>
-			<tone begin="159.395" end="159.708" pitch="294" pronounce="rong" lang="1">
-				<word>»›</word>
-			</tone>
-			<tone begin="159.708" end="160.388" pitch="251" pronounce="shi" lang="1">
-				<word> «</word>
-			</tone>
-			<tone begin="160.388" end="161.088" pitch="328" pronounce="xia" lang="1">
-				<word>œƒ</word>
-			</tone>
-			<tone begin="161.088" end="162.565" pitch="152" pronounce="ji" lang="1">
-				<word>ºæ</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="162.878" end="163.384" pitch="295" pronounce="ni" lang="1">
-				<word>ƒ„</word>
-			</tone>
-			<tone begin="163.384" end="163.878" pitch="306" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="163.878" end="164.192" pitch="388" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="164.192" end="164.598" pitch="365" pronounce="guo" lang="1">
-				<word>π˝</word>
-			</tone>
-			<tone begin="164.598" end="165.266" pitch="359" pronounce="qu" lang="1">
-				<word>»•</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="165.738" end="166.048" pitch="338" pronounce="bei" lang="1">
-				<word>±ª</word>
-			</tone>
-			<tone begin="166.048" end="166.565" pitch="338" pronounce="shun" lang="1">
-				<word>À≥</word>
-			</tone>
-			<tone begin="166.565" end="166.88" pitch="338" pronounce="shi" lang="1">
-				<word> ±</word>
-			</tone>
-			<tone begin="166.88" end="167.108" pitch="304" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="167.108" end="167.558" pitch="136" pronounce="zhen" lang="1">
-				<word>’Î</word>
-			</tone>
-			<tone begin="167.558" end="167.828" pitch="291" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="167.828" end="168.238" pitch="337" pronounce="wang" lang="1">
-				<word>Õ¸</word>
-			</tone>
-			<tone begin="168.238" end="168.93" pitch="337" pronounce="ji" lang="1">
-				<word>º«</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="169.308" end="169.808" pitch="160" pronounce="que" lang="1">
-				<word>»±</word>
-			</tone>
-			<tone begin="169.808" end="170.288" pitch="249" pronounce="yang" lang="1">
-				<word>—ı</word>
-			</tone>
-			<tone begin="170.288" end="170.758" pitch="249" pronounce="guo" lang="1">
-				<word>π˝</word>
-			</tone>
-			<tone begin="170.758" end="171.178" pitch="216" pronounce="hou" lang="1">
-				<word>∫Û</word>
-			</tone>
-			<tone begin="171.178" end="171.423" pitch="216" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="171.423" end="171.838" pitch="145" pronounce="ai" lang="1">
-				<word>∞Æ</word>
-			</tone>
-			<tone begin="171.838" end="172.551" pitch="145" pronounce="qing" lang="1">
-				<word>«È</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="172.928" end="173.372" pitch="134" pronounce="cu" lang="1">
-				<word>¥÷</word>
-			</tone>
-			<tone begin="173.372" end="173.724" pitch="148" pronounce="xin" lang="1">
-				<word>–ƒ</word>
-			</tone>
-			<tone begin="173.724" end="173.948" pitch="262" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="173.948" end="174.398" pitch="232" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="174.398" end="174.848" pitch="221" pronounce="yan" lang="1">
-				<word>—€</word>
-			</tone>
-			<tone begin="174.848" end="175.248" pitch="245" pronounce="lei" lang="1">
-				<word>¿·</word>
-			</tone>
-			<tone begin="175.248" end="176.648" pitch="245" pronounce="shi" lang="1">
-				<word> «</word>
-			</tone>
-			<tone begin="176.648" end="176.968" pitch="193" pronounce="duo" lang="1">
-				<word>∂‡</word>
-			</tone>
-			<tone begin="176.968" end="177.777" pitch="321" pronounce="yu" lang="1">
-				<word>”‡</word>
-			</tone>
-		</sentence>
-	</paragraph>
-	<paragraph>
-		<sentence>
-			<tone begin="178.418" end="178.898" pitch="210" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="178.898" end="179.398" pitch="308" pronounce="zhi" lang="1">
-				<word>÷™</word>
-			</tone>
-			<tone begin="179.398" end="179.828" pitch="301" pronounce="dao" lang="1">
-				<word>µ¿</word>
-			</tone>
-			<tone begin="179.828" end="180.13" pitch="303" pronounce="ni" lang="1">
-				<word>ƒ„</word>
-			</tone>
-			<tone begin="180.13" end="180.318" pitch="303" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="180.318" end="180.728" pitch="263" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="180.728" end="181.188" pitch="263" pronounce="dou" lang="1">
-				<word>∂º</word>
-			</tone>
-			<tone begin="181.188" end="181.488" pitch="237" pronounce="mei" lang="1">
-				<word>√ª</word>
-			</tone>
-			<tone begin="181.488" end="181.808" pitch="299" pronounce="you" lang="1">
-				<word>”–</word>
-			</tone>
-			<tone begin="181.808" end="182.341" pitch="380" pronounce="cuo" lang="1">
-				<word>¥Ì</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="182.558" end="182.918" pitch="279" pronounce="zhi" lang="1">
-				<word>÷ª</word>
-			</tone>
-			<tone begin="182.918" end="183.458" pitch="294" pronounce="shi" lang="1">
-				<word> «</word>
-			</tone>
-			<tone begin="183.458" end="183.739" pitch="301" pronounce="wang" lang="1">
-				<word>Õ¸</word>
-			</tone>
-			<tone begin="183.739" end="183.891" pitch="301" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="183.891" end="184.338" pitch="301" pronounce="le" lang="1">
-				<word>¡À</word>
-			</tone>
-			<tone begin="184.338" end="184.793" pitch="238" pronounce="zen" lang="1">
-				<word>‘ı</word>
-			</tone>
-			<tone begin="184.793" end="185.088" pitch="238" pronounce="me" lang="1">
-				<word>√¥</word>
-			</tone>
-			<tone begin="185.088" end="185.5" pitch="301" pronounce="tui" lang="1">
-				<word>ÕÀ</word>
-			</tone>
-			<tone begin="185.5" end="185.961" pitch="355" pronounce="hou" lang="1">
-				<word>∫Û</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="186.142" end="186.558" pitch="302" pronounce="xin" lang="1">
-				<word>–≈</word>
-			</tone>
-			<tone begin="186.558" end="187.108" pitch="158" pronounce="shi" lang="1">
-				<word> ƒ</word>
-			</tone>
-			<tone begin="187.108" end="187.39" pitch="327" pronounce="dan" lang="1">
-				<word>µ©</word>
-			</tone>
-			<tone begin="187.39" end="187.558" pitch="327" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="187.558" end="187.998" pitch="327" pronounce="dan" lang="1">
-				<word>µ©</word>
-			</tone>
-			<tone begin="187.998" end="188.468" pitch="327" pronounce="gei" lang="1">
-				<word>∏¯</word>
-			</tone>
-			<tone begin="188.468" end="188.648" pitch="254" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="188.648" end="189.12" pitch="254" pronounce="cheng" lang="1">
-				<word>≥–</word>
-			</tone>
-			<tone begin="189.12" end="189.63" pitch="254" pronounce="nuo" lang="1">
-				<word>≈µ</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="189.798" end="190.258" pitch="286" pronounce="quan" lang="1">
-				<word>»´</word>
-			</tone>
-			<tone begin="190.258" end="190.558" pitch="320" pronounce="bei" lang="1">
-				<word>±ª</word>
-			</tone>
-			<tone begin="190.558" end="191.158" pitch="254" pronounce="shi" lang="1">
-				<word> ±</word>
-			</tone>
-			<tone begin="191.158" end="191.668" pitch="254" pronounce="jian" lang="1">
-				<word>º‰</word>
-			</tone>
-			<tone begin="191.668" end="192.098" pitch="125" pronounce="pu" lang="1">
-				<word>∆À</word>
-			</tone>
-			<tone begin="192.098" end="192.338" pitch="239" pronounce="le" lang="1">
-				<word>¡À</word>
-			</tone>
-			<tone begin="192.338" end="193" pitch="239" pronounce="kong" lang="1">
-				<word>ø’</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="193.238" end="193.458" pitch="210" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="193.458" end="193.944" pitch="308" pronounce="zhi" lang="1">
-				<word>÷™</word>
-			</tone>
-			<tone begin="193.944" end="194.336" pitch="301" pronounce="dao" lang="1">
-				<word>µ¿</word>
-			</tone>
-			<tone begin="194.336" end="194.639" pitch="303" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="194.639" end="194.838" pitch="303" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="194.838" end="195.268" pitch="263" pronounce="men" lang="1">
-				<word>√«</word>
-			</tone>
-			<tone begin="195.268" end="195.738" pitch="263" pronounce="dou" lang="1">
-				<word>∂º</word>
-			</tone>
-			<tone begin="195.738" end="196.008" pitch="237" pronounce="mei" lang="1">
-				<word>√ª</word>
-			</tone>
-			<tone begin="196.008" end="196.321" pitch="299" pronounce="you" lang="1">
-				<word>”–</word>
-			</tone>
-			<tone begin="196.321" end="196.832" pitch="380" pronounce="cuo" lang="1">
-				<word>¥Ì</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="197.078" end="197.468" pitch="369" pronounce="zhi" lang="1">
-				<word>÷ª</word>
-			</tone>
-			<tone begin="197.468" end="198.008" pitch="369" pronounce="shi" lang="1">
-				<word> «</word>
-			</tone>
-			<tone begin="198.008" end="198.27" pitch="369" pronounce="fang" lang="1">
-				<word>∑≈</word>
-			</tone>
-			<tone begin="198.27" end="198.438" pitch="369" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="198.438" end="198.891" pitch="236" pronounce="shou" lang="1">
-				<word> ÷</word>
-			</tone>
-			<tone begin="198.891" end="199.378" pitch="243" pronounce="hui" lang="1">
-				<word>ª·</word>
-			</tone>
-			<tone begin="199.378" end="199.668" pitch="221" pronounce="bi" lang="1">
-				<word>±»</word>
-			</tone>
-			<tone begin="199.668" end="200.061" pitch="261" pronounce="jiao" lang="1">
-				<word>Ωœ</word>
-			</tone>
-			<tone begin="200.061" end="200.523" pitch="377" pronounce="hao" lang="1">
-				<word>∫√</word>
-			</tone>
-			<tone begin="200.523" end="201.951" pitch="352" pronounce="guo" lang="1">
-				<word>π˝</word>
-			</tone>
-			<tone begin="201.951" end="202.125" pitch="352" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="202.125" end="202.312" pitch="323" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="202.312" end="202.907" pitch="324" pronounce="" lang="1">
-				<word></word>
-			</tone>
-		</sentence>
-	</paragraph>
-	<paragraph>
-		<sentence>
-			<tone begin="224.158" end="224.388" pitch="347" pronounce="zui" lang="1">
-				<word>◊Ó</word>
-			</tone>
-			<tone begin="224.388" end="224.762" pitch="347" pronounce="mei" lang="1">
-				<word>√¿</word>
-			</tone>
-			<tone begin="224.762" end="225.259" pitch="347" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="225.259" end="225.478" pitch="347" pronounce="ai" lang="1">
-				<word>∞Æ</word>
-			</tone>
-			<tone begin="225.478" end="225.996" pitch="144" pronounce="qing" lang="1">
-				<word>«È</word>
-			</tone>
-			<tone begin="225.996" end="226.578" pitch="144" pronounce="hui" lang="1">
-				<word>ªÿ</word>
-			</tone>
-			<tone begin="226.578" end="227.06" pitch="261" pronounce="yi" lang="1">
-				<word>“‰</word>
-			</tone>
-			<tone begin="227.06" end="227.489" pitch="242" pronounce="li" lang="1">
-				<word>¿Ô</word>
-			</tone>
-			<tone begin="227.489" end="227.81" pitch="242" pronounce="dai" lang="1">
-				<word>¥˝</word>
-			</tone>
-			<tone begin="227.81" end="228.118" pitch="239" pronounce="" lang="1">
-				<word></word>
-			</tone>
-		</sentence>
-		<overlap begin="228.118" end="230.963" lang="1">–¯|Œ“÷™µ¿ƒ„Œ“∂º√ª”–</overlap>
-		<sentence>
-			<tone begin="230.963" end="231.254" pitch="299" pronounce="you" lang="1">
-				<word>”–</word>
-			</tone>
-			<tone begin="231.254" end="231.802" pitch="380" pronounce="cuo" lang="1">
-				<word>¥Ì</word>
-			</tone>
-			<tone begin="231.968" end="232.335" pitch="279" pronounce="zhi" lang="1">
-				<word>÷ª</word>
-			</tone>
-			<tone begin="232.335" end="232.795" pitch="294" pronounce="shi" lang="1">
-				<word> «</word>
-			</tone>
-			<tone begin="232.795" end="233.182" pitch="301" pronounce="wang" lang="1">
-				<word>Õ¸</word>
-			</tone>
-			<tone begin="233.182" end="233.306" pitch="301" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="233.306" end="233.793" pitch="301" pronounce="le" lang="1">
-				<word>¡À</word>
-			</tone>
-			<tone begin="233.793" end="234.3" pitch="238" pronounce="zen" lang="1">
-				<word>‘ı</word>
-			</tone>
-			<tone begin="234.3" end="234.547" pitch="238" pronounce="me" lang="1">
-				<word>√¥</word>
-			</tone>
-			<tone begin="234.547" end="235" pitch="301" pronounce="tui" lang="1">
-				<word>ÕÀ</word>
-			</tone>
-			<tone begin="235" end="235.447" pitch="355" pronounce="hou" lang="1">
-				<word>∫Û</word>
-			</tone>
-			<tone begin="235.66" end="236.075" pitch="302" pronounce="xin" lang="1">
-				<word>–≈</word>
-			</tone>
-			<tone begin="236.075" end="236.535" pitch="158" pronounce="shi" lang="1">
-				<word> ƒ</word>
-			</tone>
-			<tone begin="236.535" end="236.871" pitch="327" pronounce="dan" lang="1">
-				<word>µ©</word>
-			</tone>
-			<tone begin="236.871" end="237.018" pitch="327" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="237.018" end="237.435" pitch="327" pronounce="dan" lang="1">
-				<word>µ©</word>
-			</tone>
-			<tone begin="237.435" end="237.962" pitch="327" pronounce="gei" lang="1">
-				<word>∏¯</word>
-			</tone>
-			<tone begin="237.962" end="238.188" pitch="254" pronounce="le" lang="1">
-				<word>¡À</word>
-			</tone>
-			<tone begin="238.188" end="238.587" pitch="254" pronounce="cheng" lang="1">
-				<word>≥–</word>
-			</tone>
-			<tone begin="238.587" end="239.001" pitch="254" pronounce="nuo" lang="1">
-				<word>≈µ</word>
-			</tone>
-			<tone begin="239.182" end="239.706" pitch="286" pronounce="que" lang="1">
-				<word>»¥</word>
-			</tone>
-			<tone begin="239.706" end="240.04" pitch="320" pronounce="bei" lang="1">
-				<word>±ª</word>
-			</tone>
-			<tone begin="240.04" end="240.609" pitch="254" pronounce="shi" lang="1">
-				<word> ±</word>
-			</tone>
-			<tone begin="240.609" end="241.023" pitch="254" pronounce="jian" lang="1">
-				<word>º‰</word>
-			</tone>
-			<tone begin="241.023" end="241.593" pitch="125" pronounce="pu" lang="1">
-				<word>∆À</word>
-			</tone>
-			<tone begin="241.593" end="241.993" pitch="239" pronounce="le" lang="1">
-				<word>¡À</word>
-			</tone>
-			<tone begin="241.993" end="242.489" pitch="239" pronounce="kong" lang="1">
-				<word>ø’</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="242.768" end="242.918" pitch="244" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="242.918" end="243.398" pitch="296" pronounce="zhi" lang="1">
-				<word>÷™</word>
-			</tone>
-			<tone begin="243.398" end="243.866" pitch="296" pronounce="dao" lang="1">
-				<word>µ¿</word>
-			</tone>
-			<tone begin="243.866" end="244.138" pitch="296" pronounce="wo" lang="1">
-				<word>Œ“</word>
-			</tone>
-			<tone begin="244.138" end="244.298" pitch="296" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="244.298" end="244.748" pitch="240" pronounce="men" lang="1">
-				<word>√«</word>
-			</tone>
-			<tone begin="244.748" end="245.198" pitch="240" pronounce="dou" lang="1">
-				<word>∂º</word>
-			</tone>
-			<tone begin="245.198" end="245.478" pitch="228" pronounce="mei" lang="1">
-				<word>√ª</word>
-			</tone>
-			<tone begin="245.478" end="245.819" pitch="252" pronounce="you" lang="1">
-				<word>”–</word>
-			</tone>
-			<tone begin="245.819" end="246.34" pitch="369" pronounce="cuo" lang="1">
-				<word>¥Ì</word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="246.538" end="246.898" pitch="369" pronounce="zhi" lang="1">
-				<word>÷ª</word>
-			</tone>
-			<tone begin="246.898" end="247.468" pitch="369" pronounce="shi" lang="1">
-				<word> «</word>
-			</tone>
-			<tone begin="247.468" end="247.716" pitch="369" pronounce="fang" lang="1">
-				<word>∑≈</word>
-			</tone>
-			<tone begin="247.716" end="247.858" pitch="369" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="247.858" end="248.408" pitch="236" pronounce="shou" lang="1">
-				<word> ÷</word>
-			</tone>
-			<tone begin="248.408" end="248.838" pitch="243" pronounce="hui" lang="1">
-				<word>ª·</word>
-			</tone>
-			<tone begin="248.838" end="249.098" pitch="221" pronounce="bi" lang="1">
-				<word>±»</word>
-			</tone>
-			<tone begin="249.098" end="249.318" pitch="261" pronounce="jiao" lang="1">
-				<word>Ωœ</word>
-			</tone>
-			<tone begin="249.318" end="249.961" pitch="377" pronounce="hao" lang="1">
-				<word>∫√</word>
-			</tone>
-			<tone begin="249.961" end="250.384" pitch="352" pronounce="guo" lang="1">
-				<word>π˝</word>
-			</tone>
-			<tone begin="250.384" end="250.597" pitch="352" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="250.597" end="251.647" pitch="323" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="251.647" end="252.034" pitch="324" pronounce="" lang="1">
-				<word></word>
-			</tone>
-		</sentence>
-		<sentence>
-			<tone begin="253.208" end="253.577" pitch="347" pronounce="zui" lang="1">
-				<word>◊Ó</word>
-			</tone>
-			<tone begin="253.577" end="253.852" pitch="347" pronounce="mei" lang="1">
-				<word>√¿</word>
-			</tone>
-			<tone begin="253.852" end="254.309" pitch="347" pronounce="de" lang="1">
-				<word>µƒ</word>
-			</tone>
-			<tone begin="254.309" end="254.598" pitch="347" pronounce="ai" lang="1">
-				<word>∞Æ</word>
-			</tone>
-			<tone begin="254.598" end="255.205" pitch="144" pronounce="qing" lang="1">
-				<word>«È</word>
-			</tone>
-			<tone begin="255.205" end="255.678" pitch="144" pronounce="hui" lang="1">
-				<word>ªÿ</word>
-			</tone>
-			<tone begin="255.678" end="256.153" pitch="261" pronounce="yi" lang="1">
-				<word>“‰</word>
-			</tone>
-			<tone begin="256.153" end="256.568" pitch="242" pronounce="li" lang="1">
-				<word>¿Ô</word>
-			</tone>
-			<tone begin="256.568" end="257.052" pitch="242" pronounce="dai" lang="1">
-				<word>¥˝</word>
-			</tone>
-			<tone begin="257.052" end="257.258" pitch="239" pronounce="" lang="1">
-				<word></word>
-			</tone>
-			<tone begin="257.258" end="261.051" pitch="248" pronounce="xu" lang="1">
-				<word>–¯</word>
-			</tone>
-		</sentence>
-	</paragraph>
-</midi_lrc>
+    <general>
+        <name>‰∏áÁâ©ÂΩíÊµ∑</name>
+        <singer>‰∫åËÉñuÔºàÁéãË®´Ôºâ„ÄÅÂê¥Â¥é‰ºü</singer>
+        <type>1</type>
+    </general>
+    <midi_lrc>
+        <paragraph>
+            <sentence>
+                <tone begin="10.459" end="10.857" lang="1" pitch="138" pronounce="wan">
+                    <word>‰∏á</word>
+                </tone>
+                <tone begin="10.857" end="11.057" lang="1" pitch="127" pronounce="wu">
+                    <word>Áâ©</word>
+                </tone>
+                <tone begin="11.057" end="11.342" lang="1" pitch="157" pronounce="zhong">
+                    <word>Áªà</word>
+                </tone>
+                <tone begin="11.342" end="11.658" lang="1" pitch="184" pronounce="jiang">
+                    <word>Â∞Ü</word>
+                </tone>
+                <tone begin="11.658" end="11.916" lang="1" pitch="237" pronounce="cang">
+                    <word>Ëóè</word>
+                </tone>
+                <tone begin="11.916" end="12.116" lang="1" pitch="226" pronounce="ni">
+                    <word>Âåø</word>
+                </tone>
+                <tone begin="12.116" end="12.316" lang="1" pitch="233" pronounce="hai">
+                    <word>Êµ∑</word>
+                </tone>
+                <tone begin="12.316" end="13.316" lang="1" pitch="246" pronounce="di">
+                    <word>Â∫ï</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="13.883" end="14.224" lang="1" pitch="155" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="14.224" end="14.373" lang="1" pitch="155" pronounce="zai">
+                    <word>ÂÜç</word>
+                </tone>
+                <tone begin="14.373" end="14.523" lang="1" pitch="234" pronounce="ci">
+                    <word>Ê¨°</word>
+                </tone>
+                <tone begin="14.523" end="14.657" lang="1" pitch="232" pronounce="yu">
+                    <word>ÈÅá</word>
+                </tone>
+                <tone begin="14.657" end="15.089" lang="1" pitch="248" pronounce="jian">
+                    <word>ËßÅ</word>
+                </tone>
+                <tone begin="15.089" end="16.089" lang="1" pitch="244" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="16.878" end="17.157" lang="1" pitch="237" pronounce="zhe">
+                    <word>Ëøô</word>
+                </tone>
+                <tone begin="17.157" end="17.323" lang="1" pitch="311" pronounce="ci">
+                    <word>Ê¨°</word>
+                </tone>
+                <tone begin="17.323" end="17.492" lang="1" pitch="328" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="17.492" end="17.64" lang="1" pitch="166" pronounce="zhu">
+                    <word>‰∏ª</word>
+                </tone>
+                <tone begin="17.64" end="17.978" lang="1" pitch="185" pronounce="dong">
+                    <word>Âä®</word>
+                </tone>
+                <tone begin="17.978" end="18.343" lang="1" pitch="186" pronounce="kao">
+                    <word>Èù†</word>
+                </tone>
+                <tone begin="18.343" end="19.343" lang="1" pitch="123" pronounce="jin">
+                    <word>Ëøë</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="19.673" end="19.824" lang="1" pitch="251" pronounce="xiang">
+                    <word>ÊÉ≥</word>
+                </tone>
+                <tone begin="19.824" end="19.974" lang="1" pitch="260" pronounce="he">
+                    <word>Âíå</word>
+                </tone>
+                <tone begin="19.974" end="20.273" lang="1" pitch="246" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="20.273" end="20.551" lang="1" pitch="139" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="20.551" end="20.709" lang="1" pitch="155" pronounce="yi">
+                    <word>‰∏Ä</word>
+                </tone>
+                <tone begin="20.709" end="20.863" lang="1" pitch="165" pronounce="hao">
+                    <word>ÊØ´</word>
+                </tone>
+                <tone begin="20.863" end="21.046" lang="1" pitch="163" pronounce="mi">
+                    <word>Á±≥</word>
+                </tone>
+                <tone begin="21.046" end="21.202" lang="1" pitch="302" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="21.202" end="21.717" lang="1" pitch="276" pronounce="ju">
+                    <word>Ë∑ù</word>
+                </tone>
+                <tone begin="21.717" end="22.603" lang="1" pitch="278" pronounce="li">
+                    <word>Á¶ª</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="22.803" end="23.192" lang="1" pitch="245" pronounce="chao">
+                    <word>ÊΩÆ</word>
+                </tone>
+                <tone begin="23.192" end="23.518" lang="1" pitch="240" pronounce="xi">
+                    <word>Ê±ê</word>
+                </tone>
+                <tone begin="23.518" end="23.835" lang="1" pitch="226" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="23.835" end="24.032" lang="1" pitch="245" pronounce="di">
+                    <word>‰Ωé</word>
+                </tone>
+                <tone begin="24.032" end="25.032" lang="1" pitch="234" pronounce="yin">
+                    <word>Âêü</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="25.567" end="25.729" lang="1" pitch="237" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="25.729" end="25.921" lang="1" pitch="161" pronounce="zhui">
+                    <word>ËøΩ</word>
+                </tone>
+                <tone begin="26.074" end="26.223" lang="1" pitch="228" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="26.223" end="26.615" lang="1" pitch="249" pronounce="zong">
+                    <word>Ë∏™</word>
+                </tone>
+                <tone begin="26.615" end="27.615" lang="1" pitch="246" pronounce="ji">
+                    <word>Ëøπ</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="28.346" end="28.509" lang="1" pitch="93" pronounce="hao">
+                    <word>Â•Ω</word>
+                </tone>
+                <tone begin="28.509" end="28.683" lang="1" pitch="93" pronounce="xiang">
+                    <word>ÊÉ≥</word>
+                </tone>
+                <tone begin="28.683" end="28.841" lang="1" pitch="153" pronounce="shi">
+                    <word>Êó∂</word>
+                </tone>
+                <tone begin="28.841" end="29.05" lang="1" pitch="162" pronounce="jian">
+                    <word>Èó¥</word>
+                </tone>
+                <tone begin="29.05" end="29.234" lang="1" pitch="166" pronounce="dou">
+                    <word>ÈÉΩ</word>
+                </tone>
+                <tone begin="29.234" end="29.719" lang="1" pitch="185" pronounce="zan">
+                    <word>ÊöÇ</word>
+                </tone>
+                <tone begin="29.719" end="30.719" lang="1" pitch="186" pronounce="ting">
+                    <word>ÂÅú</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="31.148" end="31.34" lang="1" pitch="185" pronounce="ding">
+                    <word>ÂÆö</word>
+                </tone>
+                <tone begin="31.34" end="31.499" lang="1" pitch="184" pronounce="ge">
+                    <word>Ê†º</word>
+                </tone>
+                <tone begin="31.499" end="31.65" lang="1" pitch="124" pronounce="mei">
+                    <word>ÊØè</word>
+                </tone>
+                <tone begin="31.65" end="31.932" lang="1" pitch="257" pronounce="yi">
+                    <word>‰∏Ä</word>
+                </tone>
+                <tone begin="31.932" end="32.325" lang="1" pitch="279" pronounce="chu">
+                    <word>Â§Ñ</word>
+                </tone>
+                <tone begin="32.325" end="32.664" lang="1" pitch="152" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="32.664" end="32.925" lang="1" pitch="256" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="32.925" end="33.182" lang="1" pitch="279" pronounce="zai">
+                    <word>Âú®</word>
+                </tone>
+                <tone begin="33.182" end="33.434" lang="1" pitch="281" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="33.434" end="33.99" lang="1" pitch="277" pronounce="feng">
+                    <word>È£é</word>
+                </tone>
+                <tone begin="33.99" end="34.99" lang="1" pitch="138" pronounce="jing">
+                    <word>ÊôØ</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="35.17" end="35.335" lang="1" pitch="249" pronounce="ceng">
+                    <word>Êõæ</word>
+                </tone>
+                <tone begin="35.335" end="35.486" lang="1" pitch="253" pronounce="jing">
+                    <word>Áªè</word>
+                </tone>
+                <tone begin="35.486" end="35.607" lang="1" pitch="254" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="35.607" end="35.769" lang="1" pitch="186" pronounce="men">
+                    <word>‰ª¨</word>
+                </tone>
+                <tone begin="35.769" end="35.882" lang="1" pitch="255" pronounce="bi">
+                    <word>ÂΩº</word>
+                </tone>
+                <tone begin="35.882" end="36.024" lang="1" pitch="254" pronounce="ci">
+                    <word>Ê≠§</word>
+                </tone>
+                <tone begin="36.024" end="36.166" lang="1" pitch="203" pronounce="yong">
+                    <word>Êã•</word>
+                </tone>
+                <tone begin="36.166" end="36.318" lang="1" pitch="232" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="36.318" end="36.469" lang="1" pitch="209" pronounce="ling">
+                    <word>ÁÅµ</word>
+                </tone>
+                <tone begin="36.469" end="36.635" lang="1" pitch="186" pronounce="hun">
+                    <word>È≠Ç</word>
+                </tone>
+                <tone begin="36.635" end="36.825" lang="1" pitch="200" pronounce="zhi">
+                    <word>Áü•</word>
+                </tone>
+                <tone begin="36.825" end="37.082" lang="1" pitch="180" pronounce="ji">
+                    <word>Â∑±</word>
+                </tone>
+                <tone begin="37.082" end="37.401" lang="1" pitch="258" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="37.401" end="37.749" lang="1" pitch="244" pronounce="ming">
+                    <word>Âêç</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="38.015" end="38.165" lang="1" pitch="282" pronounce="du">
+                    <word>ËØª</word>
+                </tone>
+                <tone begin="38.165" end="38.315" lang="1" pitch="255" pronounce="dong">
+                    <word>ÊáÇ</word>
+                </tone>
+                <tone begin="38.315" end="38.457" lang="1" pitch="254" pronounce="mei">
+                    <word>ÊØè</word>
+                </tone>
+                <tone begin="38.457" end="38.607" lang="1" pitch="236" pronounce="ge">
+                    <word>‰∏™</word>
+                </tone>
+                <tone begin="38.607" end="38.732" lang="1" pitch="222" pronounce="yan">
+                    <word>Áúº</word>
+                </tone>
+                <tone begin="38.732" end="38.877" lang="1" pitch="277" pronounce="shen">
+                    <word>Á•û</word>
+                </tone>
+                <tone begin="38.877" end="39.007" lang="1" pitch="249" pronounce="wan">
+                    <word>ÂÆå</word>
+                </tone>
+                <tone begin="39.007" end="39.158" lang="1" pitch="230" pronounce="mei">
+                    <word>Áæé</word>
+                </tone>
+                <tone begin="39.158" end="39.282" lang="1" pitch="271" pronounce="qi">
+                    <word>Â•ë</word>
+                </tone>
+                <tone begin="39.282" end="39.434" lang="1" pitch="242" pronounce="he">
+                    <word>Âêà</word>
+                </tone>
+                <tone begin="39.434" end="39.557" lang="1" pitch="263" pronounce="xiang">
+                    <word>Áõ∏</word>
+                </tone>
+                <tone begin="39.557" end="39.707" lang="1" pitch="249" pronounce="hu">
+                    <word>‰∫í</word>
+                </tone>
+                <tone begin="39.707" end="40.107" lang="1" pitch="288" pronounce="yin">
+                    <word>Âºï</word>
+                </tone>
+                <tone begin="40.107" end="40.357" lang="1" pitch="293" pronounce="ling">
+                    <word>È¢Ü</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="40.851" end="40.991" lang="1" pitch="246" pronounce="lai">
+                    <word>Êù•</word>
+                </tone>
+                <tone begin="40.991" end="41.119" lang="1" pitch="252" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="41.119" end="41.267" lang="1" pitch="246" pronounce="kai">
+                    <word>ÂºÄ</word>
+                </tone>
+                <tone begin="41.267" end="41.399" lang="1" pitch="245" pronounce="shi">
+                    <word>Âßã</word>
+                </tone>
+                <tone begin="41.399" end="41.552" lang="1" pitch="236" pronounce="ju">
+                    <word>Êãí</word>
+                </tone>
+                <tone begin="41.552" end="41.674" lang="1" pitch="241" pronounce="jue">
+                    <word>Áªù</word>
+                </tone>
+                <tone begin="41.674" end="41.914" lang="1" pitch="247" pronounce="can">
+                    <word>ÂèÇ</word>
+                </tone>
+                <tone begin="41.914" end="42.165" lang="1" pitch="246" pronounce="yu">
+                    <word>‰∏é</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="42.365" end="42.523" lang="1" pitch="281" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="42.523" end="42.678" lang="1" pitch="237" pronounce="men">
+                    <word>‰ª¨</word>
+                </tone>
+                <tone begin="42.678" end="42.902" lang="1" pitch="246" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="42.902" end="43.453" lang="1" pitch="249" pronounce="ai">
+                    <word>Áà±</word>
+                </tone>
+                <tone begin="43.453" end="44.453" lang="1" pitch="315" pronounce="qing">
+                    <word>ÊÉÖ</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="46.345" end="46.508" lang="1" pitch="177" pronounce="na">
+                    <word>ÈÇ£</word>
+                </tone>
+                <tone begin="46.508" end="46.674" lang="1" pitch="194" pronounce="tian">
+                    <word>Â§©</word>
+                </tone>
+                <tone begin="46.674" end="46.832" lang="1" pitch="246" pronounce="wan">
+                    <word>Êôö</word>
+                </tone>
+                <tone begin="46.832" end="47.001" lang="1" pitch="236" pronounce="feng">
+                    <word>È£é</word>
+                </tone>
+                <tone begin="47.001" end="47.183" lang="1" pitch="243" pronounce="qing">
+                    <word>ËΩª</word>
+                </tone>
+                <tone begin="47.183" end="47.377" lang="1" pitch="211" pronounce="rou">
+                    <word>Êüî</word>
+                </tone>
+                <tone begin="47.377" end="47.601" lang="1" pitch="242" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="47.601" end="47.824" lang="1" pitch="208" pronounce="xuan">
+                    <word>ÈÄâ</word>
+                </tone>
+                <tone begin="47.824" end="48.06" lang="1" pitch="247" pronounce="ze">
+                    <word>Êã©</word>
+                </tone>
+                <tone begin="48.06" end="48.218" lang="1" pitch="254" pronounce="jie">
+                    <word>Áªì</word>
+                </tone>
+                <tone begin="48.218" end="48.366" lang="1" pitch="245" pronounce="shu">
+                    <word>Êùü</word>
+                </tone>
+                <tone begin="48.366" end="48.498" lang="1" pitch="204" pronounce="zhe">
+                    <word>Ëøô</word>
+                </tone>
+                <tone begin="48.498" end="48.641" lang="1" pitch="248" pronounce="chang">
+                    <word>Âú∫</word>
+                </tone>
+                <tone begin="48.641" end="49.074" lang="1" pitch="244" pronounce="guan">
+                    <word>ÂÖ≥</word>
+                </tone>
+                <tone begin="49.074" end="49.291" lang="1" pitch="281" pronounce="xi">
+                    <word>Á≥ª</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="49.491" end="49.642" lang="1" pitch="282" pronounce="shuo">
+                    <word>ËØ¥</word>
+                </tone>
+                <tone begin="49.642" end="49.785" lang="1" pitch="274" pronounce="ji">
+                    <word>ÊøÄ</word>
+                </tone>
+                <tone begin="49.785" end="49.927" lang="1" pitch="249" pronounce="qing">
+                    <word>ÊÉÖ</word>
+                </tone>
+                <tone begin="49.927" end="50.057" lang="1" pitch="267" pronounce="tui">
+                    <word>Ë§™</word>
+                </tone>
+                <tone begin="50.057" end="50.201" lang="1" pitch="248" pronounce="qu">
+                    <word>Âéª</word>
+                </tone>
+                <tone begin="50.201" end="50.358" lang="1" pitch="234" pronounce="yan">
+                    <word>Êé©</word>
+                </tone>
+                <tone begin="50.358" end="50.499" lang="1" pitch="276" pronounce="shi">
+                    <word>È•∞</word>
+                </tone>
+                <tone begin="50.499" end="50.69" lang="1" pitch="247" pronounce="bu">
+                    <word>‰∏ç</word>
+                </tone>
+                <tone begin="50.69" end="50.858" lang="1" pitch="277" pronounce="hui">
+                    <word>‰ºö</word>
+                </tone>
+                <tone begin="50.858" end="50.999" lang="1" pitch="255" pronounce="shuo">
+                    <word>ËØ¥</word>
+                </tone>
+                <tone begin="50.999" end="51.148" lang="1" pitch="279" pronounce="huang">
+                    <word>Ë∞é</word>
+                </tone>
+                <tone begin="51.148" end="51.434" lang="1" pitch="253" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="51.434" end="51.74" lang="1" pitch="276" pronounce="yan">
+                    <word>Áúº</word>
+                </tone>
+                <tone begin="51.74" end="52.008" lang="1" pitch="315" pronounce="jing">
+                    <word>Áùõ</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="52.367" end="52.502" lang="1" pitch="261" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="52.502" end="52.657" lang="1" pitch="267" pronounce="guai">
+                    <word>ÊÄ™</word>
+                </tone>
+                <tone begin="52.657" end="52.807" lang="1" pitch="249" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="52.807" end="52.948" lang="1" pitch="249" pronounce="ling">
+                    <word>È¢Ü</word>
+                </tone>
+                <tone begin="52.948" end="53.115" lang="1" pitch="246" pronounce="wu">
+                    <word>ÊÇü</word>
+                </tone>
+                <tone begin="53.115" end="53.282" lang="1" pitch="246" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="53.282" end="53.461" lang="1" pitch="246" pronounce="tai">
+                    <word>Â§™</word>
+                </tone>
+                <tone begin="53.461" end="53.807" lang="1" pitch="245" pronounce="chi">
+                    <word>Ëøü</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="54.007" end="54.176" lang="1" pitch="249" pronounce="cheng">
+                    <word>ÊÉ©</word>
+                </tone>
+                <tone begin="54.176" end="54.917" lang="1" pitch="245" pronounce="fa">
+                    <word>ÁΩö</word>
+                </tone>
+                <tone begin="54.917" end="55.556" lang="1" pitch="307" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="55.556" end="55.887" lang="1" pitch="315" pronounce="xiao">
+                    <word>Ê∂à</word>
+                </tone>
+                <tone begin="55.887" end="56.887" lang="1" pitch="249" pronounce="shi">
+                    <word>Â§±</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="57.25" end="57.608" lang="1" pitch="163" pronounce="hou">
+                    <word>Âêé</word>
+                </tone>
+                <tone begin="57.608" end="57.951" lang="1" pitch="184" pronounce="lai">
+                    <word>Êù•</word>
+                </tone>
+                <tone begin="57.951" end="58.359" lang="1" pitch="205" pronounce="ren">
+                    <word>‰∫∫</word>
+                </tone>
+                <tone begin="58.359" end="58.701" lang="1" pitch="181" pronounce="hai">
+                    <word>Êµ∑</word>
+                </tone>
+                <tone begin="58.701" end="58.89" lang="1" pitch="199" pronounce="yong">
+                    <word>Êã•</word>
+                </tone>
+                <tone begin="58.89" end="59.542" lang="1" pitch="231" pronounce="ji">
+                    <word>Êå§</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="59.742" end="60.249" lang="1" pitch="248" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="60.249" end="60.633" lang="1" pitch="191" pronounce="que">
+                    <word>Âç¥</word>
+                </tone>
+                <tone begin="60.633" end="60.954" lang="1" pitch="187" pronounce="zhao">
+                    <word>Êâæ</word>
+                </tone>
+                <tone begin="60.954" end="61.219" lang="1" pitch="186" pronounce="bu">
+                    <word>‰∏ç</word>
+                </tone>
+                <tone begin="61.219" end="61.551" lang="1" pitch="187" pronounce="dao">
+                    <word>Âà∞</word>
+                </tone>
+                <tone begin="61.551" end="62.551" lang="1" pitch="185" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="63.249" end="63.574" lang="1" pitch="249" pronounce="yi">
+                    <word>ÂøÜ</word>
+                </tone>
+                <tone begin="63.574" end="63.932" lang="1" pitch="324" pronounce="xuan">
+                    <word>ÊÇ¨</word>
+                </tone>
+                <tone begin="63.932" end="64.259" lang="1" pitch="185" pronounce="fu">
+                    <word>ÊµÆ</word>
+                </tone>
+                <tone begin="64.259" end="64.552" lang="1" pitch="187" pronounce="jing">
+                    <word>Èùô</word>
+                </tone>
+                <tone begin="64.552" end="65.552" lang="1" pitch="180" pronounce="zhi">
+                    <word>Ê≠¢</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="66.074" end="66.25" lang="1" pitch="224" pronounce="shi">
+                    <word>Êó∂</word>
+                </tone>
+                <tone begin="66.25" end="66.432" lang="1" pitch="248" pronounce="kong">
+                    <word>Á©∫</word>
+                </tone>
+                <tone begin="66.432" end="66.598" lang="1" pitch="267" pronounce="li">
+                    <word>Èáå</word>
+                </tone>
+                <tone begin="66.598" end="66.952" lang="1" pitch="304" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="66.952" end="67.194" lang="1" pitch="328" pronounce="shi">
+                    <word>ÊòØ</word>
+                </tone>
+                <tone begin="67.194" end="67.492" lang="1" pitch="310" pronounce="fou">
+                    <word>Âê¶</word>
+                </tone>
+                <tone begin="67.492" end="67.867" lang="1" pitch="279" pronounce="neng">
+                    <word>ËÉΩ</word>
+                </tone>
+                <tone begin="67.867" end="68.149" lang="1" pitch="282" pronounce="yong">
+                    <word>Êã•</word>
+                </tone>
+                <tone begin="68.149" end="68.474" lang="1" pitch="275" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="68.474" end="69.474" lang="1" pitch="315" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="70.776" end="70.973" lang="1" pitch="207" pronounce="zhui">
+                    <word>Âù†</word>
+                </tone>
+                <tone begin="70.973" end="71.298" lang="1" pitch="208" pronounce="ru">
+                    <word>ÂÖ•</word>
+                </tone>
+                <tone begin="71.298" end="71.607" lang="1" pitch="234" pronounce="le">
+                    <word>‰∫Ü</word>
+                </tone>
+                <tone begin="71.607" end="72.066" lang="1" pitch="247" pronounce="huan">
+                    <word>Âπª</word>
+                </tone>
+                <tone begin="72.066" end="73.066" lang="1" pitch="183" pronounce="jing">
+                    <word>Â¢É</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="73.241" end="73.582" lang="1" pitch="181" pronounce="ai">
+                    <word>Áà±</word>
+                </tone>
+                <tone begin="73.582" end="73.751" lang="1" pitch="201" pronounce="chuan">
+                    <word>Á©ø</word>
+                </tone>
+                <tone begin="73.751" end="73.916" lang="1" pitch="194" pronounce="yue">
+                    <word>Ë∂ä</word>
+                </tone>
+                <tone begin="73.916" end="74.149" lang="1" pitch="186" pronounce="suo">
+                    <word>ÊâÄ</word>
+                </tone>
+                <tone begin="74.149" end="74.391" lang="1" pitch="186" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="74.391" end="74.75" lang="1" pitch="188" pronounce="shi">
+                    <word>Êó∂</word>
+                </tone>
+                <tone begin="74.75" end="75.75" lang="1" pitch="286" pronounce="kong">
+                    <word>Á©∫</word>
+                </tone>
+                <tone begin="75.75" end="76.316" lang="1" pitch="311" pronounce="xian">
+                    <word>Èô∑</word>
+                </tone>
+                <tone begin="76.316" end="77.316" lang="1" pitch="281" pronounce="jing">
+                    <word>Èò±</word>
+                </tone>
+            </sentence>
+        </paragraph>
+        <paragraph>
+            <sentence>
+                <tone begin="79.71" end="79.891" lang="1" pitch="104" pronounce="wan">
+                    <word>‰∏á</word>
+                </tone>
+                <tone begin="79.891" end="80.182" lang="1" pitch="120" pronounce="wu">
+                    <word>Áâ©</word>
+                </tone>
+                <tone begin="80.182" end="80.558" lang="1" pitch="123" pronounce="zhong">
+                    <word>Áªà</word>
+                </tone>
+                <tone begin="80.558" end="80.875" lang="1" pitch="78" pronounce="jiang">
+                    <word>Â∞Ü</word>
+                </tone>
+                <tone begin="80.875" end="81.2" lang="1" pitch="166" pronounce="cang">
+                    <word>Ëóè</word>
+                </tone>
+                <tone begin="81.2" end="81.558" lang="1" pitch="243" pronounce="ni">
+                    <word>Âåø</word>
+                </tone>
+                <tone begin="81.558" end="81.886" lang="1" pitch="247" pronounce="hai">
+                    <word>Êµ∑</word>
+                </tone>
+                <tone begin="81.886" end="82.886" lang="1" pitch="209" pronounce="di">
+                    <word>Â∫ï</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="83.16" end="83.514" lang="1" pitch="200" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="83.514" end="83.834" lang="1" pitch="154" pronounce="zai">
+                    <word>ÂÜç</word>
+                </tone>
+                <tone begin="83.834" end="84.179" lang="1" pitch="236" pronounce="ci">
+                    <word>Ê¨°</word>
+                </tone>
+                <tone begin="84.179" end="84.458" lang="1" pitch="214" pronounce="yu">
+                    <word>ÈÅá</word>
+                </tone>
+                <tone begin="84.458" end="84.74" lang="1" pitch="236" pronounce="jian">
+                    <word>ËßÅ</word>
+                </tone>
+                <tone begin="84.74" end="85.74" lang="1" pitch="225" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="85.954" end="86.291" lang="1" pitch="186" pronounce="zhe">
+                    <word>Ëøô</word>
+                </tone>
+                <tone begin="86.291" end="86.566" lang="1" pitch="158" pronounce="ci">
+                    <word>Ê¨°</word>
+                </tone>
+                <tone begin="86.566" end="86.732" lang="1" pitch="306" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="86.732" end="86.884" lang="1" pitch="326" pronounce="zhu">
+                    <word>‰∏ª</word>
+                </tone>
+                <tone begin="86.884" end="87.032" lang="1" pitch="331" pronounce="dong">
+                    <word>Âä®</word>
+                </tone>
+                <tone begin="87.032" end="87.385" lang="1" pitch="184" pronounce="kao">
+                    <word>Èù†</word>
+                </tone>
+                <tone begin="87.385" end="87.5" lang="1" pitch="186" pronounce="jin">
+                    <word>Ëøë</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="87.7" end="88.684" lang="1" pitch="223" pronounce="bu">
+                    <word>‰∏ç</word>
+                </tone>
+                <tone begin="88.684" end="89.026" lang="1" pitch="253" pronounce="xiang">
+                    <word>ÊÉ≥</word>
+                </tone>
+                <tone begin="89.026" end="89.215" lang="1" pitch="243" pronounce="he">
+                    <word>Âíå</word>
+                </tone>
+                <tone begin="89.215" end="89.49" lang="1" pitch="260" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="89.49" end="89.852" lang="1" pitch="244" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="89.852" end="90.126" lang="1" pitch="155" pronounce="yi">
+                    <word>‰∏Ä</word>
+                </tone>
+                <tone begin="90.126" end="90.47" lang="1" pitch="165" pronounce="hao">
+                    <word>ÊØ´</word>
+                </tone>
+                <tone begin="90.47" end="90.976" lang="1" pitch="281" pronounce="mi">
+                    <word>Á±≥</word>
+                </tone>
+                <tone begin="90.976" end="91.34" lang="1" pitch="277" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="91.34" end="91.666" lang="1" pitch="137" pronounce="ju">
+                    <word>Ë∑ù</word>
+                </tone>
+                <tone begin="91.666" end="91.942" lang="1" pitch="303" pronounce="li">
+                    <word>Á¶ª</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="92.142" end="92.529" lang="1" pitch="234" pronounce="chao">
+                    <word>ÊΩÆ</word>
+                </tone>
+                <tone begin="92.529" end="92.871" lang="1" pitch="239" pronounce="xi">
+                    <word>Ê±ê</word>
+                </tone>
+                <tone begin="92.871" end="93.25" lang="1" pitch="226" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="93.25" end="93.557" lang="1" pitch="246" pronounce="di">
+                    <word>‰Ωé</word>
+                </tone>
+                <tone begin="93.557" end="94.557" lang="1" pitch="232" pronounce="yin">
+                    <word>Âêü</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="94.873" end="95.251" lang="1" pitch="192" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="95.251" end="95.423" lang="1" pitch="157" pronounce="zhui">
+                    <word>ËøΩ</word>
+                </tone>
+                <tone begin="95.423" end="95.565" lang="1" pitch="226" pronounce="xun">
+                    <word>ÂØª</word>
+                </tone>
+                <tone begin="95.565" end="95.736" lang="1" pitch="241" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="95.736" end="96.291" lang="1" pitch="245" pronounce="zong">
+                    <word>Ë∏™</word>
+                </tone>
+                <tone begin="96.291" end="97.291" lang="1" pitch="226" pronounce="ji">
+                    <word>Ëøπ</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="97.784" end="98.116" lang="1" pitch="232" pronounce="hao">
+                    <word>Â•Ω</word>
+                </tone>
+                <tone begin="98.116" end="98.399" lang="1" pitch="320" pronounce="xiang">
+                    <word>ÊÉ≥</word>
+                </tone>
+                <tone begin="98.399" end="98.566" lang="1" pitch="338" pronounce="shi">
+                    <word>Êó∂</word>
+                </tone>
+                <tone begin="98.566" end="98.725" lang="1" pitch="185" pronounce="jian">
+                    <word>Èó¥</word>
+                </tone>
+                <tone begin="98.725" end="99.037" lang="1" pitch="189" pronounce="dou">
+                    <word>ÈÉΩ</word>
+                </tone>
+                <tone begin="99.037" end="99.458" lang="1" pitch="185" pronounce="zan">
+                    <word>ÊöÇ</word>
+                </tone>
+                <tone begin="99.458" end="100.272" lang="1" pitch="199" pronounce="ting">
+                    <word>ÂÅú</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="100.472" end="100.708" lang="1" pitch="181" pronounce="ding">
+                    <word>ÂÆö</word>
+                </tone>
+                <tone begin="100.708" end="100.866" lang="1" pitch="185" pronounce="ge">
+                    <word>Ê†º</word>
+                </tone>
+                <tone begin="100.866" end="101.073" lang="1" pitch="247" pronounce="mei">
+                    <word>ÊØè</word>
+                </tone>
+                <tone begin="101.073" end="101.282" lang="1" pitch="138" pronounce="yi">
+                    <word>‰∏Ä</word>
+                </tone>
+                <tone begin="101.282" end="101.686" lang="1" pitch="139" pronounce="chu">
+                    <word>Â§Ñ</word>
+                </tone>
+                <tone begin="101.686" end="102.092" lang="1" pitch="295" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="102.092" end="102.574" lang="1" pitch="260" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="102.574" end="102.874" lang="1" pitch="264" pronounce="zai">
+                    <word>Âú®</word>
+                </tone>
+                <tone begin="102.874" end="103.049" lang="1" pitch="277" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="103.049" end="103.34" lang="1" pitch="156" pronounce="feng">
+                    <word>È£é</word>
+                </tone>
+                <tone begin="103.34" end="104" lang="1" pitch="145" pronounce="jing">
+                    <word>ÊôØ</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="104.2" end="104.368" lang="1" pitch="248" pronounce="ceng">
+                    <word>Êõæ</word>
+                </tone>
+                <tone begin="104.368" end="104.52" lang="1" pitch="247" pronounce="jing">
+                    <word>Áªè</word>
+                </tone>
+                <tone begin="104.52" end="104.651" lang="1" pitch="247" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="104.651" end="104.808" lang="1" pitch="224" pronounce="men">
+                    <word>‰ª¨</word>
+                </tone>
+                <tone begin="104.808" end="104.949" lang="1" pitch="230" pronounce="bi">
+                    <word>ÂΩº</word>
+                </tone>
+                <tone begin="104.949" end="105.084" lang="1" pitch="228" pronounce="ci">
+                    <word>Ê≠§</word>
+                </tone>
+                <tone begin="105.084" end="105.232" lang="1" pitch="207" pronounce="yong">
+                    <word>Êã•</word>
+                </tone>
+                <tone begin="105.232" end="105.373" lang="1" pitch="263" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="105.373" end="105.523" lang="1" pitch="204" pronounce="ling">
+                    <word>ÁÅµ</word>
+                </tone>
+                <tone begin="105.523" end="105.692" lang="1" pitch="215" pronounce="hun">
+                    <word>È≠Ç</word>
+                </tone>
+                <tone begin="105.692" end="105.855" lang="1" pitch="225" pronounce="zhi">
+                    <word>Áü•</word>
+                </tone>
+                <tone begin="105.855" end="106.008" lang="1" pitch="187" pronounce="ji">
+                    <word>Â∑±</word>
+                </tone>
+                <tone begin="106.008" end="106.162" lang="1" pitch="222" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="106.162" end="106.342" lang="1" pitch="212" pronounce="ming">
+                    <word>Âêç</word>
+                </tone>
+                <tone begin="106.342" end="106.654" lang="1" pitch="257" pronounce="yi">
+                    <word>‰πâ</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="106.854" end="107.007" lang="1" pitch="230" pronounce="du">
+                    <word>ËØª</word>
+                </tone>
+                <tone begin="107.007" end="107.174" lang="1" pitch="279" pronounce="dong">
+                    <word>ÊáÇ</word>
+                </tone>
+                <tone begin="107.316" end="107.467" lang="1" pitch="281" pronounce="ge">
+                    <word>‰∏™</word>
+                </tone>
+                <tone begin="107.467" end="107.607" lang="1" pitch="281" pronounce="yan">
+                    <word>Áúº</word>
+                </tone>
+                <tone begin="107.607" end="107.732" lang="1" pitch="248" pronounce="shen">
+                    <word>Á•û</word>
+                </tone>
+                <tone begin="107.732" end="107.879" lang="1" pitch="275" pronounce="wan">
+                    <word>ÂÆå</word>
+                </tone>
+                <tone begin="107.879" end="108.02" lang="1" pitch="241" pronounce="mei">
+                    <word>Áæé</word>
+                </tone>
+                <tone begin="108.02" end="108.176" lang="1" pitch="225" pronounce="qi">
+                    <word>Â•ë</word>
+                </tone>
+                <tone begin="108.176" end="108.312" lang="1" pitch="277" pronounce="he">
+                    <word>Âêà</word>
+                </tone>
+                <tone begin="108.312" end="108.427" lang="1" pitch="248" pronounce="xiang">
+                    <word>Áõ∏</word>
+                </tone>
+                <tone begin="108.427" end="108.799" lang="1" pitch="250" pronounce="hu">
+                    <word>‰∫í</word>
+                </tone>
+                <tone begin="108.799" end="108.982" lang="1" pitch="286" pronounce="yin">
+                    <word>Âºï</word>
+                </tone>
+                <tone begin="108.982" end="109.491" lang="1" pitch="249" pronounce="ling">
+                    <word>È¢Ü</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="109.691" end="110.145" lang="1" pitch="258" pronounce="ke">
+                    <word>ÂèØ</word>
+                </tone>
+                <tone begin="110.291" end="110.441" lang="1" pitch="245" pronounce="lai">
+                    <word>Êù•</word>
+                </tone>
+                <tone begin="110.441" end="110.601" lang="1" pitch="251" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="110.601" end="110.725" lang="1" pitch="249" pronounce="kai">
+                    <word>ÂºÄ</word>
+                </tone>
+                <tone begin="110.725" end="110.884" lang="1" pitch="249" pronounce="shi">
+                    <word>Âßã</word>
+                </tone>
+                <tone begin="110.884" end="111.016" lang="1" pitch="227" pronounce="ju">
+                    <word>Êãí</word>
+                </tone>
+                <tone begin="111.016" end="111.191" lang="1" pitch="244" pronounce="jue">
+                    <word>Áªù</word>
+                </tone>
+                <tone begin="111.191" end="111.387" lang="1" pitch="242" pronounce="can">
+                    <word>ÂèÇ</word>
+                </tone>
+                <tone begin="111.387" end="111.699" lang="1" pitch="246" pronounce="yu">
+                    <word>‰∏é</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="111.899" end="112.381" lang="1" pitch="200" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="112.381" end="113.149" lang="1" pitch="251" pronounce="men">
+                    <word>‰ª¨</word>
+                </tone>
+                <tone begin="113.149" end="113.415" lang="1" pitch="317" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="113.415" end="113.582" lang="1" pitch="313" pronounce="ai">
+                    <word>Áà±</word>
+                </tone>
+                <tone begin="113.582" end="114.582" lang="1" pitch="275" pronounce="qing">
+                    <word>ÊÉÖ</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="115.717" end="115.907" lang="1" pitch="177" pronounce="tian">
+                    <word>Â§©</word>
+                </tone>
+                <tone begin="115.907" end="116.074" lang="1" pitch="195" pronounce="wan">
+                    <word>Êôö</word>
+                </tone>
+                <tone begin="116.074" end="116.216" lang="1" pitch="245" pronounce="feng">
+                    <word>È£é</word>
+                </tone>
+                <tone begin="116.216" end="116.369" lang="1" pitch="242" pronounce="qing">
+                    <word>ËΩª</word>
+                </tone>
+                <tone begin="116.369" end="116.516" lang="1" pitch="247" pronounce="rou">
+                    <word>Êüî</word>
+                </tone>
+                <tone begin="116.516" end="116.677" lang="1" pitch="236" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="116.677" end="116.861" lang="1" pitch="206" pronounce="xuan">
+                    <word>ÈÄâ</word>
+                </tone>
+                <tone begin="116.861" end="117.035" lang="1" pitch="244" pronounce="ze">
+                    <word>Êã©</word>
+                </tone>
+                <tone begin="117.035" end="117.225" lang="1" pitch="244" pronounce="jie">
+                    <word>Áªì</word>
+                </tone>
+                <tone begin="117.225" end="117.419" lang="1" pitch="248" pronounce="shu">
+                    <word>Êùü</word>
+                </tone>
+                <tone begin="117.419" end="117.59" lang="1" pitch="199" pronounce="zhe">
+                    <word>Ëøô</word>
+                </tone>
+                <tone begin="117.59" end="117.768" lang="1" pitch="245" pronounce="chang">
+                    <word>Âú∫</word>
+                </tone>
+                <tone begin="117.768" end="117.94" lang="1" pitch="203" pronounce="guan">
+                    <word>ÂÖ≥</word>
+                </tone>
+                <tone begin="117.94" end="118.325" lang="1" pitch="242" pronounce="xi">
+                    <word>Á≥ª</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="118.525" end="118.718" lang="1" pitch="276" pronounce="shuo">
+                    <word>ËØ¥</word>
+                </tone>
+                <tone begin="118.868" end="119.02" lang="1" pitch="282" pronounce="qing">
+                    <word>ÊÉÖ</word>
+                </tone>
+                <tone begin="119.02" end="119.158" lang="1" pitch="278" pronounce="tui">
+                    <word>Ë§™</word>
+                </tone>
+                <tone begin="119.158" end="119.3" lang="1" pitch="243" pronounce="qu">
+                    <word>Âéª</word>
+                </tone>
+                <tone begin="119.3" end="119.442" lang="1" pitch="278" pronounce="yan">
+                    <word>Êé©</word>
+                </tone>
+                <tone begin="119.442" end="119.583" lang="1" pitch="234" pronounce="shi">
+                    <word>È•∞</word>
+                </tone>
+                <tone begin="119.583" end="119.74" lang="1" pitch="233" pronounce="bu">
+                    <word>‰∏ç</word>
+                </tone>
+                <tone begin="119.74" end="119.873" lang="1" pitch="277" pronounce="hui">
+                    <word>‰ºö</word>
+                </tone>
+                <tone begin="119.873" end="120.016" lang="1" pitch="246" pronounce="shuo">
+                    <word>ËØ¥</word>
+                </tone>
+                <tone begin="120.016" end="120.165" lang="1" pitch="276" pronounce="huang">
+                    <word>Ë∞é</word>
+                </tone>
+                <tone begin="120.165" end="120.558" lang="1" pitch="231" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="120.558" end="120.809" lang="1" pitch="254" pronounce="yan">
+                    <word>Áúº</word>
+                </tone>
+                <tone begin="120.809" end="121.168" lang="1" pitch="279" pronounce="jing">
+                    <word>Áùõ</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="121.368" end="121.644" lang="1" pitch="245" pronounce="shi">
+                    <word>ÊòØ</word>
+                </tone>
+                <tone begin="121.816" end="121.974" lang="1" pitch="262" pronounce="guai">
+                    <word>ÊÄ™</word>
+                </tone>
+                <tone begin="121.974" end="122.124" lang="1" pitch="249" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="122.124" end="122.267" lang="1" pitch="225" pronounce="ling">
+                    <word>È¢Ü</word>
+                </tone>
+                <tone begin="122.267" end="122.424" lang="1" pitch="249" pronounce="wu">
+                    <word>ÊÇü</word>
+                </tone>
+                <tone begin="122.424" end="122.575" lang="1" pitch="248" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="122.575" end="123.05" lang="1" pitch="251" pronounce="tai">
+                    <word>Â§™</word>
+                </tone>
+                <tone begin="123.05" end="123.79" lang="1" pitch="239" pronounce="chi">
+                    <word>Ëøü</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="123.99" end="124.341" lang="1" pitch="237" pronounce="cheng">
+                    <word>ÊÉ©</word>
+                </tone>
+                <tone begin="124.341" end="124.673" lang="1" pitch="306" pronounce="fa">
+                    <word>ÁΩö</word>
+                </tone>
+                <tone begin="124.673" end="124.999" lang="1" pitch="331" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="124.999" end="125.332" lang="1" pitch="310" pronounce="xiao">
+                    <word>Ê∂à</word>
+                </tone>
+                <tone begin="125.332" end="126.332" lang="1" pitch="248" pronounce="shi">
+                    <word>Â§±</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="126.571" end="126.907" lang="1" pitch="178" pronounce="hou">
+                    <word>Âêé</word>
+                </tone>
+                <tone begin="126.907" end="127.365" lang="1" pitch="178" pronounce="lai">
+                    <word>Êù•</word>
+                </tone>
+                <tone begin="127.365" end="127.658" lang="1" pitch="206" pronounce="ren">
+                    <word>‰∫∫</word>
+                </tone>
+                <tone begin="127.658" end="127.817" lang="1" pitch="187" pronounce="hai">
+                    <word>Êµ∑</word>
+                </tone>
+                <tone begin="127.817" end="127.974" lang="1" pitch="207" pronounce="yong">
+                    <word>Êã•</word>
+                </tone>
+                <tone begin="127.974" end="128.974" lang="1" pitch="209" pronounce="ji">
+                    <word>Êå§</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="129.643" end="129.824" lang="1" pitch="189" pronounce="que">
+                    <word>Âç¥</word>
+                </tone>
+                <tone begin="129.824" end="130.007" lang="1" pitch="185" pronounce="zhao">
+                    <word>Êâæ</word>
+                </tone>
+                <tone begin="130.007" end="130.206" lang="1" pitch="185" pronounce="bu">
+                    <word>‰∏ç</word>
+                </tone>
+                <tone begin="130.206" end="130.798" lang="1" pitch="184" pronounce="dao">
+                    <word>Âà∞</word>
+                </tone>
+                <tone begin="130.798" end="131.798" lang="1" pitch="183" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="132.683" end="133.066" lang="1" pitch="250" pronounce="yi">
+                    <word>ÂøÜ</word>
+                </tone>
+                <tone begin="133.066" end="133.51" lang="1" pitch="181" pronounce="xuan">
+                    <word>ÊÇ¨</word>
+                </tone>
+                <tone begin="133.51" end="133.725" lang="1" pitch="184" pronounce="fu">
+                    <word>ÊµÆ</word>
+                </tone>
+                <tone begin="133.725" end="133.882" lang="1" pitch="184" pronounce="jing">
+                    <word>Èùô</word>
+                </tone>
+                <tone begin="133.882" end="134.882" lang="1" pitch="180" pronounce="zhi">
+                    <word>Ê≠¢</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="135.423" end="135.583" lang="1" pitch="231" pronounce="shi">
+                    <word>Êó∂</word>
+                </tone>
+                <tone begin="135.583" end="135.734" lang="1" pitch="251" pronounce="kong">
+                    <word>Á©∫</word>
+                </tone>
+                <tone begin="135.734" end="135.874" lang="1" pitch="281" pronounce="li">
+                    <word>Èáå</word>
+                </tone>
+                <tone begin="135.874" end="136.142" lang="1" pitch="305" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="136.142" end="136.442" lang="1" pitch="314" pronounce="shi">
+                    <word>ÊòØ</word>
+                </tone>
+                <tone begin="136.442" end="136.868" lang="1" pitch="329" pronounce="fou">
+                    <word>Âê¶</word>
+                </tone>
+                <tone begin="136.868" end="137.368" lang="1" pitch="280" pronounce="neng">
+                    <word>ËÉΩ</word>
+                </tone>
+                <tone begin="137.368" end="137.665" lang="1" pitch="285" pronounce="yong">
+                    <word>Êã•</word>
+                </tone>
+                <tone begin="137.665" end="137.966" lang="1" pitch="275" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="137.966" end="138.966" lang="1" pitch="284" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="140.085" end="140.224" lang="1" pitch="200" pronounce="zhui">
+                    <word>Âù†</word>
+                </tone>
+                <tone begin="140.224" end="140.45" lang="1" pitch="209" pronounce="ru">
+                    <word>ÂÖ•</word>
+                </tone>
+                <tone begin="140.45" end="140.813" lang="1" pitch="209" pronounce="le">
+                    <word>‰∫Ü</word>
+                </tone>
+                <tone begin="140.813" end="141.14" lang="1" pitch="251" pronounce="huan">
+                    <word>Âπª</word>
+                </tone>
+                <tone begin="141.14" end="142.14" lang="1" pitch="307" pronounce="jing">
+                    <word>Â¢É</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="142.55" end="142.834" lang="1" pitch="185" pronounce="ai">
+                    <word>Áà±</word>
+                </tone>
+                <tone begin="142.99" end="143.182" lang="1" pitch="201" pronounce="yue">
+                    <word>Ë∂ä</word>
+                </tone>
+                <tone begin="143.182" end="143.34" lang="1" pitch="187" pronounce="suo">
+                    <word>ÊâÄ</word>
+                </tone>
+                <tone begin="143.34" end="143.708" lang="1" pitch="188" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="143.708" end="144.708" lang="1" pitch="208" pronounce="shi">
+                    <word>Êó∂</word>
+                </tone>
+                <tone begin="144.708" end="145.007" lang="1" pitch="281" pronounce="kong">
+                    <word>Á©∫</word>
+                </tone>
+                <tone begin="145.007" end="146.007" lang="1" pitch="311" pronounce="xian">
+                    <word>Èô∑</word>
+                </tone>
+                <tone begin="146.007" end="146.093" lang="1" pitch="276" pronounce="jing">
+                    <word>Èò±</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="146.891" end="147.891" lang="1" pitch="316" pronounce="wan">
+                    <word>‰∏á</word>
+                </tone>
+                <tone begin="147.891" end="148.28" lang="1" pitch="184" pronounce="wu">
+                    <word>Áâ©</word>
+                </tone>
+                <tone begin="148.28" end="148.805" lang="1" pitch="186" pronounce="zhong">
+                    <word>Áªà</word>
+                </tone>
+                <tone begin="148.805" end="149.064" lang="1" pitch="187" pronounce="jiang">
+                    <word>Â∞Ü</word>
+                </tone>
+                <tone begin="149.064" end="149.226" lang="1" pitch="184" pronounce="cang">
+                    <word>Ëóè</word>
+                </tone>
+                <tone begin="149.226" end="149.395" lang="1" pitch="222" pronounce="ni">
+                    <word>Âåø</word>
+                </tone>
+                <tone begin="149.395" end="149.584" lang="1" pitch="245" pronounce="hai">
+                    <word>Êµ∑</word>
+                </tone>
+                <tone begin="149.584" end="150.584" lang="1" pitch="248" pronounce="di">
+                    <word>Â∫ï</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="152.579" end="152.774" lang="1" pitch="196" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="152.774" end="152.951" lang="1" pitch="155" pronounce="zai">
+                    <word>ÂÜç</word>
+                </tone>
+                <tone begin="152.951" end="153.107" lang="1" pitch="157" pronounce="ci">
+                    <word>Ê¨°</word>
+                </tone>
+                <tone begin="153.107" end="153.47" lang="1" pitch="314" pronounce="yu">
+                    <word>ÈÅá</word>
+                </tone>
+                <tone begin="153.47" end="153.801" lang="1" pitch="248" pronounce="jian">
+                    <word>ËßÅ</word>
+                </tone>
+                <tone begin="153.801" end="154.801" lang="1" pitch="233" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="155.475" end="155.657" lang="1" pitch="190" pronounce="zhe">
+                    <word>Ëøô</word>
+                </tone>
+                <tone begin="155.657" end="155.832" lang="1" pitch="79" pronounce="ci">
+                    <word>Ê¨°</word>
+                </tone>
+                <tone begin="155.832" end="156.032" lang="1" pitch="313" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="156.032" end="156.257" lang="1" pitch="309" pronounce="zhu">
+                    <word>‰∏ª</word>
+                </tone>
+                <tone begin="156.257" end="156.712" lang="1" pitch="193" pronounce="dong">
+                    <word>Âä®</word>
+                </tone>
+                <tone begin="156.712" end="157.066" lang="1" pitch="186" pronounce="kao">
+                    <word>Èù†</word>
+                </tone>
+                <tone begin="157.066" end="158.066" lang="1" pitch="221" pronounce="jin">
+                    <word>Ëøë</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="158.508" end="158.7" lang="1" pitch="243" pronounce="xiang">
+                    <word>ÊÉ≥</word>
+                </tone>
+                <tone begin="158.7" end="158.841" lang="1" pitch="248" pronounce="he">
+                    <word>Âíå</word>
+                </tone>
+                <tone begin="158.841" end="159.017" lang="1" pitch="236" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="159.017" end="159.302" lang="1" pitch="276" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="159.302" end="159.567" lang="1" pitch="311" pronounce="yi">
+                    <word>‰∏Ä</word>
+                </tone>
+                <tone begin="159.567" end="159.745" lang="1" pitch="329" pronounce="hao">
+                    <word>ÊØ´</word>
+                </tone>
+                <tone begin="159.745" end="159.925" lang="1" pitch="311" pronounce="mi">
+                    <word>Á±≥</word>
+                </tone>
+                <tone begin="159.925" end="160.717" lang="1" pitch="240" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="160.717" end="160.991" lang="1" pitch="274" pronounce="ju">
+                    <word>Ë∑ù</word>
+                </tone>
+                <tone begin="160.991" end="161.307" lang="1" pitch="303" pronounce="li">
+                    <word>Á¶ª</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="161.507" end="161.784" lang="1" pitch="239" pronounce="chao">
+                    <word>ÊΩÆ</word>
+                </tone>
+                <tone begin="161.784" end="161.969" lang="1" pitch="246" pronounce="xi">
+                    <word>Ê±ê</word>
+                </tone>
+                <tone begin="161.969" end="162.136" lang="1" pitch="237" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="162.136" end="162.509" lang="1" pitch="247" pronounce="di">
+                    <word>‰Ωé</word>
+                </tone>
+                <tone begin="162.509" end="162.6" lang="1" pitch="230" pronounce="yin">
+                    <word>Âêü</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="162.752" end="163.752" lang="1" pitch="239" pronounce="wo">
+                    <word>Êàë</word>
+                </tone>
+                <tone begin="163.752" end="163.954" lang="1" pitch="183" pronounce="zhui">
+                    <word>ËøΩ</word>
+                </tone>
+                <tone begin="163.954" end="164.136" lang="1" pitch="183" pronounce="xun">
+                    <word>ÂØª</word>
+                </tone>
+                <tone begin="164.136" end="164.493" lang="1" pitch="186" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="164.493" end="165.043" lang="1" pitch="157" pronounce="zong">
+                    <word>Ë∏™</word>
+                </tone>
+                <tone begin="165.043" end="166.043" lang="1" pitch="247" pronounce="ji">
+                    <word>Ëøπ</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="167.102" end="167.43" lang="1" pitch="185" pronounce="hao">
+                    <word>Â•Ω</word>
+                </tone>
+                <tone begin="167.43" end="167.616" lang="1" pitch="157" pronounce="xiang">
+                    <word>ÊÉ≥</word>
+                </tone>
+                <tone begin="167.616" end="167.84" lang="1" pitch="330" pronounce="shi">
+                    <word>Êó∂</word>
+                </tone>
+                <tone begin="167.84" end="168.086" lang="1" pitch="166" pronounce="jian">
+                    <word>Èó¥</word>
+                </tone>
+                <tone begin="168.086" end="168.517" lang="1" pitch="172" pronounce="dou">
+                    <word>ÈÉΩ</word>
+                </tone>
+                <tone begin="168.517" end="168.901" lang="1" pitch="185" pronounce="zan">
+                    <word>ÊöÇ</word>
+                </tone>
+                <tone begin="168.901" end="169.6" lang="1" pitch="209" pronounce="ting">
+                    <word>ÂÅú</word>
+                </tone>
+            </sentence>
+            <sentence>
+                <tone begin="170.611" end="170.763" lang="1" pitch="139" pronounce="ding">
+                    <word>ÂÆö</word>
+                </tone>
+                <tone begin="170.763" end="170.966" lang="1" pitch="145" pronounce="ge">
+                    <word>Ê†º</word>
+                </tone>
+                <tone begin="170.966" end="171.118" lang="1" pitch="159" pronounce="mei">
+                    <word>ÊØè</word>
+                </tone>
+                <tone begin="171.118" end="171.423" lang="1" pitch="312" pronounce="yi">
+                    <word>‰∏Ä</word>
+                </tone>
+                <tone begin="171.423" end="171.727" lang="1" pitch="320" pronounce="chu">
+                    <word>Â§Ñ</word>
+                </tone>
+                <tone begin="171.727" end="171.928" lang="1" pitch="281" pronounce="you">
+                    <word>Êúâ</word>
+                </tone>
+                <tone begin="171.928" end="172.439" lang="1" pitch="270" pronounce="ni">
+                    <word>‰Ω†</word>
+                </tone>
+                <tone begin="172.439" end="172.743" lang="1" pitch="313" pronounce="zai">
+                    <word>Âú®</word>
+                </tone>
+                <tone begin="172.743" end="173.146" lang="1" pitch="287" pronounce="de">
+                    <word>ÁöÑ</word>
+                </tone>
+                <tone begin="173.146" end="173.603" lang="1" pitch="232" pronounce="feng">
+                    <word>È£é</word>
+                </tone>
+                <tone begin="173.603" end="174.566" lang="1" pitch="124" pronounce="jing">
+                    <word>ÊôØ</word>
+                </tone>
+            </sentence>
+        </paragraph>
+    </midi_lrc>
 </song>
