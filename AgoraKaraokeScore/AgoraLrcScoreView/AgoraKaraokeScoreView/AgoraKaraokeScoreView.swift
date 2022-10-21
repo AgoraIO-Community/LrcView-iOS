@@ -16,6 +16,10 @@ protocol AgoraKaraokeScoreDelegate {
     /// cumulativeScore: 累加分数
     /// totalScore: 总分
     @objc optional func agoraKaraokeScore(score: Double, cumulativeScore: Double, totalScore: Double)
+    
+    /// Pitch实时回调
+    /// - Parameter pitch: 文件中的音调
+    @objc optional func agoraKaraokeFilePitch(pitch: Double)
 }
 
 @objcMembers
@@ -26,7 +30,7 @@ class AgoraKaraokeScoreView: UIView {
 
     var lrcSentence: [AgoraMiguLrcSentence]? {
         didSet {
-            self.totalScore = Double(lrcSentence?.count ?? 0) * 100
+            self.totalScore = Double(lrcSentence?.count ?? 0) * (scoreConfig?.lineCalcuScore ?? 100)
         }
     }
 
@@ -214,27 +218,21 @@ class AgoraKaraokeScoreView: UIView {
             triangleView.updateAlpha(at: 0)
             return
         }
-
-        let y = pitchToY(min: model.pitchMin, max: model.pitchMax, pitch)
         
         let calcuScore = scoreConfig?.lineCalcuScore ?? 100
-//        let score = (1 - abs(model.pitch - pitch) / pitch) * calcuScore
-//        guard score >= 0 && score <= calcuScore else { return }
-        // 计算线的中心位置
-        let lineCenterY = (model.topKM + _scoreConfig.lineHeight) - _scoreConfig.lineHeight * 0.5
-        var score = calcuScore - abs(y - lineCenterY)
-        score = score > calcuScore ? calcuScore : score < 0 ? 0 : score
-//        if preModel?.startTime == model.startTime,
-//           preModel?.endTime == model.endTime
-//        {
-//            cursorAnimation(y: y, isDraw: score >= calcuScore - 15)
-//            triangleView.updateAlpha(at: pitch <= 0 ? 0 : score / calcuScore)
-//            return
-//        }
-        if score >= calcuScore - 10, pitch > 0 {
+        var score: Double = 0
+        if pitch >= model.pitchMin, pitch <= model.pitchMax {
+            let fileTone = pitchToTone(pitch: model.pitch)
+            let voiceTone = pitchToTone(pitch: pitch)
+            var match = 1 - abs(voiceTone - fileTone)/fileTone
+            if match < 0 { match = 0 }
+            score = match * calcuScore
+        }
+        
+        let y = pitchToY(min: model.pitchMin, max: model.pitchMax, pitch)
+        if score >= calcuScore * 0.9, pitch > 0 {
             cursorAnimation(y: y, isDraw: true)
             triangleView.updateAlpha(at: pitch <= 0 ? 0 : score / calcuScore)
-
         } else {
             cursorAnimation(y: y, isDraw: false)
             triangleView.updateAlpha(at: 0)
@@ -243,6 +241,11 @@ class AgoraKaraokeScoreView: UIView {
             scoreArray.append(score)
         }
         preModel = model
+    }
+    
+    private func pitchToTone(pitch: Double) -> Double {
+        let eps = 1e-6
+        return (max(0, log(pitch / 55 + eps) / log(2))) * 12
     }
 
     private func cursorAnimation(y: CGFloat, isDraw: Bool) {
@@ -291,6 +294,8 @@ class AgoraKaraokeScoreView: UIView {
             dataArray.append(startData)
         }
         var preEndTime: Double = 0
+        let pitchMin = CGFloat(tones.sorted(by: { $0.pitch < $1.pitch }).first?.pitch ?? 0) - 50
+        let pitchMax = CGFloat(tones.sorted(by: { $0.pitch > $1.pitch }).first?.pitch ?? 0) + 50
         for i in 0 ..< tones.count {
             let tone = tones[i]
             let model = AgoraScoreItemModel()
@@ -307,8 +312,8 @@ class AgoraKaraokeScoreView: UIView {
             model.pitch = Double(tone.pitch)
             model.widthKM = calcuToWidth(time: endTime - startTime)
             model.leftKM = dataArray.map { $0.widthKM }.reduce(0, +)
-            model.pitchMin = CGFloat(tones.sorted(by: { $0.pitch < $1.pitch }).first?.pitch ?? 0) - 50
-            model.pitchMax = CGFloat(tones.sorted(by: { $0.pitch > $1.pitch }).first?.pitch ?? 0) + 50
+            model.pitchMin = pitchMin
+            model.pitchMax = pitchMax
             model.topKM = pitchToY(min: model.pitchMin, max: model.pitchMax, CGFloat(tone.pitch))
 
             preEndTime = endTime
@@ -456,6 +461,12 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let dataArray = dataArray else { return }
+        let time = currentTime * 1000 - 200
+        if let model = dataArray.first(where: { time >= $0.startTime * 1000 && $0.endTime * 1000 >= time }),
+            model.isEmptyCell == false {
+            delegate?.agoraKaraokeFilePitch?(pitch: model.pitch)
+        }
+
         let moveX = scrollView.contentOffset.x
         for i in 0 ..< dataArray.count {
             let model = dataArray[i]
