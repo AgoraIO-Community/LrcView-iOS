@@ -49,7 +49,7 @@ public class AgoraScoreItemConfigModel: NSObject {
     /// 线的高度 默认:10
     public var lineHeight: CGFloat = 10
     /// 线的宽度 默认: 120
-    public var lineWidht: CGFloat = 120
+    public var lineWidth: CGFloat = 120
     /// 默认线的背景色
     public var normalColor: UIColor = .gray
     /// 匹配后线的背景色

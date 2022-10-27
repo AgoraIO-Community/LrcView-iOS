@@ -16,10 +16,6 @@ protocol AgoraKaraokeScoreDelegate {
     /// cumulativeScore: 累加分数
     /// totalScore: 总分
     @objc optional func agoraKaraokeScore(score: Double, cumulativeScore: Double, totalScore: Double)
-    
-    /// Pitch实时回调
-    /// - Parameter pitch: 文件中的音调
-    @objc optional func agoraKaraokeFilePitch(pitch: Double)
 }
 
 @objcMembers
@@ -277,7 +273,7 @@ class AgoraKaraokeScoreView: UIView {
     }
 
     private func calcuToWidth(time: TimeInterval) -> CGFloat {
-        let w = _scoreConfig.lineWidht * roundToPlaces(value: time, places: decimalCount)
+        let w = _scoreConfig.lineWidth * roundToPlaces(value: time, places: decimalCount)
         return w.isNaN ? 0 : abs(w)
     }
 
@@ -461,11 +457,6 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let dataArray = dataArray else { return }
-        let time = currentTime * 1000 - 200
-        if let model = dataArray.first(where: { time >= $0.startTime * 1000 && $0.endTime * 1000 >= time }),
-            model.isEmptyCell == false {
-            delegate?.agoraKaraokeFilePitch?(pitch: model.pitch)
-        }
 
         let moveX = scrollView.contentOffset.x
         for i in 0 ..< dataArray.count {

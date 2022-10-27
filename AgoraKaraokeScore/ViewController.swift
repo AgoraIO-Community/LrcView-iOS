@@ -32,6 +32,7 @@ class ViewController: UIViewController {
         
         lrcScoreView = AgoraLrcScoreView(delegate: self)
         let config = AgoraLrcScoreConfigModel()
+//        config.isHiddenScoreView = true
         let scoreConfig = AgoraScoreItemConfigModel()
         scoreConfig.tailAnimateColor = .yellow
         scoreConfig.scoreViewHeight = 100
@@ -101,7 +102,9 @@ extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraK
         audioPlayer?.currentTime = time
     }
     
-    func agoraWordPitch(pitch: Int, totalCount: Int) {}
+    func agoraWordPitch(pitch: Int, totalCount: Int) {
+        lrcScoreView.setVoicePitch([Double(pitch)])
+    }
     
     func downloadLrcFinished(url: String) {
         lrcDownloadOk = true
@@ -121,10 +124,6 @@ extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraK
     
     func agoraKaraokeScore(score: Double, cumulativeScore: Double, totalScore: Double) {
         print("分数: \(score) 累加分: \(cumulativeScore) 总分: \(Int(totalScore))")
-    }
-    
-    func agoraKaraokeFilePitch(pitch: Double) {
-        lrcScoreView.setVoicePitch([pitch])
     }
 }
 
