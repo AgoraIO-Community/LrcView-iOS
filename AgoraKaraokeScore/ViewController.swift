@@ -32,7 +32,7 @@ class ViewController: UIViewController {
         
         lrcScoreView = AgoraLrcScoreView(delegate: self)
         let config = AgoraLrcScoreConfigModel()
-//        config.isHiddenScoreView = true
+        config.isHiddenScoreView = true
         let scoreConfig = AgoraScoreItemConfigModel()
         scoreConfig.tailAnimateColor = .yellow
         scoreConfig.scoreViewHeight = 100
@@ -90,20 +90,24 @@ class ViewController: UIViewController {
 
 extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraKaraokeScoreDelegate {
     func getPlayerCurrentTime() -> TimeInterval {
-        let time = (audioPlayer?.currentTime ?? 0)
+        let time = (audioPlayer?.currentTime ?? 0) * 1000
+        print("== getPlayerCurrentTime \(time)")
         return time
     }
     
     func getTotalTime() -> TimeInterval {
-        audioPlayer?.duration ?? 0
+        let time = (audioPlayer?.duration ?? 0) * 1000
+        print("== getTotalTime \(time)")
+        return time
     }
     
     func seekToTime(time: TimeInterval) {
-        audioPlayer?.currentTime = time
+        print("== seekToTime \(time/1000)")
+        audioPlayer?.currentTime = time / 1000
     }
     
     func agoraWordPitch(pitch: Int, totalCount: Int) {
-        lrcScoreView.setVoicePitch([Double(pitch)])
+//        lrcScoreView.setVoicePitch([Double(pitch)])
     }
     
     func downloadLrcFinished(url: String) {
@@ -111,9 +115,9 @@ extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraK
         bottomView.stopLoading()
         lrcScoreView.start()
         audioPlayer?.play()
-//        timer.scheduledMillisecondsTimer(withName: "aaa", countDown: 10000000, milliseconds: 200, queue: .main) { [weak self] _, duration in
-//            self?.setupTimer()
-//        }
+        timer.scheduledMillisecondsTimer(withName: "aaa", countDown: 10000000, milliseconds: 200, queue: .main) { [weak self] _, duration in
+            self?.setupTimer()
+        }
     }
     
     func beginDownloadLrc(url: String) {

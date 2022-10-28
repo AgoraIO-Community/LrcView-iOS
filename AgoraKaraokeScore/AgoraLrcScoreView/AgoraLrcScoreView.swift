@@ -140,7 +140,7 @@ public class AgoraLrcScoreView: UIView {
             guard _lrcView == nil else { return _lrcView }
             _lrcView = AgoraLrcView()
             _lrcView?.seekToTime = { [weak self] time in
-                self?.delegate?.seekToTime?(time: time)
+                self?.delegate?.seekToTime?(time: time * 1000)
             }
             _lrcView?.currentPlayerLrc = { [weak self] lrc, progress in
                 self?.delegate?.currentPlayerLrc?(lrc: lrc,
@@ -201,7 +201,7 @@ public class AgoraLrcScoreView: UIView {
                 self.scoreView?.lrcSentence = senences.sentences
                 self.lrcView?.lrcConfig?.isDrag = false
             }
-            let totalTime = self.delegate?.getTotalTime() ?? 0
+            let totalTime = (self.delegate?.getTotalTime() ?? 0) / 1000
             self.scoreView?.setTotalTime(totalTime: totalTime)
             self.lrcView?.lrcConfig = self.config?.lrcConfig
             self.downloadDelegate?.downloadLrcFinished?(url: url)
@@ -236,9 +236,10 @@ public class AgoraLrcScoreView: UIView {
         timer.scheduledMillisecondsTimer(withName: "lrc", countDown: 1000 * 60 * 30, milliseconds: 10, queue: .main) { [weak self] _, duration in
             guard let self = self else { return }
             if duration.truncatingRemainder(dividingBy: 1000) == 0 {
-                let currentTime = self.delegate?.getPlayerCurrentTime() ?? 0
+                let currentTime = (self.delegate?.getPlayerCurrentTime() ?? 0) / 1000
                 self.isStop = currentTime == self.preTime
-                self.totalTime = self.roundToPlaces(value: self.delegate?.getTotalTime() ?? 0, places: 10)
+                let totalTime = (self.delegate?.getTotalTime() ?? 0) / 1000
+                self.totalTime = self.roundToPlaces(value: totalTime, places: 10)
                 self.currentTime = currentTime
                 self.preTime = currentTime
             }

@@ -223,6 +223,7 @@ class AgoraKaraokeScoreView: UIView {
             var match = 1 - abs(voiceTone - fileTone)/fileTone
             if match < 0 { match = 0 }
             score = match * calcuScore
+            print("score: \(score)")
         }
         
         let y = pitchToY(min: model.pitchMin, max: model.pitchMax, pitch)

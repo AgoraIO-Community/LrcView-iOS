@@ -98,6 +98,7 @@ class AgoraEmitterView: UIView {
         emitter.lifetime = 1.0
         isStart = true
         isStop = false
+        print("=== startEmittering")
     }
 
     /// 移除CAEmitterLayer
@@ -106,6 +107,7 @@ class AgoraEmitterView: UIView {
         emitter.lifetime = 0.0
         isStop = true
         isStart = false
+        print("=== stopEmittering")
     }
 }
 
