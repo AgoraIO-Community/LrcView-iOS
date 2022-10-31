@@ -36,6 +36,9 @@ class AgoraEmitterView: UIView {
                                 createEmitterCell(name: "2"),
                                 createEmitterCell(name: "3"),
                                 createEmitterCell(name: "4")]
+        
+        
+        
         // 6.将发射器的layer添加到父layer中
 //        layer.addSublayer(emitter)
     }
@@ -53,7 +56,7 @@ class AgoraEmitterView: UIView {
         cell.emissionLongitude = CGFloat.pi * 3
         cell.emissionRange = CGFloat.pi / 6
         // 4.5.设置例子的存活时间
-        cell.lifetime = 0.7
+        cell.lifetime = 0.75
         cell.lifetimeRange = 1
         // 4.6.设置粒子旋转
         cell.spin = CGFloat.pi / 2
@@ -75,40 +78,73 @@ class AgoraEmitterView: UIView {
 
     private var isStop: Bool = false
     private var isStart: Bool = false
-
+    private var lastStartTime: CLongLong = 0
+    
     func setupEmitterPoint(point: CGPoint) {
         emitter.emitterPosition = point
     }
 
     func startEmittering() {
-        if isStart == true { return }
-        layer.addSublayer(emitter)
-        if config?.emitterImages == nil {
-            emitter.emitterCells?.forEach {
-                let image = UIImage(color: config?.emitterColors.randomElement() ?? .red,
-                                    size: CGSize(width: 10, height: 10))?.toCircle()
-                $0.contents = image?.cgImage
+        let current = Date().milliStamp
+        let gap = current - lastStartTime
+        if gap > CLongLong(0.75 * 1000) {
+            layer.addSublayer(emitter)
+            if config?.emitterImages == nil {
+                emitter.emitterCells?.forEach {
+                    let image = UIImage(color: config?.emitterColors.randomElement() ?? .red,
+                                        size: CGSize(width: 10, height: 10))?.toCircle()
+                    $0.contents = image?.cgImage
+                }
+            } else {
+                emitter.emitterCells?.forEach {
+                    let images = config?.emitterImages?.map { $0.cgImage }
+                    $0.contents = images?.randomElement
+                }
             }
-        } else {
-            emitter.emitterCells?.forEach {
-                let images = config?.emitterImages?.map { $0.cgImage }
-                $0.contents = images?.randomElement
-            }
+            emitter.lifetime = 0.75
+            print("=== current:\(current) gap:\(gap) startEmittering")
+            lastStartTime = current
         }
-        emitter.lifetime = 1.0
-        isStart = true
-        isStop = false
-        print("=== startEmittering")
+        else {
+            layer.addSublayer(emitter)
+            if config?.emitterImages == nil {
+                emitter.emitterCells?.forEach {
+                    let image = UIImage(color: config?.emitterColors.randomElement() ?? .red,
+                                        size: CGSize(width: 10, height: 10))?.toCircle()
+                    $0.contents = image?.cgImage
+                }
+            } else {
+                emitter.emitterCells?.forEach {
+                    let images = config?.emitterImages?.map { $0.cgImage }
+                    $0.contents = images?.randomElement
+                }
+            }
+            let time = Float(Double(0.75) - Double(gap)/1000.0)
+            emitter.lifetime = time
+            
+            print("=== current:\(current) ++++ current:\(time) startEmittering")
+            lastStartTime = current
+        }
     }
-
+    
     /// 移除CAEmitterLayer
     func stopEmittering() {
-        if isStop == true { return }
-        emitter.lifetime = 0.0
-        isStop = true
-        isStart = false
-        print("=== stopEmittering")
+        let current = Date().milliStamp
+        if current - lastStartTime > CLongLong(0.75 * 1000) {
+            emitter.lifetime = 0.0
+            print("=== \(current) stopEmittering")
+        }
     }
+}
+
+extension Date {
+
+  /// 获取当前 毫秒级 时间戳 - 13位
+  var milliStamp: CLongLong {
+    let timeInterval: TimeInterval = self.timeIntervalSince1970
+    let millisecond = CLongLong(round(timeInterval*1000))
+    return millisecond
+  }
 }
 
 private extension UIImage {

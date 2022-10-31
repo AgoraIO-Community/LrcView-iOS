@@ -32,7 +32,7 @@ class ViewController: UIViewController {
         
         lrcScoreView = AgoraLrcScoreView(delegate: self)
         let config = AgoraLrcScoreConfigModel()
-        config.isHiddenScoreView = true
+        config.isHiddenScoreView = false
         let scoreConfig = AgoraScoreItemConfigModel()
         scoreConfig.tailAnimateColor = .yellow
         scoreConfig.scoreViewHeight = 100
@@ -107,7 +107,7 @@ extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraK
     }
     
     func agoraWordPitch(pitch: Int, totalCount: Int) {
-//        lrcScoreView.setVoicePitch([Double(pitch)])
+        lrcScoreView.setVoicePitch([Double(pitch)])
     }
     
     func downloadLrcFinished(url: String) {
@@ -115,9 +115,9 @@ extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraK
         bottomView.stopLoading()
         lrcScoreView.start()
         audioPlayer?.play()
-        timer.scheduledMillisecondsTimer(withName: "aaa", countDown: 10000000, milliseconds: 200, queue: .main) { [weak self] _, duration in
-            self?.setupTimer()
-        }
+//        timer.scheduledMillisecondsTimer(withName: "aaa", countDown: 10000000, milliseconds: 200, queue: .main) { [weak self] _, duration in
+//            self?.setupTimer()
+//        }
     }
     
     func beginDownloadLrc(url: String) {
