@@ -1,10 +1,10 @@
 Pod::Spec.new do |spec|
   spec.name         = "AgoraLyricsScore"
-  spec.version      = "1.0.8"
+  spec.version      = "1.0.7.1"
   spec.summary      = "AgoraLyricsScore"
   spec.description  = "AgoraLyricsScore"
 
-  spec.homepage     = "git@github.com:AgoraIO-Community/LrcView-iOS"
+  spec.homepage     = "https://github.com/AgoraIO-Community/LrcView-iOS.git"
   spec.license      = "MIT"
   spec.author       = { "ZYQ" => "zhaoyongqiang@agora.io" }
   spec.source       = { :git => "git@github.com:AgoraIO-Community" }
