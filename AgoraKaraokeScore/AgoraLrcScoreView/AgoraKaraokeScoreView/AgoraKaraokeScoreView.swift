@@ -198,10 +198,19 @@ class AgoraKaraokeScoreView: UIView {
         scoreArray.removeAll()
     }
 
+    private var pitchIsZeroCount = 0
     public func setVoicePitch(_ voicePitch: [Double]) {
-        calcuSongScore(pitch: voicePitch.last ?? 0)
-        guard voicePitch.reduce(0, +) > 0 else { return }
-        pitchCount += 1
+        let pitch = voicePitch.last ?? 0
+        if pitch == 0 {
+            pitchIsZeroCount += 1
+        }
+        else {
+            pitchIsZeroCount = 0
+        }
+        if pitch > 0 || pitchIsZeroCount >= 8 {
+            pitchIsZeroCount = 0
+            calcuSongScore(pitch: pitch)
+        }
     }
 
     private var preModel: AgoraScoreItemModel?
@@ -223,7 +232,6 @@ class AgoraKaraokeScoreView: UIView {
             var match = 1 - abs(voiceTone - fileTone)/fileTone
             if match < 0 { match = 0 }
             score = match * calcuScore
-            print("score: \(score)")
         }
         
         let y = pitchToY(min: model.pitchMin, max: model.pitchMax, pitch)
@@ -236,6 +244,7 @@ class AgoraKaraokeScoreView: UIView {
         }
         if score >= scoreConfig?.minCalcuScore ?? 40 && pitch > 0 {
             scoreArray.append(score)
+            pitchCount += 1
         }
         preModel = model
     }
@@ -403,6 +412,8 @@ class AgoraKaraokeScoreView: UIView {
         triangleView.widthAnchor.constraint(equalToConstant: 45).isActive = true
         triangleView.heightAnchor.constraint(equalToConstant: 6).isActive = true
 
+        emitterView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        emitterView.widthAnchor.constraint(equalToConstant: 400).isActive = true
         updateUI()
     }
 
