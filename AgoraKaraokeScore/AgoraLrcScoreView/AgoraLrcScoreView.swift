@@ -10,7 +10,7 @@ import UIKit
 @objc(AgoraLrcViewDelegate)
 public
 protocol AgoraLrcViewDelegate {
-    /// 当前播放器的时间 单位: 秒
+    /// 当前播放器的时间 单位: 毫秒
     func getPlayerCurrentTime() -> TimeInterval
     /// 获取歌曲总时长
     func getTotalTime() -> TimeInterval
