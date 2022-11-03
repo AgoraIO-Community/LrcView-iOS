@@ -91,23 +91,20 @@ class ViewController: UIViewController {
 extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraKaraokeScoreDelegate {
     func getPlayerCurrentTime() -> TimeInterval {
         let time = (audioPlayer?.currentTime ?? 0) * 1000
-        print("== getPlayerCurrentTime \(time)")
         return time
     }
     
     func getTotalTime() -> TimeInterval {
         let time = (audioPlayer?.duration ?? 0) * 1000
-        print("== getTotalTime \(time)")
         return time
     }
     
     func seekToTime(time: TimeInterval) {
-        print("== seekToTime \(time/1000)")
         audioPlayer?.currentTime = time / 1000
     }
     
     func agoraWordPitch(pitch: Int, totalCount: Int) {
-        lrcScoreView.setVoicePitch([Double(pitch)])
+        lrcScoreView.setVoicePitch([158.0])
     }
     
     func downloadLrcFinished(url: String) {

@@ -38,6 +38,8 @@ class AgoraScoreItemModel: NSObject {
     var pitch: Double = 0
     var pitchMin: CGFloat = 0
     var pitchMax: CGFloat = 0
+    
+    var word: String = ""
 }
 
 @objcMembers
