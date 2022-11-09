@@ -51,6 +51,7 @@ class AgoraKaraokeScoreCell: UICollectionViewCell {
         guard let model = model else { return }
         let time = (model.endTime - model.startTime).keep2
         label.text = model.word + "\(time)"
+        label.isHidden = true
         scoreModel = model
         scoreConfig = config
         scoreLineView.isHidden = model.isEmptyCell
