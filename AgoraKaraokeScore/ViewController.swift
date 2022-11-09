@@ -15,8 +15,13 @@ class ViewController: UIViewController {
     private var audioPlayer: AVAudioPlayer?
     private let songDownloadManager = SongDownloadManager()
     
-    let lrcUrl = "https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/005.xml"
-    let songUrl = "http://mfile-sg.intviu.cn/0AA037D4AE9715EB0588EFF4D51E1675/mix_v1.mp3"
+//    let lrcUrl = "https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/005.xml"
+    
+    let lrcUrl = "https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/153378.xml"
+    
+//    let songUrl = "http://mfile-sg.intviu.cn/0AA037D4AE9715EB0588EFF4D51E1675/mix_v1.mp3"
+    
+    let songUrl = "https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/65dc0c194ca0e15164738987e5e8459b.mov"
     var lrcDownloadOk = false
     var songDownloadOk = false
     var localSongUrl: URL!
@@ -104,7 +109,7 @@ extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraK
     }
     
     func agoraWordPitch(pitch: Int, totalCount: Int) {
-        lrcScoreView.setVoicePitch([158.0])
+        lrcScoreView.setVoicePitch([Double(pitch)])
     }
     
     func downloadLrcFinished(url: String) {
