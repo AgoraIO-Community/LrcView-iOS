@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2668C3AD28F7EA71009F5084 /* SongDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2668C3AC28F7EA71009F5084 /* SongDownloadManager.swift */; };
+		2668C3B128F7F194009F5084 /* BottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2668C3B028F7F194009F5084 /* BottomView.swift */; };
 		E7499C1E276B0FCF00E799FF /* AgoraLrcScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C1D276B0FCF00E799FF /* AgoraLrcScoreView.swift */; };
 		E7499C22276C766700E799FF /* AgoraEmitterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C21276C766700E799FF /* AgoraEmitterView.swift */; };
 		E7499C24276C9B6F00E799FF /* AgoraLrcConfigModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C23276C9B6F00E799FF /* AgoraLrcConfigModel.swift */; };
@@ -38,6 +40,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2668C3AC28F7EA71009F5084 /* SongDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDownloadManager.swift; sourceTree = "<group>"; };
+		2668C3B028F7F194009F5084 /* BottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomView.swift; sourceTree = "<group>"; };
 		6CCFB5940A66F99EF23C4C2C /* Pods_AgoraKaraokeScore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraKaraokeScore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE72E6063F1521F37D95DA25 /* Pods-AgoraKaraokeScore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraKaraokeScore.debug.xcconfig"; path = "Target Support Files/Pods-AgoraKaraokeScore/Pods-AgoraKaraokeScore.debug.xcconfig"; sourceTree = "<group>"; };
 		E7499C1D276B0FCF00E799FF /* AgoraLrcScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraLrcScoreView.swift; sourceTree = "<group>"; };
@@ -138,6 +142,8 @@
 				E78B5CF12761D6F300579270 /* AppDelegate.swift */,
 				E78B5CF32761D6F300579270 /* SceneDelegate.swift */,
 				E78B5CF52761D6F300579270 /* ViewController.swift */,
+				2668C3B028F7F194009F5084 /* BottomView.swift */,
+				2668C3AC28F7EA71009F5084 /* SongDownloadManager.swift */,
 				E7F9493E277EB44F005C57F1 /* music.mp3 */,
 				E78B5CF72761D6F300579270 /* Main.storyboard */,
 				E78B5CFA2761D6F600579270 /* Assets.xcassets */,
@@ -316,6 +322,7 @@
 				E78B5CF22761D6F300579270 /* AppDelegate.swift in Sources */,
 				E78B5D092761D71400579270 /* AgoraScoreItemModel.swift in Sources */,
 				E78B5D25276301D800579270 /* AgoraMiguXmlLrcParse.swift in Sources */,
+				2668C3AD28F7EA71009F5084 /* SongDownloadManager.swift in Sources */,
 				E78B5D2D276321AF00579270 /* AgoraURLExtention.swift in Sources */,
 				E78B5D2F276321AF00579270 /* AgoraCacheFileHandle.swift in Sources */,
 				E7499C26276C9F8B00E799FF /* AgoraLrcScoreConfigModel.swift in Sources */,
@@ -325,6 +332,7 @@
 				E78B5D1C2762FAA900579270 /* AgoraLrcModel.swift in Sources */,
 				E78B5D1A2762F5A000579270 /* AgoraMusicLrcCell.swift in Sources */,
 				E78B5CF42761D6F300579270 /* SceneDelegate.swift in Sources */,
+				2668C3B128F7F194009F5084 /* BottomView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
