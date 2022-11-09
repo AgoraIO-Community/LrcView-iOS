@@ -22,13 +22,13 @@ enum AgoraKaraokeScoreStatus: Int {
 
 class AgoraScoreItemModel: NSObject {
     /// position
-    var topKM: CGFloat = 0
+    var top: CGFloat = 0
     /// startTime
-    var leftKM: CGFloat = 0
+    var left: CGFloat = 0
     /// endTime-startTime
-    var widthKM: CGFloat = 0
+    var width: CGFloat = 0
     /// 实时绘制的offset
-    var offsetXKM: CGFloat = 0
+    var offsetX: CGFloat = 0
     /// 当前状态
     var status: AgoraKaraokeScoreStatus = .`init`
 
@@ -38,6 +38,8 @@ class AgoraScoreItemModel: NSObject {
     var pitch: Double = 0
     var pitchMin: CGFloat = 0
     var pitchMax: CGFloat = 0
+    
+    var word: String = ""
 }
 
 @objcMembers
@@ -49,7 +51,7 @@ public class AgoraScoreItemConfigModel: NSObject {
     /// 线的高度 默认:10
     public var lineHeight: CGFloat = 10
     /// 线的宽度 默认: 120
-    public var lineWidht: CGFloat = 120
+    public var lineWidth: CGFloat = 120
     /// 默认线的背景色
     public var normalColor: UIColor = .gray
     /// 匹配后线的背景色

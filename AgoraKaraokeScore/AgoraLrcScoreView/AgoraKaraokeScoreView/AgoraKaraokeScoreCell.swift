@@ -18,7 +18,7 @@ class AgoraKaraokeScoreCell: UICollectionViewCell {
         view.layer.masksToBounds = true
         return view
     }()
-
+    private let label = UILabel()
     private var startPoi: CGFloat = 0
     private var scoreModel: AgoraScoreItemModel?
     private var scoreConfig: AgoraScoreItemConfigModel?
@@ -37,24 +37,32 @@ class AgoraKaraokeScoreCell: UICollectionViewCell {
         contentView.backgroundColor = .clear
         backgroundColor = .clear
         contentView.addSubview(scoreLineView)
+        contentView.addSubview(label)
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        label.textColor = .white
     }
 
     func setScore(with model: AgoraScoreItemModel?,
                   config: AgoraScoreItemConfigModel)
     {
         guard let model = model else { return }
+        let time = (model.endTime - model.startTime).keep2
+        label.text = model.word + "\(time)"
         scoreModel = model
         scoreConfig = config
         scoreLineView.isHidden = model.isEmptyCell
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         scoreLineView.frame = CGRect(x: 0,
-                                     y: model.topKM,
-                                     width: model.widthKM,
+                                     y: model.top,
+                                     width: model.width,
                                      height: config.lineHeight)
         scoreLineView.backgroundColor = config.normalColor
         scoreLineView.layer.cornerRadius = config.lineHeight * 0.5
-        keepAddingMaskLayer(offsetX: model.offsetXKM)
+        keepAddingMaskLayer(offsetX: model.offsetX)
         CATransaction.commit()
     }
 
@@ -81,8 +89,8 @@ class AgoraKaraokeScoreCell: UICollectionViewCell {
 
         default: break
         }
-        let layerL = hasLayer ? (startPoi - model.leftKM) : startPoi
-        let layerW = offsetX - (hasLayer ? startPoi : model.leftKM)
+        let layerL = hasLayer ? (startPoi - model.left) : startPoi
+        let layerW = offsetX - (hasLayer ? startPoi : model.left)
         let lineH = scoreConfig?.lineHeight ?? 5
         scoreLayer?.path = UIBezierPath(roundedRect: CGRect(x: layerL,
                                                             y: 0,
@@ -99,5 +107,12 @@ class AgoraKaraokeScoreCell: UICollectionViewCell {
         scoreLayer?.fillColor = scoreConfig?.highlightColor.cgColor
         scoreLayer?.lineCap = .round
         startPoi = offsetX
+    }
+}
+
+extension Double {
+    /// 保留2位小数
+    var keep2: Double {
+        return Double(Darwin.round(self * 100)/100)
     }
 }
