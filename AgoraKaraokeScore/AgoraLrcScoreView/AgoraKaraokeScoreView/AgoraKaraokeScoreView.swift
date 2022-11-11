@@ -215,7 +215,6 @@ class AgoraKaraokeScoreView: UIView {
 
     private var preModel: AgoraScoreItemModel?
     private func calcuSongScore(pitch: Double) {
-        print("pitch: \(pitch), \(currentTime)")
         let time = currentTime * 1000 + 170
         guard let model = dataArray?.first(where: { time >= $0.startTime * 1000 && $0.endTime * 1000 >= time }), model.isEmptyCell == false
         else {
