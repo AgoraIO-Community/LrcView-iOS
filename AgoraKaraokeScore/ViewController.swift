@@ -134,7 +134,12 @@ extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraK
 }
 
 extension ViewController: SongDownloadManagerDelegate {
+    func songDownloadManagerDowning(progress: Double) {
+        print("下载歌曲进度 \(progress)")
+    }
+    
     func songDownloadManagerDidFinished(localUrl: URL) {
+        print("下载歌曲完成！！")
         localSongUrl = localUrl
         initAudioPlayer(url: localUrl)
         songDownloadOk = true
@@ -154,6 +159,7 @@ extension ViewController: BottomViewDelegate {
         case .replay:
             lrcScoreView.stop()
             lrcScoreView.reset()
+            lrcScoreView.resetTime()
             audioPlayer?.stop()
             audioPlayer = nil
             
