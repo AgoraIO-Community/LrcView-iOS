@@ -13,17 +13,9 @@ class ViewController: UIViewController {
     private let bottomView = BottomView()
     private var timer = GCDTimer()
     private var audioPlayer: AVAudioPlayer?
-    private let songDownloadManager = SongDownloadManager()
     
-//    let lrcUrl = "https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/005.xml"
-    
-    let lrcUrl = "https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/153378.xml"
-    
-//    let songUrl = "http://mfile-sg.intviu.cn/0AA037D4AE9715EB0588EFF4D51E1675/mix_v1.mp3"
-    
-    let songUrl = "https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/65dc0c194ca0e15164738987e5e8459b.mov"
-    var lrcDownloadOk = false
-    var songDownloadOk = false
+    let lrcUrl = Bundle.main.path(forResource: "153378", ofType: "xml")!
+    let songUrl = Bundle.main.path(forResource: "music", ofType: "mov")!
     var localSongUrl: URL!
     
     override func viewDidLoad() {
@@ -74,11 +66,10 @@ class ViewController: UIViewController {
         lrcScoreView.downloadDelegate = self
         lrcScoreView.scoreDelegate = self
         lrcScoreView.delegate = self
-        songDownloadManager.delegate = self
         
-        bottomView.startLoading()
-        /// 下载歌曲
-        songDownloadManager.download(urlString: songUrl)
+        localSongUrl = URL(fileURLWithPath: songUrl)
+        initAudioPlayer(url: localSongUrl)
+        bottomView.enablePlay(enable: true)
     }
     
     private func initAudioPlayer(url: URL) {
@@ -109,17 +100,16 @@ extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraK
     }
     
     func agoraWordPitch(pitch: Int, totalCount: Int) {
+        /// 调试用，在真实项目中应该是用rtc相关的回调进行设置
         lrcScoreView.setVoicePitch([Double(pitch)])
     }
     
     func downloadLrcFinished(url: String) {
-        lrcDownloadOk = true
         bottomView.stopLoading()
         lrcScoreView.start()
         audioPlayer?.play()
-//        timer.scheduledMillisecondsTimer(withName: "aaa", countDown: 10000000, milliseconds: 200, queue: .main) { [weak self] _, duration in
-//            self?.setupTimer()
-//        }
+        let position = lrcScoreView.getFirstToneBeginPosition()
+        print("getFirstToneBeginPosition (downloadLrcFinished后) \(position)")
     }
     
     func beginDownloadLrc(url: String) {
@@ -133,28 +123,13 @@ extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraK
     }
 }
 
-extension ViewController: SongDownloadManagerDelegate {
-    func songDownloadManagerDowning(progress: Double) {
-        print("下载歌曲进度 \(progress)")
-    }
-    
-    func songDownloadManagerDidFinished(localUrl: URL) {
-        print("下载歌曲完成！！")
-        localSongUrl = localUrl
-        initAudioPlayer(url: localUrl)
-        songDownloadOk = true
-        bottomView.stopLoading()
-        bottomView.enablePlay(enable: true)
-    }
-}
-
 extension ViewController: BottomViewDelegate {
     func bottomViewDidTap(actionType: BottomView.ActionType) {
         switch actionType {
         case .play:
             lrcScoreView.setLrcUrl(url: lrcUrl)
-//            audioPlayer?.play()
-//            lrcScoreView.start()
+            let position = lrcScoreView.getFirstToneBeginPosition()
+            print("getFirstToneBeginPosition \(position)")
             break
         case .replay:
             lrcScoreView.stop()
@@ -163,12 +138,10 @@ extension ViewController: BottomViewDelegate {
             audioPlayer?.stop()
             audioPlayer = nil
             
-            if songDownloadOk {
-                initAudioPlayer(url: localSongUrl)
-                lrcScoreView.setLrcUrl(url: lrcUrl)
-//                lrcScoreView.start()
-//                audioPlayer?.play()
-            }
+            initAudioPlayer(url: localSongUrl)
+            lrcScoreView.setLrcUrl(url: lrcUrl)
+            break
+        case .skip:
             break
         }
     }
