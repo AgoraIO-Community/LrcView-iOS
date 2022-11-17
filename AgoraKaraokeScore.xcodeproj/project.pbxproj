@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26302146292654FA00EE357B /* 153378.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26302144292654FA00EE357B /* 153378.xml */; };
+		26302147292654FA00EE357B /* music.mov in Resources */ = {isa = PBXBuildFile; fileRef = 26302145292654FA00EE357B /* music.mov */; };
 		2668C3AD28F7EA71009F5084 /* SongDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2668C3AC28F7EA71009F5084 /* SongDownloadManager.swift */; };
 		2668C3B128F7F194009F5084 /* BottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2668C3B028F7F194009F5084 /* BottomView.swift */; };
 		E7499C1E276B0FCF00E799FF /* AgoraLrcScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C1D276B0FCF00E799FF /* AgoraLrcScoreView.swift */; };
@@ -40,6 +42,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		26302144292654FA00EE357B /* 153378.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 153378.xml; sourceTree = "<group>"; };
+		26302145292654FA00EE357B /* music.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = music.mov; sourceTree = "<group>"; };
 		2668C3AC28F7EA71009F5084 /* SongDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDownloadManager.swift; sourceTree = "<group>"; };
 		2668C3B028F7F194009F5084 /* BottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomView.swift; sourceTree = "<group>"; };
 		6CCFB5940A66F99EF23C4C2C /* Pods_AgoraKaraokeScore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraKaraokeScore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,6 +142,8 @@
 		E78B5CF02761D6F300579270 /* AgoraKaraokeScore */ = {
 			isa = PBXGroup;
 			children = (
+				26302144292654FA00EE357B /* 153378.xml */,
+				26302145292654FA00EE357B /* music.mov */,
 				E7499C1C276B0FB200E799FF /* AgoraLrcScoreView */,
 				E78B5CF12761D6F300579270 /* AppDelegate.swift */,
 				E78B5CF32761D6F300579270 /* SceneDelegate.swift */,
@@ -253,6 +259,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7F9493F277EB44F005C57F1 /* music.mp3 in Resources */,
+				26302146292654FA00EE357B /* 153378.xml in Resources */,
+				26302147292654FA00EE357B /* music.mov in Resources */,
 				E78B5CFE2761D6F600579270 /* LaunchScreen.storyboard in Resources */,
 				E78B5CFB2761D6F600579270 /* Assets.xcassets in Resources */,
 				E78B5CF92761D6F300579270 /* Main.storyboard in Resources */,
