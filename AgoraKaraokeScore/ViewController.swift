@@ -170,6 +170,10 @@ extension ViewController: BottomViewDelegate {
 //                audioPlayer?.play()
             }
             break
+        case .skip:
+            audioPlayer?.play(atTime: 10)
+            lrcScoreView.scrollToTime(timestamp: 10)
+            break
         }
     }
 }

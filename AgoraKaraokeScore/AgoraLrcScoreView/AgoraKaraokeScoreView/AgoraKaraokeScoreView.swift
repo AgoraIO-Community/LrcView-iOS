@@ -187,12 +187,17 @@ class AgoraKaraokeScoreView: UIView {
         guard !scoreArray.isEmpty, let dataArray = dataArray, !dataArray.isEmpty else {
             pitchCount = 0
             scoreArray.removeAll()
+            let cumulativeScore = currentScore > totalScore ? totalScore : currentScore
+            delegate?.agoraKaraokeScore?(score: 0,
+                                         cumulativeScore: cumulativeScore,
+                                         totalScore: totalScore)
             return
         }
         let score = scoreArray.reduce(0, +) / Double(pitchCount)
         currentScore += score
+        let cumulativeScore = currentScore > totalScore ? totalScore : currentScore
         delegate?.agoraKaraokeScore?(score: score,
-                                     cumulativeScore: currentScore > totalScore ? totalScore : currentScore,
+                                     cumulativeScore: cumulativeScore,
                                      totalScore: totalScore)
         pitchCount = 0
         scoreArray.removeAll()
@@ -241,7 +246,8 @@ class AgoraKaraokeScoreView: UIView {
             cursorAnimation(y: y, isDraw: false, pitch: pitch)
             triangleView.updateAlpha(at: 0)
         }
-        if score >= scoreConfig?.minCalcuScore ?? 40 && pitch > 0 {
+        let k = scoreConfig?.minCalcuScore ?? 40
+        if score >= k && pitch > 0 {
             scoreArray.append(score)
             pitchCount += 1
         }
