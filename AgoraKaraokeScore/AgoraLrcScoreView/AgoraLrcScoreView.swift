@@ -248,6 +248,15 @@ public class AgoraLrcScoreView: UIView {
         }
     }
 
+    /// 歌曲前奏时间。获取歌曲的第一个字的开始时间（单位：ms）需要在回调 `downloadLrcFinished` 方法后调用此方法
+    /// - Returns: -1, 表示此时不能获取；>=0 有效值
+    public func getFirstToneBeginPosition() -> Double {
+        guard let position = scoreView?.getFirstToneBeginPosition() else {
+            return -1
+        }
+        return position * 1000
+    }
+    
     /// 停止
     public func stop() {
         isStart = false

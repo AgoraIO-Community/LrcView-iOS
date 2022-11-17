@@ -359,6 +359,10 @@ class AgoraKaraokeScoreView: UIView {
         }
         self.dataArray = dataArray
     }
+    
+    func getFirstToneBeginPosition() -> Double? {
+        return dataArray?.first?.endTime
+    }
 
     private func insertStartLrcData(lrcData: [AgoraMiguLrcTone]) -> AgoraScoreItemModel? {
         guard let firstTone = lrcData.first(where: { $0.pitch > 0 }) else { return nil }
