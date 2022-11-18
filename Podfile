@@ -7,5 +7,5 @@ target 'AgoraKaraokeScore' do
   pod 'Zip', '~> 2.1'
 
   # Pods for AgoraKaraokeScore
-
 end
+
