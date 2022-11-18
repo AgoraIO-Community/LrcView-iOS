@@ -177,9 +177,39 @@ code_sign_if_enabled() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Zip/Zip.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraAiNoiseSuppressionExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraAudioBeautyExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraClearVisionExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraContentInspectExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraDav1d.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraDrmLoaderExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/Agorafdkaac.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/Agoraffmpeg.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraPvcExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraReplayKitExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraRtcKit.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraSoundTouch.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraSpatialAudioExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraSuperResolutionExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraVideoSegmentationExtension.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Zip/Zip.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraAiNoiseSuppressionExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraAudioBeautyExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraClearVisionExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraContentInspectExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraDav1d.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraDrmLoaderExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/Agorafdkaac.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/Agoraffmpeg.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraPvcExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraReplayKitExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraRtcKit.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraSoundTouch.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraSpatialAudioExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraSuperResolutionExtension.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/AgoraRtcEngine_iOS_MCC_Special/AgoraVideoSegmentationExtension.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait
