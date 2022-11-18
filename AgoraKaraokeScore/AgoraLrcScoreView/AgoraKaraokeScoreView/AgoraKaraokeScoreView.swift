@@ -162,7 +162,7 @@ public class AgoraKaraokeScoreView: UIView {
         self.totalTime = totalTime
     }
 
-    func start(currentTime: TimeInterval, totalTime: TimeInterval) {
+    func start(currentTime: TimeInterval) {
         self.currentTime = currentTime
         guard currentTime > 0, totalTime > 0 else { return }
         if self.totalTime != totalTime {
@@ -239,7 +239,7 @@ public class AgoraKaraokeScoreView: UIView {
         }
         
         let y = pitchToY(min: model.pitchMin, max: model.pitchMax, pitch)
-        if score >= calcuScore * 0.9, pitch > 0 {
+        if score >= calcuScore * 0.9, pitch > 0 { /** 显示粒子动画 */
             cursorAnimation(y: y, isDraw: true, pitch: pitch)
             triangleView.updateAlpha(at: pitch <= 0 ? 0 : score / calcuScore)
         } else {

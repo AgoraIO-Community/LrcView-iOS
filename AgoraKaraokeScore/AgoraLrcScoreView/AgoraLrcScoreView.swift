@@ -12,8 +12,6 @@ public
 protocol AgoraLrcViewDelegate {
     /// 当前播放器的时间 单位: 毫秒
     func getPlayerCurrentTime() -> TimeInterval
-    /// 获取歌曲总时长
-    func getTotalTime() -> TimeInterval
 
     /// 设置播放器时间
     @objc
@@ -199,10 +197,11 @@ public class AgoraLrcScoreView: UIView {
             }
             if let senences = lryic as? AgoraMiguSongLyric, self.scoreView?.isHidden == false {
                 self.scoreView?.lrcSentence = senences.sentences
+                if let time = senences.sentences.last?.tones.last?.end {
+                    self.scoreView?.setTotalTime(totalTime: time/1000)
+                }
                 self.lrcView?.lrcConfig?.isDrag = false
             }
-            let totalTime = (self.delegate?.getTotalTime() ?? 0) / 1000
-            self.scoreView?.setTotalTime(totalTime: totalTime)
             self.lrcView?.lrcConfig = self.config?.lrcConfig
             self.downloadDelegate?.downloadLrcFinished?(url: url)
         }, failure: {
@@ -225,7 +224,7 @@ public class AgoraLrcScoreView: UIView {
     /// 根据时间滚到指定位置
     public func scrollToTime(timestamp: TimeInterval) {
         lrcView?.scrollToTime(timestamp: timestamp * 1000)
-        scoreView?.start(currentTime: timestamp * 1000, totalTime: totalTime)
+        scoreView?.start(currentTime: timestamp * 1000)
     }
 
     private var preTime: TimeInterval = 0
@@ -238,8 +237,6 @@ public class AgoraLrcScoreView: UIView {
             if duration.truncatingRemainder(dividingBy: 1000) == 0 {
                 let currentTime = (self.delegate?.getPlayerCurrentTime() ?? 0) / 1000
                 self.isStop = currentTime == self.preTime
-                let totalTime = (self.delegate?.getTotalTime() ?? 0) / 1000
-                self.totalTime = self.roundToPlaces(value: totalTime, places: 10)
                 self.currentTime = currentTime
                 self.preTime = currentTime
             }
@@ -282,8 +279,7 @@ public class AgoraLrcScoreView: UIView {
 
     private func timerHandler(time: TimeInterval) {
         lrcView?.start(currentTime: time)
-        scoreView?.start(currentTime: time,
-                         totalTime: totalTime)
+        scoreView?.start(currentTime: time)
     }
 
     private func roundToPlaces(value: Double, places: Int) -> Double {
