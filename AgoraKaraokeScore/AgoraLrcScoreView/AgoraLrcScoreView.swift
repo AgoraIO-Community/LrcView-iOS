@@ -123,7 +123,7 @@ public class AgoraLrcScoreView: UIView {
     }()
 
     private var _scoreView: AgoraKaraokeScoreView?
-    private var scoreView: AgoraKaraokeScoreView? {
+    @objc public var scoreView: AgoraKaraokeScoreView? {
         get {
             guard _scoreView == nil else { return _scoreView }
             _scoreView = AgoraKaraokeScoreView()

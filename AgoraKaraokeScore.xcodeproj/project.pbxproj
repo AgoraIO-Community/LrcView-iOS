@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		26302146292654FA00EE357B /* 153378.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26302144292654FA00EE357B /* 153378.xml */; };
-		26302147292654FA00EE357B /* music.mov in Resources */ = {isa = PBXBuildFile; fileRef = 26302145292654FA00EE357B /* music.mov */; };
 		2668C3AD28F7EA71009F5084 /* SongDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2668C3AC28F7EA71009F5084 /* SongDownloadManager.swift */; };
 		2668C3B128F7F194009F5084 /* BottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2668C3B028F7F194009F5084 /* BottomView.swift */; };
+		26BC82CC292776DC00374BB1 /* 105780.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26BC82CB292776DC00374BB1 /* 105780.xml */; };
+		26BC82D029277C9800374BB1 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 26BC82CF29277C9800374BB1 /* music.mp3 */; };
 		E7499C1E276B0FCF00E799FF /* AgoraLrcScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C1D276B0FCF00E799FF /* AgoraLrcScoreView.swift */; };
 		E7499C22276C766700E799FF /* AgoraEmitterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C21276C766700E799FF /* AgoraEmitterView.swift */; };
 		E7499C24276C9B6F00E799FF /* AgoraLrcConfigModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C23276C9B6F00E799FF /* AgoraLrcConfigModel.swift */; };
@@ -38,14 +38,13 @@
 		E79EB9D1278C399300FE703A /* AgoraLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79EB9D0278C399300FE703A /* AgoraLoadingView.swift */; };
 		E79EB9D3278E814D00FE703A /* AgoraTriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79EB9D2278E814D00FE703A /* AgoraTriangleView.swift */; };
 		E7CD1206A1B46CE4668AE106 /* Pods_AgoraKaraokeScore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCFB5940A66F99EF23C4C2C /* Pods_AgoraKaraokeScore.framework */; };
-		E7F9493F277EB44F005C57F1 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E7F9493E277EB44F005C57F1 /* music.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		26302144292654FA00EE357B /* 153378.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 153378.xml; sourceTree = "<group>"; };
-		26302145292654FA00EE357B /* music.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = music.mov; sourceTree = "<group>"; };
 		2668C3AC28F7EA71009F5084 /* SongDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDownloadManager.swift; sourceTree = "<group>"; };
 		2668C3B028F7F194009F5084 /* BottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomView.swift; sourceTree = "<group>"; };
+		26BC82CB292776DC00374BB1 /* 105780.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 105780.xml; sourceTree = "<group>"; };
+		26BC82CF29277C9800374BB1 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
 		6CCFB5940A66F99EF23C4C2C /* Pods_AgoraKaraokeScore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraKaraokeScore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE72E6063F1521F37D95DA25 /* Pods-AgoraKaraokeScore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraKaraokeScore.debug.xcconfig"; path = "Target Support Files/Pods-AgoraKaraokeScore/Pods-AgoraKaraokeScore.debug.xcconfig"; sourceTree = "<group>"; };
 		E7499C1D276B0FCF00E799FF /* AgoraLrcScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraLrcScoreView.swift; sourceTree = "<group>"; };
@@ -76,7 +75,6 @@
 		E79EB9CE278C1A6900FE703A /* AgoraLrcParse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraLrcParse.swift; sourceTree = "<group>"; };
 		E79EB9D0278C399300FE703A /* AgoraLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraLoadingView.swift; sourceTree = "<group>"; };
 		E79EB9D2278E814D00FE703A /* AgoraTriangleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraTriangleView.swift; sourceTree = "<group>"; };
-		E7F9493E277EB44F005C57F1 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
 		F51EAA9C33D7C3AB3BB8D299 /* Pods-AgoraKaraokeScore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraKaraokeScore.release.xcconfig"; path = "Target Support Files/Pods-AgoraKaraokeScore/Pods-AgoraKaraokeScore.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -142,15 +140,14 @@
 		E78B5CF02761D6F300579270 /* AgoraKaraokeScore */ = {
 			isa = PBXGroup;
 			children = (
-				26302144292654FA00EE357B /* 153378.xml */,
-				26302145292654FA00EE357B /* music.mov */,
+				26BC82CB292776DC00374BB1 /* 105780.xml */,
+				26BC82CF29277C9800374BB1 /* music.mp3 */,
 				E7499C1C276B0FB200E799FF /* AgoraLrcScoreView */,
 				E78B5CF12761D6F300579270 /* AppDelegate.swift */,
 				E78B5CF32761D6F300579270 /* SceneDelegate.swift */,
 				E78B5CF52761D6F300579270 /* ViewController.swift */,
 				2668C3B028F7F194009F5084 /* BottomView.swift */,
 				2668C3AC28F7EA71009F5084 /* SongDownloadManager.swift */,
-				E7F9493E277EB44F005C57F1 /* music.mp3 */,
 				E78B5CF72761D6F300579270 /* Main.storyboard */,
 				E78B5CFA2761D6F600579270 /* Assets.xcassets */,
 				E78B5CFC2761D6F600579270 /* LaunchScreen.storyboard */,
@@ -258,9 +255,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7F9493F277EB44F005C57F1 /* music.mp3 in Resources */,
-				26302146292654FA00EE357B /* 153378.xml in Resources */,
-				26302147292654FA00EE357B /* music.mov in Resources */,
+				26BC82D029277C9800374BB1 /* music.mp3 in Resources */,
+				26BC82CC292776DC00374BB1 /* 105780.xml in Resources */,
 				E78B5CFE2761D6F600579270 /* LaunchScreen.storyboard in Resources */,
 				E78B5CFB2761D6F600579270 /* Assets.xcassets in Resources */,
 				E78B5CF92761D6F300579270 /* Main.storyboard in Resources */,

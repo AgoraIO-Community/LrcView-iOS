@@ -13,9 +13,10 @@ class ViewController: UIViewController {
     private let bottomView = BottomView()
     private var timer = GCDTimer()
     private var audioPlayer: AVAudioPlayer?
+    let songDown = SongDownloadManager()
     
-    let lrcUrl = Bundle.main.path(forResource: "153378", ofType: "xml")!
-    let songUrl = Bundle.main.path(forResource: "music", ofType: "mov")!
+    let lrcUrl = Bundle.main.path(forResource: "105780", ofType: "xml")!
+    let songUrl = Bundle.main.path(forResource: "music", ofType: "mp3")!
     var localSongUrl: URL!
     
     override func viewDidLoad() {
@@ -66,14 +67,18 @@ class ViewController: UIViewController {
         lrcScoreView.downloadDelegate = self
         lrcScoreView.scoreDelegate = self
         lrcScoreView.delegate = self
+        songDown.delegate = self
         
-        localSongUrl = URL(fileURLWithPath: songUrl)
-        initAudioPlayer(url: localSongUrl)
-        bottomView.enablePlay(enable: true)
+        songDown.download(urlString: "https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/privacy/music.mp3")
     }
     
     private func initAudioPlayer(url: URL) {
-        audioPlayer = try? AVAudioPlayer(contentsOf: url)
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+        } catch let error {
+            print("\(error)")
+            print("")
+        }
         audioPlayer?.rate = 1.0
         audioPlayer?.prepareToPlay()
     }
@@ -107,7 +112,8 @@ extension ViewController: AgoraLrcViewDelegate, AgoraLrcDownloadDelegate, AgoraK
     func downloadLrcFinished(url: String) {
         bottomView.stopLoading()
         lrcScoreView.start()
-        audioPlayer?.play()
+        let ret = audioPlayer!.play()
+        print("play ret \(ret)")
         let position = lrcScoreView.getFirstToneBeginPosition()
         print("getFirstToneBeginPosition (downloadLrcFinished后) \(position)")
     }
@@ -147,3 +153,11 @@ extension ViewController: BottomViewDelegate {
     }
 }
 
+
+extension ViewController: SongDownloadManagerDelegate {
+    func songDownloadManagerDidFinished(localUrl: URL) {
+        localSongUrl = localUrl
+        initAudioPlayer(url: localSongUrl)
+        bottomView.enablePlay(enable: true)
+    }
+}

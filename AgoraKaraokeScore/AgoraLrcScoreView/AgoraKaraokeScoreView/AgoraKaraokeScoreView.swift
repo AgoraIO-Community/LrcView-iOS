@@ -19,7 +19,7 @@ protocol AgoraKaraokeScoreDelegate {
 }
 
 @objcMembers
-class AgoraKaraokeScoreView: UIView {
+public class AgoraKaraokeScoreView: UIView {
     // MARK: 公开属性
 
     public weak var delegate: AgoraKaraokeScoreDelegate?
@@ -79,7 +79,7 @@ class AgoraKaraokeScoreView: UIView {
         return collectionView
     }()
 
-    private lazy var separatorVerticalLine: UIView = {
+    @objc public lazy var separatorVerticalLine: UIView = {
         let view = UIView()
         view.backgroundColor = .systemPink
         return view
@@ -97,7 +97,7 @@ class AgoraKaraokeScoreView: UIView {
         return view
     }()
 
-    private lazy var cursorView: UIView = {
+    @objc public lazy var cursorView: UIView = {
         let view = UIView()
         view.backgroundColor = .red
         view.layer.masksToBounds = true
@@ -474,11 +474,11 @@ class AgoraKaraokeScoreView: UIView {
 }
 
 extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
+    public func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
         dataArray?.count ?? 0
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AgoraKaraokeScoreCell",
                                                       for: indexPath) as! AgoraKaraokeScoreCell
         let model = dataArray?[indexPath.item]
@@ -486,24 +486,24 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
         return cell
     }
 
-    func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: dataArray?[indexPath.item].width ?? 0,
                height: _scoreConfig.scoreViewHeight)
     }
 
-    func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, minimumLineSpacingForSectionAt _: Int) -> CGFloat {
+    public func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, minimumLineSpacingForSectionAt _: Int) -> CGFloat {
         0
     }
 
-    func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, minimumInteritemSpacingForSectionAt _: Int) -> CGFloat {
+    public func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, minimumInteritemSpacingForSectionAt _: Int) -> CGFloat {
         0
     }
 
-    func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, insetForSectionAt _: Int) -> UIEdgeInsets {
+    public func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, insetForSectionAt _: Int) -> UIEdgeInsets {
         UIEdgeInsets(top: 0, left: _scoreConfig.innerMargin, bottom: 0, right: frame.width - _scoreConfig.innerMargin)
     }
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let dataArray = dataArray else { return }
 
         let moveX = scrollView.contentOffset.x
