@@ -16,6 +16,7 @@ class AgoraLrcView: UIView {
     var currentWordPitchClosure: ((Int, Int) -> Void)?
     /// 当前行结束回调
     var currentLineEndsClosure: (() -> Void)?
+    let logTag = "AgoraLrcView"
 
     private var _lrcConfig: AgoraLrcConfigModel = .init() {
         didSet {
@@ -45,6 +46,7 @@ class AgoraLrcView: UIView {
     var lrcDatas: [AgoraLrcModel]? {
         didSet {
             dataArray = lrcDatas
+            Log.info(text: "lrcDatas.count = \(lrcDatas?.count ?? 0)", tag: logTag)
             guard let data = lrcDatas, !data.isEmpty else { return }
             _lrcConfig.lrcHighlightColor = .clear
         }
@@ -70,8 +72,14 @@ class AgoraLrcView: UIView {
         didSet {
             if scrollRow == oldValue || scrollRow < 0 { return }
             if preRow > -1 && (dataArray?.count ?? 0) > 0 {
-                UIView.performWithoutAnimation {
-                    tableView.reloadRows(at: [IndexPath(row: preRow, section: 0)], with: .fade)
+                if preRow < (dataArray?.count ?? 0) {
+                    UIView.performWithoutAnimation {
+                        tableView.reloadRows(at: [IndexPath(row: preRow, section: 0)], with: .fade)
+                    }
+                }
+                else {
+                    Log.errorText(text: "should reset preRow:\(preRow) count\((dataArray?.count ?? 0))",
+                                  tag: logTag)
                 }
             }
             let indexPath = IndexPath(row: scrollRow, section: 0)

@@ -166,9 +166,11 @@ public class AgoraLrcScoreView: UIView {
     private var scoreViewHCons: NSLayoutConstraint?
     private var currentTime: TimeInterval = 0
     private var totalTime: TimeInterval = 0
-
+    let logTag = "AgoraLrcView"
+    
     public init(delegate: AgoraLrcViewDelegate) {
         super.init(frame: .zero)
+        Log.info(text: "init == ", tag: logTag)
         setupUI()
         self.delegate = delegate
     }
@@ -186,6 +188,7 @@ public class AgoraLrcScoreView: UIView {
 
     /// 歌词的URL
     public func setLrcUrl(url: String) {
+        Log.info(text: "setLrcUrl", tag: logTag)
         AgoraDownLoadManager.manager.downloadLrcFile(urlString: url, completion: { lryic in
             self.scoreView?.isHidden = self._config.isHiddenScoreView || lryic is [AgoraLrcModel]
             self.config?.lrcConfig?.isHiddenWatitingView = self.isHiddenWatitingView
@@ -222,15 +225,18 @@ public class AgoraLrcScoreView: UIView {
     }
 
     /// 根据时间滚到指定位置
+    /// - Parameter timestamp: position, ms
     public func scrollToTime(timestamp: TimeInterval) {
-        lrcView?.scrollToTime(timestamp: timestamp * 1000)
-        scoreView?.start(currentTime: timestamp * 1000)
+        Log.info(text: "scrollToTime \(timestamp)", tag: logTag)
+        lrcView?.scrollToTime(timestamp: timestamp)
+        scoreView?.start(currentTime: timestamp)
     }
 
     private var preTime: TimeInterval = 0
     private var isStop: Bool = false
     /// 开始滚动
     public func start() {
+        Log.info(text: "start", tag: logTag)
         isStart = true
         timer.scheduledMillisecondsTimer(withName: "lrc", countDown: 1000 * 60 * 30, milliseconds: 10, queue: .main) { [weak self] _, duration in
             guard let self = self else { return }
@@ -256,11 +262,13 @@ public class AgoraLrcScoreView: UIView {
     
     /// 停止
     public func stop() {
+        Log.info(text: "stop", tag: logTag)
         isStart = false
         timer.destoryAllTimer()
     }
 
     public func reset() {
+        Log.info(text: "reset", tag: logTag)
         resetTime()
         stop()
         scoreView?.reset()
@@ -268,6 +276,7 @@ public class AgoraLrcScoreView: UIView {
     }
 
     public func resetTime() {
+        Log.info(text: "resetTime", tag: logTag)
         preTime = 0
         currentTime = 0
     }

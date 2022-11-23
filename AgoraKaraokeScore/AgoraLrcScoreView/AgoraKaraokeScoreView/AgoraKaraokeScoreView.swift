@@ -125,7 +125,7 @@ public class AgoraKaraokeScoreView: UIView {
     private var isInsertEnd: Bool = false
     private var pitchCount: Int = 0
     private var scoreArray: [Double] = []
-
+    let logTag = "AgoraKaraokeScoreView"
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -196,6 +196,9 @@ public class AgoraKaraokeScoreView: UIView {
         let score = scoreArray.reduce(0, +) / Double(pitchCount)
         currentScore += score
         let cumulativeScore = currentScore > totalScore ? totalScore : currentScore
+        if score > (scoreConfig?.lineCalcuScore ?? 100) {
+            Log.info(text: "score \(score)", tag: logTag)
+        }
         delegate?.agoraKaraokeScore?(score: score,
                                      cumulativeScore: cumulativeScore,
                                      totalScore: totalScore)
