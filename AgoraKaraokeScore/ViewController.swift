@@ -43,6 +43,8 @@ class ViewController: UIViewController {
         lrcConfig.lrcHighlightFontSize = .systemFont(ofSize: 18)
         lrcConfig.lrcTopAndBottomMargin = 10
         lrcConfig.tipsColor = .white
+        lrcConfig.isHiddenSeparator = false
+        lrcConfig.separatorLineColor = .yellow
         config.lrcConfig = lrcConfig
         lrcScoreView.config = config
         
