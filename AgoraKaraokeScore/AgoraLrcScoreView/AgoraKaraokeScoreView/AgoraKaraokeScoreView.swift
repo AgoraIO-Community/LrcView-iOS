@@ -198,7 +198,7 @@ public class AgoraKaraokeScoreView: UIView {
         currentScore += score
         let cumulativeScore = currentScore > totalScore ? totalScore : currentScore
         if score > (scoreConfig?.lineCalcuScore ?? 100) {
-            Log.info(text: "score \(score)", tag: logTag)
+            Log.info(text: "score outbounds: \(score) scoreArray:\(scoreArray) pitchCount:\(pitchCount)", tag: logTag)
         }
         delegate?.agoraKaraokeScore?(score: score,
                                      cumulativeScore: cumulativeScore,
@@ -210,6 +210,7 @@ public class AgoraKaraokeScoreView: UIView {
     private var pitchIsZeroCount = 0
     public func setVoicePitch(_ voicePitch: [Double]) {
         let pitch = voicePitch.last ?? 0
+        Log.info(text: "setVoicePitch \(pitch)", tag: logTag)
         if pitch == 0 {
             pitchIsZeroCount += 1
         }
@@ -223,7 +224,7 @@ public class AgoraKaraokeScoreView: UIView {
     }
 
     private var preModel: AgoraScoreItemModel?
-    private var voicePitchChanger: VoicePitchChanger? = VoicePitchChanger()
+    private var voicePitchChanger: VoicePitchChanger? = nil
     private func calcuSongScore(pitch: Double) {
         let time = currentTime * 1000 + 170
         guard let model = dataArray?.first(where: { time >= $0.startTime * 1000 && $0.endTime * 1000 >= time }), model.isEmptyCell == false
@@ -243,16 +244,18 @@ public class AgoraKaraokeScoreView: UIView {
             let fileTone = pitchToTone(pitch: model.pitch)
             let voiceTone = pitchToTone(pitch: voicePitch)
             var match = 1 - abs(voiceTone - fileTone)/fileTone
+            Log.info(text: "match \(match) stand: \(model.pitch) voice: \(pitch)", tag: logTag)
             if match < 0 { match = 0 }
             score = match * calcuScore
         }
         
         let y = pitchToY(min: model.pitchMin, max: model.pitchMax, voicePitch)
         if score >= calcuScore * 0.9, voicePitch > 0 { /** 显示粒子动画 */
-            cursorAnimation(y: y, isDraw: true, pitch: voicePitch)
+            Log.info(text: "show Animation \(score) y: \(y)", tag: logTag)
+            cursorAnimation(y: y, isDraw: true, pitch: voicePitch, word: model.word, standarPitch: model.pitch)
             triangleView.updateAlpha(at: voicePitch <= 0 ? 0 : score / calcuScore)
         } else {
-            cursorAnimation(y: y, isDraw: false, pitch: voicePitch)
+            cursorAnimation(y: y, isDraw: false, pitch: voicePitch, word: model.word, standarPitch: model.pitch)
             triangleView.updateAlpha(at: 0)
         }
         let k = scoreConfig?.minCalcuScore ?? 40
@@ -271,7 +274,9 @@ public class AgoraKaraokeScoreView: UIView {
     var lastConstant: CGFloat = 0
     private func cursorAnimation(y: CGFloat,
                                  isDraw: Bool,
-                                 pitch: Double) {
+                                 pitch: Double,
+                                 word: String,
+                                 standarPitch: Double) {
         let contantMax = _scoreConfig.scoreViewHeight - _scoreConfig.cursorHeight * 0.5
         var constant = y - _scoreConfig.cursorHeight * 0.5
         let durrtion: TimeInterval = 0.08
@@ -283,6 +288,7 @@ public class AgoraKaraokeScoreView: UIView {
             if isDraw {
                 isDrawingCell = true
             }
+            Log.info(text: "=> \(word) \(pitch) \(standarPitch) fast down \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
             UIView.animate(withDuration: durrtion, delay: 0, options:[]) {
                 self.layoutIfNeeded()
             } completion: { _ in
@@ -297,11 +303,14 @@ public class AgoraKaraokeScoreView: UIView {
             if isDraw {
                 isDrawingCell = true
             }
-            UIView.animate(withDuration: durrtion, delay: 0, options:[.curveEaseIn]) {
-                self.layoutIfNeeded()
-            } completion: { _ in
-                self.isDrawingCell = isDraw
-            }
+            self.layoutIfNeeded()
+            self.isDrawingCell = isDraw
+//            UIView.animate(withDuration: durrtion, delay: 0, options:[.curveEaseIn]) {
+//
+//            } completion: { _ in
+//
+//            }
+            Log.info(text: "=> \(word) \(pitch) \(standarPitch)  change \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
         }
         lastConstant = constant
     }
