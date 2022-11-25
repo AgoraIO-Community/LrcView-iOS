@@ -146,6 +146,7 @@ public class AgoraKaraokeScoreView: UIView {
         scoreArray.removeAll()
         dataArray = []
         collectionView.reloadData()
+        voicePitchChanger?.reset()
     }
     
     func setTotalTime(totalTime: TimeInterval) {
@@ -222,6 +223,7 @@ public class AgoraKaraokeScoreView: UIView {
     }
 
     private var preModel: AgoraScoreItemModel?
+    private var voicePitchChanger: VoicePitchChanger? = VoicePitchChanger()
     private func calcuSongScore(pitch: Double) {
         let time = currentTime * 1000 + 170
         guard let model = dataArray?.first(where: { time >= $0.startTime * 1000 && $0.endTime * 1000 >= time }), model.isEmptyCell == false
@@ -231,26 +233,30 @@ public class AgoraKaraokeScoreView: UIView {
             return
         }
         
+        let voicePitch = voicePitchChanger?.handlePitch(wordPitch: model.pitch,
+                                                        voicePitch: pitch,
+                                                        wordMaxPitch: model.pitchMax) ?? pitch
+        Log.info(text: "pitch: \(pitch) after voicePitch: \(voicePitch) ", tag: logTag)
         let calcuScore = scoreConfig?.lineCalcuScore ?? 100
         var score: Double = 0
-        if pitch >= model.pitchMin, pitch <= model.pitchMax {
+        if voicePitch >= model.pitchMin, voicePitch <= model.pitchMax {
             let fileTone = pitchToTone(pitch: model.pitch)
-            let voiceTone = pitchToTone(pitch: pitch)
+            let voiceTone = pitchToTone(pitch: voicePitch)
             var match = 1 - abs(voiceTone - fileTone)/fileTone
             if match < 0 { match = 0 }
             score = match * calcuScore
         }
         
-        let y = pitchToY(min: model.pitchMin, max: model.pitchMax, pitch)
-        if score >= calcuScore * 0.9, pitch > 0 { /** 显示粒子动画 */
-            cursorAnimation(y: y, isDraw: true, pitch: pitch)
-            triangleView.updateAlpha(at: pitch <= 0 ? 0 : score / calcuScore)
+        let y = pitchToY(min: model.pitchMin, max: model.pitchMax, voicePitch)
+        if score >= calcuScore * 0.9, voicePitch > 0 { /** 显示粒子动画 */
+            cursorAnimation(y: y, isDraw: true, pitch: voicePitch)
+            triangleView.updateAlpha(at: voicePitch <= 0 ? 0 : score / calcuScore)
         } else {
-            cursorAnimation(y: y, isDraw: false, pitch: pitch)
+            cursorAnimation(y: y, isDraw: false, pitch: voicePitch)
             triangleView.updateAlpha(at: 0)
         }
         let k = scoreConfig?.minCalcuScore ?? 40
-        if score >= k && pitch > 0 {
+        if score >= k && voicePitch > 0 {
             scoreArray.append(score)
             pitchCount += 1
         }
