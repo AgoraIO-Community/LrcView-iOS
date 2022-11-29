@@ -22,6 +22,8 @@ protocol AgoraLrcViewDelegate {
     /// 歌词pitch回调
     @objc
     optional func agoraWordPitch(pitch: Int, totalCount: Int)
+    
+    @objc optional func getPitch() -> Double
 }
 
 @objc(AgoraLrcDownloadDelegate)
@@ -55,8 +57,8 @@ public class AgoraLrcScoreView: UIView {
     /// 配置
     private var _config: AgoraLrcScoreConfigModel = .init() {
         didSet {
-            scoreView?.isHidden = _config.isHiddenScoreView
             scoreView?.scoreConfig = _config.scoreConfig
+            scoreView?.isHidden = _config.isHiddenScoreView
             lrcView?.lrcConfig = _config.lrcConfig
             statckView.spacing = _config.spacing
             isHiddenWatitingView = _config.lrcConfig?.isHiddenWatitingView ?? false
@@ -245,6 +247,11 @@ public class AgoraLrcScoreView: UIView {
                 self.isStop = currentTime == self.preTime
                 self.currentTime = currentTime
                 self.preTime = currentTime
+            }
+            if duration.truncatingRemainder(dividingBy: 50) == 0 {
+                if let pitch = self.delegate?.getPitch?(), pitch >= 0.0 {
+                    self.setVoicePitch([pitch])
+                }
             }
             guard self.isStop == false else { return }
             self.startMillisecondsHandler()
