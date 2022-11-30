@@ -285,14 +285,14 @@ public class AgoraKaraokeScoreView: UIView {
                                  word: String,
                                  standarPitch: Double,
                                  time: Double) {
-        let contantMax = _scoreConfig.scoreViewHeight - _scoreConfig.cursorHeight * 0.5
+        let contantMax = _scoreConfig.scoreViewHeight - _scoreConfig.cursorHeight
         var constant = y - _scoreConfig.cursorHeight * 0.5
-        let durrtion: TimeInterval = 0.08
 
         if pitch == 0.0, lastConstant != 0 { /** 为0的情况 快速下降，进行缓降处理 **/
 //            constant = min(lastConstant + 0.33 * contantMax, contantMax)
             let debugText = "\(word)\n pitch：\(pitch.keep2)\n standarPitch： \(standarPitch.keep2)\n time: \(time)"
             delegate?.debugText?(text: debugText)
+            constant = min(constant, contantMax)
             cursorTopCons?.constant = constant
             cursorTopCons?.isActive = true
             if isDraw {
@@ -325,6 +325,9 @@ public class AgoraKaraokeScoreView: UIView {
             Log.info(text: "=> \(word) \(pitch) \(standarPitch)  change \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
         }
         lastConstant = constant
+        if constant > 80 {
+            print("constant： \(constant)")
+        }
     }
     
     private func updateDraw() {
@@ -363,29 +366,34 @@ public class AgoraKaraokeScoreView: UIView {
         let pitchMin = CGFloat(tones.sorted(by: { $0.pitch < $1.pitch }).first?.pitch ?? 0) - 50
         let pitchMax = CGFloat(tones.sorted(by: { $0.pitch > $1.pitch }).first?.pitch ?? 0) + 50
         
-        for i in 0 ..< tones.count {
-            let tone = tones[i]
-            let model = AgoraScoreItemModel()
-            let startTime = tone.begin / 1000
-            let endTime = tone.end / 1000
-            if preEndTime > 0, preEndTime != startTime {
-                let model = insertMiddelLrcData(startTime: startTime,
-                                                endTime: preEndTime)
+        for sentence in lrcData {
+            var indexOfToneInSentence = 0
+            for tone in sentence.tones {
+                let model = AgoraScoreItemModel()
+                model.indexOfToneInSentence = indexOfToneInSentence
+                let startTime = tone.begin / 1000
+                let endTime = tone.end / 1000
+                if preEndTime > 0, preEndTime != startTime {
+                    let model = insertMiddelLrcData(startTime: startTime,
+                                                    endTime: preEndTime)
+                    model.left = dataArray.map { $0.width }.reduce(0, +)
+                    dataArray.append(model)
+                }
+                model.word = tone.word
+                model.startTime = roundToPlaces(value: startTime, places: decimalCount)
+                model.endTime = roundToPlaces(value: endTime, places: decimalCount)
+                model.pitch = Double(tone.pitch)
+                model.width = calcuToWidth(time: endTime - startTime)
                 model.left = dataArray.map { $0.width }.reduce(0, +)
+                model.pitchMin = pitchMin
+                model.pitchMax = pitchMax
+                model.top = pitchToY(min: model.pitchMin, max: model.pitchMax, CGFloat(tone.pitch))
+                
+                preEndTime = endTime
                 dataArray.append(model)
+                
+                indexOfToneInSentence += 1
             }
-            model.word = tone.word
-            model.startTime = roundToPlaces(value: startTime, places: decimalCount)
-            model.endTime = roundToPlaces(value: endTime, places: decimalCount)
-            model.pitch = Double(tone.pitch)
-            model.width = calcuToWidth(time: endTime - startTime)
-            model.left = dataArray.map { $0.width }.reduce(0, +)
-            model.pitchMin = pitchMin
-            model.pitchMax = pitchMax
-            model.top = pitchToY(min: model.pitchMin, max: model.pitchMax, CGFloat(tone.pitch))
-            
-            preEndTime = endTime
-            dataArray.append(model)
         }
         self.dataArray = dataArray
     }
@@ -555,6 +563,11 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
             let indexPath = IndexPath(item: i, section: 0)
             let cell = collectionView.cellForItem(at: indexPath) as? AgoraKaraokeScoreCell
             if model.left < moveX, moveX < model.left + model.width {
+                if model.indexOfToneInSentence == 1 { /** 一句话的第二个字 **/
+                    drawFirstToneInSentence(model: model,
+                                            currentIndex: i,
+                                            dataArray: dataArray)
+                }
                 model.offsetX = moveX
                 model.status = status
             } else if model.left + model.width <= moveX {
@@ -564,5 +577,30 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
             }
             cell?.setScore(with: model, config: _scoreConfig)
         }
+    }
+    
+    private func drawFirstToneInSentence(model: AgoraScoreItemModel,
+                                         currentIndex: Int,
+                                         dataArray: [AgoraScoreItemModel]) {
+        let lastIndex = currentIndex - 1
+        guard lastIndex >= 0  else {
+            return
+        }
+        
+        let lastModel = dataArray[lastIndex]
+        guard !lastModel.isEmptyCell else {
+            return
+        }
+        
+        guard lastModel.offsetX > 0 else {
+            return
+        }
+        
+        let moveX = lastModel.left + 0.1
+        lastModel.offsetX = moveX
+        lastModel.status = .new_layer
+        let indexPath = IndexPath(item: lastIndex, section: 0)
+        let cell = collectionView.cellForItem(at: indexPath) as? AgoraKaraokeScoreCell
+        cell?.setScore(with: lastModel, config: _scoreConfig)
     }
 }
