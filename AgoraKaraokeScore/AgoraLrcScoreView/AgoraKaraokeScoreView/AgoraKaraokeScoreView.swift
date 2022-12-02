@@ -299,11 +299,11 @@ public class AgoraKaraokeScoreView: UIView {
                 isDrawingCell = true
             }
             Log.info(text: "=> \(word) \(pitch) \(standarPitch) fast down \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
-//            UIView.animate(withDuration: durrtion, delay: 0, options:[]) {
+            UIView.animate(withDuration: 0.18, delay: 0, options:[.curveEaseOut]) {
                 self.layoutIfNeeded()
-//            } completion: { _ in
+            } completion: { _ in
                 self.isDrawingCell = isDraw
-//            }
+            }
         }
         else { /** 上升、不变、慢速下降 **/
             constant = min(constant, contantMax)
@@ -317,11 +317,6 @@ public class AgoraKaraokeScoreView: UIView {
             }
             self.layoutIfNeeded()
             self.isDrawingCell = isDraw
-//            UIView.animate(withDuration: durrtion, delay: 0, options:[.curveEaseIn]) {
-//
-//            } completion: { _ in
-//
-//            }
             Log.info(text: "=> \(word) \(pitch) \(standarPitch)  change \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
         }
         lastConstant = constant
@@ -563,9 +558,8 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
             let indexPath = IndexPath(item: i, section: 0)
             let cell = collectionView.cellForItem(at: indexPath) as? AgoraKaraokeScoreCell
             if model.left < moveX, moveX < model.left + model.width {
-                if model.indexOfToneInSentence == 1 { /** 一句话的第二个字 **/
-                    drawFirstToneInSentence(model: model,
-                                            currentIndex: i,
+                if model.indexOfToneInSentence == 1, status == .drawing { /** 一句话的第二个字 **/
+                    drawFirstToneInSentence(currentIndex: i,
                                             dataArray: dataArray)
                 }
                 model.offsetX = moveX
@@ -579,8 +573,7 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
-    private func drawFirstToneInSentence(model: AgoraScoreItemModel,
-                                         currentIndex: Int,
+    private func drawFirstToneInSentence(currentIndex: Int,
                                          dataArray: [AgoraScoreItemModel]) {
         let lastIndex = currentIndex - 1
         guard lastIndex >= 0  else {
@@ -592,15 +585,11 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
             return
         }
         
-        guard lastModel.offsetX > 0 else {
-            return
-        }
-        
-        let moveX = lastModel.left + 0.1
+        let moveX = lastModel.left + lastModel.width - 0.0001
         lastModel.offsetX = moveX
-        lastModel.status = .new_layer
+        lastModel.status = .drawing
         let indexPath = IndexPath(item: lastIndex, section: 0)
         let cell = collectionView.cellForItem(at: indexPath) as? AgoraKaraokeScoreCell
-        cell?.setScore(with: lastModel, config: _scoreConfig)
+        cell?.setHit()
     }
 }

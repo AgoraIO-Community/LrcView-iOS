@@ -22,6 +22,7 @@ class AgoraKaraokeScoreCell: UICollectionViewCell {
     private var startPoi: CGFloat = 0
     private var scoreModel: AgoraScoreItemModel?
     private var scoreConfig: AgoraScoreItemConfigModel?
+    private var isAutoHit = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,6 +32,12 @@ class AgoraKaraokeScoreCell: UICollectionViewCell {
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        startPoi = 0
+        isAutoHit = false
     }
 
     private func setupUI() {
@@ -55,6 +62,9 @@ class AgoraKaraokeScoreCell: UICollectionViewCell {
         scoreModel = model
         scoreConfig = config
         scoreLineView.isHidden = model.isEmptyCell
+        if isAutoHit {
+            return
+        }
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         scoreLineView.frame = CGRect(x: 0,
@@ -90,6 +100,9 @@ class AgoraKaraokeScoreCell: UICollectionViewCell {
 
         default: break
         }
+        if isAutoHit {
+            return
+        }
         let layerL = hasLayer ? (startPoi - model.left) : startPoi
         let layerW = offsetX - (hasLayer ? startPoi : model.left)
         let lineH = scoreConfig?.lineHeight ?? 5
@@ -108,6 +121,11 @@ class AgoraKaraokeScoreCell: UICollectionViewCell {
         scoreLayer?.fillColor = scoreConfig?.highlightColor.cgColor
         scoreLayer?.lineCap = .round
         startPoi = offsetX
+    }
+    
+    func setHit() {
+        isAutoHit = true
+        scoreLineView.backgroundColor = scoreConfig?.highlightColor
     }
 }
 

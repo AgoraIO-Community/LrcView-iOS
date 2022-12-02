@@ -40,6 +40,7 @@ class AgoraScoreItemModel: NSObject {
     var pitchMax: CGFloat = 0
     
     var word: String = ""
+    /// 当前在句子中的索引
     var indexOfToneInSentence = 0
 }
 

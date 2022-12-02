@@ -22,8 +22,6 @@ protocol AgoraLrcViewDelegate {
     /// 歌词pitch回调
     @objc
     optional func agoraWordPitch(pitch: Int, totalCount: Int)
-    
-    @objc optional func getPitch() -> Double
 }
 
 @objc(AgoraLrcDownloadDelegate)
@@ -215,8 +213,13 @@ public class AgoraLrcScoreView: UIView {
         })
     }
 
+    var lastVoicePitch: [Double]?
     /// 实时声音数据
     public func setVoicePitch(_ voicePitch: [Double]) {
+        lastVoicePitch = voicePitch
+    }
+    
+    func setVoicePitchInternal(_ voicePitch: [Double]) {
         scoreView?.setVoicePitch(voicePitch)
     }
 
@@ -243,14 +246,18 @@ public class AgoraLrcScoreView: UIView {
         timer.scheduledMillisecondsTimer(withName: "lrc", countDown: 1000 * 60 * 30, milliseconds: 10, queue: .main) { [weak self] _, duration in
             guard let self = self else { return }
             if duration.truncatingRemainder(dividingBy: 1000) == 0 {
-                let currentTime = (self.delegate?.getPlayerCurrentTime() ?? 0) / 1000
+                var time = self.delegate?.getPlayerCurrentTime() ?? 0
+                if time > 250 {
+                    time -= 250
+                }
+                let currentTime = time / 1000
                 self.isStop = currentTime == self.preTime
                 self.currentTime = currentTime
                 self.preTime = currentTime
             }
             if duration.truncatingRemainder(dividingBy: 50) == 0 {
-                if let pitch = self.delegate?.getPitch?(), pitch >= 0.0 {
-                    self.setVoicePitch([pitch])
+                if let voicePitch = self.lastVoicePitch {
+                    self.setVoicePitchInternal(voicePitch)
                 }
             }
             guard self.isStop == false else { return }
@@ -286,6 +293,11 @@ public class AgoraLrcScoreView: UIView {
         Log.info(text: "resetTime", tag: logTag)
         preTime = 0
         currentTime = 0
+    }
+    
+    /// 清理歌词缓存
+    public static func clearCache() {
+        let _ = AgoraCacheFileHandle.clearCache()
     }
 
     private func startMillisecondsHandler() {
