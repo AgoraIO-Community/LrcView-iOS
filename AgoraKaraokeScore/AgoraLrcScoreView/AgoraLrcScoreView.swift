@@ -55,8 +55,8 @@ public class AgoraLrcScoreView: UIView {
     /// 配置
     private var _config: AgoraLrcScoreConfigModel = .init() {
         didSet {
-            scoreView?.isHidden = _config.isHiddenScoreView
             scoreView?.scoreConfig = _config.scoreConfig
+            scoreView?.isHidden = _config.isHiddenScoreView
             lrcView?.lrcConfig = _config.lrcConfig
             statckView.spacing = _config.spacing
             isHiddenWatitingView = _config.lrcConfig?.isHiddenWatitingView ?? false
@@ -69,6 +69,8 @@ public class AgoraLrcScoreView: UIView {
     public var config: AgoraLrcScoreConfigModel? {
         set {
             _config = newValue ?? AgoraLrcScoreConfigModel()
+            assert(_config.scoreConfig!.hitScoreThreshold >= 0, "hitScoreThreshold invalid")
+            assert(_config.scoreConfig!.hitScoreThreshold <= 1, "hitScoreThreshold invalid")
         }
         get {
             return _config
@@ -166,7 +168,7 @@ public class AgoraLrcScoreView: UIView {
     private var scoreViewHCons: NSLayoutConstraint?
     private var currentTime: TimeInterval = 0
     private var totalTime: TimeInterval = 0
-    let logTag = "AgoraLrcView"
+    let logTag = "AgoraLrcScoreView"
     
     public init(delegate: AgoraLrcViewDelegate) {
         super.init(frame: .zero)
@@ -182,6 +184,10 @@ public class AgoraLrcScoreView: UIView {
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        Log.info(text: "deinit == ", tag: logTag)
     }
 
     // MARK: 赋值方法
@@ -213,8 +219,13 @@ public class AgoraLrcScoreView: UIView {
         })
     }
 
+    var lastVoicePitch: [Double]?
     /// 实时声音数据
     public func setVoicePitch(_ voicePitch: [Double]) {
+        lastVoicePitch = voicePitch
+    }
+    
+    func setVoicePitchInternal(_ voicePitch: [Double]) {
         scoreView?.setVoicePitch(voicePitch)
     }
 
@@ -241,10 +252,19 @@ public class AgoraLrcScoreView: UIView {
         timer.scheduledMillisecondsTimer(withName: "lrc", countDown: 1000 * 60 * 30, milliseconds: 10, queue: .main) { [weak self] _, duration in
             guard let self = self else { return }
             if duration.truncatingRemainder(dividingBy: 1000) == 0 {
-                let currentTime = (self.delegate?.getPlayerCurrentTime() ?? 0) / 1000
+                var time = self.delegate?.getPlayerCurrentTime() ?? 0
+                if time > 250 {
+                    time -= 250
+                }
+                let currentTime = time / 1000
                 self.isStop = currentTime == self.preTime
                 self.currentTime = currentTime
                 self.preTime = currentTime
+            }
+            if duration.truncatingRemainder(dividingBy: 50) == 0 {
+                if let voicePitch = self.lastVoicePitch {
+                    self.setVoicePitchInternal(voicePitch)
+                }
             }
             guard self.isStop == false else { return }
             self.startMillisecondsHandler()
@@ -268,6 +288,7 @@ public class AgoraLrcScoreView: UIView {
     }
 
     public func reset() {
+        lastVoicePitch = nil
         Log.info(text: "reset", tag: logTag)
         resetTime()
         stop()
@@ -279,6 +300,12 @@ public class AgoraLrcScoreView: UIView {
         Log.info(text: "resetTime", tag: logTag)
         preTime = 0
         currentTime = 0
+        timer.destoryAllTimer()
+    }
+    
+    /// 清理歌词缓存
+    public static func clearCache() {
+        let _ = AgoraCacheFileHandle.clearCache()
     }
 
     private func startMillisecondsHandler() {

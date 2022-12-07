@@ -16,6 +16,8 @@ protocol AgoraKaraokeScoreDelegate {
     /// cumulativeScore: 累加分数
     /// totalScore: 总分
     @objc optional func agoraKaraokeScore(score: Double, cumulativeScore: Double, totalScore: Double)
+    
+    @objc optional func debugText(text: String)
 }
 
 @objcMembers
@@ -146,6 +148,7 @@ public class AgoraKaraokeScoreView: UIView {
         scoreArray.removeAll()
         dataArray = []
         collectionView.reloadData()
+        voicePitchChanger?.reset()
     }
     
     func setTotalTime(totalTime: TimeInterval) {
@@ -197,7 +200,7 @@ public class AgoraKaraokeScoreView: UIView {
         currentScore += score
         let cumulativeScore = currentScore > totalScore ? totalScore : currentScore
         if score > (scoreConfig?.lineCalcuScore ?? 100) {
-            Log.info(text: "score \(score)", tag: logTag)
+            Log.info(text: "score outbounds: \(score) scoreArray:\(scoreArray) pitchCount:\(pitchCount)", tag: logTag)
         }
         delegate?.agoraKaraokeScore?(score: score,
                                      cumulativeScore: cumulativeScore,
@@ -209,48 +212,59 @@ public class AgoraKaraokeScoreView: UIView {
     private var pitchIsZeroCount = 0
     public func setVoicePitch(_ voicePitch: [Double]) {
         let pitch = voicePitch.last ?? 0
+        Log.info(text: "setVoicePitch \(pitch)", tag: logTag)
         if pitch == 0 {
             pitchIsZeroCount += 1
         }
         else {
             pitchIsZeroCount = 0
         }
-        if pitch > 0 || pitchIsZeroCount >= 8 {
+        if pitch > 0 || pitchIsZeroCount >= 3 * 4 {
             pitchIsZeroCount = 0
             calcuSongScore(pitch: pitch)
         }
+        
     }
 
     private var preModel: AgoraScoreItemModel?
+    private var voicePitchChanger: VoicePitchChanger? = VoicePitchChanger()
     private func calcuSongScore(pitch: Double) {
-        let time = currentTime * 1000 + 170
+        let time = currentTime * 1000
         guard let model = dataArray?.first(where: { time >= $0.startTime * 1000 && $0.endTime * 1000 >= time }), model.isEmptyCell == false
         else {
+            let contantMax = _scoreConfig.scoreViewHeight - _scoreConfig.cursorHeight * 0.5
+            cursorAnimation(y: contantMax, isDraw: false, pitch: pitch, word: "空白", standarPitch: 0, time: time.keep2)
             isDrawingCell = false
             triangleView.updateAlpha(at: 0)
             return
         }
         
+        let voicePitch = voicePitchChanger?.handlePitch(wordPitch: model.pitch,
+                                                        voicePitch: pitch,
+                                                        wordMaxPitch: model.pitchMax) ?? pitch
+        Log.info(text: "pitch: \(pitch) after voicePitch: \(voicePitch) ", tag: logTag)
         let calcuScore = scoreConfig?.lineCalcuScore ?? 100
         var score: Double = 0
-        if pitch >= model.pitchMin, pitch <= model.pitchMax {
+        if voicePitch >= model.pitchMin, voicePitch <= model.pitchMax {
             let fileTone = pitchToTone(pitch: model.pitch)
-            let voiceTone = pitchToTone(pitch: pitch)
+            let voiceTone = pitchToTone(pitch: voicePitch)
             var match = 1 - abs(voiceTone - fileTone)/fileTone
+            Log.info(text: "match \(match) stand: \(model.pitch) voice: \(pitch)", tag: logTag)
             if match < 0 { match = 0 }
             score = match * calcuScore
         }
         
-        let y = pitchToY(min: model.pitchMin, max: model.pitchMax, pitch)
-        if score >= calcuScore * 0.9, pitch > 0 { /** 显示粒子动画 */
-            cursorAnimation(y: y, isDraw: true, pitch: pitch)
-            triangleView.updateAlpha(at: pitch <= 0 ? 0 : score / calcuScore)
+        let y = pitchToY(min: model.pitchMin, max: model.pitchMax, voicePitch)
+        if score >= calcuScore * Double(_scoreConfig.hitScoreThreshold), voicePitch > 0 { /** 显示粒子动画 */
+            Log.info(text: "show Animation \(score) y: \(y)", tag: logTag)
+            cursorAnimation(y: y, isDraw: true, pitch: voicePitch, word: model.word, standarPitch: model.pitch, time: time.keep2)
+            triangleView.updateAlpha(at: voicePitch <= 0 ? 0 : score / calcuScore)
         } else {
-            cursorAnimation(y: y, isDraw: false, pitch: pitch)
+            cursorAnimation(y: y, isDraw: false, pitch: voicePitch, word: model.word, standarPitch: model.pitch, time: time.keep2)
             triangleView.updateAlpha(at: 0)
         }
         let k = scoreConfig?.minCalcuScore ?? 40
-        if score >= k && pitch > 0 {
+        if score >= k && voicePitch > 0 {
             scoreArray.append(score)
             pitchCount += 1
         }
@@ -265,39 +279,69 @@ public class AgoraKaraokeScoreView: UIView {
     var lastConstant: CGFloat = 0
     private func cursorAnimation(y: CGFloat,
                                  isDraw: Bool,
-                                 pitch: Double) {
-        let contantMax = _scoreConfig.scoreViewHeight - _scoreConfig.cursorHeight * 0.5
-        var constant = y - _scoreConfig.cursorHeight * 0.5
-        let durrtion: TimeInterval = 0.08
+                                 pitch: Double,
+                                 word: String,
+                                 standarPitch: Double,
+                                 time: Double) {
+        let contantMax = _scoreConfig.scoreViewHeight - _scoreConfig.cursorHeight
+        
+        if word == "空白" { /** 句间空白 **/
+            let debugText = "\(word)\n pitch：\(pitch.keep2)\n standarPitch： \(standarPitch.keep2)\n time: \(time)"
+            delegate?.debugText?(text: debugText)
+            let constant = contantMax
+            lastConstant = constant
+            cursorTopCons?.isActive = true
+            if isDraw {
+                isDrawingCell = true
+            }
+            Log.info(text: "=> \(word) \(pitch) \(standarPitch) fast down \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
+            UIView.animate(withDuration: 0.25, delay: 0, options:[.curveLinear]) {
+                self.cursorTopCons?.constant = constant
+                self.layoutIfNeeded()
+            } completion: { _ in
+                self.isDrawingCell = isDraw
+            }
+            lastConstant = constant
+            return
+        }
 
-        if pitch == 0.0, lastConstant != 0 { /** 为0的情况 快速下降，进行缓降处理 **/
-            constant = min(lastConstant + 0.12 * contantMax, contantMax)
-            cursorTopCons?.constant = constant
+        if pitch == 0.0, lastConstant != 0 { /** pitch为0**/
+            let debugText = "\(word)\n pitch：\(pitch.keep2)\n standarPitch： \(standarPitch.keep2)\n time: \(time)"
+            delegate?.debugText?(text: debugText)
+            
+            let constant = contantMax
+            
             cursorTopCons?.isActive = true
             if isDraw {
                 isDrawingCell = true
             }
-            UIView.animate(withDuration: durrtion, delay: 0, options:[]) {
+            Log.info(text: "=> \(word) \(pitch) \(standarPitch) fast down \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
+            UIView.animate(withDuration: 0.25, delay: 0, options:[.curveLinear]) {
+                self.cursorTopCons?.constant = constant
                 self.layoutIfNeeded()
             } completion: { _ in
                 self.isDrawingCell = isDraw
             }
+            lastConstant = constant
+            return
         }
-        else { /** 上升、不变、慢速下降 **/
-            constant = min(constant, contantMax)
-            constant = max(0, constant)
-            cursorTopCons?.constant = constant
-            cursorTopCons?.isActive = true
-            if isDraw {
-                isDrawingCell = true
-            }
-            UIView.animate(withDuration: durrtion, delay: 0, options:[.curveEaseIn]) {
-                self.layoutIfNeeded()
-            } completion: { _ in
-                self.isDrawingCell = isDraw
-            }
+        
+        /** pitch匹配上的情况 **/
+        var constant = y - _scoreConfig.cursorHeight * 0.5
+        constant = min(constant, contantMax)
+        constant = max(0, constant)
+        cursorTopCons?.constant = constant
+        cursorTopCons?.isActive = true
+        let debugText = "\(word)\n pos: \(constant)\n pitch：\(pitch.keep2)\n standarPitch： \(standarPitch.keep2) \n time: \(time)"
+        delegate?.debugText?(text: debugText)
+        if isDraw {
+            isDrawingCell = true
         }
+        self.layoutIfNeeded()
+        self.isDrawingCell = isDraw
+        Log.info(text: "=> \(word) \(pitch) \(standarPitch)  change \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
         lastConstant = constant
+        
     }
     
     private func updateDraw() {
@@ -335,30 +379,35 @@ public class AgoraKaraokeScoreView: UIView {
         var preEndTime: Double = 0
         let pitchMin = CGFloat(tones.sorted(by: { $0.pitch < $1.pitch }).first?.pitch ?? 0) - 50
         let pitchMax = CGFloat(tones.sorted(by: { $0.pitch > $1.pitch }).first?.pitch ?? 0) + 50
-        for i in 0 ..< tones.count {
-            let tone = tones[i]
-            
-            let model = AgoraScoreItemModel()
-            let startTime = tone.begin / 1000
-            let endTime = tone.end / 1000
-            if preEndTime > 0, preEndTime != startTime {
-                let model = insertMiddelLrcData(startTime: startTime,
-                                                endTime: preEndTime)
+        
+        for sentence in lrcData {
+            var indexOfToneInSentence = 0
+            for tone in sentence.tones {
+                let model = AgoraScoreItemModel()
+                model.indexOfToneInSentence = indexOfToneInSentence
+                let startTime = tone.begin / 1000
+                let endTime = tone.end / 1000
+                if preEndTime > 0, preEndTime != startTime {
+                    let model = insertMiddelLrcData(startTime: startTime,
+                                                    endTime: preEndTime)
+                    model.left = dataArray.map { $0.width }.reduce(0, +)
+                    dataArray.append(model)
+                }
+                model.word = tone.word
+                model.startTime = roundToPlaces(value: startTime, places: decimalCount)
+                model.endTime = roundToPlaces(value: endTime, places: decimalCount)
+                model.pitch = Double(tone.pitch)
+                model.width = calcuToWidth(time: endTime - startTime)
                 model.left = dataArray.map { $0.width }.reduce(0, +)
+                model.pitchMin = pitchMin
+                model.pitchMax = pitchMax
+                model.top = pitchToY(min: model.pitchMin, max: model.pitchMax, CGFloat(tone.pitch))
+                
+                preEndTime = endTime
                 dataArray.append(model)
+                
+                indexOfToneInSentence += 1
             }
-            model.word = tone.word
-            model.startTime = roundToPlaces(value: startTime, places: decimalCount)
-            model.endTime = roundToPlaces(value: endTime, places: decimalCount)
-            model.pitch = Double(tone.pitch)
-            model.width = calcuToWidth(time: endTime - startTime)
-            model.left = dataArray.map { $0.width }.reduce(0, +)
-            model.pitchMin = pitchMin
-            model.pitchMax = pitchMax
-            model.top = pitchToY(min: model.pitchMin, max: model.pitchMax, CGFloat(tone.pitch))
-
-            preEndTime = endTime
-            dataArray.append(model)
         }
         self.dataArray = dataArray
     }
@@ -384,8 +433,8 @@ public class AgoraKaraokeScoreView: UIView {
         // 中间间隔部分
         let model = AgoraScoreItemModel()
         let time = startTime - endTime
-        model.startTime = startTime
-        model.endTime = endTime
+        model.startTime = endTime
+        model.endTime = startTime
         model.width = calcuToWidth(time: time)
         model.isEmptyCell = true
         return model
@@ -405,6 +454,8 @@ public class AgoraKaraokeScoreView: UIView {
         return model
     }
 
+    private var cursorViewHeightConstraint: NSLayoutConstraint?
+    private var cursorViewWidthConstraint: NSLayoutConstraint?
     private func setupUI() {
         addSubview(collectionView)
         addSubview(separatorVerticalLine)
@@ -442,8 +493,10 @@ public class AgoraKaraokeScoreView: UIView {
         separatorBottomLine.heightAnchor.constraint(equalToConstant: 1).isActive = true
         cursorView.centerXAnchor.constraint(equalTo: separatorVerticalLine.centerXAnchor).isActive = true
         cursorTopCons = cursorView.topAnchor.constraint(equalTo: separatorVerticalLine.topAnchor, constant: _scoreConfig.scoreViewHeight - _scoreConfig.cursorHeight)
-        cursorView.widthAnchor.constraint(equalToConstant: _scoreConfig.cursorWidth).isActive = true
-        cursorView.heightAnchor.constraint(equalToConstant: _scoreConfig.cursorHeight).isActive = true
+        cursorViewWidthConstraint = cursorView.widthAnchor.constraint(equalToConstant: _scoreConfig.cursorWidth)
+        cursorViewWidthConstraint?.isActive = true
+        cursorViewHeightConstraint = cursorView.heightAnchor.constraint(equalToConstant: _scoreConfig.cursorHeight)
+        cursorViewHeightConstraint?.isActive = true
         cursorTopCons?.isActive = true
 
         triangleView.trailingAnchor.constraint(equalTo: cursorView.leadingAnchor, constant: 1).isActive = true
@@ -453,6 +506,7 @@ public class AgoraKaraokeScoreView: UIView {
 
         emitterView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         emitterView.widthAnchor.constraint(equalToConstant: 400).isActive = true
+        
         updateUI()
     }
 
@@ -460,6 +514,8 @@ public class AgoraKaraokeScoreView: UIView {
         triangleView.config = _scoreConfig
         emitterView.config = _scoreConfig
         emitterView.isHidden = _scoreConfig.isHiddenEmitterView
+        cursorViewWidthConstraint?.constant = _scoreConfig.cursorWidth
+        cursorViewHeightConstraint?.constant = _scoreConfig.cursorHeight
         cursorView.layer.cornerRadius = _scoreConfig.cursorHeight * 0.5
         cursorView.backgroundColor = _scoreConfig.cursorColor
         separatorTopLine.backgroundColor = _scoreConfig.separatorLineColor
@@ -515,6 +571,10 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
             let indexPath = IndexPath(item: i, section: 0)
             let cell = collectionView.cellForItem(at: indexPath) as? AgoraKaraokeScoreCell
             if model.left < moveX, moveX < model.left + model.width {
+                if model.indexOfToneInSentence == 1, status == .drawing { /** 一句话的第二个字 **/
+                    drawFirstToneInSentence(currentIndex: i,
+                                            dataArray: dataArray)
+                }
                 model.offsetX = moveX
                 model.status = status
             } else if model.left + model.width <= moveX {
@@ -524,5 +584,25 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
             }
             cell?.setScore(with: model, config: _scoreConfig)
         }
+    }
+    
+    private func drawFirstToneInSentence(currentIndex: Int,
+                                         dataArray: [AgoraScoreItemModel]) {
+        let lastIndex = currentIndex - 1
+        guard lastIndex >= 0  else {
+            return
+        }
+        
+        let lastModel = dataArray[lastIndex]
+        guard !lastModel.isEmptyCell else {
+            return
+        }
+        
+        let moveX = lastModel.left + lastModel.width - 0.0001
+        lastModel.offsetX = moveX
+        lastModel.status = .drawing
+        let indexPath = IndexPath(item: lastIndex, section: 0)
+        let cell = collectionView.cellForItem(at: indexPath) as? AgoraKaraokeScoreCell
+        cell?.setHit()
     }
 }

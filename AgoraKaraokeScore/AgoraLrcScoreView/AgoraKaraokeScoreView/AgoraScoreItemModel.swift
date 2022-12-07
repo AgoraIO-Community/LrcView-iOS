@@ -40,6 +40,8 @@ class AgoraScoreItemModel: NSObject {
     var pitchMax: CGFloat = 0
     
     var word: String = ""
+    /// 当前在句子中的索引
+    var indexOfToneInSentence = 0
 }
 
 @objcMembers
@@ -84,4 +86,6 @@ public class AgoraScoreItemConfigModel: NSObject {
     public var lineCalcuScore: Double = 100
     /// 低于最低分不计算分数
     public var minCalcuScore: Double = 40
+    /// 打分容忍度 范围：0-1
+    public var hitScoreThreshold: Float = 0.7
 }

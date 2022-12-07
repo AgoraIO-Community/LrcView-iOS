@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		263BA25D292E1B62000E9930 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263BA25C292E1B62000E9930 /* Log.swift */; };
 		2668C3AD28F7EA71009F5084 /* SongDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2668C3AC28F7EA71009F5084 /* SongDownloadManager.swift */; };
 		2668C3B128F7F194009F5084 /* BottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2668C3B028F7F194009F5084 /* BottomView.swift */; };
 		26BC82CC292776DC00374BB1 /* 105780.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26BC82CB292776DC00374BB1 /* 105780.xml */; };
 		26BC82D029277C9800374BB1 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 26BC82CF29277C9800374BB1 /* music.mp3 */; };
-		26F6744B292C7B77002D6988 /* NewApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26F67443292C7B77002D6988 /* NewApi.framework */; };
-		26F6744C292C7B77002D6988 /* NewApi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 26F67443292C7B77002D6988 /* NewApi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E7499C1E276B0FCF00E799FF /* AgoraLrcScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C1D276B0FCF00E799FF /* AgoraLrcScoreView.swift */; };
 		E7499C22276C766700E799FF /* AgoraEmitterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C21276C766700E799FF /* AgoraEmitterView.swift */; };
 		E7499C24276C9B6F00E799FF /* AgoraLrcConfigModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7499C23276C9B6F00E799FF /* AgoraLrcConfigModel.swift */; };
@@ -42,16 +41,6 @@
 		E7CD1206A1B46CE4668AE106 /* Pods_AgoraKaraokeScore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCFB5940A66F99EF23C4C2C /* Pods_AgoraKaraokeScore.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		26F67449292C7B77002D6988 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E78B5CE62761D6F300579270 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 26F67442292C7B77002D6988;
-			remoteInfo = NewApi;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		26F6744D292C7B78002D6988 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -59,7 +48,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				26F6744C292C7B77002D6988 /* NewApi.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,11 +55,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		263BA25C292E1B62000E9930 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Log.swift; path = AgoraKaraokeScore/AgoraLrcScoreView/Log.swift; sourceTree = SOURCE_ROOT; };
 		2668C3AC28F7EA71009F5084 /* SongDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongDownloadManager.swift; sourceTree = "<group>"; };
 		2668C3B028F7F194009F5084 /* BottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomView.swift; sourceTree = "<group>"; };
 		26BC82CB292776DC00374BB1 /* 105780.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 105780.xml; sourceTree = "<group>"; };
 		26BC82CF29277C9800374BB1 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
-		26F67443292C7B77002D6988 /* NewApi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NewApi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CCFB5940A66F99EF23C4C2C /* Pods_AgoraKaraokeScore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraKaraokeScore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE72E6063F1521F37D95DA25 /* Pods-AgoraKaraokeScore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraKaraokeScore.debug.xcconfig"; path = "Target Support Files/Pods-AgoraKaraokeScore/Pods-AgoraKaraokeScore.debug.xcconfig"; sourceTree = "<group>"; };
 		E7499C1D276B0FCF00E799FF /* AgoraLrcScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraLrcScoreView.swift; sourceTree = "<group>"; };
@@ -106,18 +94,10 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		26F67440292C7B77002D6988 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E78B5CEB2761D6F300579270 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26F6744B292C7B77002D6988 /* NewApi.framework in Frameworks */,
 				E7CD1206A1B46CE4668AE106 /* Pods_AgoraKaraokeScore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -168,7 +148,6 @@
 			isa = PBXGroup;
 			children = (
 				E78B5CEE2761D6F300579270 /* AgoraKaraokeScore.app */,
-				26F67443292C7B77002D6988 /* NewApi.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -195,6 +174,7 @@
 		E78B5D052761D6FC00579270 /* AgoraKaraokeScoreView */ = {
 			isa = PBXGroup;
 			children = (
+				263BA25C292E1B62000E9930 /* Log.swift */,
 				E78B5D082761D71400579270 /* AgoraKaraokeScoreView.swift */,
 				E78B5D072761D71300579270 /* AgoraKaraokeScoreCell.swift */,
 				E78B5D062761D71300579270 /* AgoraScoreItemModel.swift */,
@@ -233,35 +213,7 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		26F6743E292C7B77002D6988 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
-		26F67442292C7B77002D6988 /* NewApi */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 26F67450292C7B78002D6988 /* Build configuration list for PBXNativeTarget "NewApi" */;
-			buildPhases = (
-				26F6743E292C7B77002D6988 /* Headers */,
-				26F6743F292C7B77002D6988 /* Sources */,
-				26F67440292C7B77002D6988 /* Frameworks */,
-				26F67441292C7B77002D6988 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = NewApi;
-			productName = NewApi;
-			productReference = 26F67443292C7B77002D6988 /* NewApi.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		E78B5CED2761D6F300579270 /* AgoraKaraokeScore */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E78B5D022761D6F600579270 /* Build configuration list for PBXNativeTarget "AgoraKaraokeScore" */;
@@ -276,7 +228,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				26F6744A292C7B77002D6988 /* PBXTargetDependency */,
 			);
 			name = AgoraKaraokeScore;
 			productName = AgoraKaraokeScore;
@@ -293,9 +244,6 @@
 				LastSwiftUpdateCheck = 1300;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
-					26F67442292C7B77002D6988 = {
-						CreatedOnToolsVersion = 13.4.1;
-					};
 					E78B5CED2761D6F300579270 = {
 						CreatedOnToolsVersion = 13.0;
 					};
@@ -315,19 +263,11 @@
 			projectRoot = "";
 			targets = (
 				E78B5CED2761D6F300579270 /* AgoraKaraokeScore */,
-				26F67442292C7B77002D6988 /* NewApi */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		26F67441292C7B77002D6988 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E78B5CEC2761D6F300579270 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -385,19 +325,13 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		26F6743F292C7B77002D6988 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E78B5CEA2761D6F300579270 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				E78B5D182762F37F00579270 /* AgoraLrcView.swift in Sources */,
 				E78B5D342763338200579270 /* AgoraDownLoadManager.swift in Sources */,
+				263BA25D292E1B62000E9930 /* Log.swift in Sources */,
 				E79EB9D3278E814D00FE703A /* AgoraTriangleView.swift in Sources */,
 				E7499C22276C766700E799FF /* AgoraEmitterView.swift in Sources */,
 				E79EB9CF278C1A6900FE703A /* AgoraLrcParse.swift in Sources */,
@@ -426,14 +360,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		26F6744A292C7B77002D6988 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 26F67442292C7B77002D6988 /* NewApi */;
-			targetProxy = 26F67449292C7B77002D6988 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		E78B5CF72761D6F300579270 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -454,68 +380,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		26F6744E292C7B78002D6988 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = YS397FG5PA;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Normi.NewApi;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		26F6744F292C7B78002D6988 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = YS397FG5PA;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Normi.NewApi;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		E78B5D002761D6F600579270 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -695,15 +559,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		26F67450292C7B78002D6988 /* Build configuration list for PBXNativeTarget "NewApi" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				26F6744E292C7B78002D6988 /* Debug */,
-				26F6744F292C7B78002D6988 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		E78B5CE92761D6F300579270 /* Build configuration list for PBXProject "AgoraKaraokeScore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
