@@ -81,7 +81,7 @@ class AgoraDownLoadManager {
                     try? FileManager.default.removeItem(atPath: path)
                 })
             } catch {
-                debugPrint("unzip error == \(error.localizedDescription)")
+                Log.error(error: "unzip error == \(error.localizedDescription)", tag: "AgoraDownLoadManager")
                 guard self.retryCount < 3 else {
                     self.retryCount = 0
                     DispatchQueue.main.async {
