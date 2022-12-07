@@ -69,6 +69,8 @@ public class AgoraLrcScoreView: UIView {
     public var config: AgoraLrcScoreConfigModel? {
         set {
             _config = newValue ?? AgoraLrcScoreConfigModel()
+            assert(_config.scoreConfig!.hitScoreThreshold >= 0, "hitScoreThreshold invalid")
+            assert(_config.scoreConfig!.hitScoreThreshold <= 1, "hitScoreThreshold invalid")
         }
         get {
             return _config
@@ -166,7 +168,7 @@ public class AgoraLrcScoreView: UIView {
     private var scoreViewHCons: NSLayoutConstraint?
     private var currentTime: TimeInterval = 0
     private var totalTime: TimeInterval = 0
-    let logTag = "AgoraLrcView"
+    let logTag = "AgoraLrcScoreView"
     
     public init(delegate: AgoraLrcViewDelegate) {
         super.init(frame: .zero)
@@ -182,6 +184,10 @@ public class AgoraLrcScoreView: UIView {
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        Log.info(text: "deinit == ", tag: logTag)
     }
 
     // MARK: 赋值方法
@@ -282,6 +288,7 @@ public class AgoraLrcScoreView: UIView {
     }
 
     public func reset() {
+        lastVoicePitch = nil
         Log.info(text: "reset", tag: logTag)
         resetTime()
         stop()
@@ -293,6 +300,7 @@ public class AgoraLrcScoreView: UIView {
         Log.info(text: "resetTime", tag: logTag)
         preTime = 0
         currentTime = 0
+        timer.destoryAllTimer()
     }
     
     /// 清理歌词缓存

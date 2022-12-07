@@ -122,7 +122,7 @@ private class AgoraMiguSongLyricXmlParser: NSObject, XMLParserDelegate {
                 song?.type = MusicType(rawValue: string) ?? .fast
             case .word, .overlap:
                 if let tone = song?.sentences.last?.tones.last {
-                    tone.word = string
+                    tone.word = tone.word + string
                     if tone.lang == .unknown {
                         do {
                             let regular = try NSRegularExpression(pattern: "[a-zA-Z]", options: .caseInsensitive)

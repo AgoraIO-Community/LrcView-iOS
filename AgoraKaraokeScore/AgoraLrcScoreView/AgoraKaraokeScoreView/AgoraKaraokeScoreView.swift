@@ -105,8 +105,6 @@ public class AgoraKaraokeScoreView: UIView {
         view.layer.masksToBounds = true
         return view
     }()
-    
-    let cursorLabel = UILabel()
 
     private lazy var emitterView = AgoraEmitterView()
     private lazy var triangleView = AgoraTriangleView()
@@ -257,7 +255,7 @@ public class AgoraKaraokeScoreView: UIView {
         }
         
         let y = pitchToY(min: model.pitchMin, max: model.pitchMax, voicePitch)
-        if score >= calcuScore * 0.7, voicePitch > 0 { /** 显示粒子动画 */
+        if score >= calcuScore * Double(_scoreConfig.hitScoreThreshold), voicePitch > 0 { /** 显示粒子动画 */
             Log.info(text: "show Animation \(score) y: \(y)", tag: logTag)
             cursorAnimation(y: y, isDraw: true, pitch: voicePitch, word: model.word, standarPitch: model.pitch, time: time.keep2)
             triangleView.updateAlpha(at: voicePitch <= 0 ? 0 : score / calcuScore)
@@ -286,43 +284,64 @@ public class AgoraKaraokeScoreView: UIView {
                                  standarPitch: Double,
                                  time: Double) {
         let contantMax = _scoreConfig.scoreViewHeight - _scoreConfig.cursorHeight
-        var constant = y - _scoreConfig.cursorHeight * 0.5
-
-        if pitch == 0.0, lastConstant != 0 { /** 为0的情况 快速下降，进行缓降处理 **/
-//            constant = min(lastConstant + 0.33 * contantMax, contantMax)
+        
+        if word == "空白" { /** 句间空白 **/
             let debugText = "\(word)\n pitch：\(pitch.keep2)\n standarPitch： \(standarPitch.keep2)\n time: \(time)"
             delegate?.debugText?(text: debugText)
-            constant = min(constant, contantMax)
-            cursorTopCons?.constant = constant
+            let constant = contantMax
+            lastConstant = constant
             cursorTopCons?.isActive = true
             if isDraw {
                 isDrawingCell = true
             }
             Log.info(text: "=> \(word) \(pitch) \(standarPitch) fast down \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
-            UIView.animate(withDuration: 0.18, delay: 0, options:[.curveEaseOut]) {
+            UIView.animate(withDuration: 0.25, delay: 0, options:[.curveLinear]) {
+                self.cursorTopCons?.constant = constant
                 self.layoutIfNeeded()
             } completion: { _ in
                 self.isDrawingCell = isDraw
             }
+            lastConstant = constant
+            return
         }
-        else { /** 上升、不变、慢速下降 **/
-            constant = min(constant, contantMax)
-            constant = max(0, constant)
-            cursorTopCons?.constant = constant
-            cursorTopCons?.isActive = true
-            let debugText = "\(word)\n pos: \(constant)\n pitch：\(pitch.keep2)\n standarPitch： \(standarPitch.keep2) \n time: \(time)"
+
+        if pitch == 0.0, lastConstant != 0 { /** pitch为0**/
+            let debugText = "\(word)\n pitch：\(pitch.keep2)\n standarPitch： \(standarPitch.keep2)\n time: \(time)"
             delegate?.debugText?(text: debugText)
+            
+            let constant = contantMax
+            
+            cursorTopCons?.isActive = true
             if isDraw {
                 isDrawingCell = true
             }
-            self.layoutIfNeeded()
-            self.isDrawingCell = isDraw
-            Log.info(text: "=> \(word) \(pitch) \(standarPitch)  change \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
+            Log.info(text: "=> \(word) \(pitch) \(standarPitch) fast down \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
+            UIView.animate(withDuration: 0.25, delay: 0, options:[.curveLinear]) {
+                self.cursorTopCons?.constant = constant
+                self.layoutIfNeeded()
+            } completion: { _ in
+                self.isDrawingCell = isDraw
+            }
+            lastConstant = constant
+            return
         }
+        
+        /** pitch匹配上的情况 **/
+        var constant = y - _scoreConfig.cursorHeight * 0.5
+        constant = min(constant, contantMax)
+        constant = max(0, constant)
+        cursorTopCons?.constant = constant
+        cursorTopCons?.isActive = true
+        let debugText = "\(word)\n pos: \(constant)\n pitch：\(pitch.keep2)\n standarPitch： \(standarPitch.keep2) \n time: \(time)"
+        delegate?.debugText?(text: debugText)
+        if isDraw {
+            isDrawingCell = true
+        }
+        self.layoutIfNeeded()
+        self.isDrawingCell = isDraw
+        Log.info(text: "=> \(word) \(pitch) \(standarPitch)  change \(constant) isDrawingCell:\(isDrawingCell)", tag: logTag)
         lastConstant = constant
-        if constant > 80 {
-            print("constant： \(constant)")
-        }
+        
     }
     
     private func updateDraw() {
@@ -445,7 +464,6 @@ public class AgoraKaraokeScoreView: UIView {
         emitterView.insertSubview(triangleView, at: 0)
         addSubview(cursorView)
         addSubview(emitterView)
-//        addSubview(cursorLabel)
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         separatorVerticalLine.translatesAutoresizingMaskIntoConstraints = false
@@ -453,7 +471,6 @@ public class AgoraKaraokeScoreView: UIView {
         separatorBottomLine.translatesAutoresizingMaskIntoConstraints = false
         cursorView.translatesAutoresizingMaskIntoConstraints = false
         triangleView.translatesAutoresizingMaskIntoConstraints = false
-        cursorLabel.translatesAutoresizingMaskIntoConstraints = false
 
         collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         collectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -490,10 +507,6 @@ public class AgoraKaraokeScoreView: UIView {
         emitterView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         emitterView.widthAnchor.constraint(equalToConstant: 400).isActive = true
         
-//        cursorLabel.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 150).isActive = true
-//        cursorLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 60).isActive = true
-//        cursorLabel.textColor = .white
-//        cursorLabel.numberOfLines = 0
         updateUI()
     }
 
