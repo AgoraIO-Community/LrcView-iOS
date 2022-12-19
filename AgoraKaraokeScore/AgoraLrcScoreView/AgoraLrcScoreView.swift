@@ -222,13 +222,9 @@ public class AgoraLrcScoreView: UIView {
     var lastVoicePitch: [Double]?
     /// 实时声音数据
     public func setVoicePitch(_ voicePitch: [Double]) {
-        lastVoicePitch = voicePitch
-    }
-    
-    func setVoicePitchInternal(_ voicePitch: [Double]) {
         scoreView?.setVoicePitch(voicePitch)
     }
-
+    
     /// 滚到顶部
     public func scrollToTop(animation: Bool = false) {
         lrcView?.scrollToTop(animation: animation)
@@ -260,11 +256,6 @@ public class AgoraLrcScoreView: UIView {
                 self.isStop = currentTime == self.preTime
                 self.currentTime = currentTime
                 self.preTime = currentTime
-            }
-            if duration.truncatingRemainder(dividingBy: 50) == 0 {
-                if let voicePitch = self.lastVoicePitch {
-                    self.setVoicePitchInternal(voicePitch)
-                }
             }
             guard self.isStop == false else { return }
             self.startMillisecondsHandler()
@@ -301,6 +292,35 @@ public class AgoraLrcScoreView: UIView {
         preTime = 0
         currentTime = 0
         timer.destoryAllTimer()
+    }
+    
+    
+    /// 设置打分难度系数
+    /// - Note: 值越小打分难度越小，值越高打分难度越大
+    /// - Parameter factor: 系数, 范围：[0, 100], 如不设置默认为10
+    public func setScoringDifficultyFactor(factor: Double) {
+        if factor >= 0, factor <= 100 {
+            scoreView?.difficultyFactor = factor
+        }
+    }
+    
+    /// 设置打分分值补偿
+    /// - Note:
+    /// - Parameter offset: 分值补偿 [-100, 100], 如不设置默认为0
+    public func setScoringOffset(offset: Double) {
+        if offset >= -100, offset <= 100 {
+            scoreView?.offset = offset
+        }
+    }
+    
+    /// 获取打分难度系数
+    public func getScoringDifficultyFactor() -> Double {
+        return scoreView!.difficultyFactor
+    }
+    
+    /// 获取打分分值补偿
+    public func getScoringOffset() -> Double {
+        return scoreView!.offset
     }
     
     /// 清理歌词缓存

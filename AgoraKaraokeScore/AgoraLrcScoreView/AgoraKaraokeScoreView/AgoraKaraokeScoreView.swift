@@ -219,13 +219,15 @@ public class AgoraKaraokeScoreView: UIView {
         else {
             pitchIsZeroCount = 0
         }
-        if pitch > 0 || pitchIsZeroCount >= 3 * 4 {
+        if pitch > 0 || pitchIsZeroCount >= 5 {
             pitchIsZeroCount = 0
             calcuSongScore(pitch: pitch)
         }
         
     }
 
+    var difficultyFactor: Double = 10
+    var offset: Double = 0
     private var preModel: AgoraScoreItemModel?
     private var voicePitchChanger: VoicePitchChanger? = VoicePitchChanger()
     private func calcuSongScore(pitch: Double) {
@@ -242,15 +244,16 @@ public class AgoraKaraokeScoreView: UIView {
         let voicePitch = voicePitchChanger?.handlePitch(wordPitch: model.pitch,
                                                         voicePitch: pitch,
                                                         wordMaxPitch: model.pitchMax) ?? pitch
-        Log.info(text: "pitch: \(pitch) after voicePitch: \(voicePitch) ", tag: logTag)
+        Log.info(text: "pitch: \(pitch) after voicePitch: \(voicePitch) wordPitch: \(model.pitch)", tag: logTag)
         let calcuScore = scoreConfig?.lineCalcuScore ?? 100
         var score: Double = 0
         if voicePitch >= model.pitchMin, voicePitch <= model.pitchMax {
             let fileTone = pitchToTone(pitch: model.pitch)
             let voiceTone = pitchToTone(pitch: voicePitch)
-            var match = 1 - abs(voiceTone - fileTone)/fileTone
-            Log.info(text: "match \(match) stand: \(model.pitch) voice: \(pitch)", tag: logTag)
+            var match = 1 - difficultyFactor/100 * abs(voiceTone - fileTone) + offset/100
+            if match > 1 { match = 1 }
             if match < 0 { match = 0 }
+            Log.info(text: "match \(match) stand: \(model.pitch) voice: \(pitch)", tag: logTag)
             score = match * calcuScore
         }
         
@@ -571,10 +574,10 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
             let indexPath = IndexPath(item: i, section: 0)
             let cell = collectionView.cellForItem(at: indexPath) as? AgoraKaraokeScoreCell
             if model.left < moveX, moveX < model.left + model.width {
-                if model.indexOfToneInSentence == 1, status == .drawing { /** 一句话的第二个字 **/
-                    drawFirstToneInSentence(currentIndex: i,
-                                            dataArray: dataArray)
-                }
+//                if model.indexOfToneInSentence == 1, status == .drawing { /** 一句话的第二个字 **/
+//                    drawFirstToneInSentence(currentIndex: i,
+//                                            dataArray: dataArray)
+//                }
                 model.offsetX = moveX
                 model.status = status
             } else if model.left + model.width <= moveX {
