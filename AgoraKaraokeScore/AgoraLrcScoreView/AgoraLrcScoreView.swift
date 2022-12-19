@@ -298,9 +298,9 @@ public class AgoraLrcScoreView: UIView {
     /// 设置打分难度系数
     /// - Note: 值越小打分难度越小，值越高打分难度越大
     /// - Parameter factor: 系数, 范围：[0, 100], 如不设置默认为10
-    public func setScoringDifficultyFactor(factor: Double) {
+    public func setScoringLevel(factor: Double) {
         if factor >= 0, factor <= 100 {
-            scoreView?.difficultyFactor = factor
+            scoreView?.level = factor
         }
     }
     
@@ -314,8 +314,8 @@ public class AgoraLrcScoreView: UIView {
     }
     
     /// 获取打分难度系数
-    public func getScoringDifficultyFactor() -> Double {
-        return scoreView!.difficultyFactor
+    public func getScoringLevel() -> Double {
+        return scoreView!.level
     }
     
     /// 获取打分分值补偿

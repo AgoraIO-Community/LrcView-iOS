@@ -226,7 +226,7 @@ public class AgoraKaraokeScoreView: UIView {
         
     }
 
-    var difficultyFactor: Double = 10
+    var level: Double = 10
     var offset: Double = 0
     private var preModel: AgoraScoreItemModel?
     private var voicePitchChanger: VoicePitchChanger? = VoicePitchChanger()
@@ -250,7 +250,7 @@ public class AgoraKaraokeScoreView: UIView {
         if voicePitch >= model.pitchMin, voicePitch <= model.pitchMax {
             let fileTone = pitchToTone(pitch: model.pitch)
             let voiceTone = pitchToTone(pitch: voicePitch)
-            var match = 1 - difficultyFactor/100 * abs(voiceTone - fileTone) + offset/100
+            var match = 1 - level/100 * abs(voiceTone - fileTone) + offset/100
             if match > 1 { match = 1 }
             if match < 0 { match = 0 }
             Log.info(text: "match \(match) stand: \(model.pitch) voice: \(pitch)", tag: logTag)
