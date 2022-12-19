@@ -59,4 +59,14 @@ public class KaraokeView: UIView {
     /// - Note: 如果设置空数组，则采用内部默认代替
     /// - incentiveConfigItems: 数组，分数从低往高排序。即：[("good", 0..<60>), ("vary good", 60..<70), ....]
     public func set(incentiveConfigItems: [IncentiveConfigItem]) {}
+    
+    /// 设置打分难易程度(难度系数)
+    /// - Note: 值越小打分难度越小，值越高打分难度越大
+    /// - Parameter scoreLevel: 系数, 范围：[0, 100], 如不设置默认为10
+    public func set(scoreLevel: Int) {}
+    
+    /// 设置打分分值补偿
+    /// - Note: 在计算分值的时候作为补偿
+    /// - Parameter scoreOffset: 分值补偿 [-100, 100], 如不设置默认为0
+    public func set(scoreOffset: Int) {}
 }
