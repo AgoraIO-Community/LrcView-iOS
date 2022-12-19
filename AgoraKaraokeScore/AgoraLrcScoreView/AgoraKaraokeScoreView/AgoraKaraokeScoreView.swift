@@ -574,10 +574,10 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
             let indexPath = IndexPath(item: i, section: 0)
             let cell = collectionView.cellForItem(at: indexPath) as? AgoraKaraokeScoreCell
             if model.left < moveX, moveX < model.left + model.width {
-//                if model.indexOfToneInSentence == 1, status == .drawing { /** 一句话的第二个字 **/
-//                    drawFirstToneInSentence(currentIndex: i,
-//                                            dataArray: dataArray)
-//                }
+                if model.indexOfToneInSentence == 1, status == .drawing { /** 一句话的第二个字 **/
+                    drawFirstToneInSentence(currentIndex: i,
+                                            dataArray: dataArray)
+                }
                 model.offsetX = moveX
                 model.status = status
             } else if model.left + model.width <= moveX {
