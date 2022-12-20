@@ -17,6 +17,10 @@ protocol AgoraKaraokeScoreDelegate {
     /// totalScore: 总分
     @objc optional func agoraKaraokeScore(score: Double, cumulativeScore: Double, totalScore: Double)
     
+    /// 是否需要显示动画
+    /// - Parameter showAnimation: `true`表示需要显示动画，`false`表示不需要显示动画
+    @objc optional func agoraKaraokeViewShouldUpdateUI(showAnimation: Bool)
+    
     @objc optional func debugText(text: String)
 }
 
