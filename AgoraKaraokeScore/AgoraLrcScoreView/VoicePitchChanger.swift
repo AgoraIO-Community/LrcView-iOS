@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 class VoicePitchChanger {
     var offset: Double = 0.0
     var n: Double = 0
