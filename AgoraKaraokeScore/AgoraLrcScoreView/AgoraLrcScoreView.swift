@@ -297,17 +297,17 @@ public class AgoraLrcScoreView: UIView {
     
     /// 设置打分难度系数
     /// - Note: 值越小打分难度越小，值越高打分难度越大
-    /// - Parameter factor: 系数, 范围：[0, 100], 如不设置默认为10
-    public func setScoringLevel(factor: Double) {
-        if factor >= 0, factor <= 100 {
-            scoreView?.level = factor
+    /// - Parameter level: 系数, 范围：[0, 100], 如不设置默认为10
+    public func setScoreLevel(level: Double) {
+        if level >= 0, level <= 100 {
+            scoreView?.level = level
         }
     }
     
     /// 设置打分分值补偿
     /// - Note:
     /// - Parameter offset: 分值补偿 [-100, 100], 如不设置默认为0
-    public func setScoringOffset(offset: Double) {
+    public func setScoreCompensationOffset(offset: Double) {
         if offset >= -100, offset <= 100 {
             scoreView?.offset = offset
         }

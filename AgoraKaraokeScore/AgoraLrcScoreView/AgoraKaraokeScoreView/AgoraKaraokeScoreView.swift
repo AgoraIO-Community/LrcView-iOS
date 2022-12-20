@@ -264,9 +264,11 @@ public class AgoraKaraokeScoreView: UIView {
         let y = pitchToY(min: model.pitchMin, max: model.pitchMax, voicePitch)
         if score >= calcuScore * Double(_scoreConfig.hitScoreThreshold), voicePitch > 0 { /** 显示粒子动画 */
             Log.info(text: "show Animation \(score) y: \(y)", tag: logTag)
+            delegate?.agoraKaraokeViewShouldUpdateUI?(showAnimation: true)
             cursorAnimation(y: y, isDraw: true, pitch: voicePitch, word: model.word, standarPitch: model.pitch, time: time.keep2)
             triangleView.updateAlpha(at: voicePitch <= 0 ? 0 : score / calcuScore)
         } else {
+            delegate?.agoraKaraokeViewShouldUpdateUI?(showAnimation: false)
             cursorAnimation(y: y, isDraw: false, pitch: voicePitch, word: model.word, standarPitch: model.pitch, time: time.keep2)
             triangleView.updateAlpha(at: 0)
         }
