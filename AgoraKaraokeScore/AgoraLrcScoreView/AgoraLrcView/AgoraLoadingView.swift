@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol AgoraLoadViewDelegate {
+protocol AgoraLoadViewDelegate: NSObjectProtocol {
     func getCurrentTime() -> TimeInterval
 }
 
 class AgoraLoadingView: UIView {
-    var delegate: AgoraLoadViewDelegate?
+    weak var delegate: AgoraLoadViewDelegate?
 
     var lrcConfig: AgoraLrcConfigModel? {
         didSet {
