@@ -17,6 +17,10 @@ protocol AgoraKaraokeScoreDelegate {
     /// totalScore: 总分
     @objc optional func agoraKaraokeScore(score: Double, cumulativeScore: Double, totalScore: Double)
     
+    /// 是否需要显示动画
+    /// - Parameter showAnimation: `true`表示需要显示动画，`false`表示不需要显示动画
+    @objc optional func agoraKaraokeViewShouldUpdateUI(showAnimation: Bool)
+    
     @objc optional func debugText(text: String)
 }
 
@@ -219,13 +223,15 @@ public class AgoraKaraokeScoreView: UIView {
         else {
             pitchIsZeroCount = 0
         }
-        if pitch > 0 || pitchIsZeroCount >= 3 * 4 {
+        if pitch > 0 || pitchIsZeroCount >= 5 {
             pitchIsZeroCount = 0
             calcuSongScore(pitch: pitch)
         }
         
     }
 
+    var level: Double = 10
+    var offset: Double = 0
     private var preModel: AgoraScoreItemModel?
     private var voicePitchChanger: VoicePitchChanger? = VoicePitchChanger()
     private func calcuSongScore(pitch: Double) {
@@ -242,24 +248,27 @@ public class AgoraKaraokeScoreView: UIView {
         let voicePitch = voicePitchChanger?.handlePitch(wordPitch: model.pitch,
                                                         voicePitch: pitch,
                                                         wordMaxPitch: model.pitchMax) ?? pitch
-        Log.info(text: "pitch: \(pitch) after voicePitch: \(voicePitch) ", tag: logTag)
+        Log.info(text: "pitch: \(pitch) after voicePitch: \(voicePitch) wordPitch: \(model.pitch)", tag: logTag)
         let calcuScore = scoreConfig?.lineCalcuScore ?? 100
         var score: Double = 0
         if voicePitch >= model.pitchMin, voicePitch <= model.pitchMax {
             let fileTone = pitchToTone(pitch: model.pitch)
             let voiceTone = pitchToTone(pitch: voicePitch)
-            var match = 1 - abs(voiceTone - fileTone)/fileTone
-            Log.info(text: "match \(match) stand: \(model.pitch) voice: \(pitch)", tag: logTag)
+            var match = 1 - level/100 * abs(voiceTone - fileTone) + offset/100
+            if match > 1 { match = 1 }
             if match < 0 { match = 0 }
+            Log.info(text: "match \(match) stand: \(model.pitch) voice: \(pitch)", tag: logTag)
             score = match * calcuScore
         }
         
         let y = pitchToY(min: model.pitchMin, max: model.pitchMax, voicePitch)
         if score >= calcuScore * Double(_scoreConfig.hitScoreThreshold), voicePitch > 0 { /** 显示粒子动画 */
             Log.info(text: "show Animation \(score) y: \(y)", tag: logTag)
+            delegate?.agoraKaraokeViewShouldUpdateUI?(showAnimation: true)
             cursorAnimation(y: y, isDraw: true, pitch: voicePitch, word: model.word, standarPitch: model.pitch, time: time.keep2)
             triangleView.updateAlpha(at: voicePitch <= 0 ? 0 : score / calcuScore)
         } else {
+            delegate?.agoraKaraokeViewShouldUpdateUI?(showAnimation: false)
             cursorAnimation(y: y, isDraw: false, pitch: voicePitch, word: model.word, standarPitch: model.pitch, time: time.keep2)
             triangleView.updateAlpha(at: 0)
         }
