@@ -14,7 +14,7 @@ public enum MusicType {
     case slow
 }
  
-public class LyricsModel: NSObject {
+public class LyricModel: NSObject {
     /// 歌曲名称
     public let name: String
     /// 歌星名称
@@ -110,34 +110,3 @@ public class ToneScoreModel: NSObject {
     }
 }
 
-/// 等级配置模型
-public class ScoreRankConfigItem: NSObject {
-    /// 名称
-    public let name: String
-    /// 范围 取值必须在[0, 100]内
-    public let range: Range<Int>
-    
-    public init(name: String,
-                range: Range<Int>) {
-        self.name = name
-        self.range = range
-    }
-}
-
-/// 激励配置模型
-public class IncentiveConfigItem: NSObject {
-    /// 名称
-    public let name: String
-    /// 范围 取值必须在[0, 100]内
-    public let range: Range<Int>
-    /// 当连续出现时，是否可以显示连击
-    public let canCombo: Bool
-    
-    public init(name: String,
-                range: Range<Int>,
-                canCombo: Bool) {
-        self.name = name
-        self.range = range
-        self.canCombo = canCombo
-    }
-}

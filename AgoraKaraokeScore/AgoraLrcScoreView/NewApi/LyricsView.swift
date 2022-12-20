@@ -32,12 +32,17 @@ public class LyricsView: UIView {
     public var maxWidth: CGFloat = UIScreen.main.bounds.width - 30
     /// 歌词上下间距
     public var lyricLineSpacing: CGFloat = 10
-    /// 等待开始圆点背景色
-    public var waitingViewBackgroundColor: UIColor? = .gray
-    /// 等待开始圆点大小
-    public var waitingViewSize: CGFloat = 10
-    /// 等待开始圆点底部间距
-    public var waitingViewBottomMargin: CGFloat = 0
+    /// 等待开始圆点风格
+    public var firstToneHintViewStyle: FirstToneHintViewStyle = .init()
     /// 是否开启拖拽
     public var draggable: Bool = true
+}
+
+public class FirstToneHintViewStyle: NSObject {
+    /// 背景色
+    public var backgroundColor: UIColor? = .gray
+    /// 大小
+    public var size: CGFloat = 10
+    /// 底部间距
+    public var bottomMargin: CGFloat = 0
 }

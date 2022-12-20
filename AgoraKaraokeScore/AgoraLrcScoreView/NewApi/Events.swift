@@ -29,10 +29,19 @@ import Foundation
 }
 
 /// 分数计算协议
-@objc public protocol ScoreCalculatorProtocol {
+@objc public protocol IScoreAlgorithm {
     /// 计算当前行(Line)的分数
     /// - Parameters:
     ///   - models: 字得分信息集合
     /// - Returns: 计算后的分数 [0, 100]
-    @objc optional func getLineScore(with toneScores: [ToneScoreModel]) -> Int
+    @objc func getLineScore(with toneScores: [ToneScoreModel]) -> Int
+    
+    @objc func incentiveGradeCount() -> Int
+    @objc func incentiveGradeIndex(score: Int) -> Int
+    @objc func incentiveGradeDescription(gradeIndex: Int) -> String
+    @objc func incentiveCombinable(gradeIndex: Int) -> Bool
+    
+    @objc func totalGradeCount() -> Int
+    @objc func totalGradeIndex(score: Int) -> Int
+    @objc func totalGradeDescription(gradeIndex: Int) -> Int
 }

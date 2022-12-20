@@ -43,13 +43,13 @@ public class ScoringView: UIView {
     /// 是否隐藏等级视图
     public var isRankViewHidden: Bool = false
     /// 等级视图高
-    public var rankViewHeight: CGFloat = 20
+    public var gradeViewHeight: CGFloat = 20
     /// 等级视图宽
-    public var rankViewWidth: CGFloat = 200
+    public var gradeViewWidth: CGFloat = 200
     /// 等级视图的正常颜色
-    public var rankViewNormalColor: UIColor = .gray
+    public var gradeViewNormalColor: UIColor = .gray
     /// 等级视图的高亮颜色 (渐变色)
-    public var rankViewHighlightColors: [UIColor] = [.blue]
+    public var gradeViewHighlightColors: [UIColor] = [.blue]
     /// 评分激励是否显示
     public var incentiveViewHidden: Bool = false
     /// 评分激励的文字颜色 (渐变色)
