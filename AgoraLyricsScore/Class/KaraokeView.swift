@@ -36,6 +36,7 @@ public class KaraokeView: UIView {
     public let scoringView = ScoringView()
     fileprivate let backgroundImageView = UIImageView()
     fileprivate var lyricsViewTopConstraint: NSLayoutConstraint!
+    fileprivate var lyricData: LyricModel!
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -62,7 +63,10 @@ extension KaraokeView {
     
     /// 设置歌词数据信息
     /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成
-    public func setLyricData(data: LyricModel) {}
+    public func setLyricData(data: LyricModel) {
+        lyricData = data
+        lyricsView.setLyricData(data: data)
+    }
     
     /// 设置实时采集(mic)的Pitch
     /// - Note: 可以从AgoraRTC回调方法 `- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine reportAudioVolumeIndicationOfSpeakers:(NSArray<AgoraRtcAudioVolumeInfo *> * _Nonnull)speakers totalVolume:(NSInteger)totalVolume`  获取
@@ -72,7 +76,9 @@ extension KaraokeView {
     /// 设置当前歌曲的进度
     /// - Note: 可以获取播放器的当前进度进行设置
     /// - Parameter progress: 歌曲进度 (ms)
-    public func setProgress(progress: Int) {}
+    public func setProgress(progress: Int) {
+        lyricsView.setProgress(progress: progress)
+    }
     
     /// 设置自定义分数计算对象
     /// - Note: 如果不调用此方法，则内部使用默认计分规则
@@ -93,8 +99,8 @@ extension KaraokeView {
 // MARK: - UI
 extension KaraokeView {
     fileprivate func setupUI() {
-        scoringView.backgroundColor = .red
-        lyricsView.backgroundColor = .blue
+        scoringView.backgroundColor = .clear
+        lyricsView.backgroundColor = .clear
         
         backgroundImageView.isHidden = true
         

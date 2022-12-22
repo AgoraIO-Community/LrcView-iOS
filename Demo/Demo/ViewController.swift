@@ -37,12 +37,20 @@ class ViewController: UIViewController {
     }
     
     func createData() {
-        list = [Section(title: "UI", rows: [.init(title: "View")]),
-                Section(title: "体验", rows: [.init(title: "AVPlayer"), .init(title: "MCC")])]
+        list = [Section(title: "UI", rows: [.init(title: "View配置")]),
+                Section(title: "体验", rows: [.init(title: "FirstToneHintView"), .init(title: "MCC")])]
     }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        list[section].title
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        list.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list[section].rows.count
     }
@@ -56,11 +64,19 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let vc = ViewTestVC()
-//        navigationController?.pushViewController(vc, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
         
-        let vc = ParserTestVC()
-        navigationController?.pushViewController(vc, animated: true)
+        if indexPath.section == 0 {
+            let vc = ViewTestVC()
+            navigationController?.pushViewController(vc, animated: true)
+            return
+        }
+        
+        if indexPath.section == 1 {
+            let vc = ExpTestVC()
+            navigationController?.pushViewController(vc, animated: true)
+            return
+        }
     }
 }
 

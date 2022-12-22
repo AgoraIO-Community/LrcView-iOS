@@ -8,17 +8,24 @@
 import Foundation
 
 class Parser {
+    private let logTag = "Parser"
     func parseLyricData(data: Data) -> LyricModel? {
-        guard let string = String(data: data, encoding: .utf8) else {
-            fatalError("can not verified file type")
+        guard data.count > 0 else {
+            Log.errorText(text: "data.count == 0", tag: logTag)
+            return nil
         }
         
-        if string.first == "<" {
+        guard let string = String(data: data, encoding: .utf8) else {
+            Log.errorText(text: "can not verified file type", tag: logTag)
+            return nil
+        }
+        
+        if string.first == "<" { /** XML格式 **/
             let parser = XmlParser()
             return parser.parseLyricData(data: data)
         }
         
-        if string.first == "[" {
+        if string.first == "[" { /** LRC格式 **/
             let parser = LrcParser()
             return parser.parseLyricData(data: data)
         }
