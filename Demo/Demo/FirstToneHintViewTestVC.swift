@@ -8,7 +8,8 @@
 import UIKit
 import AgoraLyricsScore
 
-class ExpTestVC: UIViewController {
+/// 测试等待视图
+class FirstToneHintViewTestVC: UIViewController {
 
     let karaokeView = KaraokeView()
     private var timer = GCDTimer()

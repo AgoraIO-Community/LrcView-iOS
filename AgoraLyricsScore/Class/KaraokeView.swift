@@ -65,6 +65,9 @@ extension KaraokeView {
     /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成
     public func setLyricData(data: LyricModel) {
         lyricData = data
+        if data.isEmpty { /** 无歌词状态下强制关闭 **/
+            scoringEnabled = false
+        }
         lyricsView.setLyricData(data: data)
     }
     

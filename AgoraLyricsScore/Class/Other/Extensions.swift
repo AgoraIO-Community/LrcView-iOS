@@ -16,3 +16,23 @@ extension String {
         return String(subvalues)
     }
 }
+
+extension LyricModel {
+    /// 无歌词
+    var isEmpty: Bool {
+        return name == "" &&
+        singer == "" &&
+        lines.count == 0 &&
+        !hasPitch &&
+        duration == 0 &&
+        preludeEndPosition == 0
+    }
+    
+    
+}
+
+extension LyricLineModel {
+    var endTime: Int {
+        beginTime + duration
+    }
+}

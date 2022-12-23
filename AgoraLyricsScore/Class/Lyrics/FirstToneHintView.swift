@@ -69,7 +69,7 @@ class FirstToneHintView: UIView {
     
     /// 设置剩余开始时间 （前奏时间 - 当前歌曲进度）
     /// - Parameter time: 剩余开始唱第一句的时间
-    func setrRemainingTime(time: Int) {
+    func setRemainingTime(time: Int) {
         guard time > -2000 else { /** 超过2s不再进行有效输入 **/
             return
         }
@@ -91,11 +91,15 @@ class FirstToneHintView: UIView {
         }
         
         if remainingTime >= 2 * 1000 {
+            loadViews[0].isHidden = true
             loadViews[1].isHidden = true
+            loadViews[2].isHidden = false
             return
         }
         
         if remainingTime >= 1 * 1000 {
+            loadViews[0].isHidden = true
+            loadViews[1].isHidden = true
             loadViews[2].isHidden = true
             return
         }

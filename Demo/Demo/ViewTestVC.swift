@@ -20,10 +20,6 @@ class ViewTestVC: UIViewController {
         createData()
         setupUI()
         commonInit()
-        
-
-//        karaokeView.spacing = 0
-//        karaokeView.scoringEnabled = false
     }
 
     func createData() {

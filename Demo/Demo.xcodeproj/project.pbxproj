@@ -17,7 +17,13 @@
 		260942FD295302370022A50D /* 745012.xml in Resources */ = {isa = PBXBuildFile; fileRef = 260942FC295302370022A50D /* 745012.xml */; };
 		2609430129530FCC0022A50D /* lrc.lrc in Resources */ = {isa = PBXBuildFile; fileRef = 2609430029530FCC0022A50D /* lrc.lrc */; };
 		2682B05929544EF8005285B9 /* GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05829544EF8005285B9 /* GCDTimer.swift */; };
-		2682B05B2954535E005285B9 /* ExpTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05A2954535E005285B9 /* ExpTestVC.swift */; };
+		2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */; };
+		26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */; };
+		26C5452429557D25009E0F37 /* LyricsTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452329557D25009E0F37 /* LyricsTestVC.swift */; };
+		26C5452C2955B2FE009E0F37 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452B2955B2FE009E0F37 /* Config.swift */; };
+		26C5452E2955B370009E0F37 /* AVPlayerTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452D2955B370009E0F37 /* AVPlayerTestVC.swift */; };
+		26C545322955B684009E0F37 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 26C545312955B684009E0F37 /* music.mp3 */; };
+		26C545342955B6C2009E0F37 /* 105780.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26C545332955B6C2009E0F37 /* 105780.xml */; };
 		F88793560A341F9CBCF66020 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -34,7 +40,15 @@
 		260942FC295302370022A50D /* 745012.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 745012.xml; sourceTree = "<group>"; };
 		2609430029530FCC0022A50D /* lrc.lrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lrc.lrc; sourceTree = "<group>"; };
 		2682B05829544EF8005285B9 /* GCDTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDTimer.swift; path = ../../AgoraLyricsScore/Class/Other/GCDTimer.swift; sourceTree = "<group>"; };
-		2682B05A2954535E005285B9 /* ExpTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpTestVC.swift; sourceTree = "<group>"; };
+		2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstToneHintViewTestVC.swift; sourceTree = "<group>"; };
+		26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoLyricsTestVC.swift; sourceTree = "<group>"; };
+		26C5452329557D25009E0F37 /* LyricsTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsTestVC.swift; sourceTree = "<group>"; };
+		26C5452729559918009E0F37 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		26C5452829559920009E0F37 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		26C5452B2955B2FE009E0F37 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		26C5452D2955B370009E0F37 /* AVPlayerTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerTestVC.swift; sourceTree = "<group>"; };
+		26C545312955B684009E0F37 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
+		26C545332955B6C2009E0F37 /* 105780.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 105780.xml; sourceTree = "<group>"; };
 		474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		97B9305873CDD18897DEA957 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		B11BABF3447B1F591F0171BB /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -87,8 +101,12 @@
 				260942D82952B5050022A50D /* SceneDelegate.swift */,
 				260942DA2952B5050022A50D /* ViewController.swift */,
 				260942EC2952BD4C0022A50D /* ViewTestVC.swift */,
-				2682B05A2954535E005285B9 /* ExpTestVC.swift */,
+				2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */,
+				26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */,
+				26C5452329557D25009E0F37 /* LyricsTestVC.swift */,
+				26C5452D2955B370009E0F37 /* AVPlayerTestVC.swift */,
 				2682B05829544EF8005285B9 /* GCDTimer.swift */,
+				26C5452B2955B2FE009E0F37 /* Config.swift */,
 				260942DC2952B5050022A50D /* Main.storyboard */,
 				260942DF2952B5060022A50D /* Assets.xcassets */,
 				260942E12952B5060022A50D /* LaunchScreen.storyboard */,
@@ -102,6 +120,8 @@
 			children = (
 				260942FC295302370022A50D /* 745012.xml */,
 				2609430029530FCC0022A50D /* lrc.lrc */,
+				26C545332955B6C2009E0F37 /* 105780.xml */,
+				26C545312955B684009E0F37 /* music.mp3 */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -109,6 +129,8 @@
 		71C0091C9A3C4A9E26233CC8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				26C5452829559920009E0F37 /* libz.tbd */,
+				26C5452729559918009E0F37 /* libc++.tbd */,
 				474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */,
 			);
 			name = Frameworks;
@@ -176,8 +198,10 @@
 			files = (
 				260942FD295302370022A50D /* 745012.xml in Resources */,
 				2609430129530FCC0022A50D /* lrc.lrc in Resources */,
+				26C545322955B684009E0F37 /* music.mp3 in Resources */,
 				260942E32952B5060022A50D /* LaunchScreen.storyboard in Resources */,
 				260942E02952B5060022A50D /* Assets.xcassets in Resources */,
+				26C545342955B6C2009E0F37 /* 105780.xml in Resources */,
 				260942DE2952B5050022A50D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,10 +256,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				260942DB2952B5050022A50D /* ViewController.swift in Sources */,
+				26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */,
+				26C5452C2955B2FE009E0F37 /* Config.swift in Sources */,
 				260942D72952B5050022A50D /* AppDelegate.swift in Sources */,
+				26C5452E2955B370009E0F37 /* AVPlayerTestVC.swift in Sources */,
 				260942D92952B5050022A50D /* SceneDelegate.swift in Sources */,
+				26C5452429557D25009E0F37 /* LyricsTestVC.swift in Sources */,
 				2682B05929544EF8005285B9 /* GCDTimer.swift in Sources */,
-				2682B05B2954535E005285B9 /* ExpTestVC.swift in Sources */,
+				2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */,
 				260942ED2952BD4C0022A50D /* ViewTestVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

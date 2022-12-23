@@ -38,7 +38,10 @@ class ViewController: UIViewController {
     
     func createData() {
         list = [Section(title: "UI", rows: [.init(title: "View配置")]),
-                Section(title: "体验", rows: [.init(title: "FirstToneHintView"), .init(title: "MCC")])]
+                Section(title: "体验", rows: [.init(title: "FirstToneHintView"),
+                                            .init(title: "纯音乐"),
+                                            .init(title: "歌词显示 mcc"),
+                                            .init(title: "用AVPlayer测试")])]
     }
 }
 
@@ -66,16 +69,36 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if indexPath.section == 0 {
+        if indexPath.section == 0 { /** UI配置测试 **/
             let vc = ViewTestVC()
             navigationController?.pushViewController(vc, animated: true)
             return
         }
         
         if indexPath.section == 1 {
-            let vc = ExpTestVC()
-            navigationController?.pushViewController(vc, animated: true)
-            return
+            if indexPath.row == 0 { /** 等待视图 **/
+                let vc = FirstToneHintViewTestVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 1 { /** 纯音乐 **/
+                let vc = NoLyricsTestVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 2 { /** 歌词显示 **/
+                let vc = LyricsTestVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 3 { /** 用AVPlayer测试 **/
+                let vc = AVPlayerTestVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
         }
     }
 }

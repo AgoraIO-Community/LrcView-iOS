@@ -53,7 +53,6 @@ class XmlParser: NSObject {
                     let lead = (index >= 1 && line.tones[index - 1].lang != .en && line.tones[index - 1].word != "") ? " " : ""
                     let trail = index == count - 1 ? "" : " "
                     tone.word = "\(lead)\(tone.word)\(trail)"
-                    content += tone.word
                 }
                 if tone.pitch > 0 {
                     hasPitch = true
@@ -61,6 +60,7 @@ class XmlParser: NSObject {
                 if preludeEndPosition == -1 {
                     preludeEndPosition = tone.beginTime
                 }
+                content += tone.word
             }
             
             let lineBeginTime = line.tones.first?.beginTime ?? -1
