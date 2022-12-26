@@ -103,8 +103,9 @@ public class LyricsView: UIView {
             first.update(status: .highlighted)
             let indexPath = IndexPath(row: currentIndex, section: 0)
             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-            let cell = tableView.cellForRow(at: indexPath) as! LyricsCell
-            cell.update(model: first)
+            UIView.performWithoutAnimation {
+                tableView.reloadRows(at: [indexPath], with: .fade)
+            }
         }
     }
     
@@ -273,7 +274,8 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
                                          textHighlightFillColor: textHighlightFillColor,
                                          textNormalFontSize: textNormalFontSize,
                                          textHighlightFontSize: textHighlightFontSize,
-                                         maxWidth: maxWidth)
+                                         maxWidth: maxWidth,
+                                         lyricLineSpacing: lyricLineSpacing)
         cell.updateUI(uiConfig: config)
         let model = dataList[indexPath.row]
         cell.update(model: model)

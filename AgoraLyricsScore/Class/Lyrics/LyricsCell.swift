@@ -12,6 +12,8 @@ class LyricsCell: UITableViewCell {
     private var uiConfig: UIConfig!
     private var widthConstraint: NSLayoutConstraint!
     private var hasSetupUI = false
+    private var bottomConstraint, topConstraint: NSLayoutConstraint!
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -27,19 +29,26 @@ class LyricsCell: UITableViewCell {
         guard !hasSetupUI else {
             return
         }
+        
         contentView.backgroundColor = .clear
         backgroundColor = .clear
         
         contentView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-        
+        topConstraint = label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
+        bottomConstraint = label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+        topConstraint!.isActive = true
+        bottomConstraint!.isActive = true
         hasSetupUI = true
     }
     
     func updateUI(uiConfig: UIConfig) {
         self.uiConfig = uiConfig
+        if topConstraint!.constant != uiConfig.lyricLineSpacing {
+            topConstraint!.constant = uiConfig.lyricLineSpacing
+            bottomConstraint!.constant = -1 * uiConfig.lyricLineSpacing
+        }
         label.preferredMaxLayoutWidth = uiConfig.maxWidth
         label.setupUI(uiConfig: uiConfig.labelUIConfig)
     }
@@ -65,6 +74,8 @@ extension LyricsCell {
         let textHighlightFontSize: UIFont
         /// 最大宽度
         let maxWidth: CGFloat
+        /// 上下间距
+        let lyricLineSpacing: CGFloat
         
         var labelUIConfig: LyricsLabel.UIConfig {
             LyricsLabel.UIConfig(textNormalColor: textNormalColor,

@@ -21,6 +21,7 @@ class LyricsLabel: UILabel {
     
     func setupUI(uiConfig: UIConfig) {
         self.uiConfig = uiConfig
+        numberOfLines = 0
     }
     
     func setStatus(status: Status) {

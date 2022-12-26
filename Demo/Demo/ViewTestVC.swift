@@ -31,12 +31,14 @@ class ViewTestVC: UIViewController {
                                                     .init(title: "高亮的歌词颜色（未命中）"),
                                                     .init(title: "高亮的歌词填充颜色 （命中）"),
                                                     .init(title: "正常歌词文字大小"),
-                                                    .init(title: "高亮歌词文字大小"),])
+                                                    .init(title: "高亮歌词文字大小"),
+                                                    .init(title: "歌词上下间距"),
+                                                    .init(title: "歌词最大宽度"),])
         ]
     }
     
     func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .black
         
         view.addSubview(karaokeView)
         view.addSubview(tableview)
@@ -135,13 +137,23 @@ extension ViewTestVC: UITableViewDelegate, UITableViewDataSource {
                 reset()
                 return
             }
-            if indexPath.row == 4 { /** textNormalFontSize **/
+            if indexPath.row == 4 { /** lyricsView.textNormalFontSize **/
                 karaokeView.lyricsView.textNormalFontSize = .systemFont(ofSize: 20)
                 reset()
                 return
             }
-            if indexPath.row == 5 { /** textHighlightFontSize **/
+            if indexPath.row == 5 { /** lyricsView.textHighlightFontSize **/
                 karaokeView.lyricsView.textHighlightFontSize = .systemFont(ofSize: 23)
+                reset()
+                return
+            }
+            if indexPath.row == 6 { /** lyricsView.textHighlightFontSize **/
+                karaokeView.lyricsView.lyricLineSpacing = CGFloat.random(in: 5...50)
+                reset()
+                return
+            }
+            if indexPath.row == 7 { /** lyricsView.maxWidth **/
+                karaokeView.lyricsView.maxWidth = CGFloat.random(in: 100...350)
                 reset()
                 return
             }
