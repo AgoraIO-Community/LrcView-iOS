@@ -26,6 +26,12 @@ class LyricsTestVC: UIViewController {
     }
     
     func setupUI() {
+        karaokeView.lyricsView.textNormalColor = .yellow
+        karaokeView.lyricsView.textHighlightColor = .blue
+        karaokeView.lyricsView.textHighlightFillColor = .cyan
+        karaokeView.lyricsView.textNormalFontSize = .systemFont(ofSize: 16)
+        karaokeView.lyricsView.textHighlightFontSize = .systemFont(ofSize: 23)
+        karaokeView.lyricsView.draggable = true
         view.backgroundColor = .black
         view.addSubview(karaokeView)
         karaokeView.translatesAutoresizingMaskIntoConstraints = false
@@ -43,6 +49,7 @@ class LyricsTestVC: UIViewController {
         initEngine()
         initMCC()
         mccPreload()
+        karaokeView.delegate = self
     }
     
     func initEngine() {
@@ -82,6 +89,7 @@ class LyricsTestVC: UIViewController {
         print("== openMedia success")
     }
     
+    var last = 0
     func mccPlay() {
         let ret = mpk.play()
         if ret != 0 {
@@ -97,8 +105,17 @@ class LyricsTestVC: UIViewController {
                                          queue: .main) { [weak self](_, time) in
             
             guard let self = self else { return }
-            let currentTime = self.mpk.getPosition() + 10
-            self.karaokeView.setProgress(progress: Int(currentTime) )
+            
+            var current = self.last
+            if time.truncatingRemainder(dividingBy: 1000) == 0 {
+                current = self.mpk.getPosition()
+            }
+            
+            current += 10
+            
+            self.last = current
+            
+            self.karaokeView.setProgress(progress: self.last )
         }
     }
     
@@ -106,6 +123,11 @@ class LyricsTestVC: UIViewController {
         let requestId = mcc.getLyric(songCode: songCode, lyricType: 0)
         print("== mccGetLrc requestId:\(requestId)")
     }
+    
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        mpk.stop()
+//        karaokeView.reset()
+//    }
 }
 
 extension LyricsTestVC: AgoraRtcEngineDelegate {
@@ -182,4 +204,8 @@ extension LyricsTestVC: AgoraRtcMediaPlayerDelegate {
     }
 }
 
-
+extension LyricsTestVC: KaraokeDelegate {
+    func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
+        mpk.seek(toPosition: position)
+    }
+}

@@ -41,6 +41,7 @@ public class KaraokeView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        commonInit()
     }
     
     required init?(coder: NSCoder) {
@@ -51,7 +52,9 @@ public class KaraokeView: UIView {
 // MARK: - Public Method
 extension KaraokeView {
     /// 重置, 歌曲停止、切歌需要调用
-    public func reset() {}
+    public func reset() {
+        lyricsView.reset()
+    }
     
     /// 解析歌词文件xml数据
     /// - Parameter data: xml二进制数据
@@ -62,7 +65,7 @@ extension KaraokeView {
     }
     
     /// 设置歌词数据信息
-    /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成
+    /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `.empty`.
     public func setLyricData(data: LyricModel) {
         lyricData = data
         if data.isEmpty { /** 无歌词状态下强制关闭 **/
@@ -80,7 +83,11 @@ extension KaraokeView {
     /// - Note: 可以获取播放器的当前进度进行设置
     /// - Parameter progress: 歌曲进度 (ms)
     public func setProgress(progress: Int) {
-        lyricsView.setProgress(progress: progress)
+        var t = progress
+        if t > 250 {
+            t -= 250
+        }
+        lyricsView.setProgress(progress: t)
     }
     
     /// 设置自定义分数计算对象
@@ -133,7 +140,7 @@ extension KaraokeView {
     }
     
     fileprivate func commonInit() {
-        
+        lyricsView.delegate = self
     }
     
     fileprivate func updateUI() {
@@ -143,5 +150,11 @@ extension KaraokeView {
         lyricsViewTopConstraint.constant = scoringEnabled ? scoringView.viewHeight + spacing : 0
         
         scoringView.isHidden = !scoringEnabled
+    }
+}
+
+extension KaraokeView: LyricsViewDelegate {
+    func onLyricsView(view: LyricsView, didDragTo position: Int) {
+        delegate?.onKaraokeView?(view: self, didDragTo: position)
     }
 }

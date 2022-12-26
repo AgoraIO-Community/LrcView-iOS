@@ -11,7 +11,7 @@ import AgoraLyricsScore
 class ViewTestVC: UIViewController {
 
     let karaokeView = KaraokeView()
-    let tableview = UITableView()
+    let tableview = UITableView(frame: .zero, style: .grouped)
     private var timer = GCDTimer()
     var list = [Section]()
     
@@ -26,8 +26,12 @@ class ViewTestVC: UIViewController {
         list = [Section(title: "karaokeView", rows: [.init(title: "backgroundImage"),
                                                      .init(title: "spacing"),
                                                      .init(title: "scoringEnabled")]),
-                Section(title: "LyricsView", rows: [.init(title: "123"),
-                                                    .init(title: "456")])
+                Section(title: "LyricsView", rows: [.init(title: "隐藏等待开始圆点"),
+                                                    .init(title: "正常歌词背景色"),
+                                                    .init(title: "高亮的歌词颜色（未命中）"),
+                                                    .init(title: "高亮的歌词填充颜色 （命中）"),
+                                                    .init(title: "正常歌词文字大小"),
+                                                    .init(title: "高亮歌词文字大小"),])
         ]
     }
     
@@ -55,11 +59,32 @@ class ViewTestVC: UIViewController {
         tableview.dataSource = self
         tableview.delegate = self
         tableview.reloadData()
+        
+        reset()
+    }
+    
+    func reset() {
+        karaokeView.reset()
+        
+        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
+        let data = try! Data(contentsOf: url)
+        let model = KaraokeView.parseLyricData(data: data)!
+        karaokeView.setLyricData(data: model)
+        karaokeView.setProgress(progress: 30 * 1000)
     }
     
 }
 
 extension ViewTestVC: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return list[section].title
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return list.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list[section].rows.count
     }
@@ -89,7 +114,38 @@ extension ViewTestVC: UITableViewDelegate, UITableViewDataSource {
                 return
             }
         }
-        
+        if indexPath.section == 1 {
+            if indexPath.row == 0 { /** lyrcis.waitingViewHidden **/
+                karaokeView.lyricsView.waitingViewHidden = !karaokeView.lyricsView.waitingViewHidden
+                reset()
+                return
+            }
+            if indexPath.row == 1 { /** lyrcis.textNormalColor **/
+                karaokeView.lyricsView.textNormalColor = .green
+                reset()
+                return
+            }
+            if indexPath.row == 2 { /** lyrcis.textHighlightColor **/
+                karaokeView.lyricsView.textHighlightColor = .red
+                reset()
+                return
+            }
+            if indexPath.row == 3 { /** lyrcis.textHighlightFillColor **/
+                karaokeView.lyricsView.textHighlightFillColor = .yellow
+                reset()
+                return
+            }
+            if indexPath.row == 4 { /** textNormalFontSize **/
+                karaokeView.lyricsView.textNormalFontSize = .systemFont(ofSize: 20)
+                reset()
+                return
+            }
+            if indexPath.row == 5 { /** textHighlightFontSize **/
+                karaokeView.lyricsView.textHighlightFontSize = .systemFont(ofSize: 23)
+                reset()
+                return
+            }
+        }
     }
 }
 

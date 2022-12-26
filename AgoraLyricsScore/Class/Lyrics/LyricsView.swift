@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol LyricsViewDelegate: NSObjectProtocol {
+    func onLyricsView(view: LyricsView, didDragTo position: Int)
+}
+
 public class FirstToneHintViewStyle: NSObject {
     /// 背景色
     public var backgroundColor: UIColor? = .gray
@@ -24,22 +28,21 @@ public class LyricsView: UIView {
     /// 无歌词提示文字大小
     public var noLyricTipsFont: UIFont = .systemFont(ofSize: 17)
     /// 是否隐藏等待开始圆点
-    public var waitingViewHidden: Bool = false
-    /// 提示文字大小
-    public var tipsFont: UIFont = .systemFont(ofSize: 17)
-    
-    /// 正常歌词背景色
+    public var waitingViewHidden: Bool = false {
+        didSet {
+            updateUI()
+        }
+    }
+    /// 正常歌词颜色
     public var textNormalColor: UIColor = .gray
     /// 高亮的歌词颜色（未命中）
     public var textHighlightColor: UIColor = .white
     /// 高亮的歌词填充颜色 （命中）
     public var textHighlightFillColor: UIColor = .orange
-    
     /// 正常歌词文字大小
     public var textNormalFontSize: UIFont = .systemFont(ofSize: 15)
     /// 高亮歌词文字大小
     public var textHighlightFontSize: UIFont = .systemFont(ofSize: 18)
-    
     /// 歌词最大宽度
     public var maxWidth: CGFloat = UIScreen.main.bounds.width - 30
     /// 歌词上下间距
@@ -49,6 +52,7 @@ public class LyricsView: UIView {
     /// 是否开启拖拽
     public var draggable: Bool = false
     
+    var delegate: LyricsViewDelegate?
     /// 倒计时view
     fileprivate let firstToneHintView = FirstToneHintView()
     fileprivate let noLyricTipsLabel = UILabel()
@@ -60,6 +64,12 @@ public class LyricsView: UIView {
     fileprivate var progress: Int = 0
     /// 当前滚动到的索引
     fileprivate var currentIndex = 0
+    fileprivate let referenceLineView = UIView()
+    fileprivate var isDragging = false {
+        didSet {
+            referenceLineView.isHidden = !isDragging
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -84,7 +94,8 @@ public class LyricsView: UIView {
                                                           progressRate: 0,
                                                           beginTime: $0.beginTime,
                                                           duration: $0.duration,
-                                                          status: .normal) })
+                                                          status: .normal,
+                                                          tones: $0.tones) })
         updateUI()
         tableView.reloadData()
         
@@ -97,12 +108,23 @@ public class LyricsView: UIView {
         }
     }
     
+    func reset() {
+        firstToneHintView.reset()
+        dataList = []
+        progress = 0
+        currentIndex = 0
+        tableView.reloadData()
+    }
+    
     func setProgress(progress: Int) {
         self.progress = progress
         updateProgress()
     }
     
     private func updateProgress() {
+        if isDragging {
+            return
+        }
         let remainingTime = lyricData.preludeEndPosition - progress
         firstToneHintView.setRemainingTime(time: remainingTime)
         
@@ -118,61 +140,88 @@ public class LyricsView: UIView {
                     last.update(progressRate: 0)
                     Log.debug(text: "currentIndex: \(currentIndex) progressRate: 0", tag: logTag)
                     let lastIndexPath = IndexPath(row: lastIndex, section: 0)
-                    let lastCell = tableView.cellForRow(at: lastIndexPath) as! LyricsCell
-                    lastCell.update(model: last)
+                    UIView.performWithoutAnimation {
+                        tableView.reloadRows(at: [lastIndexPath], with: .fade)
+                    }
                     
                     /// 更新当前
                     currentIndex = newCurrentIndex
                     let current = dataList[currentIndex]
                     current.update(status: .highlighted)
-                    var progressRate: Float = 0
+                    var progressRate: Double = 0
                     if progress > item.element.beginTime, progress <= item.element.endTime { /** 计算比例 **/
-                        progressRate = Float((progress - item.element.beginTime) / item.element.duration)
+                        progressRate = calculateProgressRate(progress: progress, model: item.element)
                     }
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
-                    let cell = tableView.cellForRow(at: indexPath) as! LyricsCell
-                    cell.update(model: current)
+                    UIView.performWithoutAnimation {
+                        tableView.reloadRows(at: [indexPath], with: .fade)
+                    }
                     tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
                     Log.debug(text: "currentIndex: \(currentIndex) progressRate: \(progressRate)", tag: logTag)
                     return
                 }
                 
                 if newCurrentIndex == currentIndex,
-                    progress > item.element.beginTime,
-                    progress <= item.element.endTime { /** 还在原来的句子 **/
+                   progress > item.element.beginTime,
+                   progress <= item.element.endTime { /** 还在原来的句子 **/
                     
                     let current = dataList[currentIndex]
-                    let progressRate: Float = Float(progress - item.element.beginTime) / Float(item.element.duration)
+                    let progressRate: Double = calculateProgressRate(progress: progress, model: item.element)
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
-                    let cell = tableView.cellForRow(at: indexPath) as! LyricsCell
-                    cell.update(model: current)
+                    UIView.performWithoutAnimation {
+                        tableView.reloadRows(at: [indexPath], with: .fade)
+                    }
                     Log.debug(text: "currentIndex: \(currentIndex) progressRate: \(progressRate)", tag: logTag)
                 }
             }
             else {
                 Log.debug(text: "progress==: \(progress)", tag: logTag)
             }
-            
         }
-        
+    }
+    
+    private func dragCellHandler(scrollView: UIScrollView) {
+        let point = CGPoint(x: 0, y: scrollView.contentOffset.y + scrollView.bounds.height * 0.5)
+        guard let indexPath = tableView.indexPathForRow(at: point) else { return }
+        let model = dataList[indexPath.row]
+        delegate?.onLyricsView(view: self, didDragTo: model.beginTime)
+    }
+    
+    /// 计算一个句子的进度
+    private func calculateProgressRate(progress: Int, model: LyricsCell.Model) -> Double {
+        let toneCount = model.tones.filter({ $0.word.isEmpty == false }).count
+        for (index, tone) in model.tones.enumerated() {
+            if progress >= tone.beginTime, progress <= tone.beginTime + tone.duration {
+                let progressRate = Double((progress - tone.beginTime)) / Double(tone.duration)
+                let total = (Double(index) + progressRate) / Double(toneCount)
+                Log.debug(text: "total: \(total)", tag: logTag)
+                return total
+            }
+        }
+        return 0
     }
 }
 
-extension LyricsView { /** UI **/
+// MARK: - UI
+extension LyricsView {
     fileprivate func setupUI() {
         backgroundColor = .clear
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+        referenceLineView.backgroundColor = .red
+        referenceLineView.isHidden = true
         addSubview(noLyricTipsLabel)
         addSubview(firstToneHintView)
         addSubview(tableView)
+        addSubview(referenceLineView)
         
         noLyricTipsLabel.translatesAutoresizingMaskIntoConstraints = false
         firstToneHintView.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        referenceLineView.translatesAutoresizingMaskIntoConstraints = false
         
         noLyricTipsLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         noLyricTipsLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -187,6 +236,11 @@ extension LyricsView { /** UI **/
         tableView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         tableView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
+        referenceLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        referenceLineView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        referenceLineView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        referenceLineView.centerYAnchor.constraint(equalTo: tableView.centerYAnchor).isActive = true
     }
     
     fileprivate func commonInit() {
@@ -202,14 +256,16 @@ extension LyricsView { /** UI **/
         noLyricTipsLabel.isHidden = !isNoLyric
         tableView.isHidden = isNoLyric
         tableView.isScrollEnabled = draggable
+        firstToneHintView.isHidden = waitingViewHidden || isNoLyric
     }
 }
 
+// MARK: - UITableViewDataSource UITableViewDelegate
 extension LyricsView: UITableViewDataSource, UITableViewDelegate {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataList.count
     }
-
+    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "LyricsCell", for: indexPath) as! LyricsCell
         let config = LyricsCell.UIConfig(textNormalColor: textNormalColor,
@@ -223,17 +279,29 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
         cell.update(model: model)
         return cell
     }
-
+    
     public func scrollViewWillBeginDragging(_: UIScrollView) {
-        
+        isDragging = true
     }
-
+    
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate _: Bool) {
-        
+        dragCellHandler(scrollView: scrollView)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: { [weak self] in /** 延时0.3秒放开，避免跳动 **/
+            guard let self = self else {
+                return
+            }
+            self.isDragging = false
+        })
     }
-
+    
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        
+        dragCellHandler(scrollView: scrollView)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: { [weak self] in /** 延时0.3秒放开，避免跳动 **/
+            guard let self = self else {
+                return
+            }
+            self.isDragging = false
+        })
     }
 }
 

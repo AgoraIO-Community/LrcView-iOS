@@ -43,9 +43,9 @@ class FirstToneHintViewTestVC: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        timer.scheduledSecondsTimer(withName: "ExpTestVC", timeInterval: 1000, queue: .main) { [weak self] _, time in
+        timer.scheduledMillisecondsTimer(withName: "ExpTestVC", countDown: 1000000, milliseconds: 10, queue: .main) { [weak self](_, time) in
             guard let self = self else { return }
-            self.progress += 1000
+            self.progress += 10
             self.karaokeView.setProgress(progress: self.progress)
         }
     }

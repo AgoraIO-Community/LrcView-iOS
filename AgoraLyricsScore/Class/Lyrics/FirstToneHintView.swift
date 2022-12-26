@@ -13,6 +13,7 @@ class FirstToneHintView: UIView {
     private var loadViewConstraints = [NSLayoutConstraint]()
     /// 剩余开始时间 ms
     private var remainingTime = 0
+    private var lastRemainingTime = 0
     fileprivate let logTag = "FirstToneHintView"
     
     override init(frame: CGRect) {
@@ -70,18 +71,24 @@ class FirstToneHintView: UIView {
     /// 设置剩余开始时间 （前奏时间 - 当前歌曲进度）
     /// - Parameter time: 剩余开始唱第一句的时间
     func setRemainingTime(time: Int) {
-        guard time > -2000 else { /** 超过2s不再进行有效输入 **/
-            return
-        }
-        Log.info(text: "remainingTime: \(time)", tag: logTag)
-        
         if time < 0 {
             reset()
             return
         }
         
+        /** 过滤，500ms设置一次 **/
+        if lastRemainingTime == 0 {
+            lastRemainingTime = time
+        }
+        if lastRemainingTime - time < 500 {
+            return
+        }
+        lastRemainingTime = time
+        
         remainingTime = time
         isHidden = false
+        Log.info(text: "remainingTime: \(remainingTime)", tag: logTag)
+        
         
         if remainingTime >= 3 * 1000 {
             loadViews[0].isHidden = !self.loadViews[0].isHidden
@@ -115,6 +122,8 @@ class FirstToneHintView: UIView {
         self.loadViews[0].isHidden = false
         self.loadViews[1].isHidden = false
         self.loadViews[2].isHidden = false
+        lastRemainingTime = 0
+        remainingTime = 0
     }
     
 }

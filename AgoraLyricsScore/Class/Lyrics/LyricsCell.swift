@@ -78,7 +78,7 @@ extension LyricsCell {
     class Model {
         let text: String
         /// 进度 0-1
-        var progressRate: Float
+        var progressRate: Double
         /// 开始时间 单位为毫秒
         let beginTime: Int
         /// 总时长 (ms)
@@ -86,19 +86,23 @@ extension LyricsCell {
         /// 状态
         var status: Status
         
+        var tones: [LyricToneModel]
+        
         init(text: String,
-             progressRate: Float,
+             progressRate: Double,
              beginTime: Int,
              duration: Int,
-             status: Status) {
+             status: Status,
+             tones: [LyricToneModel]) {
             self.text = text
             self.progressRate = progressRate
             self.beginTime = beginTime
             self.duration = duration
             self.status = status
+            self.tones = tones
         }
         
-        func update(progressRate: Float) {
+        func update(progressRate: Double) {
             self.progressRate = progressRate
         }
         
