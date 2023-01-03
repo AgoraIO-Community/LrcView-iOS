@@ -66,6 +66,7 @@ extension KaraokeView {
             scoringEnabled = false
         }
         lyricsView.setLyricData(data: data)
+        scoringView.setLyricData(data: data)
     }
     
     /// 设置实时采集(mic)的Pitch
@@ -82,6 +83,7 @@ extension KaraokeView {
             t -= 250
         }
         lyricsView.progress = t
+        scoringView.progress = t
     }
     
     /// 设置自定义分数计算对象

@@ -22,3 +22,9 @@ extension LyricLineModel {
         beginTime + duration
     }
 }
+
+extension LyricToneModel {
+    var endTime: Int {
+        beginTime + duration
+    }
+}

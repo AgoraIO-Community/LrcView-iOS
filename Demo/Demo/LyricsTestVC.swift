@@ -124,10 +124,9 @@ class LyricsTestVC: UIViewController {
         print("== mccGetLrc requestId:\(requestId)")
     }
     
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        mpk.stop()
-//        karaokeView.reset()
-//    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        mpk.seek(toPosition: 13000)
+    }
 }
 
 extension LyricsTestVC: AgoraRtcEngineDelegate {
@@ -198,9 +197,9 @@ extension LyricsTestVC: AgoraRtcMediaPlayerDelegate {
     }
     
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo position: Int) {
-        DispatchQueue.main.async { [weak self] in
-            self?.karaokeView.setProgress(progress: position)
-        }
+//        DispatchQueue.main.async { [weak self] in
+//            self?.karaokeView.setProgress(progress: position)
+//        }
     }
 }
 
