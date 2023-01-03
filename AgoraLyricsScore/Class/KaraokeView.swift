@@ -10,25 +10,19 @@ import UIKit
 public class KaraokeView: UIView {
     /// 背景图
     public var backgroundImage: UIImage? = nil {
-        didSet {
-            updateUI()
-        }
+        didSet { updateUI() }
     }
     
     /// 是否使用评分功能
     /// - Note: 当`LyricModel.hasPitch = false`，强制不使用
     /// - Note: 当为 `false`, 会隐藏评分视图
     public var scoringEnabled: Bool = true {
-        didSet {
-            updateUI()
-        }
+        didSet { updateUI() }
     }
     
     /// 评分组件和歌词组件之间的间距 默认: 0
     public var spacing: CGFloat = 0 {
-        didSet {
-            updateUI()
-        }
+        didSet { updateUI() }
     }
     
     public weak var delegate: KaraokeDelegate?
@@ -36,7 +30,7 @@ public class KaraokeView: UIView {
     public let scoringView = ScoringView()
     fileprivate let backgroundImageView = UIImageView()
     fileprivate var lyricsViewTopConstraint: NSLayoutConstraint!
-    fileprivate var lyricData: LyricModel!
+    fileprivate var lyricData: LyricModel?
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -66,9 +60,9 @@ extension KaraokeView {
     
     /// 设置歌词数据信息
     /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `.empty`.
-    public func setLyricData(data: LyricModel) {
+    public func setLyricData(data: LyricModel?) {
         lyricData = data
-        if data.isEmpty { /** 无歌词状态下强制关闭 **/
+        if data == nil { /** 无歌词状态下强制关闭 **/
             scoringEnabled = false
         }
         lyricsView.setLyricData(data: data)
@@ -84,10 +78,10 @@ extension KaraokeView {
     /// - Parameter progress: 歌曲进度 (ms)
     public func setProgress(progress: Int) {
         var t = progress
-        if t > 250 {
+        if t > 250 { /** 进度提前250ms **/
             t -= 250
         }
-        lyricsView.setProgress(progress: t)
+        lyricsView.progress = t
     }
     
     /// 设置自定义分数计算对象

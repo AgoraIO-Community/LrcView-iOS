@@ -35,10 +35,10 @@ public class LyricsView: UIView {
     }
     /// 正常歌词颜色
     public var textNormalColor: UIColor = .gray
-    /// 高亮的歌词颜色（未命中）
-    public var textHighlightColor: UIColor = .white
-    /// 高亮的歌词填充颜色 （命中）
-    public var textHighlightFillColor: UIColor = .orange
+    /// 选中的歌词颜色
+    public var textSelectedColor: UIColor = .white
+    /// 高亮的歌词颜色 （命中）
+    public var textHighlightedColor: UIColor = .orange
     /// 正常歌词文字大小
     public var textNormalFontSize: UIFont = .systemFont(ofSize: 15)
     /// 高亮歌词文字大小
@@ -57,11 +57,11 @@ public class LyricsView: UIView {
     fileprivate let firstToneHintView = FirstToneHintView()
     fileprivate let noLyricTipsLabel = UILabel()
     fileprivate let tableView = UITableView()
-    fileprivate var lyricData: LyricModel!
+    fileprivate var lyricData: LyricModel?
     fileprivate let logTag = "LyricsView"
-    fileprivate var dataList = [LyricsCell.Model]()
+    fileprivate var dataList = [LyricCell.Model]()
     fileprivate var isNoLyric = false
-    fileprivate var progress: Int = 0
+    var progress: Int = 0 { didSet { updateProgress() } }
     /// 当前滚动到的索引
     fileprivate var currentIndex = 0
     fileprivate let referenceLineView = UIView()
@@ -86,21 +86,21 @@ public class LyricsView: UIView {
         Log.info(text: "deinit", tag: logTag)
     }
     
-    func setLyricData(data: LyricModel) {
+    func setLyricData(data: LyricModel?) {
         currentIndex = 0
         lyricData = data
-        isNoLyric = data.isEmpty
-        dataList = lyricData.lines.map({ LyricsCell.Model(text: $0.content,
+        isNoLyric = data == nil
+        dataList = lyricData?.lines.map({ LyricCell.Model(text: $0.content,
                                                           progressRate: 0,
                                                           beginTime: $0.beginTime,
                                                           duration: $0.duration,
                                                           status: .normal,
-                                                          tones: $0.tones) })
+                                                          tones: $0.tones) }) ?? []
         updateUI()
         tableView.reloadData()
         
         if !dataList.isEmpty, let first = dataList.first { /** 默认高亮第一个 **/
-            first.update(status: .highlighted)
+            first.update(status: .selectedOrHighlighted)
             let indexPath = IndexPath(row: currentIndex, section: 0)
             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
             UIView.performWithoutAnimation {
@@ -117,16 +117,14 @@ public class LyricsView: UIView {
         tableView.reloadData()
     }
     
-    func setProgress(progress: Int) {
-        self.progress = progress
-        updateProgress()
-    }
-    
     private func updateProgress() {
         if isDragging {
             return
         }
-        let remainingTime = lyricData.preludeEndPosition - progress
+        guard let data = lyricData else {
+            return
+        }
+        let remainingTime = data.preludeEndPosition - progress
         firstToneHintView.setRemainingTime(time: remainingTime)
         
         if !dataList.isEmpty, currentIndex < dataList.count {
@@ -148,7 +146,7 @@ public class LyricsView: UIView {
                     /// 更新当前
                     currentIndex = newCurrentIndex
                     let current = dataList[currentIndex]
-                    current.update(status: .highlighted)
+                    current.update(status: .selectedOrHighlighted)
                     var progressRate: Double = 0
                     if progress > item.element.beginTime, progress <= item.element.endTime { /** 计算比例 **/
                         progressRate = calculateProgressRate(progress: progress, model: item.element)
@@ -191,7 +189,7 @@ public class LyricsView: UIView {
     }
     
     /// 计算一个句子的进度
-    private func calculateProgressRate(progress: Int, model: LyricsCell.Model) -> Double {
+    private func calculateProgressRate(progress: Int, model: LyricCell.Model) -> Double {
         let toneCount = model.tones.filter({ $0.word.isEmpty == false }).count
         for (index, tone) in model.tones.enumerated() {
             if progress >= tone.beginTime, progress <= tone.beginTime + tone.duration {
@@ -245,7 +243,7 @@ extension LyricsView {
     }
     
     fileprivate func commonInit() {
-        tableView.register(LyricsCell.self, forCellReuseIdentifier: "LyricsCell")
+        tableView.register(LyricCell.self, forCellReuseIdentifier: "LyricsCell")
         tableView.delegate = self
         tableView.dataSource = self
     }
@@ -268,15 +266,15 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "LyricsCell", for: indexPath) as! LyricsCell
-        let config = LyricsCell.UIConfig(textNormalColor: textNormalColor,
-                                         textHighlightColor: textHighlightColor,
-                                         textHighlightFillColor: textHighlightFillColor,
-                                         textNormalFontSize: textNormalFontSize,
-                                         textHighlightFontSize: textHighlightFontSize,
-                                         maxWidth: maxWidth,
-                                         lyricLineSpacing: lyricLineSpacing)
-        cell.updateUI(uiConfig: config)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "LyricsCell", for: indexPath) as! LyricCell
+        cell.textNormalColor = textNormalColor
+        cell.textSelectedColor = textSelectedColor
+        cell.textHighlightedColor = textHighlightedColor
+        cell.textNormalFontSize = textNormalFontSize
+        cell.textHighlightFontSize = textHighlightFontSize
+        cell.maxWidth = maxWidth
+        cell.lyricLineSpacing = lyricLineSpacing
+        
         let model = dataList[indexPath.row]
         cell.update(model: model)
         return cell

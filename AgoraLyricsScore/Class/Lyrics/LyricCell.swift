@@ -7,9 +7,37 @@
 
 import UIKit
 
-class LyricsCell: UITableViewCell {
-    private let label = LyricsLabel()
-    private var uiConfig: UIConfig!
+class LyricCell: UITableViewCell {
+    private let label = LyricLabel()
+    /// 正常歌词背景色
+    var textNormalColor: UIColor = .gray {
+        didSet { updateUI() }
+    }
+    /// 选中的歌词颜色
+    var textSelectedColor: UIColor = .white {
+        didSet { updateUI() }
+    }
+    /// 高亮的歌词填充颜色
+    var textHighlightedColor: UIColor = .orange {
+        didSet { updateUI() }
+    }
+    /// 正常歌词文字大小
+    var textNormalFontSize: UIFont = .systemFont(ofSize: 15) {
+        didSet { updateUI() }
+    }
+    /// 高亮歌词文字大小
+    var textHighlightFontSize: UIFont = .systemFont(ofSize: 18) {
+        didSet { updateUI() }
+    }
+    /// 最大宽度
+    var maxWidth: CGFloat = UIScreen.main.bounds.width - 30 {
+        didSet { updateUI() }
+    }
+    /// 上下间距
+    var lyricLineSpacing: CGFloat = 10 {
+        didSet { updateUI() }
+    }
+    
     private var widthConstraint: NSLayoutConstraint!
     private var hasSetupUI = false
     private var bottomConstraint, topConstraint: NSLayoutConstraint!
@@ -43,49 +71,27 @@ class LyricsCell: UITableViewCell {
         hasSetupUI = true
     }
     
-    func updateUI(uiConfig: UIConfig) {
-        self.uiConfig = uiConfig
-        if topConstraint!.constant != uiConfig.lyricLineSpacing {
-            topConstraint!.constant = uiConfig.lyricLineSpacing
-            bottomConstraint!.constant = -1 * uiConfig.lyricLineSpacing
+    private func updateUI() {
+        if topConstraint!.constant != lyricLineSpacing {
+            topConstraint!.constant = lyricLineSpacing
+            bottomConstraint!.constant = -1 * lyricLineSpacing
         }
-        label.preferredMaxLayoutWidth = uiConfig.maxWidth
-        label.setupUI(uiConfig: uiConfig.labelUIConfig)
+        label.maxWidth = maxWidth
+        label.textNormalColor = textNormalColor
+        label.textSelectedColor = textSelectedColor
+        label.textHighlightedColor = textHighlightedColor
+        label.textNormalFontSize = textNormalFontSize
+        label.textHighlightFontSize = textHighlightFontSize
     }
     
     func update(model: Model) {
         label.text = model.text
-        label.setStatus(status: model.status)
-        label.setProgressRate(progressRate: CGFloat(model.progressRate))
+        label.status = model.status
+        label.progressRate = CGFloat(model.progressRate)
     }
 }
 
-extension LyricsCell {
-    struct UIConfig {
-        /// 正常歌词背景色
-        let textNormalColor: UIColor
-        /// 高亮的歌词颜色（未命中）
-        let textHighlightColor: UIColor
-        /// 高亮的歌词填充颜色 （命中）
-        let textHighlightFillColor: UIColor
-        /// 正常歌词文字大小
-        let textNormalFontSize: UIFont
-        /// 高亮歌词文字大小
-        let textHighlightFontSize: UIFont
-        /// 最大宽度
-        let maxWidth: CGFloat
-        /// 上下间距
-        let lyricLineSpacing: CGFloat
-        
-        var labelUIConfig: LyricsLabel.UIConfig {
-            LyricsLabel.UIConfig(textNormalColor: textNormalColor,
-                                 textHighlightColor: textHighlightColor,
-                                 textHighlightFillColor: textHighlightFillColor,
-                                 textNormalFontSize: textNormalFontSize,
-                                 textHighlightFontSize: textHighlightFontSize)
-        }
-    }
-    
+extension LyricCell {
     class Model {
         let text: String
         /// 进度 0-1
@@ -126,5 +132,5 @@ extension LyricsCell {
         }
     }
     
-    typealias Status = LyricsLabel.Status
+    typealias Status = LyricLabel.Status
 }

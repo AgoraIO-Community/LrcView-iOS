@@ -27,8 +27,8 @@ class LyricsTestVC: UIViewController {
     
     func setupUI() {
         karaokeView.lyricsView.textNormalColor = .yellow
-        karaokeView.lyricsView.textHighlightColor = .blue
-        karaokeView.lyricsView.textHighlightFillColor = .cyan
+        karaokeView.lyricsView.textSelectedColor = .blue
+        karaokeView.lyricsView.textHighlightedColor = .cyan
         karaokeView.lyricsView.textNormalFontSize = .systemFont(ofSize: 16)
         karaokeView.lyricsView.textHighlightFontSize = .systemFont(ofSize: 23)
         karaokeView.lyricsView.draggable = true

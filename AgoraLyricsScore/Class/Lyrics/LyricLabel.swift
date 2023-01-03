@@ -7,33 +7,42 @@
 
 import UIKit
 
-class LyricsLabel: UILabel {
+class LyricLabel: UILabel {
     /// [0, 1]
-    private var progressRate: CGFloat = 0
-    private var uiConfig: UIConfig!
-    private var status: Status = .normal
+    var progressRate: CGFloat = 0 { didSet { setNeedsDisplay() } }
+    /// 正常歌词颜色
+    var textNormalColor: UIColor = .gray
+    /// 选中的歌词颜色
+    var textSelectedColor: UIColor = .white
+    /// 高亮的歌词颜色
+    var textHighlightedColor: UIColor = .orange
+    /// 正常歌词文字大小
+    var textNormalFontSize: UIFont = .systemFont(ofSize: 15)
+    /// 高亮歌词文字大小
+    var textHighlightFontSize: UIFont = .systemFont(ofSize: 18)
+    var maxWidth: CGFloat = 0
     
-    /// [0, 1]
-    func setProgressRate(progressRate: CGFloat) {
-        self.progressRate = progressRate
-        setNeedsDisplay()
-    }
+    var status: Status = .normal { didSet { updateState() } }
     
-    func setupUI(uiConfig: UIConfig) {
-        self.uiConfig = uiConfig
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         numberOfLines = 0
     }
     
-    func setStatus(status: Status) {
-        self.status = status
-        if status == .highlighted {
-            textColor = uiConfig.textHighlightColor
-            font = uiConfig.textHighlightFontSize
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func updateState() {
+        if status == .selectedOrHighlighted {
+            textColor = textSelectedColor
+            font = textHighlightFontSize
         }
         else {
-            textColor = uiConfig.textNormalColor
-            font = uiConfig.textNormalFontSize
+            textColor = textNormalColor
+            font = textNormalFontSize
         }
+        preferredMaxLayoutWidth = maxWidth
     }
     
     override func draw(_ rect: CGRect) {
@@ -80,29 +89,16 @@ class LyricsLabel: UILabel {
             context.addPath(path)
             context.clip()
             let _textColor = textColor
-            textColor = uiConfig.textHighlightFillColor
+            textColor = textHighlightedColor
             super.draw(rect)
             textColor = _textColor
         }
     }
 }
 
-extension LyricsLabel {
-    struct UIConfig {
-        /// 正常歌词背景色
-        let textNormalColor: UIColor
-        /// 高亮的歌词颜色（未命中）
-        let textHighlightColor: UIColor
-        /// 高亮的歌词填充颜色 （命中）
-        let textHighlightFillColor: UIColor
-        /// 正常歌词文字大小
-        let textNormalFontSize: UIFont
-        /// 高亮歌词文字大小
-        let textHighlightFontSize: UIFont
-    }
-    
+extension LyricLabel {
     enum Status {
         case normal
-        case highlighted
+        case selectedOrHighlighted
     }
 }

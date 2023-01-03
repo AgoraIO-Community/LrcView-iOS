@@ -86,35 +86,11 @@ class FirstToneHintView: UIView {
         lastRemainingTime = time
         
         remainingTime = time
-        isHidden = false
         Log.info(text: "remainingTime: \(remainingTime)", tag: logTag)
-        
-        
-        if remainingTime >= 3 * 1000 {
-            loadViews[0].isHidden = !self.loadViews[0].isHidden
-            loadViews[1].isHidden = false
-            loadViews[2].isHidden = false
-            return
-        }
-        
-        if remainingTime >= 2 * 1000 {
-            loadViews[0].isHidden = true
-            loadViews[1].isHidden = true
-            loadViews[2].isHidden = false
-            return
-        }
-        
-        if remainingTime >= 1 * 1000 {
-            loadViews[0].isHidden = true
-            loadViews[1].isHidden = true
-            loadViews[2].isHidden = true
-            return
-        }
-        
-        if remainingTime < 1 * 1000, time < 115 {
-            isHidden = true
-            return
-        }
+        isHidden = remainingTime < 1 * 1000 && time < 115
+        loadViews[0].isHidden = (remainingTime >= 3 * 1000) ? !loadViews[0].isHidden : true
+        loadViews[1].isHidden = !(remainingTime >= 2 * 1000)
+        loadViews[2].isHidden = !(remainingTime >= 1 * 1000)
     }
     
     func reset() {

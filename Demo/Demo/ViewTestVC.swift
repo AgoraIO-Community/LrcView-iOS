@@ -128,12 +128,12 @@ extension ViewTestVC: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             if indexPath.row == 2 { /** lyrcis.textHighlightColor **/
-                karaokeView.lyricsView.textHighlightColor = .red
+                karaokeView.lyricsView.textSelectedColor = .red
                 reset()
                 return
             }
             if indexPath.row == 3 { /** lyrcis.textHighlightFillColor **/
-                karaokeView.lyricsView.textHighlightFillColor = .yellow
+                karaokeView.lyricsView.textHighlightedColor = .yellow
                 reset()
                 return
             }

@@ -79,16 +79,6 @@ public class LyricModel: NSObject {
         super.init()
     }
     
-    public static var empty: LyricModel {
-        LyricModel(name: "",
-                   singer: "",
-                   type: .slow,
-                   lines: [],
-                   preludeEndPosition: 0,
-                   duration: 0,
-                   hasPitch: false)
-    }
-    
     public override var description: String {
         let dict = ["name" : name,
                     "singer" : singer,
