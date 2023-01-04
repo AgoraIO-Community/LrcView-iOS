@@ -11,7 +11,7 @@ class ScoringCanvasView: UIView {
     /// 游标的起始位置
     var defaultPitchCursorX: CGFloat = 100
     /// 音准线的高度
-    var standardPitchStickViewHeight: CGFloat = 10
+    var standardPitchStickViewHeight: CGFloat = 3
     /// 音准线的基准因子
     var movingSpeedFactor: CGFloat = 120
     /// 音准线默认的背景色
@@ -37,6 +37,7 @@ class ScoringCanvasView: UIView {
     override func draw(_ rect: CGRect) {
         drawStaff()
         drawStandardInfos()
+        drawHighlightInfos()
     }
     
     func draw(progress: Int,
@@ -78,7 +79,7 @@ extension ScoringCanvasView {
             let y = CGFloat(i) * (spaceY + lineHeight)
             let rect = CGRect(x: 0, y: y, width: width, height: lineHeight)
             let linePath = UIBezierPath(rect: rect)
-            UIColor.white.setFill()
+            UIColor.white.withAlphaComponent(0.08).setFill()
             linePath.fill()
         }
     }
@@ -87,14 +88,14 @@ extension ScoringCanvasView {
         drawInfos(infos: standardInfos, fillColor: standardPitchStickViewColor)
     }
     
-    fileprivate func drawHitInfos() {
-//        drawInfos(infos: highlightInfos, fillColor: standardPitchStickViewHighlightColor)
+    fileprivate func drawHighlightInfos() {
+        drawInfos(infos: highlightInfos, fillColor: standardPitchStickViewHighlightColor)
     }
     
     private func drawInfos(infos: [ScoringView.Info], fillColor: UIColor) {
         for info in infos {
-            let beginTime = info.beginTime
-            let duration = info.duration
+            let beginTime = info.drawBeginTime
+            let duration = info.drawDuration
             let pitch = info.pitch
             
             /// 视图最左边到游标这段距离对应的时长
@@ -112,13 +113,12 @@ extension ScoringCanvasView {
     
     /// 计算y的位置
     private func getCenterY(pitch: Double) -> CGFloat {
-        if pitch < minPitch {
+        if pitch <= 0 {
             return bounds.height
         }
+        if pitch < minPitch { return bounds.height }
+        if pitch > maxPitch { return 0 }
         
-        if pitch > maxPitch {
-            return 0
-        }
         /// 映射成从0开始
         let value = pitch - minPitch
         /// 计算相对偏移

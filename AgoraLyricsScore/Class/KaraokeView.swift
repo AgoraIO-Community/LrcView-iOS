@@ -31,6 +31,7 @@ public class KaraokeView: UIView {
     fileprivate let backgroundImageView = UIImageView()
     fileprivate var lyricsViewTopConstraint: NSLayoutConstraint!
     fileprivate var lyricData: LyricModel?
+    fileprivate var pitchIsZeroCount = 0
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -47,6 +48,7 @@ public class KaraokeView: UIView {
 extension KaraokeView {
     /// 重置, 歌曲停止、切歌需要调用
     public func reset() {
+        pitchIsZeroCount = 0
         lyricsView.reset()
     }
     
@@ -72,7 +74,18 @@ extension KaraokeView {
     /// 设置实时采集(mic)的Pitch
     /// - Note: 可以从AgoraRTC回调方法 `- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine reportAudioVolumeIndicationOfSpeakers:(NSArray<AgoraRtcAudioVolumeInfo *> * _Nonnull)speakers totalVolume:(NSInteger)totalVolume`  获取
     /// - Parameter pitch: 实时音调值
-    public func setPitch(pitch: Double) {}
+    public func setPitch(pitch: Double) {
+        if pitch == 0 {
+            pitchIsZeroCount += 1
+        }
+        else {
+            pitchIsZeroCount = 0
+        }
+        if pitch > 0 || pitchIsZeroCount >= 5 { /** 过滤5个0 的情况 **/
+            pitchIsZeroCount = 0
+            scoringView.setPitch(pitch: pitch)
+        }
+    }
     
     /// 设置当前歌曲的进度
     /// - Note: 可以获取播放器的当前进度进行设置

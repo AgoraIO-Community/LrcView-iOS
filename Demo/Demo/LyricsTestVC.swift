@@ -47,6 +47,7 @@ class LyricsTestVC: UIViewController {
                                         appCertificate: Config.mccCertificate,
                                         userUuid: "\(Config.mccUid)")
         initEngine()
+        joinChannel()
         initMCC()
         mccPreload()
         karaokeView.delegate = self
@@ -58,6 +59,18 @@ class LyricsTestVC: UIViewController {
         config.audioScenario = .chorus
         config.channelProfile = .liveBroadcasting
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: config, delegate: self)
+    }
+    
+    func joinChannel() { /** 目的：发布mic流、接收音频流 **/
+        agoraKit.enableAudioVolumeIndication(50, smooth: 3, reportVad: true)
+        let option = AgoraRtcChannelMediaOptions()
+        option.clientRoleType = .broadcaster
+        agoraKit.setClientRole(.broadcaster)
+        let ret = agoraKit.joinChannel(byToken: nil,
+                                       channelId: Config.channelId,
+                                       uid: Config.hostUid,
+                                       mediaOptions: option)
+        print("joinChannel ret \(ret)")
     }
     
     func initMCC() {
@@ -145,8 +158,7 @@ extension LyricsTestVC: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
         if let pitch = speakers.last?.voicePitch {
-            
-            
+            karaokeView.setPitch(pitch: pitch)
         }
     }
 }
