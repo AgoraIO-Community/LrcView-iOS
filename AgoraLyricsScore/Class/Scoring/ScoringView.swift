@@ -121,6 +121,7 @@ public class ScoringView: UIView {
         canvasView.separatorColor = separatorColor
         canvasView.isVerticalSeparatorLineHidden = isVerticalSeparatorLineHidden
         canvasView.separatorHidden = separatorHidden
+        localPitchView.defaultPitchCursorX = defaultPitchCursorX
     }
     
     private func updateProgress() {

@@ -41,7 +41,8 @@ class ViewController: UIViewController {
                 Section(title: "体验", rows: [.init(title: "FirstToneHintView"),
                                             .init(title: "纯音乐"),
                                             .init(title: "歌词显示 mcc"),
-                                            .init(title: "用AVPlayer测试")])]
+                                            .init(title: "用AVPlayer测试"),
+                                            .init(title: "Emitter测试")])]
     }
 }
 
@@ -96,6 +97,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             
             if indexPath.row == 3 { /** 用AVPlayer测试 **/
                 let vc = AVPlayerTestVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 4 { /** Emitter测试 **/
+                let vc = EmitterVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }
