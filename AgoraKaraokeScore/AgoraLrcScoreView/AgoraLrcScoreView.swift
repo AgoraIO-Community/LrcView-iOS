@@ -194,7 +194,7 @@ public class AgoraLrcScoreView: UIView {
 
     /// 歌词的URL
     public func setLrcUrl(url: String) {
-        Log.info(text: "setLrcUrl", tag: logTag)
+        Log.info(text: "=== setLrcUrl \(url)", tag: logTag)
         AgoraDownLoadManager.manager.downloadLrcFile(urlString: url, completion: { lryic in
             self.scoreView?.isHidden = self._config.isHiddenScoreView || lryic is [AgoraLrcModel]
             self.config?.lrcConfig?.isHiddenWatitingView = self.isHiddenWatitingView
@@ -212,8 +212,10 @@ public class AgoraLrcScoreView: UIView {
                 self.lrcView?.lrcConfig?.isDrag = false
             }
             self.lrcView?.lrcConfig = self.config?.lrcConfig
+            Log.info(text: "invoke downloadLrcFinished", tag: self.logTag)
             self.downloadDelegate?.downloadLrcFinished?(url: url)
         }, failure: {
+            Log.info(text: "download failed", tag: self.logTag)
             self.lrcView?.lrcDatas = []
             self.config?.lrcConfig?.isHiddenWatitingView = true
         })
@@ -222,6 +224,10 @@ public class AgoraLrcScoreView: UIView {
     var lastVoicePitch: [Double]?
     /// 实时声音数据
     public func setVoicePitch(_ voicePitch: [Double]) {
+        guard isStart else {
+            Log.info(text: "setVoicePitch return", tag: logTag)
+            return
+        }
         scoreView?.setVoicePitch(voicePitch)
     }
     
@@ -243,12 +249,13 @@ public class AgoraLrcScoreView: UIView {
     private var isStop: Bool = false
     /// 开始滚动
     public func start() {
-        Log.info(text: "start", tag: logTag)
+        Log.info(text: "=== start", tag: logTag)
         isStart = true
-        timer.scheduledMillisecondsTimer(withName: "lrc", countDown: 1000 * 60 * 30, milliseconds: 10, queue: .main) { [weak self] _, duration in
+        timer.scheduledMillisecondsTimer(withName: "lrc", countDown: 1000 * 60 * 15, milliseconds: 10, queue: .main) { [weak self] _, duration in
             guard let self = self else { return }
             if duration.truncatingRemainder(dividingBy: 1000) == 0 {
                 var time = self.delegate?.getPlayerCurrentTime() ?? 0
+                Log.info(text: "invoke getPlayerCurrentTime \(time)", tag: self.logTag)
                 if time > 250 {
                     time -= 250
                 }
@@ -280,7 +287,7 @@ public class AgoraLrcScoreView: UIView {
 
     public func reset() {
         lastVoicePitch = nil
-        Log.info(text: "reset", tag: logTag)
+        Log.info(text: "=== reset", tag: logTag)
         resetTime()
         stop()
         scoreView?.reset()
@@ -334,6 +341,7 @@ public class AgoraLrcScoreView: UIView {
     }
 
     private func timerHandler(time: TimeInterval) {
+        Log.info(text: "timerHandler", tag: logTag)
         lrcView?.start(currentTime: time)
         scoreView?.start(currentTime: time)
     }
