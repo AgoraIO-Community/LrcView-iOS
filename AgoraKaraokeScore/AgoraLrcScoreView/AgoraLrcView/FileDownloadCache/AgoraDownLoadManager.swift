@@ -85,6 +85,7 @@ class AgoraDownLoadManager {
                 guard self.retryCount < 3 else {
                     self.retryCount = 0
                     DispatchQueue.main.async {
+                        Log.info(text: "invoke downloadLrcError", tag: "AgoraDownLoadManager")
                         self.delegate?.downloadLrcError?(url: self.urlString,
                                                          error: error)
                         failure()
@@ -154,6 +155,7 @@ extension AgoraDownLoadManager: AgoraLrcDownloadDelegate {
     }
 
     func downloadLrcError(url: String, error: Error?) {
+        Log.errorText(text: "\(error?.localizedDescription ?? "nil") url")
         delegate?.downloadLrcError?(url: url, error: error)
     }
 

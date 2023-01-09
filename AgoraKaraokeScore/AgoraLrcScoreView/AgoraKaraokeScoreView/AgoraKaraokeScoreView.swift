@@ -143,6 +143,7 @@ public class AgoraKaraokeScoreView: UIView {
     }
 
     func reset() {
+        Log.info(text: "reset", tag: logTag)
         currentScore = _scoreConfig.defaultScore
         currentTime = 0
         totalTime = 0

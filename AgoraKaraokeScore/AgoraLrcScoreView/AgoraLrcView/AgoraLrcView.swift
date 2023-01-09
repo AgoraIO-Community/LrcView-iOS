@@ -36,7 +36,7 @@ class AgoraLrcView: UIView {
     var miguSongModel: AgoraMiguSongLyric? {
         didSet {
             guard miguSongModel != nil else { return }
-            Log.info(text: "will miguSongModel setdataArray \(miguSongModel?.sentences.count ?? 0) ", tag: logTag)
+            Log.info(text: "--- will miguSongModel setdataArray songName: \(miguSongModel?.name ?? "nil")  lines: \(miguSongModel?.sentences.count ?? 0) ", tag: logTag)
             dataArray = miguSongModel?.sentences
             // 计算总pitch数量
             totalPitchCount = miguSongModel?.sentences
@@ -65,6 +65,7 @@ class AgoraLrcView: UIView {
     private var progress: CGFloat = 0 {
         didSet {
             let cell = tableView.cellForRow(at: IndexPath(row: scrollRow, section: 0)) as? AgoraMusicLrcCell
+            Log.debug(text: "progress: \(progress)", tag: logTag)
             cell?.setupMusicLrcProgress(with: progress)
         }
     }
@@ -73,7 +74,11 @@ class AgoraLrcView: UIView {
     private var preRow: Int = -1
     private var scrollRow: Int = -1 {
         didSet {
-            if scrollRow == oldValue || scrollRow < 0 { return }
+            Log.info(text: "didSet scrollRow \(scrollRow)", tag: logTag)
+            if scrollRow == oldValue || scrollRow < 0 {
+                Log.info(text: "scrollRow: \(scrollRow) oldValue:\(oldValue)", tag: logTag)
+                return
+            }
             if preRow > -1 && (dataArray?.count ?? 0) > 0 {
                 if preRow < (dataArray?.count ?? 0) {
                     UIView.performWithoutAnimation {
@@ -85,10 +90,18 @@ class AgoraLrcView: UIView {
                                   tag: logTag)
                 }
             }
-            let indexPath = IndexPath(row: scrollRow, section: 0)
-            tableView.reloadRows(at: [indexPath], with: .none)
-            tableView.scrollToRow(at: indexPath, at: _lrcConfig.lyricsScrollPosition, animated: true)
-            preRow = scrollRow
+            
+            if scrollRow >= 0, scrollRow < (dataArray?.count ?? 0) {
+                let indexPath = IndexPath(row: scrollRow, section: 0)
+                tableView.reloadRows(at: [indexPath], with: .none)
+                tableView.scrollToRow(at: indexPath, at: _lrcConfig.lyricsScrollPosition, animated: true)
+                preRow = scrollRow
+                Log.info(text: "scrollToRow \(scrollRow)", tag: logTag)
+            }
+            else {
+                Log.errorText(text: "scrollRow out bounds, scrollRow: \(scrollRow) \(dataArray?.count ?? 0)",
+                              tag: logTag)
+            }
         }
     }
 
@@ -220,7 +233,11 @@ class AgoraLrcView: UIView {
 
     private var preTime: TimeInterval = 0
     func start(currentTime: TimeInterval) {
-        guard !(dataArray?.isEmpty ?? false) else { return }
+        Log.info(text: "start \(currentTime)", tag: logTag)
+        guard !(dataArray?.isEmpty ?? false) else {
+            Log.info(text: "start return empty", tag: logTag)
+            return
+        }
         let time: TimeInterval = lrcDatas == nil ? 1000 : 1
         if self.currentTime == 0 {
             loadView.beginAnimation()
@@ -326,7 +343,10 @@ class AgoraLrcView: UIView {
                                  progress: CGFloat?, pitch: Int)?
     {
         guard let lrcArray = miguSongModel?.sentences,
-              !lrcArray.isEmpty else { return nil }
+              !lrcArray.isEmpty else {
+            Log.info(text: "getXmlLrc nil empty", tag: logTag)
+            return nil
+        }
         var i = 0
         var progress: CGFloat = 0.0
         // 歌词滚动显示
@@ -349,9 +369,11 @@ class AgoraLrcView: UIView {
                 i = index
                 let (wordProgress, pitch) = currentLrc.getProgress(with: currentTime)
                 progress = wordProgress
+                Log.info(text: "getXmlLrc progress:\(progress) \(lrcArray.count)", tag: logTag)
                 return (i, currentLrc.toSentence(), progress, pitch)
             }
         }
+        Log.info(text: "getXmlLrc nil \(lrcArray.count)", tag: logTag)
         return nil
     }
 
