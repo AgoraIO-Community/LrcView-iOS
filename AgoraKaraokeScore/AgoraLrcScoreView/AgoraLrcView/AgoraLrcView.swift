@@ -56,9 +56,12 @@ class AgoraLrcView: UIView {
 
     private var dataArray: [Any]? {
         didSet {
-            Log.info(text: "did setdataArray \(dataArray?.count ?? 0) ", tag: logTag)
+            Log.info(text: "=== did setdataArray \(dataArray?.count ?? 0) ", tag: logTag)
             tipsLabel.isHidden = !(dataArray?.isEmpty ?? true)
             tableView.reloadData()
+            if (dataArray?.count ?? 0) > 0 {
+                scrollToTop(animation: false)
+            }
         }
     }
 
@@ -74,7 +77,7 @@ class AgoraLrcView: UIView {
     private var preRow: Int = -1
     private var scrollRow: Int = -1 {
         didSet {
-            Log.info(text: "didSet scrollRow \(scrollRow)", tag: logTag)
+            Log.info(text: "=== didSet scrollRow \(scrollRow)", tag: logTag)
             if scrollRow == oldValue || scrollRow < 0 {
                 Log.info(text: "scrollRow: \(scrollRow) oldValue:\(oldValue)", tag: logTag)
                 return
@@ -96,7 +99,7 @@ class AgoraLrcView: UIView {
                 tableView.reloadRows(at: [indexPath], with: .none)
                 tableView.scrollToRow(at: indexPath, at: _lrcConfig.lyricsScrollPosition, animated: true)
                 preRow = scrollRow
-                Log.info(text: "scrollToRow \(scrollRow)", tag: logTag)
+                Log.info(text: "=== scrollToRow \(scrollRow)", tag: logTag)
             }
             else {
                 Log.errorText(text: "scrollRow out bounds, scrollRow: \(scrollRow) \(dataArray?.count ?? 0)",
