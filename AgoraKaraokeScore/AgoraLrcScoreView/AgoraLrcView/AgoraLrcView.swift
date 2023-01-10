@@ -36,7 +36,7 @@ class AgoraLrcView: UIView {
     var miguSongModel: AgoraMiguSongLyric? {
         didSet {
             guard miguSongModel != nil else { return }
-            Log.info(text: "--- will miguSongModel setdataArray songName: \(miguSongModel?.name ?? "nil")  lines: \(miguSongModel?.sentences.count ?? 0) ", tag: logTag)
+            Log.info(text: "=== will miguSongModel setdataArray songName: \(miguSongModel?.name ?? "nil")  lines: \(miguSongModel?.sentences.count ?? 0) ", tag: logTag)
             dataArray = miguSongModel?.sentences
             // 计算总pitch数量
             totalPitchCount = miguSongModel?.sentences
@@ -46,9 +46,9 @@ class AgoraLrcView: UIView {
 
     var lrcDatas: [AgoraLrcModel]? {
         didSet {
-            Log.info(text: "will lrcDatas setdataArray \(lrcDatas?.count ?? 0) ", tag: logTag)
+            Log.info(text: "=== will lrcDatas setdataArray \(lrcDatas?.count ?? 0) ", tag: logTag)
             dataArray = lrcDatas
-            Log.info(text: "lrcDatas.count = \(lrcDatas?.count ?? 0)", tag: logTag)
+            Log.info(text: "=== lrcDatas.count = \(lrcDatas?.count ?? 0)", tag: logTag)
             guard let data = lrcDatas, !data.isEmpty else { return }
             _lrcConfig.lrcHighlightColor = .clear
         }
@@ -68,7 +68,6 @@ class AgoraLrcView: UIView {
     private var progress: CGFloat = 0 {
         didSet {
             let cell = tableView.cellForRow(at: IndexPath(row: scrollRow, section: 0)) as? AgoraMusicLrcCell
-            Log.debug(text: "progress: \(progress)", tag: logTag)
             cell?.setupMusicLrcProgress(with: progress)
         }
     }
@@ -236,7 +235,6 @@ class AgoraLrcView: UIView {
 
     private var preTime: TimeInterval = 0
     func start(currentTime: TimeInterval) {
-        Log.info(text: "start \(currentTime)", tag: logTag)
         guard !(dataArray?.isEmpty ?? false) else {
             Log.info(text: "start return empty", tag: logTag)
             return
@@ -347,7 +345,6 @@ class AgoraLrcView: UIView {
     {
         guard let lrcArray = miguSongModel?.sentences,
               !lrcArray.isEmpty else {
-            Log.info(text: "getXmlLrc nil empty", tag: logTag)
             return nil
         }
         var i = 0

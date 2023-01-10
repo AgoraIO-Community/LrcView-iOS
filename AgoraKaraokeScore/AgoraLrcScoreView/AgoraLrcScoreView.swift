@@ -340,7 +340,6 @@ public class AgoraLrcScoreView: UIView {
     }
 
     private func timerHandler(time: TimeInterval) {
-        Log.info(text: "timerHandler", tag: logTag)
         lrcView?.start(currentTime: time)
         scoreView?.start(currentTime: time)
     }
