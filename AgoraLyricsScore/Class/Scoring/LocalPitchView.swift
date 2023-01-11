@@ -77,7 +77,7 @@ class LocalPitchView: UIView {
     }
 }
 
-public class Emitter {
+class Emitter {
     let layer = CAEmitterLayer()
     var images = [UIImage]() {
         didSet {
@@ -87,8 +87,9 @@ public class Emitter {
     
     var defaultImages: [UIImage] {
         var list = [UIImage]()
-        for i in 1...9 {
-            let image = Bundle.currentBundle.image(name: "start\(i)")!
+        let bundle = Bundle.currentBundle
+        for i in 1..<9 {
+            let image = bundle.image(name: "star\(i)")!
             list.append(image)
         }
         return list
@@ -101,6 +102,7 @@ public class Emitter {
         layer.masksToBounds = false
         layer.emitterMode = .points
         layer.emitterShape = .circle
+        layer.birthRate = 0
         updateImageCells()
     }
     

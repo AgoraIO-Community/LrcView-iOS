@@ -50,6 +50,7 @@ extension KaraokeView {
     public func reset() {
         pitchIsZeroCount = 0
         lyricsView.reset()
+        scoringView.reset()
     }
     
     /// 解析歌词文件xml数据

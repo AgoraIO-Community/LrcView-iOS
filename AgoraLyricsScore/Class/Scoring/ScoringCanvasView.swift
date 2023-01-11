@@ -25,13 +25,8 @@ class ScoringCanvasView: UIView {
     /// 是否隐藏上下分割线
     var separatorHidden: Bool = false
     
-    var minPitch: Double = 0
-    var maxPitch: Double = 0
-    
-    fileprivate var progress: Int = 0
-    fileprivate var highlightInfos = [ScoringView.Info]()
-    /// 需要绘制标准pitch的数据
-    fileprivate var standardInfos = [ScoringView.Info]()
+    fileprivate var standardInfos = [DrawInfo]()
+    fileprivate var highlightInfos = [DrawInfo]()
     fileprivate var widthPreMs: CGFloat { movingSpeedFactor / 1000 }
     
     override func draw(_ rect: CGRect) {
@@ -40,17 +35,14 @@ class ScoringCanvasView: UIView {
         drawHighlightInfos()
     }
     
-    func draw(progress: Int,
-              standardInfos: [ScoringView.Info],
-              highlightInfos: [ScoringView.Info]) {
-        self.progress = progress
+    func draw(standardInfos: [DrawInfo],
+              highlightInfos: [DrawInfo]) {
         self.standardInfos = standardInfos
         self.highlightInfos = highlightInfos
         setNeedsDisplay()
     }
     
     func reset() {
-        self.progress = 0
         self.standardInfos = []
         self.highlightInfos = []
         setNeedsDisplay()
@@ -92,38 +84,51 @@ extension ScoringCanvasView {
         drawInfos(infos: highlightInfos, fillColor: standardPitchStickViewHighlightColor)
     }
     
-    private func drawInfos(infos: [ScoringView.Info], fillColor: UIColor) {
+    private func drawInfos(infos: [DrawInfo], fillColor: UIColor) {
         for info in infos {
-            let beginTime = info.drawBeginTime
-            let duration = info.drawDuration
-            let pitch = info.pitch
-            
-            /// 视图最左边到游标这段距离对应的时长
-            let defaultPitchCursorXTime = Int(defaultPitchCursorX / widthPreMs)
-            let x = CGFloat(beginTime - (progress - defaultPitchCursorXTime)) * widthPreMs
-            let y = getCenterY(pitch: pitch) - (standardPitchStickViewHeight / 2)
-            let w = widthPreMs * CGFloat(duration)
-            let h = standardPitchStickViewHeight
-            let rect = CGRect(x: x, y: y, width: w, height: h)
+            let rect = info.rect
             let path = UIBezierPath(roundedRect: rect, cornerRadius: standardPitchStickViewHeight/2)
             fillColor.setFill()
             path.fill()
         }
     }
     
+//    private func drawInfos(infos: [ScoringVM.Info], fillColor: UIColor) {
+//        for info in infos {
+//            let beginTime = info.drawBeginTime
+//            let duration = info.drawDuration
+//            let pitch = info.pitch
+//
+//            /// 视图最左边到游标这段距离对应的时长
+//            let defaultPitchCursorXTime = Int(defaultPitchCursorX / widthPreMs)
+//            let x = CGFloat(beginTime - (progress - defaultPitchCursorXTime)) * widthPreMs
+//            let y = getCenterY(pitch: pitch) - (standardPitchStickViewHeight / 2)
+//            let w = widthPreMs * CGFloat(duration)
+//            let h = standardPitchStickViewHeight
+//            let rect = CGRect(x: x, y: y, width: w, height: h)
+//            let path = UIBezierPath(roundedRect: rect, cornerRadius: standardPitchStickViewHeight/2)
+//            fillColor.setFill()
+//            path.fill()
+//        }
+//    }
+    
     /// 计算y的位置
-    private func getCenterY(pitch: Double) -> CGFloat {
-        if pitch <= 0 {
-            return bounds.height
-        }
-        if pitch < minPitch { return bounds.height }
-        if pitch > maxPitch { return 0 }
-        
-        /// 映射成从0开始
-        let value = pitch - minPitch
-        /// 计算相对偏移
-        let distance = (value / (maxPitch - minPitch)) * bounds.height
-        let y = bounds.height - distance
-        return y
-    }
+//    private func getCenterY(pitch: Double) -> CGFloat {
+//        if pitch <= 0 {
+//            return bounds.height
+//        }
+//        if pitch < minPitch { return bounds.height }
+//        if pitch > maxPitch { return 0 }
+//
+//        /// 映射成从0开始
+//        let value = pitch - minPitch
+//        /// 计算相对偏移
+//        let distance = (value / (maxPitch - minPitch)) * bounds.height
+//        let y = bounds.height - distance
+//        return y
+//    }
+}
+
+extension ScoringCanvasView {
+    typealias DrawInfo = ScoringVM.DrawInfo
 }

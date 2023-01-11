@@ -63,26 +63,34 @@ public class ScoringView: UIView {
     fileprivate let gradeView = GradeView()
     fileprivate let localPitchView = LocalPitchView()
     fileprivate let canvasView = ScoringCanvasView()
-    fileprivate var dataList = [Info]()
-    fileprivate var widthPreMs: CGFloat { movingSpeedFactor / 1000 }
-    fileprivate var currentVisiableInfos = [Info]()
-    fileprivate var currentHighlightInfos = [Info]()
-    fileprivate var maxPitch: Double = 0
-    fileprivate var minPitch: Double = 0
-    fileprivate var scoreLevel = 0
-    fileprivate var scoreCompensationOffset = 0
-    /// 产生pitch花费的时间
-    fileprivate let pitchDuration = 50
     /// 间距
     fileprivate let gradeViewSpaces: CGFloat = 15
+    fileprivate let vm = ScoringVM()
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        vm.delegate = self
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setLyricData(data: LyricModel?) {
+        vm.setLyricData(data: data)
+    }
+    
+    func setPitch(pitch: Double) {
+        vm.setPitch(pitch: pitch)
+    }
+    
+    func reset() {
+        vm.reset()
+    }
+    
+    private func updateProgress() {
+        vm.progress = progress
     }
     
     private func setupUI() {
@@ -122,223 +130,30 @@ public class ScoringView: UIView {
         canvasView.isVerticalSeparatorLineHidden = isVerticalSeparatorLineHidden
         canvasView.separatorHidden = separatorHidden
         localPitchView.defaultPitchCursorX = defaultPitchCursorX
-    }
-    
-    private func updateProgress() {
-        /// 视图最左边到游标这段距离对应的时长
-        let defaultPitchCursorXTime = Int(defaultPitchCursorX / widthPreMs)
-        /// 游标到视图最右边对应的时长
-        let remainTime = Int((frame.width - defaultPitchCursorX) / widthPreMs)
-        /// 需要显示音高的开始时间
-        let beginTime = max(progress - defaultPitchCursorXTime, 0)
-        /// 需要显示音高的结束时间
-        let endTime = progress + remainTime
         
-        currentVisiableInfos = filterStandardInfos(infos: dataList,
-                                                   beginTime: beginTime,
-                                                   endTime: endTime)
-        currentHighlightInfos = filterHighlightInfos(infos: currentHighlightInfos,
-                                                     beginTime: beginTime,
-                                                     endTime: endTime)
-        canvasView.draw(progress: progress,
-                        standardInfos: currentVisiableInfos,
-                        highlightInfos: currentHighlightInfos)
-        
-        //        if let currentInfo = getCurrentInfo(progress: progress, currentVisiableInfos: currentVisiableInfos) { /** debug **/
-        //            setPitch(pitch: currentInfo.pitch)
-        //        }
-    }
-    
-    func setLyricData(data: LyricModel?) {
-        guard let lyricData = data else { return }
-        /** create data **/
-        createData(data: lyricData)
-        
-        /** set value **/
-        let pitchs = dataList.filter({ $0.word != " " }).map({ $0.pitch })
-        let maxValue = pitchs.max() ?? 0
-        let minValue = pitchs.min() ?? 0
-        /// UI上的一个点对于的pitch数量
-        let pitchPerPoint = (CGFloat(maxValue) - CGFloat(minValue)) / canvasView.bounds.height
-        let extend = pitchPerPoint * standardPitchStickViewHeight
-        maxPitch = maxValue + extend
-        minPitch = max(minValue - extend, 0)
-        canvasView.maxPitch = maxPitch
-        canvasView.minPitch = minPitch
-        progress = 0
-    }
-    
-    private func createData(data: LyricModel) {
-        dataList = []
-        for line in data.lines {
-            for tone in line.tones {
-                let info = Info(beginTime: tone.beginTime,
-                                duration: tone.duration,
-                                word: tone.word,
-                                pitch: tone.pitch,
-                                drawBeginTime: tone.beginTime,
-                                drawDuration: tone.duration)
-                dataList.append(info)
-            }
-        }
-    }
-    
-    private func filterStandardInfos(infos: [Info],
-                                     beginTime: Int,
-                                     endTime: Int) -> [Info] {
-        var result = [Info]()
-        for info in infos {
-            if info.drawBeginTime >= endTime {
-                break
-            }
-            if info.endTime <= beginTime {
-                continue
-            }
-            result.append(info)
-        }
-        return result
-    }
-    
-    private func filterHighlightInfos(infos: [Info],
-                                      beginTime: Int,
-                                      endTime: Int) -> [Info] {
-        return filterStandardInfos(infos: infos,
-                                   beginTime: beginTime,
-                                   endTime: endTime)
-    }
-    
-    func setPitch(pitch: Double) {
-        let y = getCenterY(pitch: pitch)
-        localPitchView.setIndicatedViewY(y: y)
-        if pitch != 0 {
-            let _ = updateHighlightInfos(progress: progress,
-                                         pitch: pitch,
-                                         currentVisiableInfos: currentVisiableInfos)
-        }
-    }
-    
-    /// 更新高亮数据
-    /// - Returns: 返回击中的数据
-    private func updateHighlightInfos(progress: Int,
-                                      pitch: Double,
-                                      currentVisiableInfos: [Info]) -> Info? {
-        if let preInfo = currentHighlightInfos.last,
-           let preHitInfo = getHitedInfo(progress: progress, currentVisiableInfos: [preInfo])  { /** 判断是否可追加 **/
-            let score = calculedScore(voicePitch: pitch, stdPitch: preInfo.pitch)
-            if score >= hitScoreThreshold * 100 {
-                let newDrawBeginTime = max(progress - pitchDuration, preHitInfo.beginTime)
-                let distance = newDrawBeginTime - preHitInfo.drawEndTime
-                
-                if distance < pitchDuration { /** 追加 **/
-                    let drawDuration = min(preHitInfo.drawDuration + pitchDuration + distance, preHitInfo.duration)
-                    preHitInfo.drawDuration = drawDuration
-                    return preHitInfo
-                }
-            }
-        }
-        
-        if let stdInfo = getHitedInfo(progress: progress, currentVisiableInfos: currentVisiableInfos) { /** 新建 **/
-            let score = calculedScore(voicePitch: pitch, stdPitch: stdInfo.pitch)
-            if score >= hitScoreThreshold * 100 {
-                let drawBeginTime = max(progress - pitchDuration, stdInfo.beginTime)
-                let drawDuration = min(pitchDuration, stdInfo.duration)
-                let info = Info(beginTime: stdInfo.beginTime,
-                                duration: stdInfo.duration,
-                                word: stdInfo.word,
-                                pitch: stdInfo.pitch,
-                                drawBeginTime: drawBeginTime,
-                                drawDuration: drawDuration)
-                currentHighlightInfos.append(info)
-                return info
-            }
-        }
-        
-        return nil
-    }
-    
-    /// 计算y的位置
-    private func getCenterY(pitch: Double) -> CGFloat {
-        let canvasViewHeight = canvasView.bounds.height
-        
-        if pitch <= 0 {
-            return canvasViewHeight
-        }
-        
-        if pitch < minPitch {
-            return canvasViewHeight
-        }
-        if pitch > maxPitch {
-            return 0
-        }
-        
-        /// 映射成从0开始
-        let value = pitch - minPitch
-        /// 计算相对偏移
-        let distance = (value / (maxPitch - minPitch)) * canvasViewHeight
-        let y = canvasViewHeight - distance
-        return y
-    }
-    
-    private func getHitedInfo(progress: Int, currentVisiableInfos: [Info]) -> Info? {
-        let pitchBeginTime = progress - pitchDuration/2
-        return currentVisiableInfos.first { info in
-            return pitchBeginTime >= info.drawBeginTime && pitchBeginTime <= info.endTime
-        }
-    }
-    
-    /// 计算tone分数
-    private func calculedScore(voicePitch: Double, stdPitch: Double) -> Float {
-        if voicePitch < minPitch || voicePitch > maxPitch {
-            return 0
-        }
-        let stdTone = pitchToTone(pitch: stdPitch)
-        let voiceTone = pitchToTone(pitch: voicePitch)
-        var match = 1 - Float(scoreLevel/100) * Float(abs(voiceTone - stdTone)) + Float(scoreCompensationOffset/100)
-        match = max(0, match)
-        match = min(1, match)
-        return match * 100
-    }
-    
-    private func pitchToTone(pitch: Double) -> Double {
-        let eps = 1e-6
-        return (max(0, log(pitch / 55 + eps) / log(2))) * 12
+        vm.defaultPitchCursorX = defaultPitchCursorX
+        vm.standardPitchStickViewHeight = standardPitchStickViewHeight
+        vm.movingSpeedFactor = movingSpeedFactor
+        vm.hitScoreThreshold = hitScoreThreshold
     }
 }
 
-extension ScoringView {
-    class Info {
-        /// 标准开始时间 （来源自歌词文件）
-        let beginTime: Int
-        /// 标准时长 （来源自歌词文件）
-        let duration: Int
-        /// 需要绘制的开始时间
-        let drawBeginTime: Int
-        /// 需要绘制的时长
-        var drawDuration: Int
-        let word: String
-        let pitch: Double
-        
-        init(beginTime: Int,
-             duration: Int,
-             word: String,
-             pitch: Double,
-             drawBeginTime: Int,
-             drawDuration: Int) {
-            self.beginTime = beginTime
-            self.duration = duration
-            self.word = word
-            self.pitch = pitch
-            self.drawBeginTime = drawBeginTime
-            self.drawDuration = drawDuration
-        }
-        
-        var endTime: Int {
-            beginTime + duration
-        }
-        
-        var drawEndTime: Int {
-            drawBeginTime + drawDuration
-        }
+extension ScoringView: ScoringVMDelegate {
+    func sizeOfCanvasView(_ vm: ScoringVM) -> CGSize {
+        return canvasView.bounds.size
+    }
+    
+    func scoringVM(_ vm: ScoringVM,
+                   didUpdateDraw standardInfos: [ScoringVM.DrawInfo],
+                   highlightInfos: [ScoringVM.DrawInfo]) {
+        canvasView.draw(standardInfos: standardInfos,
+                        highlightInfos: highlightInfos)
+    }
+    
+    func scoringVM(_ vm: ScoringVM,
+                   didUpdateCursor centerY: CGFloat,
+                   showAnimation: Bool) {
+        localPitchView.setIndicatedViewY(y: centerY)
+        showAnimation ? localPitchView.startEmitter() : localPitchView.stopEmitter()
     }
 }
-
