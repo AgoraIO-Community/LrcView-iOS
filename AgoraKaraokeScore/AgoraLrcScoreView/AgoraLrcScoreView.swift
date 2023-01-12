@@ -225,7 +225,6 @@ public class AgoraLrcScoreView: UIView {
     /// 实时声音数据
     public func setVoicePitch(_ voicePitch: [Double]) {
         guard isStart else {
-            Log.info(text: "setVoicePitch return", tag: logTag)
             return
         }
         scoreView?.setVoicePitch(voicePitch)
@@ -341,7 +340,6 @@ public class AgoraLrcScoreView: UIView {
     }
 
     private func timerHandler(time: TimeInterval) {
-        Log.info(text: "timerHandler", tag: logTag)
         lrcView?.start(currentTime: time)
         scoreView?.start(currentTime: time)
     }
