@@ -373,7 +373,6 @@ class AgoraLrcView: UIView {
                 return (i, currentLrc.toSentence(), progress, pitch)
             }
         }
-        Log.info(text: "getXmlLrc nil \(lrcArray.count)", tag: logTag)
         return nil
     }
 
