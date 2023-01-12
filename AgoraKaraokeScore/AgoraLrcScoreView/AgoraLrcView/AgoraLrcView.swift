@@ -36,7 +36,7 @@ class AgoraLrcView: UIView {
     var miguSongModel: AgoraMiguSongLyric? {
         didSet {
             guard miguSongModel != nil else { return }
-            Log.info(text: "--- will miguSongModel setdataArray songName: \(miguSongModel?.name ?? "nil")  lines: \(miguSongModel?.sentences.count ?? 0) ", tag: logTag)
+            Log.info(text: "=== will miguSongModel setdataArray songName: \(miguSongModel?.name ?? "nil")  lines: \(miguSongModel?.sentences.count ?? 0) ", tag: logTag)
             dataArray = miguSongModel?.sentences
             // 计算总pitch数量
             totalPitchCount = miguSongModel?.sentences
@@ -46,9 +46,9 @@ class AgoraLrcView: UIView {
 
     var lrcDatas: [AgoraLrcModel]? {
         didSet {
-            Log.info(text: "will lrcDatas setdataArray \(lrcDatas?.count ?? 0) ", tag: logTag)
+            Log.info(text: "=== will lrcDatas setdataArray \(lrcDatas?.count ?? 0) ", tag: logTag)
             dataArray = lrcDatas
-            Log.info(text: "lrcDatas.count = \(lrcDatas?.count ?? 0)", tag: logTag)
+            Log.info(text: "=== lrcDatas.count = \(lrcDatas?.count ?? 0)", tag: logTag)
             guard let data = lrcDatas, !data.isEmpty else { return }
             _lrcConfig.lrcHighlightColor = .clear
         }
@@ -56,16 +56,18 @@ class AgoraLrcView: UIView {
 
     private var dataArray: [Any]? {
         didSet {
-            Log.info(text: "did setdataArray \(dataArray?.count ?? 0) ", tag: logTag)
+            Log.info(text: "=== did setdataArray \(dataArray?.count ?? 0) ", tag: logTag)
             tipsLabel.isHidden = !(dataArray?.isEmpty ?? true)
             tableView.reloadData()
+            if (dataArray?.count ?? 0) > 0 {
+                scrollToTop(animation: false)
+            }
         }
     }
 
     private var progress: CGFloat = 0 {
         didSet {
             let cell = tableView.cellForRow(at: IndexPath(row: scrollRow, section: 0)) as? AgoraMusicLrcCell
-            Log.debug(text: "progress: \(progress)", tag: logTag)
             cell?.setupMusicLrcProgress(with: progress)
         }
     }
@@ -74,7 +76,7 @@ class AgoraLrcView: UIView {
     private var preRow: Int = -1
     private var scrollRow: Int = -1 {
         didSet {
-            Log.info(text: "didSet scrollRow \(scrollRow)", tag: logTag)
+            Log.info(text: "=== didSet scrollRow \(scrollRow)", tag: logTag)
             if scrollRow == oldValue || scrollRow < 0 {
                 Log.info(text: "scrollRow: \(scrollRow) oldValue:\(oldValue)", tag: logTag)
                 return
@@ -96,7 +98,7 @@ class AgoraLrcView: UIView {
                 tableView.reloadRows(at: [indexPath], with: .none)
                 tableView.scrollToRow(at: indexPath, at: _lrcConfig.lyricsScrollPosition, animated: true)
                 preRow = scrollRow
-                Log.info(text: "scrollToRow \(scrollRow)", tag: logTag)
+                Log.info(text: "=== scrollToRow \(scrollRow)", tag: logTag)
             }
             else {
                 Log.errorText(text: "scrollRow out bounds, scrollRow: \(scrollRow) \(dataArray?.count ?? 0)",
@@ -233,7 +235,6 @@ class AgoraLrcView: UIView {
 
     private var preTime: TimeInterval = 0
     func start(currentTime: TimeInterval) {
-        Log.info(text: "start \(currentTime)", tag: logTag)
         guard !(dataArray?.isEmpty ?? false) else {
             Log.info(text: "start return empty", tag: logTag)
             return
@@ -344,7 +345,6 @@ class AgoraLrcView: UIView {
     {
         guard let lrcArray = miguSongModel?.sentences,
               !lrcArray.isEmpty else {
-            Log.info(text: "getXmlLrc nil empty", tag: logTag)
             return nil
         }
         var i = 0
@@ -373,7 +373,6 @@ class AgoraLrcView: UIView {
                 return (i, currentLrc.toSentence(), progress, pitch)
             }
         }
-        Log.info(text: "getXmlLrc nil \(lrcArray.count)", tag: logTag)
         return nil
     }
 
