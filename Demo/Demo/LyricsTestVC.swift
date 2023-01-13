@@ -219,4 +219,12 @@ extension LyricsTestVC: KaraokeDelegate {
     func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
         mpk.seek(toPosition: position)
     }
+    
+    func onKaraokeView(view: KaraokeView,
+                       didFinishLineWith model: LyricLineModel,
+                       score: Int,
+                       lineIndex: Int,
+                       lineCount: Int) {
+        print("score \(score)")
+    }
 }

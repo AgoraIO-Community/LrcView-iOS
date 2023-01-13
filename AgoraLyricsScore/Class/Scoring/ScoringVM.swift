@@ -18,26 +18,38 @@ class ScoringVM {
     /// 打分容忍度 范围：0-1
     var hitScoreThreshold: Float = 0.7
     
+    var scoreLevel = 10
+    var scoreCompensationOffset = 0
+    
+    var scoreAlgorithm = ScoreAlgorithm()
+    
+
     weak var delegate: ScoringVMDelegate?
     
     fileprivate var widthPreMs: CGFloat { movingSpeedFactor / 1000 }
     fileprivate var dataList = [Info]()
+    fileprivate var lineEndTimes = [Int]()
     fileprivate var currentVisiableInfos = [Info]()
     fileprivate var currentHighlightInfos = [Info]()
     fileprivate var maxPitch: Double = 0
     fileprivate var minPitch: Double = 0
-    fileprivate var scoreLevel = 0
-    fileprivate var scoreCompensationOffset = 0
+    
     /// 产生pitch花费的时间 ms
     fileprivate let pitchDuration = 50
     fileprivate var canvasViewSize: CGSize = .zero
+    fileprivate var toneScores = [ToneScoreModel]()
     fileprivate let queue = DispatchQueue(label: "ScoringVM.queue")
+    fileprivate var currentIndexOfLine = -1
+    fileprivate var lyricData: LyricModel?
     
     func setLyricData(data: LyricModel?) {
         guard let lyricData = data else { return }
         guard let size = delegate?.sizeOfCanvasView(self) else { fatalError("sizeOfCanvasView has not been implemented") }
         canvasViewSize = size
-        dataList = ScoringVM.createData(data: lyricData)
+        self.lyricData = lyricData
+        let (lineEnds, infos) = ScoringVM.createData(data: lyricData)
+        dataList = infos
+        lineEndTimes = lineEnds
         let (min, max) = makeMinMaxPitch()
         minPitch = min
         maxPitch = max
@@ -45,24 +57,50 @@ class ScoringVM {
     }
     
     func reset() {
+        currentIndexOfLine = -1
+        toneScores = []
         progress = 0
     }
     
     private func updateProgress() {
+        /// 计算需要绘制的数据
         let (visiableDrawInfos, highlightDrawInfos) = makeInfos()
         invokeScoringVM(didUpdateDraw: visiableDrawInfos, highlightInfos: highlightDrawInfos)
+        
+        /// 检查结束的行
+        if let indexOfLine = findIndexOfEndLine(progress: progress, lineEndTims: lineEndTimes) {
+            if currentIndexOfLine != indexOfLine {
+                currentIndexOfLine = indexOfLine
+                didLineEnd()
+            }
+        }
     }
     
     func setPitch(pitch: Double) {
         let y = getCenterY(pitch: pitch)
         var showAnimation = false
         if pitch > 0 {
-            let info = updateHighlightInfos(progress: progress,
+            let ret = updateHighlightInfos(progress: progress,
                                             pitch: pitch,
                                             currentVisiableInfos: currentVisiableInfos)
-            showAnimation = info != nil
+            showAnimation = ret != nil
+            if let (score, info) = ret {
+                let toneScore = ToneScoreModel(tone: info.tone, score: Int(score))
+                toneScores.append(toneScore)
+            }
         }
         invokeScoringVM(didUpdateCursor: y, showAnimation: showAnimation)
+    }
+    
+    private func didLineEnd() {
+        let lineScore = scoreAlgorithm.getLineScore(with: toneScores)
+        toneScores = []
+        if let data = lyricData, currentIndexOfLine < data.lines.count {
+            invokeScoringVM(didFinishLineWith: data.lines[currentIndexOfLine],
+                            score: lineScore,
+                            lineIndex: currentIndexOfLine,
+                            lineCount: data.lines.count)
+        }
     }
 }
 
@@ -70,8 +108,10 @@ extension ScoringVM { /** Data handle **/
     
     /// 创建Scoring内部数据
     ///   - shouldFixTime: 是否要修复时间异常问题
-    static func createData(data: LyricModel, shouldFixTime: Bool = true) -> [Info] {
+    ///   - return: (行结束时间, 字内部模型)
+    static func createData(data: LyricModel, shouldFixTime: Bool = true) -> ([Int], [Info]) {
         var array = [Info]()
+        var lineEndTimes = [Int]()
         var preEndTime = 0
         for line in data.lines {
             for tone in line.tones {
@@ -98,8 +138,9 @@ extension ScoringVM { /** Data handle **/
                 
                 array.append(info)
             }
+            lineEndTimes.append(preEndTime)
         }
-        return array
+        return (lineEndTimes, array)
     }
     
     /// 生成DrawInfo
@@ -154,10 +195,10 @@ extension ScoringVM { /** Data handle **/
     }
     
     /// 更新高亮数据
-    /// - Returns: 返回击中的数据
+    /// - Returns: (得分, 击中的数据)
     private func updateHighlightInfos(progress: Int,
                                       pitch: Double,
-                                      currentVisiableInfos: [Info]) -> Info? {
+                                      currentVisiableInfos: [Info]) -> (Float, Info)? {
         if let preInfo = currentHighlightInfos.last,
            let preHitInfo = getHitedInfo(progress: progress, currentVisiableInfos: [preInfo])  { /** 判断是否可追加 **/
             let score = ToneCalculator.calculedScore(voicePitch: pitch,
@@ -172,7 +213,7 @@ extension ScoringVM { /** Data handle **/
                 if distance < pitchDuration { /** 追加 **/
                     let drawDuration = min(preHitInfo.drawDuration + pitchDuration + distance, preHitInfo.duration)
                     preHitInfo.drawDuration = drawDuration
-                    return preHitInfo
+                    return (score, preHitInfo)
                 }
             }
         }
@@ -195,7 +236,7 @@ extension ScoringVM { /** Data handle **/
                                 drawDuration: drawDuration,
                                 isLastInLine: false)
                 currentHighlightInfos.append(info)
-                return info
+                return (score, info)
             }
         }
         
@@ -208,6 +249,34 @@ extension ScoringVM { /** Data handle **/
         return currentVisiableInfos.first { info in
             return pitchBeginTime >= info.drawBeginTime && pitchBeginTime <= info.endTime
         }
+    }
+    
+    /// 查找句子结束位置
+    private func findIndexOfEndLine(progress: Int, lineEndTims: [Int]) -> Int? {
+        if lineEndTims.isEmpty {
+            return nil
+        }
+        
+        if progress >= lineEndTims.last! {
+            return lineEndTims.count - 1
+        }
+        
+        var index: Int?
+        for item in lineEndTims.enumerated() {
+            if item.element == progress {
+                return item.offset
+            }
+            
+            if item.element < progress {
+                index = item.offset
+                continue
+            }
+            
+            if item.element > progress {
+                return index
+            }
+        }
+        return nil
     }
     
     /// 筛选指定时间下的infos

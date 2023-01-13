@@ -59,6 +59,9 @@ public class ScoringView: UIView {
     /// 打分容忍度 范围：0-1
     public var hitScoreThreshold: Float = 0.7
     
+    public var scoreLevel = 10
+    public var scoreCompensationOffset = 0
+    
     var progress: Int = 0 { didSet { updateProgress() } }
     fileprivate let gradeView = GradeView()
     fileprivate let localPitchView = LocalPitchView()
@@ -66,6 +69,7 @@ public class ScoringView: UIView {
     /// 间距
     fileprivate let gradeViewSpaces: CGFloat = 15
     fileprivate let vm = ScoringVM()
+    weak var delegate: ScoringViewDelegate?
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -135,6 +139,8 @@ public class ScoringView: UIView {
         vm.standardPitchStickViewHeight = standardPitchStickViewHeight
         vm.movingSpeedFactor = movingSpeedFactor
         vm.hitScoreThreshold = hitScoreThreshold
+        vm.scoreLevel = scoreLevel
+        vm.scoreCompensationOffset = scoreCompensationOffset
     }
 }
 
@@ -155,5 +161,17 @@ extension ScoringView: ScoringVMDelegate {
                    showAnimation: Bool) {
         localPitchView.setIndicatedViewY(y: centerY)
         showAnimation ? localPitchView.startEmitter() : localPitchView.stopEmitter()
+    }
+    
+    func scoringVM(_ vm: ScoringVM,
+                   didFinishLineWith model: LyricLineModel,
+                   score: Int,
+                   lineIndex: Int,
+                   lineCount: Int) {
+        delegate?.scoringVM(self,
+                            didFinishLineWith: model,
+                            score: score,
+                            lineIndex: lineIndex,
+                            lineCount: lineCount)
     }
 }

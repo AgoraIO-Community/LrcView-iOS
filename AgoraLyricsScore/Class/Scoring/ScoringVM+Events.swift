@@ -19,6 +19,13 @@ protocol ScoringVMDelegate: NSObjectProtocol {
     func scoringVM(_ vm: ScoringVM,
                    didUpdateCursor centerY: CGFloat,
                    showAnimation: Bool)
+    
+    /// 更新句子分数
+    func scoringVM(_ vm: ScoringVM,
+                   didFinishLineWith model: LyricLineModel,
+                   score: Int,
+                   lineIndex: Int,
+                   lineCount: Int)
 }
 
 
@@ -54,6 +61,29 @@ extension ScoringVM { /** invoke **/
             self.delegate?.scoringVM(self,
                                      didUpdateCursor: centerY,
                                      showAnimation: showAnimation)
+        }
+    }
+    
+    func invokeScoringVM(didFinishLineWith model: LyricLineModel,
+                         score: Int,
+                         lineIndex: Int,
+                         lineCount: Int) {
+        if Thread.isMainThread {
+            delegate?.scoringVM(self,
+                                didFinishLineWith: model,
+                                score: score,
+                                lineIndex: lineIndex,
+                                lineCount: lineCount)
+            return
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.scoringVM(self,
+                                     didFinishLineWith: model,
+                                     score: score,
+                                     lineIndex: lineIndex,
+                                     lineCount: lineCount)
         }
     }
 }

@@ -32,6 +32,7 @@ public class KaraokeView: UIView {
     fileprivate var lyricsViewTopConstraint: NSLayoutConstraint!
     fileprivate var lyricData: LyricModel?
     fileprivate var pitchIsZeroCount = 0
+    fileprivate let logTag = "KaraokeView"
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -65,9 +66,8 @@ extension KaraokeView {
     /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `.empty`.
     public func setLyricData(data: LyricModel?) {
         lyricData = data
-        if data == nil { /** 无歌词状态下强制关闭 **/
-            scoringEnabled = false
-        }
+        /** 无歌词状态下强制关闭 **/
+        scoringEnabled = data != nil
         lyricsView.setLyricData(data: data)
         scoringView.setLyricData(data: data)
     }
@@ -151,6 +151,7 @@ extension KaraokeView {
     
     fileprivate func commonInit() {
         lyricsView.delegate = self
+        scoringView.delegate = self
     }
     
     fileprivate func updateUI() {
@@ -166,5 +167,20 @@ extension KaraokeView {
 extension KaraokeView: LyricsViewDelegate {
     func onLyricsView(view: LyricsView, didDragTo position: Int) {
         delegate?.onKaraokeView?(view: self, didDragTo: position)
+    }
+}
+
+extension KaraokeView: ScoringViewDelegate {
+    func scoringVM(_ vm: ScoringView,
+                   didFinishLineWith model: LyricLineModel,
+                   score: Int,
+                   lineIndex: Int,
+                   lineCount: Int) {
+        Log.info(text: "didFinishLineWith score:\(score) lineIndex:\(lineIndex) lineCount:\(lineCount)", tag: logTag)
+        delegate?.onKaraokeView?(view: self,
+                                 didFinishLineWith: model,
+                                 score: score,
+                                 lineIndex: lineIndex,
+                                 lineCount: lineCount)
     }
 }

@@ -9,7 +9,8 @@ import Foundation
 
 class ScoreAlgorithm: IScoreAlgorithm {
     func getLineScore(with toneScores: [ToneScoreModel]) -> Int {
-        return 0
+        if toneScores.isEmpty { return 0 }
+        return toneScores.map({ $0.score }).reduce(0, +) / toneScores.count
     }
     
     func incentiveGradeCount() -> Int {

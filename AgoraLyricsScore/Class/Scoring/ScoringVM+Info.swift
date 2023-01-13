@@ -45,6 +45,15 @@ extension ScoringVM {
         var drawEndTime: Int {
             drawBeginTime + drawDuration
         }
+        
+        var tone: LyricToneModel {
+            return LyricToneModel(beginTime: beginTime,
+                                  duration: duration,
+                                  word: word,
+                                  pitch: pitch,
+                                  lang: .zh,
+                                  pronounce: "")
+        }
     }
     
     struct DrawInfo {

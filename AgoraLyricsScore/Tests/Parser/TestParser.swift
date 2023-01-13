@@ -61,9 +61,6 @@ class TestParser: XCTestCase {
         let parser = Parser()
         let model = parser.parseLyricData(data: data)
         XCTAssertNil(model)
-        
-
-        
     }
     
     func testTimeIssue2() {
@@ -91,5 +88,4 @@ class TestParser: XCTestCase {
             pre = info
         }
     }
-    
 }
