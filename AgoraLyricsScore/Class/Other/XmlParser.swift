@@ -29,17 +29,18 @@ class XmlParser: NSObject {
             return nil
         }
         
-        if success, let song = song {
-            process()
-            return song
+        if song == nil {
+            return nil
         }
         
-        fatalError("never call this")
+        return process()
     }
     
-    private func process() {
+    private func process() -> LyricModel? {
         if song.lines.count == 0 {
-            fatalError("data error. song.lines: \(song.lines)")
+            let text = "data error. song.lines: \(song.lines)"
+            Log.error(error: text, tag: logTag)
+            return nil
         }
         var hasPitch = false
         var preludeEndPosition = -1
@@ -66,7 +67,9 @@ class XmlParser: NSObject {
             let lineBeginTime = line.tones.first?.beginTime ?? -1
             let lineEndTime = (line.tones.last?.duration ?? -1) + (line.tones.last?.beginTime ?? -1)
             if lineBeginTime < 0 || lineEndTime < 0 || lineEndTime - lineBeginTime < 0 {
-                fatalError("data error. lineBeginTime: \(lineBeginTime) lineEndTime: \(lineEndTime)")
+                let text = "data error. lineBeginTime: \(lineBeginTime) lineEndTime: \(lineEndTime)"
+                Log.error(error: text, tag: logTag)
+                return nil
             }
             line.beginTime = lineBeginTime
             line.duration = lineEndTime - lineBeginTime
@@ -79,6 +82,7 @@ class XmlParser: NSObject {
         }
         song.hasPitch = hasPitch
         song.preludeEndPosition = preludeEndPosition
+        return song
     }
 }
 

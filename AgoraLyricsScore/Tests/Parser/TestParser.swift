@@ -6,9 +6,7 @@
 //
 
 import XCTest
-import AgoraLyricsScore
-
-
+@testable import AgoraLyricsScore
 
 class TestParser: XCTestCase {
     
@@ -55,5 +53,43 @@ class TestParser: XCTestCase {
         let model = KaraokeView.parseLyricData(data: data)
         XCTAssertNil(model)
     }
+    
+    func testTimeIssue1() { /** xml 异常 时间严重异常 **/
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "CJ1420023417", ofType: "xml")!)
+        let data = try! Data(contentsOf: url)
 
+        let parser = Parser()
+        let model = parser.parseLyricData(data: data)
+        XCTAssertNil(model)
+        
+
+        
+    }
+    
+    func testTimeIssue2() {
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "745012-timeissue2", ofType: "xml")!)
+        let data = try! Data(contentsOf: url)
+
+        let parser = Parser()
+        let model = parser.parseLyricData(data: data)
+        XCTAssertNotNil(model)
+        
+        let infos = ScoringVM.createData(data: model!)
+        
+        var pre:ScoringVM.Info?
+        
+        for info in infos {
+            if let pre = pre, info.beginTime < pre.endTime {
+                let text = """
+                --> error
+                current: \(info.word) beginTime:\(info.beginTime) endTime:\(info.endTime)
+                pre: \(pre.word) beginTime:\(pre.beginTime) endTime:\(info.endTime)
+                """
+                print(text)
+                XCTFail()
+            }
+            pre = info
+        }
+    }
+    
 }

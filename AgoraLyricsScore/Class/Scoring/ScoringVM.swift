@@ -37,7 +37,7 @@ class ScoringVM {
         guard let lyricData = data else { return }
         guard let size = delegate?.sizeOfCanvasView(self) else { fatalError("sizeOfCanvasView has not been implemented") }
         canvasViewSize = size
-        dataList = createData(data: lyricData)
+        dataList = ScoringVM.createData(data: lyricData)
         let (min, max) = makeMinMaxPitch()
         minPitch = min
         maxPitch = max
@@ -67,16 +67,35 @@ class ScoringVM {
 }
 
 extension ScoringVM { /** Data handle **/
-    private func createData(data: LyricModel) -> [Info] {
+    
+    /// 创建Scoring内部数据
+    ///   - shouldFixTime: 是否要修复时间异常问题
+    static func createData(data: LyricModel, shouldFixTime: Bool = true) -> [Info] {
         var array = [Info]()
+        var preEndTime = 0
         for line in data.lines {
             for tone in line.tones {
-                let info = Info(beginTime: tone.beginTime,
-                                duration: tone.duration,
+                var beginTime = tone.beginTime
+                var duration = tone.duration
+                if shouldFixTime { /** 时间异常修复 **/
+                    if beginTime < preEndTime {
+                        /// 取出endTime文件原始值
+                        let endTime = tone.endTime
+                        beginTime = preEndTime
+                        duration = endTime - beginTime
+                    }
+                }
+                
+                let info = Info(beginTime: beginTime,
+                                duration: duration,
                                 word: tone.word,
                                 pitch: tone.pitch,
                                 drawBeginTime: tone.beginTime,
-                                drawDuration: tone.duration)
+                                drawDuration: tone.duration,
+                                isLastInLine: tone == line.tones.last)
+                
+                preEndTime = tone.endTime
+                
                 array.append(info)
             }
         }
@@ -173,7 +192,8 @@ extension ScoringVM { /** Data handle **/
                                 word: stdInfo.word,
                                 pitch: stdInfo.pitch,
                                 drawBeginTime: drawBeginTime,
-                                drawDuration: drawDuration)
+                                drawDuration: drawDuration,
+                                isLastInLine: false)
                 currentHighlightInfos.append(info)
                 return info
             }

@@ -19,19 +19,23 @@ extension ScoringVM {
         var drawDuration: Int
         let word: String
         let pitch: Double
+        /// 是否句子中最后的一个字
+        let isLastInLine: Bool
         
-        init(beginTime: Int,
-             duration: Int,
-             word: String,
-             pitch: Double,
-             drawBeginTime: Int,
-             drawDuration: Int) {
+        required init(beginTime: Int,
+                      duration: Int,
+                      word: String,
+                      pitch: Double,
+                      drawBeginTime: Int,
+                      drawDuration: Int,
+                      isLastInLine: Bool) {
             self.beginTime = beginTime
             self.duration = duration
             self.word = word
             self.pitch = pitch
             self.drawBeginTime = drawBeginTime
             self.drawDuration = drawDuration
+            self.isLastInLine = isLastInLine
         }
         
         var endTime: Int {
