@@ -127,8 +127,11 @@ public class AgoraKaraokeScoreView: UIView {
     
     private var totalScore: Double = 0
     private var currentScore: Double = 50
-    private var pitchCount: Int = 0
     private var scoreArray: [Double] = []
+    /// 每句的结束时间
+    private var lineEndTimes = [Double]()
+    /// 上一句的索引
+    private var lastLineIndex = -1
     /// 仅用于调试
     private var scoreDetails = [String]()
     let logTag = "AgoraKaraokeScoreView"
@@ -144,10 +147,11 @@ public class AgoraKaraokeScoreView: UIView {
     
     func reset() {
         Log.info(text: "reset", tag: logTag)
+        lastLineIndex = -1
         currentScore = _scoreConfig.defaultScore
+        lineEndTimes = []
         currentTime = 0
         totalTime = 0
-        pitchCount = 0
         scoreArray.removeAll()
         scoreDetails.removeAll()
         dataArray = []
@@ -181,6 +185,7 @@ public class AgoraKaraokeScoreView: UIView {
         
         collectionView.setContentOffset(CGPoint(x: pointX, y: 0),
                                         animated: false)
+        calculedLineEnd(currentTime: currentTime * 1000)
     }
     
     func scrollToTop(animation: Bool = false) {
@@ -188,29 +193,79 @@ public class AgoraKaraokeScoreView: UIView {
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: animation)
     }
     
+    /// 计算句子结束 ms
+    func calculedLineEnd(currentTime: TimeInterval) {
+        if let index = findIndexOfEndLine(progress: currentTime, lineEndTims: lineEndTimes), lastLineIndex != index {
+            Log.info(text: "findIndexOfEndLine \(index) currentTime:\(currentTime)", tag: logTag)
+            lastLineIndex = index
+            lyricsLineEnds(lineIndex: lastLineIndex)
+        }
+    }
+    
+    /// 查找句子结束位置
+    private func findIndexOfEndLine(progress: TimeInterval, lineEndTims: [Double]) -> Int? {
+        if lineEndTims.isEmpty {
+            return nil
+        }
+        
+        if progress >= lineEndTims.last! { /** 处理最后一个 **/
+            return lineEndTims.count - 1
+        }
+        
+        var index: Int?
+        for item in lineEndTims.enumerated() {
+            if item.element == progress { /** 刚好命中 **/
+                return item.offset
+            }
+            
+            if item.element < progress {
+                index = item.offset
+                continue
+            }
+            
+            if item.element > progress {
+                return index
+            }
+        }
+        return nil
+    }
+    
     // 每行歌词结束计算分数
-    func lyricsLineEnds() {
+    func lyricsLineEnds(lineIndex: Int) {
         guard !scoreArray.isEmpty, let dataArray = dataArray, !dataArray.isEmpty else {
-            pitchCount = 0
-            scoreDetails.removeAll()
-            scoreArray.removeAll()
+            setScoreArray(lineIndex: lineIndex)
             let cumulativeScore = currentScore > totalScore ? totalScore : currentScore
             delegate?.agoraKaraokeScore?(score: 0,
                                          cumulativeScore: cumulativeScore,
                                          totalScore: totalScore)
             return
         }
-        let score = scoreArray.reduce(0, +) / Double(pitchCount)
+        let score = scoreArray.reduce(0, +) / Double(scoreArray.count)
         currentScore += score
         let cumulativeScore = currentScore > totalScore ? totalScore : currentScore
         let scoreDetailText = scoreDetails.reduce("", +)
-        Log.info(text: ">>> agoraKaraokeScore: \(score) pitchCount: \(pitchCount), \(scoreDetailText)", tag: logTag)
+        
+        var debugText = ""
+        for item in scoreArray {
+            debugText += "[\(item)]"
+        }
+        Log.info(text: "====> agoraKaraokeScore: \(score) \(debugText)", tag: logTag)
+        Log.info(text: "====> agoraKaraokeScore: \(scoreDetailText)", tag: logTag)
         delegate?.agoraKaraokeScore?(score: score,
                                      cumulativeScore: cumulativeScore,
                                      totalScore: totalScore)
-        pitchCount = 0
-        scoreDetails.removeAll()
+        setScoreArray(lineIndex: lineIndex + 1)
+    }
+    
+    private func setScoreArray(lineIndex: Int) {
         scoreArray.removeAll()
+        scoreDetails.removeAll()
+        if lineIndex < lrcSentence?.count ?? 0 {
+            if let sentence = lrcSentence?[lineIndex]  {
+                scoreArray = .init(repeating: 0, count: sentence.tones.count)
+                Log.info(text: "====> setScoreArray \(lineIndex) \(sentence.tones.map({ $0.word }).reduce("", +))", tag: logTag)
+            }
+        }
     }
     
     private var pitchIsZeroCount = 0
@@ -245,20 +300,11 @@ public class AgoraKaraokeScoreView: UIView {
             return
         }
         
-        let voicePitch = voicePitchChanger?.handlePitch(wordPitch: model.pitch,
-                                                        voicePitch: pitch,
-                                                        wordMaxPitch: model.pitchMax) ?? pitch
+        let (score, voicePitch) = calcultedTone(stdPitch: model.pitch,
+                                                stdPitchMin: model.pitchMin,
+                                                stdPitchMax: model.pitchMax,
+                                                pitch: pitch)
         let calcuScore = scoreConfig?.lineCalcuScore ?? 100
-        var score: Double = 0
-        if voicePitch >= model.pitchMin, voicePitch <= model.pitchMax {
-            let fileTone = pitchToTone(pitch: model.pitch)
-            let voiceTone = pitchToTone(pitch: voicePitch)
-            var match = 1 - level/100 * abs(voiceTone - fileTone) + offset/100
-            if match > 1 { match = 1 }
-            if match < 0 { match = 0 }
-            Log.info(text: "match \(match) stand: \(model.pitch) voice: \(pitch)", tag: logTag)
-            score = match * calcuScore
-        }
         
         let y = pitchToY(min: model.pitchMin, max: model.pitchMax, voicePitch)
         if score >= calcuScore * Double(_scoreConfig.hitScoreThreshold), voicePitch > 0 { /** 显示粒子动画 */
@@ -271,16 +317,47 @@ public class AgoraKaraokeScoreView: UIView {
             cursorAnimation(y: y, isDraw: false, pitch: voicePitch, word: model.word, standarPitch: model.pitch, time: time.keep2)
             triangleView.updateAlpha(at: 0)
         }
-        let k = scoreConfig?.minCalcuScore ?? 40
-        if score >= k && voicePitch > 0 {
-            scoreArray.append(score)
-            scoreDetails.append(">>> score:\(score) \(model.word) voice: \(pitch) after: \(voicePitch) wordPitch: \(model.pitch)")
-            pitchCount += 1
+        
+        let minCalcuScore = scoreConfig?.minCalcuScore ?? 40
+        if score >= minCalcuScore && voicePitch > 0 {
+            let index = model.indexOfToneInSentence
+            if index < scoreArray.count {
+                scoreArray[index] = (scoreArray[index] + score) / 2.0
+                scoreDetails.append(">>> score:\(score) \(model.word) voice: \(pitch) after: \(voicePitch) wordPitch: \(model.pitch)")
+            }
+            else {
+                Log.errorText(text: "out bounds, progress:\(time) word:\(model.word) index:\(index) count:\(scoreArray.count)", tag: logTag)
+            }
         }
         else {
             Log.info(text: ">>> 丢弃score: \(score) [\(model.word)]", tag: logTag)
         }
         preModel = model
+    }
+    
+    
+    /// 计算一个tone的分数
+    /// - Parameters:
+    ///   - pitch: 原始语音pitch
+    /// - Returns: (分数，音调处理后的pitch)
+    private func calcultedTone(stdPitch: Double,
+                               stdPitchMin: Double,
+                               stdPitchMax: Double,
+                               pitch: Double) -> (Double, Double) {
+        let voicePitch = voicePitchChanger?.handlePitch(wordPitch: stdPitch,
+                                                        voicePitch: pitch,
+                                                        wordMaxPitch: stdPitchMax) ?? pitch
+        let calcuScore = scoreConfig?.lineCalcuScore ?? 100
+        var score: Double = 0
+        if voicePitch >= stdPitchMin, voicePitch <= stdPitchMax {
+            let fileTone = pitchToTone(pitch: stdPitch)
+            let voiceTone = pitchToTone(pitch: voicePitch)
+            var match = 1 - level/100 * abs(voiceTone - fileTone) + offset/100
+            if match > 1 { match = 1 }
+            if match < 0 { match = 0 }
+            score = match * calcuScore
+        }
+        return (score, voicePitch)
     }
     
     private func pitchToTone(pitch: Double) -> Double {
@@ -420,10 +497,13 @@ public class AgoraKaraokeScoreView: UIView {
                 
                 indexOfToneInSentence += 1
             }
+            lineEndTimes.append(preEndTime)
         }
         Log.info(text: "createScoreData \(dataArray.count)", tag: logTag)
         self.dataArray = dataArray
         preEndTime = 0
+        
+        setScoreArray(lineIndex: 0)
         
         /// check
         var time = 0.0
@@ -632,5 +712,24 @@ extension AgoraKaraokeScoreView: UICollectionViewDataSource, UICollectionViewDel
         let indexPath = IndexPath(item: lastIndex, section: 0)
         let cell = collectionView.cellForItem(at: indexPath) as? AgoraKaraokeScoreCell
         cell?.setHit()
+    }
+}
+
+extension AgoraKaraokeScoreView {
+    class ToneScore {
+        var score: Double = 0
+        let word: String
+        var items = [ToneScoreItem]()
+        
+        init(word: String) {
+            self.word = word
+        }
+    }
+    
+    struct ToneScoreItem {
+        let score: Double
+        let word: String
+        let originalPitch: Double
+        let pitch: Double
     }
 }
