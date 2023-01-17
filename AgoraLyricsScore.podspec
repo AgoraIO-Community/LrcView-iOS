@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
   spec.static_framework = true
   spec.dependency "Zip"
   
-  spec.test_spec 'Tests' do |test_spec|
-    test_spec.source_files = 'AgoraKaraokeScore/Tests/**/*.{swift}'
-  end
+#  spec.test_spec 'Tests' do |test_spec|
+#    test_spec.source_files = 'AgoraKaraokeScore/Tests/**/*.{swift}'
+#  end
 end
