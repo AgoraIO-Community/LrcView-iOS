@@ -127,13 +127,11 @@ public class AgoraKaraokeScoreView: UIView {
     
     private var totalScore: Double = 0
     private var currentScore: Double = 50
-    private var scoreArray: [Double] = []
+    private var scoreArray: [ToneScore] = []
     /// 每句的结束时间
     private var lineEndTimes = [Double]()
     /// 上一句的索引
     private var lastLineIndex = -1
-    /// 仅用于调试
-    private var scoreDetails = [String]()
     let logTag = "AgoraKaraokeScoreView"
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -153,7 +151,6 @@ public class AgoraKaraokeScoreView: UIView {
         currentTime = 0
         totalTime = 0
         scoreArray.removeAll()
-        scoreDetails.removeAll()
         dataArray = []
         collectionView.reloadData()
         voicePitchChanger?.reset()
@@ -240,17 +237,15 @@ public class AgoraKaraokeScoreView: UIView {
                                          totalScore: totalScore)
             return
         }
-        let score = scoreArray.reduce(0, +) / Double(scoreArray.count)
+        let minCalcuScore = scoreConfig?.minCalcuScore ?? 40
+        let score = scoreArray.map({ $0.score }).filter({ $0 >= minCalcuScore }).reduce(0, +) / Double(scoreArray.count)
         currentScore += score
         let cumulativeScore = currentScore > totalScore ? totalScore : currentScore
-        let scoreDetailText = scoreDetails.reduce("", +)
-        
-        var debugText = ""
-        for item in scoreArray {
-            debugText += "[\(item)]"
+        Log.info(text: "====> agoraKaraokeScore: \(score) minCalcuScore:\(minCalcuScore)", tag: logTag)
+        for item in scoreArray.enumerated() {
+            Log.info(text: "====> agoraKaraokeScore \(item.offset):  \(item.element.description)", tag: logTag)
         }
-        Log.info(text: "====> agoraKaraokeScore: \(score) \(debugText)", tag: logTag)
-        Log.info(text: "====> agoraKaraokeScore: \(scoreDetailText)", tag: logTag)
+        
         delegate?.agoraKaraokeScore?(score: score,
                                      cumulativeScore: cumulativeScore,
                                      totalScore: totalScore)
@@ -259,10 +254,11 @@ public class AgoraKaraokeScoreView: UIView {
     
     private func setScoreArray(lineIndex: Int) {
         scoreArray.removeAll()
-        scoreDetails.removeAll()
         if lineIndex < lrcSentence?.count ?? 0 {
             if let sentence = lrcSentence?[lineIndex]  {
-                scoreArray = .init(repeating: 0, count: sentence.tones.count)
+                for tone in sentence.tones {
+                    scoreArray.append(ToneScore(word: tone.word, stdPitch: tone.pitch))
+                }
                 Log.info(text: "====> setScoreArray \(lineIndex) \(sentence.tones.map({ $0.word }).reduce("", +))", tag: logTag)
             }
         }
@@ -300,11 +296,17 @@ public class AgoraKaraokeScoreView: UIView {
             return
         }
         
-        let (score, voicePitch) = calcultedTone(stdPitch: model.pitch,
-                                                stdPitchMin: model.pitchMin,
-                                                stdPitchMax: model.pitchMax,
-                                                pitch: pitch)
         let calcuScore = scoreConfig?.lineCalcuScore ?? 100
+        let voicePitch = voicePitchChanger?.handlePitch(stdPitch: model.pitch,
+                                                        voicePitch: pitch,
+                                                        wordMaxPitch: model.pitchMax) ?? pitch
+        let score = AgoraKaraokeScoreView.calcultedTone(stdPitch: model.pitch,
+                                                        stdPitchMin: model.pitchMin,
+                                                        stdPitchMax: model.pitchMax,
+                                                        pitch: pitch,
+                                                        level: level,
+                                                        offset: offset,
+                                                        lineCalcuScore: calcuScore)
         
         let y = pitchToY(min: model.pitchMin, max: model.pitchMax, voicePitch)
         if score >= calcuScore * Double(_scoreConfig.hitScoreThreshold), voicePitch > 0 { /** 显示粒子动画 */
@@ -318,49 +320,49 @@ public class AgoraKaraokeScoreView: UIView {
             triangleView.updateAlpha(at: 0)
         }
         
-        let minCalcuScore = scoreConfig?.minCalcuScore ?? 40
-        if score >= minCalcuScore && voicePitch > 0 {
+        if voicePitch > 0 {
             let index = model.indexOfToneInSentence
             if index < scoreArray.count {
-                scoreArray[index] = (scoreArray[index] + score) / 2.0
-                scoreDetails.append(">>> score:\(score) \(model.word) voice: \(pitch) after: \(voicePitch) wordPitch: \(model.pitch)")
+                let item = ToneScoreItem(score: score,
+                                         word: model.word,
+                                         originalPitch: pitch,
+                                         pitch: voicePitch,
+                                         currentTime: time)
+                scoreArray[index].addItem(item: item)
             }
             else {
                 Log.errorText(text: "out bounds, progress:\(time) word:\(model.word) index:\(index) count:\(scoreArray.count)", tag: logTag)
             }
         }
-        else {
-            Log.info(text: ">>> 丢弃score: \(score) [\(model.word)]", tag: logTag)
-        }
         preModel = model
     }
-    
     
     /// 计算一个tone的分数
     /// - Parameters:
     ///   - pitch: 原始语音pitch
     /// - Returns: (分数，音调处理后的pitch)
-    private func calcultedTone(stdPitch: Double,
-                               stdPitchMin: Double,
-                               stdPitchMax: Double,
-                               pitch: Double) -> (Double, Double) {
-        let voicePitch = voicePitchChanger?.handlePitch(wordPitch: stdPitch,
-                                                        voicePitch: pitch,
-                                                        wordMaxPitch: stdPitchMax) ?? pitch
-        let calcuScore = scoreConfig?.lineCalcuScore ?? 100
+    static func calcultedTone(stdPitch: Double,
+                              stdPitchMin: Double,
+                              stdPitchMax: Double,
+                              pitch: Double,
+                              level: Double,
+                              offset: Double,
+                              lineCalcuScore: Double) -> Double {
+        if pitch == 0 { return 0 }
         var score: Double = 0
-        if voicePitch >= stdPitchMin, voicePitch <= stdPitchMax {
-            let fileTone = pitchToTone(pitch: stdPitch)
-            let voiceTone = pitchToTone(pitch: voicePitch)
-            var match = 1 - level/100 * abs(voiceTone - fileTone) + offset/100
-            if match > 1 { match = 1 }
-            if match < 0 { match = 0 }
-            score = match * calcuScore
+        if pitch >= stdPitchMin, pitch <= stdPitchMax {
+            let fileTone = AgoraKaraokeScoreView.pitchToTone(pitch: stdPitch)
+            if fileTone == 0 { return 0 }
+            let voiceTone = AgoraKaraokeScoreView.pitchToTone(pitch: pitch)
+            var match = 1 - level/100 * abs(voiceTone - fileTone)/fileTone + offset/100
+            match = min(match, 1)
+            match = max(match, 0)
+            score = match * lineCalcuScore
         }
-        return (score, voicePitch)
+        return score
     }
     
-    private func pitchToTone(pitch: Double) -> Double {
+    static func pitchToTone(pitch: Double) -> Double {
         let eps = 1e-6
         return (max(0, log(pitch / 55 + eps) / log(2))) * 12
     }
@@ -720,16 +722,41 @@ extension AgoraKaraokeScoreView {
         var score: Double = 0
         let word: String
         var items = [ToneScoreItem]()
+        let stdPitch: Int
         
-        init(word: String) {
+        init(word: String, stdPitch: Int) {
             self.word = word
+            self.stdPitch = stdPitch
+        }
+        
+        func addItem(item: ToneScoreItem) {
+            score = (score + item.score) / 2.0
+            items.append(item)
+        }
+        
+        var description: String {
+            let dict: [String : Any] = ["word" : word,
+                                        "score" : score,
+                                        "stdPitch" : stdPitch,
+                                        "items" : items]
+            return "\(dict)"
         }
     }
     
-    struct ToneScoreItem {
+    struct ToneScoreItem: CustomStringConvertible {
         let score: Double
         let word: String
         let originalPitch: Double
         let pitch: Double
+        let currentTime: Double
+        
+        var description: String {
+            let dict: [String : Any] = ["score" : score,
+                                        "word" : word,
+                                        "originalPitch" : originalPitch,
+                                        "pitch" : pitch,
+                                        "currentTime" : currentTime]
+            return "\(dict)"
+        }
     }
 }
