@@ -17,7 +17,7 @@ class VoicePitchChanger {
     ///   - voicePitch: 实际值 来自rtc回调
     ///   - wordMaxPitch: 最大值 来自标准值
     /// - Returns: 处理后的值
-    func handlePitch(wordPitch: Double,
+    func handlePitch(stdPitch: Double,
                      voicePitch: Double,
                      wordMaxPitch: Double) -> Double {
         if voicePitch <= 0 {
@@ -25,7 +25,7 @@ class VoicePitchChanger {
         }
         
         n += 1.0
-        let gap = wordPitch - voicePitch
+        let gap = stdPitch - voicePitch
         
         offset = offset * (n - 1)/n + gap/n
         

@@ -150,9 +150,6 @@ public class AgoraLrcScoreView: UIView {
                 guard pitch > 0 else { return }
                 self?.delegate?.agoraWordPitch?(pitch: pitch, totalCount: totalCount)
             }
-            _lrcView?.currentLineEndsClosure = { [weak self] in
-                self?.scoreView?.lyricsLineEnds()
-            }
             return _lrcView
         }
         set {
@@ -241,7 +238,7 @@ public class AgoraLrcScoreView: UIView {
     public func scrollToTime(timestamp: TimeInterval) {
         Log.info(text: "scrollToTime \(timestamp)", tag: logTag)
         lrcView?.scrollToTime(timestamp: timestamp)
-        scoreView?.start(currentTime: timestamp)
+        scoreView?.start(currentTime: timestamp/1000)
     }
 
     private var preTime: TimeInterval = 0

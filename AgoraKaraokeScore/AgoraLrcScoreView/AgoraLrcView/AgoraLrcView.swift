@@ -14,8 +14,6 @@ class AgoraLrcView: UIView {
     var currentPlayerLrc: ((String, CGFloat) -> Void)?
     /// 当前歌词pitch回调
     var currentWordPitchClosure: ((Int, Int) -> Void)?
-    /// 当前行结束回调
-    var currentLineEndsClosure: (() -> Void)?
     let logTag = "AgoraLrcView"
 
     private var _lrcConfig: AgoraLrcConfigModel = .init() {
@@ -274,7 +272,6 @@ class AgoraLrcView: UIView {
         preWord = nil
         progress = 0
         totalPitchCount = 0
-        isLineCallback = false
         miguSongModel = nil
         lrcDatas?.removeAll()
         dataArray = []
@@ -302,17 +299,12 @@ class AgoraLrcView: UIView {
     private var preWord: String?
     private var prePitch: Int = 0
     private var preIndex: Int = 0
-    private var isLineCallback: Bool = false
     private func updatePerSecond() {
         if lrcDatas != nil {
             if let lrc = getLrc() {
                 scrollRow = lrc.index ?? 0
                 progress = lrc.progress ?? 0
                 currentPlayerLrc?(lrc.lrcText ?? "", progress)
-                if roundToPlaces(value: progress, places: 1) >= 1.0 && isLineCallback == false {
-                    currentLineEndsClosure?()
-                }
-                isLineCallback = roundToPlaces(value: progress, places: 1) >= 1
             }
             return
         }
@@ -320,10 +312,6 @@ class AgoraLrcView: UIView {
             scrollRow = lrc.index ?? 0
             progress = lrc.progress ?? 0
             currentPlayerLrc?(lrc.lrcText ?? "", progress)
-            if roundToPlaces(value: progress, places: 1) >= 1.0 && isLineCallback == false {
-                currentLineEndsClosure?()
-            }
-            isLineCallback = roundToPlaces(value: progress, places: 1) >= 1
             if preIndex != scrollRow {
                 currentWordPitchClosure?(lrc.pitch, totalPitchCount)
             } else if preWord != lrc.lrcText || prePitch != lrc.pitch {
