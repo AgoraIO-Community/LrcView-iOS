@@ -354,7 +354,7 @@ public class AgoraKaraokeScoreView: UIView {
             let fileTone = AgoraKaraokeScoreView.pitchToTone(pitch: stdPitch)
             if fileTone == 0 { return 0 }
             let voiceTone = AgoraKaraokeScoreView.pitchToTone(pitch: pitch)
-            var match = 1 - level/100 * abs(voiceTone - fileTone)/fileTone + offset/100
+            var match = 1 - level/100 * abs(voiceTone - fileTone) + offset/100
             match = min(match, 1)
             match = max(match, 0)
             score = match * lineCalcuScore

@@ -50,21 +50,21 @@ class TestScore: XCTestCase {
     }
     
     func testCalcultedTone() {
-//        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 500, level: 10, offset: 0, lineCalcuScore: 100))
-//        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 400, level: 10, offset: 0, lineCalcuScore: 100))
-//        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 301, level: 10, offset: 0, lineCalcuScore: 100))
-//        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 300, level: 10, offset: 0, lineCalcuScore: 100))
-//        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 299, level: 10, offset: 0, lineCalcuScore: 100))
-//        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 200, level: 10, offset: 0, lineCalcuScore: 100))
-//        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 100, level: 10, offset: 0, lineCalcuScore: 100))
-//        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 50, level: 10, offset: 0, lineCalcuScore: 100))
-//        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 1, level: 10, offset: 0, lineCalcuScore: 100))
+        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 500, level: 10, offset: 0, lineCalcuScore: 100))
+        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 400, level: 10, offset: 0, lineCalcuScore: 100))
+        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 301, level: 10, offset: 0, lineCalcuScore: 100))
+        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 300, level: 10, offset: 0, lineCalcuScore: 100))
+        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 299, level: 10, offset: 0, lineCalcuScore: 100))
+        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 200, level: 10, offset: 0, lineCalcuScore: 100))
+        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 100, level: 10, offset: 0, lineCalcuScore: 100))
+        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 50, level: 10, offset: 0, lineCalcuScore: 100))
+        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 300, stdPitchMin: 0, stdPitchMax: 500, pitch: 1, level: 10, offset: 0, lineCalcuScore: 100))
         
-        print(AgoraKaraokeScoreView.calcultedTone(stdPitch: 150, stdPitchMin: -50, stdPitchMax: 200, pitch: 200, level: 10, offset: 0, lineCalcuScore: 100))
-        
-        
-        for i in 0...100 {
-            print("\(i) - \(AgoraKaraokeScoreView.pitchToTone(pitch: Double(i)))")
-        }
+
+//
+//
+//        for i in 0...100 {
+//            print("\(i) - \(AgoraKaraokeScoreView.pitchToTone(pitch: Double(i)))")
+//        }
     }
 }
