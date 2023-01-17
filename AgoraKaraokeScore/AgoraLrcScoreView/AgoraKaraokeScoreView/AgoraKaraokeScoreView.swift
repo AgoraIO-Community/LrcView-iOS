@@ -297,13 +297,17 @@ public class AgoraKaraokeScoreView: UIView {
         }
         
         let calcuScore = scoreConfig?.lineCalcuScore ?? 100
-        let voicePitch = voicePitchChanger?.handlePitch(stdPitch: model.pitch,
+        var voicePitch: Double = pitch
+        if pitch >= model.pitchMin, pitch <= model.pitchMax {
+            voicePitch = voicePitchChanger?.handlePitch(stdPitch: model.pitch,
                                                         voicePitch: pitch,
                                                         wordMaxPitch: model.pitchMax) ?? pitch
+        }
+        
         let score = AgoraKaraokeScoreView.calcultedTone(stdPitch: model.pitch,
-                                                        stdPitchMin: model.pitchMin,
-                                                        stdPitchMax: model.pitchMax,
-                                                        pitch: pitch,
+                                                        pitchMin: model.pitchMin,
+                                                        pitchMax: model.pitchMax,
+                                                        pitch: voicePitch,
                                                         level: level,
                                                         offset: offset,
                                                         lineCalcuScore: calcuScore)
@@ -339,26 +343,30 @@ public class AgoraKaraokeScoreView: UIView {
     
     /// 计算一个tone的分数
     /// - Parameters:
-    ///   - pitch: 原始语音pitch
+    ///   - stdPitch: xml内标准picth
+    ///   - pitch: 语音pitch
+    ///   - lineCalcuScore: 分制，如100
     /// - Returns: (分数，音调处理后的pitch)
     static func calcultedTone(stdPitch: Double,
-                              stdPitchMin: Double,
-                              stdPitchMax: Double,
+                              pitchMin: Double,
+                              pitchMax: Double,
                               pitch: Double,
                               level: Double,
                               offset: Double,
                               lineCalcuScore: Double) -> Double {
         if pitch == 0 { return 0 }
+        if stdPitch == 0 { return 0 }
+        if pitch < pitchMin || pitch > pitchMax {  return 0 }
         var score: Double = 0
-        if pitch >= stdPitchMin, pitch <= stdPitchMax {
-            let fileTone = AgoraKaraokeScoreView.pitchToTone(pitch: stdPitch)
-            if fileTone == 0 { return 0 }
-            let voiceTone = AgoraKaraokeScoreView.pitchToTone(pitch: pitch)
-            var match = 1 - level/100 * abs(voiceTone - fileTone) + offset/100
-            match = min(match, 1)
-            match = max(match, 0)
-            score = match * lineCalcuScore
-        }
+        
+        let fileTone = AgoraKaraokeScoreView.pitchToTone(pitch: stdPitch)
+        if fileTone == 0 { return 0 }
+        let voiceTone = AgoraKaraokeScoreView.pitchToTone(pitch: pitch)
+        var match = 1 - level/100 * abs(voiceTone - fileTone) + offset/100
+        match = min(match, 1)
+        match = max(match, 0)
+        score = match * lineCalcuScore
+        
         return score
     }
     
