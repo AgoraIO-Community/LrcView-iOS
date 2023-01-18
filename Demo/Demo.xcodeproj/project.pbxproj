@@ -25,6 +25,7 @@
 		26C5452E2955B370009E0F37 /* AVPlayerTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452D2955B370009E0F37 /* AVPlayerTestVC.swift */; };
 		26C545322955B684009E0F37 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 26C545312955B684009E0F37 /* music.mp3 */; };
 		26C545342955B6C2009E0F37 /* 105780.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26C545332955B6C2009E0F37 /* 105780.xml */; };
+		26D01F9A2977D7F500B9D31A /* ScoreAniVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D01F992977D7F500B9D31A /* ScoreAniVC.swift */; };
 		F88793560A341F9CBCF66020 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,7 @@
 		26C5452D2955B370009E0F37 /* AVPlayerTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerTestVC.swift; sourceTree = "<group>"; };
 		26C545312955B684009E0F37 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
 		26C545332955B6C2009E0F37 /* 105780.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 105780.xml; sourceTree = "<group>"; };
+		26D01F992977D7F500B9D31A /* ScoreAniVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreAniVC.swift; sourceTree = "<group>"; };
 		474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		97B9305873CDD18897DEA957 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		B11BABF3447B1F591F0171BB /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				26C5452329557D25009E0F37 /* LyricsTestVC.swift */,
 				26C5452D2955B370009E0F37 /* AVPlayerTestVC.swift */,
 				26105FE42966787A00712EDA /* EmitterVC.swift */,
+				26D01F992977D7F500B9D31A /* ScoreAniVC.swift */,
 				2682B05829544EF8005285B9 /* GCDTimer.swift */,
 				26C5452B2955B2FE009E0F37 /* Config.swift */,
 				260942DC2952B5050022A50D /* Main.storyboard */,
@@ -267,6 +270,7 @@
 				26C5452429557D25009E0F37 /* LyricsTestVC.swift in Sources */,
 				2682B05929544EF8005285B9 /* GCDTimer.swift in Sources */,
 				26105FE52966787A00712EDA /* EmitterVC.swift in Sources */,
+				26D01F9A2977D7F500B9D31A /* ScoreAniVC.swift in Sources */,
 				2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */,
 				260942ED2952BD4C0022A50D /* ViewTestVC.swift in Sources */,
 			);

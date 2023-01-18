@@ -74,6 +74,7 @@ public class ScoringView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        updateUI()
         vm.delegate = self
     }
     
@@ -83,6 +84,12 @@ public class ScoringView: UIView {
     
     func setLyricData(data: LyricModel?) {
         vm.setLyricData(data: data)
+        if let data = data {
+            /** 设置gradeView **/
+            let gradeTitle = data.name + "-" + data.singer
+            gradeView.setTitle(title: gradeTitle)
+            gradeView.totalScore = data.lines.count * 100
+        }
     }
     
     func setPitch(pitch: Double) {
@@ -91,6 +98,7 @@ public class ScoringView: UIView {
     
     func reset() {
         vm.reset()
+        gradeView.reset()
     }
     
     private func updateProgress() {
@@ -98,7 +106,6 @@ public class ScoringView: UIView {
     }
     
     private func setupUI() {
-        gradeView.backgroundColor = .blue
         addSubview(gradeView)
         addSubview(canvasView)
         addSubview(localPitchView)
@@ -120,7 +127,7 @@ public class ScoringView: UIView {
         localPitchView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         localPitchView.topAnchor.constraint(equalTo: canvasView.topAnchor).isActive = true
         localPitchView.bottomAnchor.constraint(equalTo: canvasView.bottomAnchor).isActive = true
-        let width = defaultPitchCursorX + 1 * 0.5 /** 竖线的宽度是1 **/
+        let width = defaultPitchCursorX + LocalPitchView.scoreAnimateWidth /** 竖线的宽度是1 **/
         localPitchView.widthAnchor.constraint(equalToConstant: width).isActive = true
     }
     
@@ -141,6 +148,9 @@ public class ScoringView: UIView {
         vm.hitScoreThreshold = hitScoreThreshold
         vm.scoreLevel = scoreLevel
         vm.scoreCompensationOffset = scoreCompensationOffset
+        
+        gradeView.isHidden = isGradeViewHidden
+        gradeView.updateUI()
     }
 }
 
@@ -168,6 +178,8 @@ extension ScoringView: ScoringVMDelegate {
                    score: Int,
                    lineIndex: Int,
                    lineCount: Int) {
+        localPitchView.showScoreView(score: score)
+        gradeView.addScore(score: score)
         delegate?.scoringVM(self,
                             didFinishLineWith: model,
                             score: score,

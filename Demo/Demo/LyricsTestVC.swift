@@ -32,6 +32,7 @@ class LyricsTestVC: UIViewController {
         karaokeView.lyricsView.textNormalFontSize = .systemFont(ofSize: 16)
         karaokeView.lyricsView.textHighlightFontSize = .systemFont(ofSize: 23)
         karaokeView.lyricsView.draggable = true
+        karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         view.backgroundColor = .black
         view.addSubview(karaokeView)
         karaokeView.translatesAutoresizingMaskIntoConstraints = false

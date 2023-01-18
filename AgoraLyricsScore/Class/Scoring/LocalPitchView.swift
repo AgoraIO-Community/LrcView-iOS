@@ -12,6 +12,11 @@ class LocalPitchView: UIView {
     private let bgView = UIImageView()
     private let verticalLineView = UIImageView()
     private let indicatedView = UIImageView()
+    private var labels: [UILabel] = [.init(), .init(), .init(), .init(), .init()]
+    private var labelCenterYConstraints = [NSLayoutConstraint]()
+    private var currentLabelIndex = 0
+    private var indicatedCenterYConstant: CGFloat = 0.0
+    static let scoreAnimateWidth: CGFloat = 30
     /// 游标的起始位置
     var defaultPitchCursorX: CGFloat = 100
     var emitterImages = [UIImage]() {
@@ -34,10 +39,17 @@ class LocalPitchView: UIView {
         bgView.image = Bundle.currentBundle.image(name: "bg_scoring_left")
         verticalLineView.image = Bundle.currentBundle.image(name: "icon_vertical_line")
         indicatedView.image = Bundle.currentBundle.image(name: "icon_trangle")
+        
         backgroundColor = .clear
         addSubview(bgView)
         addSubview(verticalLineView)
         addSubview(indicatedView)
+        for label in labels {
+            label.font = .systemFont(ofSize: 11)
+            label.textColor = .white
+            addSubview(label)
+            label.translatesAutoresizingMaskIntoConstraints = false
+        }
         layer.addSublayer(emitter.layer)
         
         bgView.translatesAutoresizingMaskIntoConstraints = false
@@ -45,15 +57,22 @@ class LocalPitchView: UIView {
         indicatedView.translatesAutoresizingMaskIntoConstraints = false
         
         bgView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        bgView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        bgView.rightAnchor.constraint(equalTo: rightAnchor, constant: -1 * LocalPitchView.scoreAnimateWidth).isActive = true
         bgView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         bgView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
-        verticalLineView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        verticalLineView.rightAnchor.constraint(equalTo: rightAnchor, constant: -1 * (LocalPitchView.scoreAnimateWidth - 0.5)).isActive = true
         verticalLineView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         verticalLineView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
-        indicatedView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        for label in labels {
+            label.leftAnchor.constraint(equalTo: verticalLineView.rightAnchor, constant: 5).isActive = true
+            let labelCenterYConstraint = label.centerYAnchor.constraint(equalTo: bottomAnchor)
+            labelCenterYConstraint.isActive = true
+            labelCenterYConstraints.append(labelCenterYConstraint)
+        }
+        
+        indicatedView.rightAnchor.constraint(equalTo: rightAnchor, constant: -1 * LocalPitchView.scoreAnimateWidth).isActive = true
         indicatedViewCenterYAnchor = indicatedView.centerYAnchor.constraint(equalTo: bottomAnchor, constant: 0)
         indicatedViewCenterYAnchor.isActive = true
     }
@@ -62,10 +81,11 @@ class LocalPitchView: UIView {
     /// - Parameter y: 从top到bottom方向上的距离
     func setIndicatedViewY(y: CGFloat) {
         let constant = (bounds.height - y) * -1
+        indicatedCenterYConstant = constant
         indicatedViewCenterYAnchor.constant = constant
         emitter.setupEmitterPoint(point: .init(x: defaultPitchCursorX, y: y))
     }
-    
+      
     /// 开启粒子动画
     func startEmitter() {
         emitter.start()
@@ -74,6 +94,34 @@ class LocalPitchView: UIView {
     /// 暂停粒子动画
     func stopEmitter() {
         emitter.stop()
+    }
+    
+    func showScoreView(score: Int) {
+        let viewHeight = bounds.height
+        let index = findIndexOfLabel()
+        let label = labels[index]
+        label.text = "+\(score)"
+        let constraint = labelCenterYConstraints[index]
+        let startConstant: CGFloat = .random(in: 10...90) * -1
+        let endConstant: CGFloat = (viewHeight - 10) * -1
+        constraint.constant = startConstant
+        label.alpha = 1
+        label.isHidden = false
+        layoutIfNeeded()
+        constraint.constant = endConstant
+        UIView.animate(withDuration: 0.4, delay: 0.2, options: []) {
+            label.alpha = 0
+            self.layoutIfNeeded()
+        } completion: { completed in
+            
+        }
+    }
+    
+    private func findIndexOfLabel() -> Int {
+        var index = currentLabelIndex + 1
+        index = index < labels.count ? index : 0
+        currentLabelIndex = index
+        return index
     }
 }
 
@@ -131,8 +179,8 @@ class Emitter {
         cell.velocity = 1
         cell.velocityRange = 1
         /// 设置例子的大小
-        cell.scale = 0.6
-        cell.scaleRange = 0.3
+        cell.scale = 1
+        cell.scaleRange = 0.5
         /// 设置粒子方向
         cell.emissionLongitude = CGFloat.pi * 3
         cell.emissionRange = CGFloat.pi / 6
