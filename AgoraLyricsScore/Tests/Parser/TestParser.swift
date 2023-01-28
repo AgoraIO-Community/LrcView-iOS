@@ -75,7 +75,7 @@ class TestParser: XCTestCase {
         
         var pre:ScoringVM.Info?
         
-        for info in infos {
+        for info in infos.1 {
             if let pre = pre, info.beginTime < pre.endTime {
                 let text = """
                 --> error

@@ -12,10 +12,9 @@ class GradeView: UIView {
     private let gradeImageView = UIImageView()
     private let scoreLabel = UILabel()
     private let progressView = GradeProgressView()
-    /// 歌曲预设总分
-    var totalScore: Int = 0
-    /// 累计分
-    private var cumulativeScore: Int = 0
+    private var gradeItems = [GradeItem]()
+    var gradeViewHighlightColors = [UIColor]()
+    var gradeViewNormalColor = UIColor.black.withAlphaComponent(0.3)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,7 +26,6 @@ class GradeView: UIView {
     }
     
     private func setupUI() {
-        gradeImageView.image = Bundle.currentBundle.image(name: "icon-C")
         scoreLabel.text = "0分"
         scoreLabel.textColor = .white
         scoreLabel.font = .systemFont(ofSize: 11)
@@ -60,15 +58,26 @@ class GradeView: UIView {
     
     /// 当父视图布局完成时调用
     func updateUI() {
+        progressView.gradeViewNormalColor = gradeViewNormalColor
+        progressView.gradeViewHighlightColors = gradeViewHighlightColors
         progressView.updateUI()
+    }
+    
+    func setupGradeItems(gradeItems: [GradeItem]) {
+        self.gradeItems = gradeItems
+        progressView.gradeItems = gradeItems
     }
     
     func setTitle(title: String) {
         titleLabel.text = title
     }
     
-    func addScore(score: Int) {
-        cumulativeScore += score
+    func setGradeImage(image: UIImage?) {
+        gradeImageView.image = image
+        gradeImageView.isHidden = image == nil
+    }
+    
+    func setScore(cumulativeScore: Int, totalScore: Int) {
         if totalScore > 0 {
             let progress = Float(cumulativeScore) / Float(totalScore)
             progressView.setProgress(progress: progress)
@@ -77,9 +86,9 @@ class GradeView: UIView {
     }
     
     func reset() {
-        totalScore = 0
-        cumulativeScore = 0
         scoreLabel.text = "0分"
+        setGradeImage(image: nil)
+        progressView.reset()
     }
 }
 
@@ -88,6 +97,10 @@ class GradeProgressView: UIView {
     private let progressBackgroundView = UIView()
     private let gradientLayer = CAGradientLayer()
     private var widthConstraint: NSLayoutConstraint!
+    private var labels = [UILabel]()
+    fileprivate var gradeViewHighlightColors = [UIColor]()
+    fileprivate var gradeViewNormalColor = UIColor.black.withAlphaComponent(0.3)
+    fileprivate var gradeItems = [GradeItem]() { didSet{ updateUI() } }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -101,36 +114,58 @@ class GradeProgressView: UIView {
     private func setupUI() {
         progressBackgroundView.layer.masksToBounds = true
         progressBackgroundView.layer.cornerRadius = GradeProgressView.viewHeight / 2
-        progressBackgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.3)
         
-        gradientLayer.colors = [UIColor.yellow.cgColor, UIColor.red.cgColor]
         gradientLayer.startPoint = .init(x: 0, y: 0.5)
         gradientLayer.endPoint = .init(x: 1, y: 0.5)
         gradientLayer.frame = .init(x: 0, y: 0, width: 0, height: GradeProgressView.viewHeight)
+        gradientLayer.cornerRadius = GradeProgressView.viewHeight/2
         progressBackgroundView.layer.addSublayer(gradientLayer)
         
         addSubview(progressBackgroundView)
-        
-        
 
         progressBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        
         progressBackgroundView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         progressBackgroundView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         progressBackgroundView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         progressBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
-
     }
     
     fileprivate func updateUI() {
-//        gradientLayer.frame = bounds
+        progressBackgroundView.backgroundColor = gradeViewNormalColor
+        gradientLayer.colors = gradeViewHighlightColors.map({ $0.cgColor })
+        
+        for label in labels {
+            label.removeFromSuperview()
+        }
+
+        for item in gradeItems {
+            let label = UILabel()
+            let rate = Float(item.score) / 100
+            let x = CGFloat(rate) * bounds.width
+            label.textColor = .white
+            label.font = .systemFont(ofSize: 10)
+            label.text = "| " + item.description
+            progressBackgroundView.insertSubview(label, at: 0)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            label.leftAnchor.constraint(equalTo: leftAnchor, constant: x).isActive = true
+            labels.append(label)
+        }
     }
     
     /// 0-1
     fileprivate func setProgress(progress: Float) {
         let constant = bounds.width * CGFloat(progress)
         gradientLayer.frame = .init(x: 0, y: 0, width: constant, height: GradeProgressView.viewHeight)
+        if progress > 0.8 { /** 大于80%有多种颜色 **/
+            gradientLayer.colors = gradeViewHighlightColors.map({ $0.cgColor })
+        }
+        else {
+            if gradeViewHighlightColors.count > 2 {
+                let colors = [gradeViewHighlightColors[0], gradeViewHighlightColors[1]]
+                gradientLayer.colors = colors.map({ $0.cgColor })
+            }
+        }
     }
     
     fileprivate func reset() {

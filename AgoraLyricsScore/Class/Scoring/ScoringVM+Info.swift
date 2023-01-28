@@ -60,3 +60,9 @@ extension ScoringVM {
         let rect: CGRect
     }
 }
+
+struct GradeItem {
+    let score: Int
+    let description: String
+    let image: UIImage?
+}

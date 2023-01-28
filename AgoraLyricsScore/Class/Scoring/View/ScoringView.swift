@@ -47,9 +47,11 @@ public class ScoringView: UIView {
     /// 等级视图宽
     public var gradeViewWidth: CGFloat = UIScreen.main.bounds.width - 60
     /// 等级视图的正常颜色
-    public var gradeViewNormalColor: UIColor = .gray
+    public var gradeViewNormalColor: UIColor = UIColor.black.withAlphaComponent(0.3)
     /// 等级视图的高亮颜色 (渐变色)
-    public var gradeViewHighlightColors: [UIColor] = [.blue]
+    public var gradeViewHighlightColors: [UIColor] = [UIColor.colorWithHex(hexStr: "#99F5FF"),
+                                                      UIColor.colorWithHex(hexStr: "#1B6FFF"),
+                                                      UIColor.colorWithHex(hexStr: "#D598FF")]
     /// 评分激励是否显示
     public var incentiveViewHidden: Bool = false
     /// 评分激励的文字颜色 (渐变色)
@@ -88,12 +90,16 @@ public class ScoringView: UIView {
             /** 设置gradeView **/
             let gradeTitle = data.name + "-" + data.singer
             gradeView.setTitle(title: gradeTitle)
-            gradeView.totalScore = data.lines.count * 100
+            gradeView.setupGradeItems(gradeItems: vm.gradeItems)
         }
     }
     
     func setPitch(pitch: Double) {
         vm.setPitch(pitch: pitch)
+    }
+    
+    func setScoreAlgorithm(algorithm: IScoreAlgorithm) {
+        vm.scoreAlgorithm = algorithm
     }
     
     func reset() {
@@ -150,6 +156,8 @@ public class ScoringView: UIView {
         vm.scoreCompensationOffset = scoreCompensationOffset
         
         gradeView.isHidden = isGradeViewHidden
+        gradeView.gradeViewHighlightColors = gradeViewHighlightColors
+        gradeView.gradeViewNormalColor = gradeViewNormalColor
         gradeView.updateUI()
     }
 }
@@ -179,7 +187,9 @@ extension ScoringView: ScoringVMDelegate {
                    lineIndex: Int,
                    lineCount: Int) {
         localPitchView.showScoreView(score: score)
-        gradeView.addScore(score: score)
+        gradeView.setScore(cumulativeScore: vm.cumulativeScore, totalScore: vm.totalScore)
+        let image = vm.getGradeImage()
+        gradeView.setGradeImage(image: image)
         delegate?.scoringVM(self,
                             didFinishLineWith: model,
                             score: score,

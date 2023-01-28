@@ -14,7 +14,7 @@ import Foundation
     ///   - view: KaraokeView
     ///   - position: 当前时间点 (ms)
     @objc optional func onKaraokeView(view: KaraokeView, didDragTo position: Int)
-     
+    
     /// 歌曲播放完一行(Line)时的歌词回调
     /// - Parameters:
     ///   - model: 行信息
@@ -66,14 +66,57 @@ import Foundation
     /// 获取等级分布的数量
     @objc func totalGradeCount() -> Int
     
-    /// 计算当前分数属于哪个等级
-    /// - Parameter score: 当前句分数
-    /// - Returns: 等级索引
-    @objc func totalGradeIndex(score: Int) -> Int
+    /// 等级对应的总分数百分比
+    /// - Parameter index: 当前等级索引
+    /// - Returns: 分数 0-100 (把总分当做100分，内部按照百分比计算)
+    @objc func totalGradeScoreByIndex(gradeIndex: Int) -> Int
     
     /// 等级的描述
     /// - Note: 在视图中显示的名称
     /// - Parameter gradeIndex: 等级的索引
     /// - Returns: 等级名称
     @objc func totalGradeDescription(gradeIndex: Int) -> String
+    
+    /// 等级的图片
+    /// - Parameter gradeIndex: 等级的索引
+    /// - Returns: 等级图片
+    @objc func totalGradeImage(gradeIndex: Int) -> UIImage
+}
+
+extension IScoreAlgorithm {
+    /// 计算分数等级 当一句结束的时候回调
+    /// - Parameter score: 每一句的分数
+    /// - Parameter gradeScores: 等级参考分数
+    /// - Returns: 等级索引, `nil`表示没有匹配上
+    func totalGradeIndex(cumulativeScore: Int,
+                         totalScore: Int,
+                         gradeScores: [Int]) -> Int? {
+        guard !gradeScores.isEmpty else {
+            return nil
+        }
+        
+        if cumulativeScore < 0 {
+            return nil
+        }
+        
+        let ratio = Float(cumulativeScore)/Float(totalScore)
+        if ratio > 1 {
+            return gradeScores.count - 1
+        }
+        
+        if ratio < Float(gradeScores.first!) / 100 {
+            return nil
+        }
+        
+        var last: Int? = nil
+        for item in gradeScores.enumerated() {
+            if ratio == Float(item.element) / 100 {
+                return item.offset
+            }
+            if ratio >= Float(item.element) / 100 {
+                last = item.offset
+            }
+        }
+        return last
+    }
 }

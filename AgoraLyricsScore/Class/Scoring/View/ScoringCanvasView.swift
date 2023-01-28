@@ -25,6 +25,7 @@ class ScoringCanvasView: UIView {
     /// 是否隐藏上下分割线
     var separatorHidden: Bool = false
     
+    
     fileprivate var standardInfos = [DrawInfo]()
     fileprivate var highlightInfos = [DrawInfo]()
     fileprivate var widthPreMs: CGFloat { movingSpeedFactor / 1000 }
@@ -77,14 +78,25 @@ extension ScoringCanvasView {
     }
     
     fileprivate func drawStandardInfos() {
-        drawInfos(infos: standardInfos, fillColor: standardPitchStickViewColor)
+        drawInfosStandrad(infos: standardInfos, fillColor: standardPitchStickViewColor)
     }
     
     fileprivate func drawHighlightInfos() {
-        drawInfos(infos: highlightInfos, fillColor: standardPitchStickViewHighlightColor)
+        drawInfosStandrad(infos: highlightInfos, fillColor: standardPitchStickViewHighlightColor)
     }
     
-    private func drawInfos(infos: [DrawInfo], fillColor: UIColor) {
+    private func drawInfosHighlight(infos: [DrawInfo], fillColor: UIColor) {
+        for info in infos {
+            let rect = info.rect
+            let gradient = CAGradientLayer()
+            gradient.frame = rect
+            gradient.colors = [UIColor.magenta.cgColor, UIColor.cyan.cgColor]
+
+            layer.addSublayer(gradient)
+        }
+    }
+    
+    private func drawInfosStandrad(infos: [DrawInfo], fillColor: UIColor) {
         for info in infos {
             let rect = info.rect
             let path = UIBezierPath(roundedRect: rect, cornerRadius: standardPitchStickViewHeight/2)
@@ -92,41 +104,6 @@ extension ScoringCanvasView {
             path.fill()
         }
     }
-    
-//    private func drawInfos(infos: [ScoringVM.Info], fillColor: UIColor) {
-//        for info in infos {
-//            let beginTime = info.drawBeginTime
-//            let duration = info.drawDuration
-//            let pitch = info.pitch
-//
-//            /// 视图最左边到游标这段距离对应的时长
-//            let defaultPitchCursorXTime = Int(defaultPitchCursorX / widthPreMs)
-//            let x = CGFloat(beginTime - (progress - defaultPitchCursorXTime)) * widthPreMs
-//            let y = getCenterY(pitch: pitch) - (standardPitchStickViewHeight / 2)
-//            let w = widthPreMs * CGFloat(duration)
-//            let h = standardPitchStickViewHeight
-//            let rect = CGRect(x: x, y: y, width: w, height: h)
-//            let path = UIBezierPath(roundedRect: rect, cornerRadius: standardPitchStickViewHeight/2)
-//            fillColor.setFill()
-//            path.fill()
-//        }
-//    }
-    
-    /// 计算y的位置
-//    private func getCenterY(pitch: Double) -> CGFloat {
-//        if pitch <= 0 {
-//            return bounds.height
-//        }
-//        if pitch < minPitch { return bounds.height }
-//        if pitch > maxPitch { return 0 }
-//
-//        /// 映射成从0开始
-//        let value = pitch - minPitch
-//        /// 计算相对偏移
-//        let distance = (value / (maxPitch - minPitch)) * bounds.height
-//        let y = bounds.height - distance
-//        return y
-//    }
 }
 
 extension ScoringCanvasView {

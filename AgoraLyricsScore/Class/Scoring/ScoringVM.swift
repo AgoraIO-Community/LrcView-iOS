@@ -21,8 +21,7 @@ class ScoringVM {
     var scoreLevel = 10
     var scoreCompensationOffset = 0
     
-    var scoreAlgorithm = ScoreAlgorithm()
-    
+    var scoreAlgorithm: IScoreAlgorithm = ScoreAlgorithm()
 
     weak var delegate: ScoringVMDelegate?
     
@@ -33,6 +32,11 @@ class ScoringVM {
     fileprivate var currentHighlightInfos = [Info]()
     fileprivate var maxPitch: Double = 0
     fileprivate var minPitch: Double = 0
+    var gradeItems = [GradeItem]()
+    /// 歌曲预设总分
+    var totalScore: Int = 0
+    /// 累计分
+    var cumulativeScore: Int = 0
     
     /// 产生pitch花费的时间 ms
     fileprivate let pitchDuration = 50
@@ -53,13 +57,22 @@ class ScoringVM {
         let (min, max) = makeMinMaxPitch()
         minPitch = min
         maxPitch = max
+        gradeItems = setupGradeData()
+        totalScore = lyricData.lines.count * 100
         updateProgress()
     }
     
+    func setScoreAlgorithm(algorithm: IScoreAlgorithm) {
+        self.scoreAlgorithm = algorithm
+    }
+    
     func reset() {
+        totalScore = 0
+        cumulativeScore = 0
         currentIndexOfLine = -1
         toneScores = []
         progress = 0
+        gradeItems = []
     }
     
     private func updateProgress() {
@@ -96,6 +109,7 @@ class ScoringVM {
         let lineScore = scoreAlgorithm.getLineScore(with: toneScores)
         toneScores = []
         if let data = lyricData, currentIndexOfLine < data.lines.count {
+            cumulativeScore += lineScore
             invokeScoringVM(didFinishLineWith: data.lines[currentIndexOfLine],
                             score: lineScore,
                             lineIndex: currentIndexOfLine,
