@@ -43,8 +43,9 @@ class ScoringVM {
     fileprivate var canvasViewSize: CGSize = .zero
     fileprivate var toneScores = [ToneScoreModel]()
     fileprivate let queue = DispatchQueue(label: "ScoringVM.queue")
-    fileprivate var currentIndexOfLine = -1
+    fileprivate var currentIndexOfLineEnd = -1
     fileprivate var lyricData: LyricModel?
+    fileprivate let logTag = "ScoringVM"
     
     func setLyricData(data: LyricModel?) {
         guard let lyricData = data else { return }
@@ -59,6 +60,7 @@ class ScoringVM {
         maxPitch = max
         gradeItems = setupGradeData()
         totalScore = lyricData.lines.count * 100
+        toneScores = lyricData.lines[0].tones.map({ ToneScoreModel(tone: $0, score: 0) })
         updateProgress()
     }
     
@@ -69,7 +71,7 @@ class ScoringVM {
     func reset() {
         totalScore = 0
         cumulativeScore = 0
-        currentIndexOfLine = -1
+        currentIndexOfLineEnd = -1
         toneScores = []
         progress = 0
         gradeItems = []
@@ -82,8 +84,8 @@ class ScoringVM {
         
         /// 检查结束的行
         if let indexOfLine = findIndexOfEndLine(progress: progress, lineEndTims: lineEndTimes) {
-            if currentIndexOfLine != indexOfLine {
-                currentIndexOfLine = indexOfLine
+            if currentIndexOfLineEnd != indexOfLine {
+                currentIndexOfLineEnd = indexOfLine
                 didLineEnd()
             }
         }
@@ -98,8 +100,12 @@ class ScoringVM {
                                             currentVisiableInfos: currentVisiableInfos)
             showAnimation = ret != nil
             if let (score, info) = ret {
-                let toneScore = ToneScoreModel(tone: info.tone, score: Int(score))
-                toneScores.append(toneScore)
+                if let hitToneScore = toneScores.first(where: { $0.tone.beginTime == info.beginTime }) {
+                    hitToneScore.addScore(score: Int(score))
+                }
+                else {
+                    Log.error(error: "ignore score \(score), beginTime: \(info.beginTime), \(toneScores.map({ "\($0.tone.beginTime)-" }).reduce("", +))", tag: logTag)
+                }
             }
         }
         invokeScoringVM(didUpdateCursor: y, showAnimation: showAnimation)
@@ -107,13 +113,16 @@ class ScoringVM {
     
     private func didLineEnd() {
         let lineScore = scoreAlgorithm.getLineScore(with: toneScores)
-        toneScores = []
-        if let data = lyricData, currentIndexOfLine < data.lines.count {
+        if let data = lyricData, currentIndexOfLineEnd < data.lines.count {
             cumulativeScore += lineScore
-            invokeScoringVM(didFinishLineWith: data.lines[currentIndexOfLine],
+            
+            invokeScoringVM(didFinishLineWith: data.lines[currentIndexOfLineEnd],
                             score: lineScore,
-                            lineIndex: currentIndexOfLine,
+                            lineIndex: currentIndexOfLineEnd,
                             lineCount: data.lines.count)
+            if currentIndexOfLineEnd + 1 < data.lines.count {
+                toneScores = data.lines[currentIndexOfLineEnd + 1].tones.map({ ToneScoreModel(tone: $0, score: 0) })
+            }
         }
     }
 }
