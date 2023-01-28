@@ -738,7 +738,12 @@ extension AgoraKaraokeScoreView {
         }
         
         func addItem(item: ToneScoreItem) {
-            score = (score + item.score) / 2.0
+            if score > 0 {
+                score = (score + item.score) / 2.0
+            }
+            else {
+                score += item.score
+            }
             items.append(item)
         }
         
