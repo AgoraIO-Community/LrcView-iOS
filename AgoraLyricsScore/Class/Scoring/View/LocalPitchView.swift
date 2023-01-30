@@ -19,6 +19,8 @@ class LocalPitchView: UIView {
     static let scoreAnimateWidth: CGFloat = 30
     /// 游标的起始位置
     var defaultPitchCursorX: CGFloat = 100
+    /// 是否隐藏粒子动画效果
+    var particleEffectHidden: Bool = false
     var emitterImages = [UIImage]() {
         didSet {
             emitter.images = emitterImages
@@ -92,11 +94,13 @@ class LocalPitchView: UIView {
       
     /// 开启粒子动画
     func startEmitter() {
+        if particleEffectHidden { return }
         emitter.start()
     }
     
     /// 暂停粒子动画
     func stopEmitter() {
+        if particleEffectHidden { return }
         emitter.stop()
     }
     

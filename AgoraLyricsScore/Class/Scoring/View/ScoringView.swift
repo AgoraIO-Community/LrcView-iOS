@@ -22,12 +22,6 @@ public class ScoringView: UIView {
     public var standardPitchStickViewColor: UIColor = .gray { didSet { updateUI() } }
     /// 音准线匹配后的背景色
     public var standardPitchStickViewHighlightColor: UIColor = .orange { didSet { updateUI() } }
-    /// 分割线的颜色
-    public var separatorColor: UIColor = .systemPink { didSet { updateUI() } }
-    /// 是否隐藏垂直分割线
-    public var isVerticalSeparatorLineHidden: Bool = false { didSet { updateUI() } }
-    /// 是否隐藏上下分割线
-    public var separatorHidden: Bool = false { didSet { updateUI() } }
     /// 游标背景色
     public var localPitchCursorColor: UIColor = .systemPink { didSet { updateUI() } }
     /// 游标的半径
@@ -38,16 +32,6 @@ public class ScoringView: UIView {
     public var emitterImages: [UIImage]? { didSet { updateUI() } }
     /// 动画颜色 (emitterImages为空时，默认使用颜色创建粒子动画)
     public var emitterColors: [UIColor] = [.red] { didSet { updateUI() } }
-    /// 自定义火焰效果图片
-    public var fireEffectImage: UIImage? { didSet { updateUI() } }
-    /// 火焰效果颜色 图片为空时使用颜色
-    public var fireEffectColor: UIColor? = .yellow { didSet { updateUI() } }
-    /// 评分激励是否显示
-    public var incentiveViewHidden: Bool = false
-    /// 评分激励的文字颜色 (渐变色)
-    public var incentiveTextColor: [UIColor] = [.blue]
-    /// 评分激励的文字大小
-    public var incentiveTextFont: UIFont = .systemFont(ofSize: 18)
     /// 打分容忍度 范围：0-1
     public var hitScoreThreshold: Float = 0.7 { didSet { updateUI() } }
     /// use for debug only
@@ -61,7 +45,7 @@ public class ScoringView: UIView {
     fileprivate let canvasView = ScoringCanvasView()
     /// use for debug only
     fileprivate let consoleView = ConsoleView()
-    private var canvasViewTopConstraint: NSLayoutConstraint!
+    private var canvasViewTopConstraint, localPitchViewWidthConstraint: NSLayoutConstraint!
     
     fileprivate let vm = ScoringVM()
     weak var delegate: ScoringViewDelegate?
@@ -114,9 +98,8 @@ public class ScoringView: UIView {
         localPitchView.topAnchor.constraint(equalTo: canvasView.topAnchor).isActive = true
         localPitchView.bottomAnchor.constraint(equalTo: canvasView.bottomAnchor).isActive = true
         let width = defaultPitchCursorX + LocalPitchView.scoreAnimateWidth /** 竖线的宽度是1 **/
-        localPitchView.widthAnchor.constraint(equalToConstant: width).isActive = true
-        
-        
+        localPitchViewWidthConstraint = localPitchView.widthAnchor.constraint(equalToConstant: width)
+        localPitchViewWidthConstraint.isActive = true
     }
     
     private func updateUI() {
@@ -125,10 +108,11 @@ public class ScoringView: UIView {
         canvasView.movingSpeedFactor = movingSpeedFactor
         canvasView.standardPitchStickViewColor = standardPitchStickViewColor
         canvasView.standardPitchStickViewHighlightColor = standardPitchStickViewHighlightColor
-        canvasView.separatorColor = separatorColor
-        canvasView.isVerticalSeparatorLineHidden = isVerticalSeparatorLineHidden
-        canvasView.separatorHidden = separatorHidden
+        
+        localPitchView.particleEffectHidden = particleEffectHidden
         localPitchView.defaultPitchCursorX = defaultPitchCursorX
+        let width = defaultPitchCursorX + LocalPitchView.scoreAnimateWidth /** 竖线的宽度是1 **/
+        localPitchViewWidthConstraint.constant = width
         
         canvasViewTopConstraint.constant = topSpaces
         

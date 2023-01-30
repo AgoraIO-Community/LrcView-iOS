@@ -73,7 +73,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if indexPath.section == 0 { /** UI配置测试 **/
-            let vc = ViewTestVC()
+            let vc = MainTestVC()
             navigationController?.pushViewController(vc, animated: true)
             return
         }
@@ -124,11 +124,4 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-struct Section {
-    let title: String
-    let rows: [Row]
-}
 
-struct Row {
-    let title: String
-}

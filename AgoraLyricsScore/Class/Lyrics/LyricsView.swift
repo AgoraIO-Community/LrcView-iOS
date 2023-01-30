@@ -22,7 +22,7 @@ public class FirstToneHintViewStyle: NSObject {
 
 public class LyricsView: UIView {
     /// 无歌词提示文案
-    public var noLyricTipsText: String = "纯音乐，无歌词"
+    public var noLyricTipsText: String = "无歌词"
     /// 无歌词提示文字颜色
     public var noLyricTipsColor: UIColor = .orange
     /// 无歌词提示文字大小

@@ -18,13 +18,6 @@ class ScoringCanvasView: UIView {
     var standardPitchStickViewColor: UIColor = .gray
     /// 音准线匹配后的背景色
     var standardPitchStickViewHighlightColor: UIColor = .orange
-    /// 分割线的颜色
-    var separatorColor: UIColor = .systemPink
-    /// 是否隐藏垂直分割线
-    var isVerticalSeparatorLineHidden: Bool = false
-    /// 是否隐藏上下分割线
-    var separatorHidden: Bool = false
-    
     
     fileprivate var standardInfos = [DrawInfo]()
     fileprivate var highlightInfos = [DrawInfo]()
