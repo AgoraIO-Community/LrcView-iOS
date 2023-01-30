@@ -61,8 +61,4 @@ extension ScoringVM {
     }
 }
 
-struct GradeItem {
-    let score: Int
-    let description: String
-    let image: UIImage?
-}
+

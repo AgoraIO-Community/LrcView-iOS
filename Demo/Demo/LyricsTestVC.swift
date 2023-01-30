@@ -12,12 +12,15 @@ import AgoraLyricsScore
 
 class LyricsTestVC: UIViewController {
     let karaokeView = KaraokeView()
+    let gradeView = GradeView()
+    let incentiveView = IncentiveView()
     var agoraKit: AgoraRtcEngineKit!
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
     var songCode = 6599298157850480 /// 十年
     private var timer = GCDTimer()
+    var cumulativeScore = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,18 +35,36 @@ class LyricsTestVC: UIViewController {
         karaokeView.lyricsView.textNormalFontSize = .systemFont(ofSize: 16)
         karaokeView.lyricsView.textHighlightFontSize = .systemFont(ofSize: 23)
         karaokeView.lyricsView.draggable = true
+        karaokeView.scoringView.viewHeight = 130
+        karaokeView.scoringView.topSpaces = 50
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         view.backgroundColor = .black
         view.addSubview(karaokeView)
+        view.addSubview(gradeView)
+        view.addSubview(incentiveView)
+        
         karaokeView.translatesAutoresizingMaskIntoConstraints = false
+        gradeView.translatesAutoresizingMaskIntoConstraints = false
+        incentiveView.translatesAutoresizingMaskIntoConstraints = false
         
         karaokeView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         karaokeView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         karaokeView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         karaokeView.heightAnchor.constraint(equalToConstant: 350).isActive = true
+        
+        gradeView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: 10).isActive = true
+        gradeView.leftAnchor.constraint(equalTo: karaokeView.leftAnchor, constant: 15).isActive = true
+        gradeView.rightAnchor.constraint(equalTo: karaokeView.rightAnchor, constant: -15).isActive = true
+        gradeView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        incentiveView.heightAnchor.constraint(equalToConstant: incentiveView.heigth).isActive = true
+        incentiveView.widthAnchor.constraint(equalToConstant: incentiveView.width).isActive = true
+        incentiveView.bottomAnchor.constraint(equalTo: karaokeView.scoringView.bottomAnchor, constant: -5).isActive = true
+        incentiveView.centerXAnchor.constraint(equalTo: karaokeView.centerXAnchor, constant: -20).isActive = true
     }
     
     func commonInit() {
+        cumulativeScore = 0
         token = TokenBuilder.buildToken(Config.mccAppId,
                                         appCertificate: Config.mccCertificate,
                                         userUuid: "\(Config.mccUid)")
@@ -179,6 +200,7 @@ extension LyricsTestVC: AgoraMusicContentCenterEventDelegate {
         let model = KaraokeView.parseLyricData(data: data)!
         DispatchQueue.main.async { [weak self] in
             self?.karaokeView.setLyricData(data: model)
+            self?.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
             self?.mccPlay()
         }
         
@@ -226,6 +248,8 @@ extension LyricsTestVC: KaraokeDelegate {
                        score: Int,
                        lineIndex: Int,
                        lineCount: Int) {
-        print("score \(score)")
+        cumulativeScore += score
+        gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lineCount * 100)
+        incentiveView.show(score: score)
     }
 }

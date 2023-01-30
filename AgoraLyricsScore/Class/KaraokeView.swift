@@ -30,6 +30,7 @@ public class KaraokeView: UIView {
     public let scoringView = ScoringView()
     fileprivate let backgroundImageView = UIImageView()
     fileprivate var lyricsViewTopConstraint: NSLayoutConstraint!
+    fileprivate var scoringViewHeightConstraint: NSLayoutConstraint!
     fileprivate var lyricData: LyricModel?
     fileprivate var pitchIsZeroCount = 0
     fileprivate let logTag = "KaraokeView"
@@ -103,17 +104,23 @@ extension KaraokeView {
     /// 设置自定义分数计算对象
     /// - Note: 如果不调用此方法，则内部使用默认计分规则
     /// - Parameter algorithm: 遵循`IScoreAlgorithm`协议实现的对象
-    public func setScoreAlgorithm(algorithm: IScoreAlgorithm) {}
+    public func setScoreAlgorithm(algorithm: IScoreAlgorithm) {
+        scoringView.setScoreAlgorithm(algorithm: algorithm)
+    }
     
     /// 设置打分难易程度(难度系数)
     /// - Note: 值越小打分难度越小，值越高打分难度越大
     /// - Parameter level: 系数, 范围：[0, 100], 如不设置默认为10
-    public func setScoreLevel(level: Int) {}
+    public func setScoreLevel(level: Int) {
+        scoringView.scoreLevel = level
+    }
     
     /// 设置打分分值补偿
     /// - Note: 在计算分值的时候作为补偿
     /// - Parameter offset: 分值补偿 [-100, 100], 如不设置默认为0
-    public func setScoreCompensationOffset(offset: Int) {}
+    public func setScoreCompensationOffset(offset: Int) {
+        scoringView.scoreCompensationOffset = offset
+    }
 }
 
 // MARK: - UI
@@ -135,7 +142,8 @@ extension KaraokeView {
         scoringView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scoringView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         scoringView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        scoringView.heightAnchor.constraint(equalToConstant: scoringView.viewHeight).isActive = true
+        scoringViewHeightConstraint = scoringView.heightAnchor.constraint(equalToConstant: scoringView.viewHeight)
+        scoringViewHeightConstraint.isActive = true
         
         lyricsView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         lyricsView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -159,7 +167,7 @@ extension KaraokeView {
         backgroundImageView.isHidden = backgroundImage == nil
         
         lyricsViewTopConstraint.constant = scoringEnabled ? scoringView.viewHeight + spacing : 0
-        
+        scoringViewHeightConstraint.constant = scoringView.viewHeight
         scoringView.isHidden = !scoringEnabled
     }
 }
@@ -171,7 +179,11 @@ extension KaraokeView: LyricsViewDelegate {
 }
 
 extension KaraokeView: ScoringViewDelegate {
-    func scoringVM(_ vm: ScoringView,
+    func scoringViewShouldUpdateViewLayout(view: ScoringView) {
+        updateUI()
+    }
+    
+    func scoringView(_ vm: ScoringView,
                    didFinishLineWith model: LyricLineModel,
                    score: Int,
                    lineIndex: Int,

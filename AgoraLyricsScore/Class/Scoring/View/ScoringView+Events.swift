@@ -9,9 +9,12 @@ import Foundation
 
 protocol ScoringViewDelegate: NSObjectProtocol {
     /// 更新句子分数
-    func scoringVM(_ vm: ScoringView,
+    func scoringView(_ view: ScoringView,
                    didFinishLineWith model: LyricLineModel,
                    score: Int,
                    lineIndex: Int,
                    lineCount: Int)
+    
+    /// 更新UI
+    func scoringViewShouldUpdateViewLayout(view: ScoringView)
 }

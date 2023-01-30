@@ -32,11 +32,6 @@ class ScoringVM {
     fileprivate var currentHighlightInfos = [Info]()
     fileprivate var maxPitch: Double = 0
     fileprivate var minPitch: Double = 0
-    var gradeItems = [GradeItem]()
-    /// 歌曲预设总分
-    var totalScore: Int = 0
-    /// 累计分
-    var cumulativeScore: Int = 0
     
     /// 产生pitch花费的时间 ms
     fileprivate let pitchDuration = 50
@@ -58,8 +53,6 @@ class ScoringVM {
         let (min, max) = makeMinMaxPitch()
         minPitch = min
         maxPitch = max
-        gradeItems = setupGradeData()
-        totalScore = lyricData.lines.count * 100
         toneScores = lyricData.lines[0].tones.map({ ToneScoreModel(tone: $0, score: 0) })
         updateProgress()
     }
@@ -69,12 +62,9 @@ class ScoringVM {
     }
     
     func reset() {
-        totalScore = 0
-        cumulativeScore = 0
         currentIndexOfLineEnd = -1
         toneScores = []
         progress = 0
-        gradeItems = []
     }
     
     private func updateProgress() {
@@ -83,7 +73,7 @@ class ScoringVM {
         invokeScoringVM(didUpdateDraw: visiableDrawInfos, highlightInfos: highlightDrawInfos)
         
         /// 检查结束的行
-        if let indexOfLine = findIndexOfEndLine(progress: progress, lineEndTims: lineEndTimes) {
+        if let indexOfLine = findIndexOfEndLine(progress: progress, lineEndTimes: lineEndTimes) {
             if currentIndexOfLineEnd != indexOfLine {
                 currentIndexOfLineEnd = indexOfLine
                 didLineEnd()
@@ -96,15 +86,15 @@ class ScoringVM {
         var showAnimation = false
         if pitch > 0 {
             let ret = updateHighlightInfos(progress: progress,
-                                            pitch: pitch,
-                                            currentVisiableInfos: currentVisiableInfos)
+                                           pitch: pitch,
+                                           currentVisiableInfos: currentVisiableInfos)
             showAnimation = ret != nil
             if let (score, info) = ret {
                 if let hitToneScore = toneScores.first(where: { $0.tone.beginTime == info.beginTime }) {
                     hitToneScore.addScore(score: Int(score))
                 }
                 else {
-                    Log.error(error: "ignore score \(score), beginTime: \(info.beginTime), \(toneScores.map({ "\($0.tone.beginTime)-" }).reduce("", +))", tag: logTag)
+                    Log.error(error: "ignore score \(score) progress: \(progress), beginTime: \(info.beginTime), endTime: \(info.endTime) \(toneScores.map({ "\($0.tone.beginTime)-" }).reduce("", +))", tag: logTag)
                 }
             }
         }
@@ -114,8 +104,6 @@ class ScoringVM {
     private func didLineEnd() {
         let lineScore = scoreAlgorithm.getLineScore(with: toneScores)
         if let data = lyricData, currentIndexOfLineEnd < data.lines.count {
-            cumulativeScore += lineScore
-            
             invokeScoringVM(didFinishLineWith: data.lines[currentIndexOfLineEnd],
                             score: lineScore,
                             lineIndex: currentIndexOfLineEnd,
@@ -275,27 +263,28 @@ extension ScoringVM { /** Data handle **/
     }
     
     /// 查找句子结束位置
-    private func findIndexOfEndLine(progress: Int, lineEndTims: [Int]) -> Int? {
-        if lineEndTims.isEmpty {
+    private func findIndexOfEndLine(progress: Int, lineEndTimes: [Int]) -> Int? {
+        if lineEndTimes.isEmpty {
             return nil
         }
         
-        if progress >= lineEndTims.last! {
-            return lineEndTims.count - 1
+        if progress >= lineEndTimes.last! {
+            return lineEndTimes.count - 1
         }
         
         var index: Int?
-        for item in lineEndTims.enumerated() {
-            if item.element == progress {
+        let gap = 30 /// 冗余
+        for item in lineEndTimes.enumerated() {
+            if item.element + gap == progress {
                 return item.offset
             }
             
-            if item.element < progress {
+            if item.element + gap < progress {
                 index = item.offset
                 continue
             }
             
-            if item.element > progress {
+            if item.element + gap > progress {
                 return index
             }
         }

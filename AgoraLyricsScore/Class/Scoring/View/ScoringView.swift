@@ -9,7 +9,9 @@ import UIKit
 
 public class ScoringView: UIView {
     /// 评分视图高度
-    public var viewHeight: CGFloat = 170 { didSet { updateUI() } }
+    public var viewHeight: CGFloat = 120 { didSet { updateUI() } }
+    /// 渲染视图到顶部的间距
+    public var topSpaces: CGFloat = 0 { didSet { updateUI() } }
     /// 游标的起始位置
     public var defaultPitchCursorX: CGFloat = 100 { didSet { updateUI() } }
     /// 音准线的高度
@@ -31,27 +33,15 @@ public class ScoringView: UIView {
     /// 游标的半径
     public var localPitchCursorRadius: CGFloat = 20 { didSet { updateUI() } }
     /// 是否隐藏粒子动画效果
-    public var particleEffectHidden: Bool = false
+    public var particleEffectHidden: Bool = false { didSet { updateUI() } }
     /// 使用图片创建粒子动画
-    public var emitterImages: [UIImage]?
+    public var emitterImages: [UIImage]? { didSet { updateUI() } }
     /// 动画颜色 (emitterImages为空时，默认使用颜色创建粒子动画)
-    public var emitterColors: [UIColor] = [.red]
+    public var emitterColors: [UIColor] = [.red] { didSet { updateUI() } }
     /// 自定义火焰效果图片
-    public var fireEffectImage: UIImage?
+    public var fireEffectImage: UIImage? { didSet { updateUI() } }
     /// 火焰效果颜色 图片为空时使用颜色
-    public var fireEffectColor: UIColor? = .yellow
-    /// 是否隐藏等级视图
-    public var isGradeViewHidden: Bool = false
-    /// 等级视图高
-    public var gradeViewHeight: CGFloat = 40
-    /// 等级视图宽
-    public var gradeViewWidth: CGFloat = UIScreen.main.bounds.width - 60
-    /// 等级视图的正常颜色
-    public var gradeViewNormalColor: UIColor = UIColor.black.withAlphaComponent(0.3)
-    /// 等级视图的高亮颜色 (渐变色)
-    public var gradeViewHighlightColors: [UIColor] = [UIColor.colorWithHex(hexStr: "#99F5FF"),
-                                                      UIColor.colorWithHex(hexStr: "#1B6FFF"),
-                                                      UIColor.colorWithHex(hexStr: "#D598FF")]
+    public var fireEffectColor: UIColor? = .yellow { didSet { updateUI() } }
     /// 评分激励是否显示
     public var incentiveViewHidden: Bool = false
     /// 评分激励的文字颜色 (渐变色)
@@ -59,17 +49,16 @@ public class ScoringView: UIView {
     /// 评分激励的文字大小
     public var incentiveTextFont: UIFont = .systemFont(ofSize: 18)
     /// 打分容忍度 范围：0-1
-    public var hitScoreThreshold: Float = 0.7
+    public var hitScoreThreshold: Float = 0.7 { didSet { updateUI() } }
     
-    public var scoreLevel = 10
-    public var scoreCompensationOffset = 0
+    var scoreLevel = 10
+    var scoreCompensationOffset = 0
     
     var progress: Int = 0 { didSet { updateProgress() } }
-    fileprivate let gradeView = GradeView()
     fileprivate let localPitchView = LocalPitchView()
     fileprivate let canvasView = ScoringCanvasView()
-    /// 间距
-    fileprivate let gradeViewSpaces: CGFloat = 15
+    private var canvasViewTopConstraint: NSLayoutConstraint!
+    
     fileprivate let vm = ScoringVM()
     weak var delegate: ScoringViewDelegate?
     
@@ -86,12 +75,6 @@ public class ScoringView: UIView {
     
     func setLyricData(data: LyricModel?) {
         vm.setLyricData(data: data)
-        if let data = data {
-            /** 设置gradeView **/
-            let gradeTitle = data.name + "-" + data.singer
-            gradeView.setTitle(title: gradeTitle)
-            gradeView.setupGradeItems(gradeItems: vm.gradeItems)
-        }
     }
     
     func setPitch(pitch: Double) {
@@ -104,7 +87,6 @@ public class ScoringView: UIView {
     
     func reset() {
         vm.reset()
-        gradeView.reset()
     }
     
     private func updateProgress() {
@@ -112,21 +94,15 @@ public class ScoringView: UIView {
     }
     
     private func setupUI() {
-        addSubview(gradeView)
         addSubview(canvasView)
         addSubview(localPitchView)
         
         canvasView.translatesAutoresizingMaskIntoConstraints = false
         localPitchView.translatesAutoresizingMaskIntoConstraints = false
-        gradeView.translatesAutoresizingMaskIntoConstraints = false
-        
-        gradeView.topAnchor.constraint(equalTo: topAnchor, constant: gradeViewSpaces).isActive = true
-        gradeView.widthAnchor.constraint(equalToConstant: gradeViewWidth).isActive = true
-        gradeView.heightAnchor.constraint(equalToConstant: gradeViewHeight).isActive = true
-        gradeView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         canvasView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        canvasView.topAnchor.constraint(equalTo: gradeView.bottomAnchor, constant: gradeViewSpaces).isActive = true
+        canvasViewTopConstraint = canvasView.topAnchor.constraint(equalTo: topAnchor, constant: topSpaces)
+        canvasViewTopConstraint.isActive = true
         canvasView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         canvasView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
         
@@ -148,6 +124,8 @@ public class ScoringView: UIView {
         canvasView.separatorHidden = separatorHidden
         localPitchView.defaultPitchCursorX = defaultPitchCursorX
         
+        canvasViewTopConstraint.constant = topSpaces
+        
         vm.defaultPitchCursorX = defaultPitchCursorX
         vm.standardPitchStickViewHeight = standardPitchStickViewHeight
         vm.movingSpeedFactor = movingSpeedFactor
@@ -155,10 +133,7 @@ public class ScoringView: UIView {
         vm.scoreLevel = scoreLevel
         vm.scoreCompensationOffset = scoreCompensationOffset
         
-        gradeView.isHidden = isGradeViewHidden
-        gradeView.gradeViewHighlightColors = gradeViewHighlightColors
-        gradeView.gradeViewNormalColor = gradeViewNormalColor
-        gradeView.updateUI()
+        delegate?.scoringViewShouldUpdateViewLayout(view: self)
     }
 }
 
@@ -187,10 +162,7 @@ extension ScoringView: ScoringVMDelegate {
                    lineIndex: Int,
                    lineCount: Int) {
         localPitchView.showScoreView(score: score)
-        gradeView.setScore(cumulativeScore: vm.cumulativeScore, totalScore: vm.totalScore)
-        let image = vm.getGradeImage()
-        gradeView.setGradeImage(image: image)
-        delegate?.scoringVM(self,
+        delegate?.scoringView(self,
                             didFinishLineWith: model,
                             score: score,
                             lineIndex: lineIndex,
