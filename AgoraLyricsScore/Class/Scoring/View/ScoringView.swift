@@ -151,9 +151,13 @@ extension ScoringView: ScoringVMDelegate {
     
     func scoringVM(_ vm: ScoringVM,
                    didUpdateCursor centerY: CGFloat,
-                   showAnimation: Bool) {
+                   showAnimation: Bool,
+                   pitch: Double) {
         localPitchView.setIndicatedViewY(y: centerY)
         showAnimation ? localPitchView.startEmitter() : localPitchView.stopEmitter()
+        delegate?.debugScoringView(didUpdateCursor: centerY,
+                                   showAnimation: showAnimation,
+                                   pitch: pitch)
     }
     
     func scoringVM(_ vm: ScoringVM,

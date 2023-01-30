@@ -28,6 +28,8 @@ public class KaraokeView: UIView {
     public weak var delegate: KaraokeDelegate?
     public let lyricsView = LyricsView()
     public let scoringView = ScoringView()
+    /// use for debug only
+    fileprivate let consoleView = ConsoleView()
     fileprivate let backgroundImageView = UIImageView()
     fileprivate var lyricsViewTopConstraint: NSLayoutConstraint!
     fileprivate var scoringViewHeightConstraint: NSLayoutConstraint!
@@ -83,7 +85,7 @@ extension KaraokeView {
         else {
             pitchIsZeroCount = 0
         }
-        if pitch > 0 || pitchIsZeroCount >= 5 { /** 过滤5个0 的情况 **/
+        if pitch > 0 || pitchIsZeroCount >= 10 { /** 过滤12个0 的情况 10*50 = 500ms * **/
             pitchIsZeroCount = 0
             scoringView.setPitch(pitch: pitch)
         }
@@ -112,6 +114,10 @@ extension KaraokeView {
     /// - Note: 值越小打分难度越小，值越高打分难度越大
     /// - Parameter level: 系数, 范围：[0, 100], 如不设置默认为10
     public func setScoreLevel(level: Int) {
+        if level < 0 || level > 100 {
+            Log.error(error: "setScoreLevel out bounds \(level), [0, 100]", tag: logTag)
+            return
+        }
         scoringView.scoreLevel = level
     }
     
@@ -119,6 +125,10 @@ extension KaraokeView {
     /// - Note: 在计算分值的时候作为补偿
     /// - Parameter offset: 分值补偿 [-100, 100], 如不设置默认为0
     public func setScoreCompensationOffset(offset: Int) {
+        if offset < -100 || offset > 100 {
+            Log.error(error: "setScoreCompensationOffset out bounds \(offset), [-100, 100]", tag: logTag)
+            return
+        }
         scoringView.scoreCompensationOffset = offset
     }
 }
@@ -155,6 +165,15 @@ extension KaraokeView {
         backgroundImageView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         backgroundImageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
+#if DEBUG
+        addSubview(consoleView)
+        consoleView.translatesAutoresizingMaskIntoConstraints = false
+        consoleView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        consoleView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        consoleView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        consoleView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+#endif
     }
     
     fileprivate func commonInit() {
@@ -194,5 +213,12 @@ extension KaraokeView: ScoringViewDelegate {
                                  score: score,
                                  lineIndex: lineIndex,
                                  lineCount: lineCount)
+    }
+    
+    func debugScoringView(didUpdateCursor centerY: CGFloat, showAnimation: Bool, pitch: Double) {
+        #if DEBUG
+        let text = "y: \(Float(centerY)) \n ani: \(showAnimation) \n pitch: \(Float(pitch))"
+        consoleView.set(text: text)
+        #endif
     }
 }

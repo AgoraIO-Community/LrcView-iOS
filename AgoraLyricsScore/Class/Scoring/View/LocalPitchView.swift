@@ -24,8 +24,8 @@ class LocalPitchView: UIView {
             emitter.images = emitterImages
         }
     }
-    
     private var indicatedViewCenterYAnchor: NSLayoutConstraint!
+    fileprivate let logTag = "LocalPitchView"
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -81,8 +81,12 @@ class LocalPitchView: UIView {
     /// - Parameter y: 从top到bottom方向上的距离
     func setIndicatedViewY(y: CGFloat) {
         let constant = (bounds.height - y) * -1
+        let duration: TimeInterval = indicatedCenterYConstant < constant ? 0.05 : 0.15
         indicatedCenterYConstant = constant
         indicatedViewCenterYAnchor.constant = constant
+        UIView.animate(withDuration: duration, delay: 0, options: []) { [weak self] in
+            self?.layoutIfNeeded()
+        }
         emitter.setupEmitterPoint(point: .init(x: defaultPitchCursorX, y: y))
     }
       

@@ -82,6 +82,8 @@ class ScoringVM {
     }
     
     func setPitch(pitch: Double) {
+        guard canvasViewSize.height > 0 else { return } /** setLyricData 后执行 **/
+        
         let y = getCenterY(pitch: pitch)
         var showAnimation = false
         if pitch > 0 {
@@ -98,7 +100,7 @@ class ScoringVM {
                 }
             }
         }
-        invokeScoringVM(didUpdateCursor: y, showAnimation: showAnimation)
+        invokeScoringVM(didUpdateCursor: y, showAnimation: showAnimation, pitch: pitch)
     }
     
     private func didLineEnd() {

@@ -59,8 +59,8 @@ class LyricsTestVC: UIViewController {
         
         incentiveView.heightAnchor.constraint(equalToConstant: incentiveView.heigth).isActive = true
         incentiveView.widthAnchor.constraint(equalToConstant: incentiveView.width).isActive = true
-        incentiveView.bottomAnchor.constraint(equalTo: karaokeView.scoringView.bottomAnchor, constant: -5).isActive = true
-        incentiveView.centerXAnchor.constraint(equalTo: karaokeView.centerXAnchor, constant: -20).isActive = true
+        incentiveView.topAnchor.constraint(equalTo: gradeView.bottomAnchor, constant: 15).isActive = true
+        incentiveView.centerXAnchor.constraint(equalTo: karaokeView.centerXAnchor, constant: -10).isActive = true
     }
     
     func commonInit() {
@@ -202,6 +202,7 @@ extension LyricsTestVC: AgoraMusicContentCenterEventDelegate {
             self?.karaokeView.setLyricData(data: model)
             self?.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
             self?.mccPlay()
+            self?.mpk.seek(toPosition: 16000)
         }
         
     }

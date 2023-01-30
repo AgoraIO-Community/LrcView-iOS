@@ -40,9 +40,9 @@ public class LyricsView: UIView {
     /// 高亮的歌词颜色 （命中）
     public var textHighlightedColor: UIColor = .orange
     /// 正常歌词文字大小
-    public var textNormalFontSize: UIFont = .systemFont(ofSize: 15)
+    public var textNormalFontSize = UIFont(name: "PingFangSC-Semibold", size: 15)!
     /// 高亮歌词文字大小
-    public var textHighlightFontSize: UIFont = .systemFont(ofSize: 18)
+    public var textHighlightFontSize = UIFont(name: "PingFangSC-Semibold", size: 18)!
     /// 歌词最大宽度
     public var maxWidth: CGFloat = UIScreen.main.bounds.width - 30
     /// 歌词上下间距

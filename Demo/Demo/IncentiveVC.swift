@@ -23,7 +23,7 @@ class IncentiveVC: UIViewController {
         timer.scheduledMillisecondsTimer(withName: "EmitterVC", countDown: 1000000, milliseconds: 1000, queue: .main) { [weak self](_, time) in
             guard let self = self else { return }
             /// Int.random(in: 40...100)
-            self.incentiveView.show(score: Int.random(in: 40...100))
+            self.incentiveView.show(score: 80)
         }
     }
     

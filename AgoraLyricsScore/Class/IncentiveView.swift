@@ -57,7 +57,7 @@ public class IncentiveView: UIView {
         guard let path = Bundle.currentBundle.path(forResource: name, ofType: "gif") else {
             return
         }
-        
+
         if lastName == name {
             if combo == 0 {
                 combo += 2
@@ -113,13 +113,15 @@ public class IncentiveView: UIView {
 
 class GifView: UIView {
     private let imageView = UIImageView()
-    private let comboLabel = UILabel()
+    private let comboLabel = IncentiveLabel()
     var time: Int64 = 0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        comboLabel.font = UIFont(name: "PingFangSC-Semibold", size: 16)
+        comboLabel.font = UIFont(name: "PingFangSC-Bold", size: 13)
+        
         comboLabel.textAlignment = .center
+        comboLabel.textColor = .white
         
         addSubview(imageView)
         addSubview(comboLabel)
@@ -142,8 +144,10 @@ class GifView: UIView {
     
     func startGif(filePath: String, combo: Int) {
         imageView.startGif(filePath: filePath)
-        comboLabel.attributedText = NSMutableAttributedString(string: "×\(combo)", attributes: [NSAttributedString.Key.foregroundColor : UIColor.white, NSAttributedString.Key.strokeColor : UIColor.colorWithHex(hexStr: "#368CFF"), NSAttributedString.Key.strokeWidth : -5])
+        
+        comboLabel.text = "×\(combo)"
         comboLabel.isHidden = combo == 0
+        
         time = Date().milliStamp
     }
     
@@ -197,5 +201,23 @@ extension UIImageView {
     }
 }
 
+class IncentiveLabel: UILabel {
+    override func drawText(in rect: CGRect) {
+        let color = textColor
+        let offset = shadowOffset
+        
+        let c = UIGraphicsGetCurrentContext()
+        c?.setLineWidth(4.0)
+        c?.setLineJoin(.round)
+        c?.setTextDrawingMode(.strokeClip)
+        textColor = UIColor.colorWithHex(hexStr: "#368CFF")
+        super.drawText(in: rect)
 
+        c?.setTextDrawingMode(.fill)
+        textColor = color
+        shadowOffset = .zero
+        super.drawText(in: rect)
 
+        shadowOffset = offset
+    }
+}
