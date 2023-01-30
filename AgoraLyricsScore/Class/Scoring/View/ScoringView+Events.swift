@@ -17,9 +17,4 @@ protocol ScoringViewDelegate: NSObjectProtocol {
     
     /// 更新UI
     func scoringViewShouldUpdateViewLayout(view: ScoringView)
-    
-    /// only for debug
-    func debugScoringView(didUpdateCursor centerY: CGFloat,
-                          showAnimation: Bool,
-                          pitch: Double)
 }

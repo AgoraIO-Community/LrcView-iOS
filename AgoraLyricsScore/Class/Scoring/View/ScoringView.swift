@@ -50,6 +50,8 @@ public class ScoringView: UIView {
     public var incentiveTextFont: UIFont = .systemFont(ofSize: 18)
     /// 打分容忍度 范围：0-1
     public var hitScoreThreshold: Float = 0.7 { didSet { updateUI() } }
+    /// use for debug only
+    public var showDebugView = false { didSet { updateUI() } }
     
     var scoreLevel = 10
     var scoreCompensationOffset = 0
@@ -57,6 +59,8 @@ public class ScoringView: UIView {
     var progress: Int = 0 { didSet { updateProgress() } }
     fileprivate let localPitchView = LocalPitchView()
     fileprivate let canvasView = ScoringCanvasView()
+    /// use for debug only
+    fileprivate let consoleView = ConsoleView()
     private var canvasViewTopConstraint: NSLayoutConstraint!
     
     fileprivate let vm = ScoringVM()
@@ -111,6 +115,8 @@ public class ScoringView: UIView {
         localPitchView.bottomAnchor.constraint(equalTo: canvasView.bottomAnchor).isActive = true
         let width = defaultPitchCursorX + LocalPitchView.scoreAnimateWidth /** 竖线的宽度是1 **/
         localPitchView.widthAnchor.constraint(equalToConstant: width).isActive = true
+        
+        
     }
     
     private func updateUI() {
@@ -134,6 +140,15 @@ public class ScoringView: UIView {
         vm.scoreCompensationOffset = scoreCompensationOffset
         
         delegate?.scoringViewShouldUpdateViewLayout(view: self)
+        
+        if showDebugView, !subviews.contains(consoleView) {
+            addSubview(consoleView)
+            consoleView.translatesAutoresizingMaskIntoConstraints = false
+            consoleView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+            consoleView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+            consoleView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            consoleView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        }
     }
 }
 
@@ -155,9 +170,10 @@ extension ScoringView: ScoringVMDelegate {
                    pitch: Double) {
         localPitchView.setIndicatedViewY(y: centerY)
         showAnimation ? localPitchView.startEmitter() : localPitchView.stopEmitter()
-        delegate?.debugScoringView(didUpdateCursor: centerY,
-                                   showAnimation: showAnimation,
-                                   pitch: pitch)
+        if showDebugView {
+            let text = "y: \(Float(centerY)) \npitch: \(pitch.keep2) \nani: \(showAnimation) "
+            consoleView.set(text: text)
+        }
     }
     
     func scoringVM(_ vm: ScoringVM,

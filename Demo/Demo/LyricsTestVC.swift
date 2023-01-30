@@ -37,6 +37,7 @@ class LyricsTestVC: UIViewController {
         karaokeView.lyricsView.draggable = true
         karaokeView.scoringView.viewHeight = 130
         karaokeView.scoringView.topSpaces = 50
+//        karaokeView.scoringView.showDebugView = true
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         view.backgroundColor = .black
         view.addSubview(karaokeView)

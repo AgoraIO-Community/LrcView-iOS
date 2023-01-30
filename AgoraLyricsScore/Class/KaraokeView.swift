@@ -28,8 +28,6 @@ public class KaraokeView: UIView {
     public weak var delegate: KaraokeDelegate?
     public let lyricsView = LyricsView()
     public let scoringView = ScoringView()
-    /// use for debug only
-    fileprivate let consoleView = ConsoleView()
     fileprivate let backgroundImageView = UIImageView()
     fileprivate var lyricsViewTopConstraint: NSLayoutConstraint!
     fileprivate var scoringViewHeightConstraint: NSLayoutConstraint!
@@ -165,15 +163,6 @@ extension KaraokeView {
         backgroundImageView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         backgroundImageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
-#if DEBUG
-        addSubview(consoleView)
-        consoleView.translatesAutoresizingMaskIntoConstraints = false
-        consoleView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        consoleView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        consoleView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        consoleView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-#endif
     }
     
     fileprivate func commonInit() {
@@ -213,12 +202,5 @@ extension KaraokeView: ScoringViewDelegate {
                                  score: score,
                                  lineIndex: lineIndex,
                                  lineCount: lineCount)
-    }
-    
-    func debugScoringView(didUpdateCursor centerY: CGFloat, showAnimation: Bool, pitch: Double) {
-        #if DEBUG
-        let text = "-y: \(Float(centerY)) \n-ani: \(showAnimation) \n-pitch: \(pitch.keep2)"
-        consoleView.set(text: text)
-        #endif
     }
 }
