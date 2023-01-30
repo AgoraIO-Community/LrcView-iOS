@@ -100,3 +100,10 @@ extension Date {
         return millisecond
     }
 }
+
+extension Double {
+    /// 保留2位小数
+    var keep2: Double {
+        return Double(Darwin.round(self * 100)/100)
+    }
+}

@@ -85,7 +85,7 @@ extension KaraokeView {
         else {
             pitchIsZeroCount = 0
         }
-        if pitch > 0 || pitchIsZeroCount >= 10 { /** 过滤12个0 的情况 10*50 = 500ms * **/
+        if pitch > 0 || pitchIsZeroCount >= 5 { /** 过滤5个0的情况* **/
             pitchIsZeroCount = 0
             scoringView.setPitch(pitch: pitch)
         }
@@ -217,7 +217,7 @@ extension KaraokeView: ScoringViewDelegate {
     
     func debugScoringView(didUpdateCursor centerY: CGFloat, showAnimation: Bool, pitch: Double) {
         #if DEBUG
-        let text = "y: \(Float(centerY)) \n ani: \(showAnimation) \n pitch: \(Float(pitch))"
+        let text = "-y: \(Float(centerY)) \n-ani: \(showAnimation) \n-pitch: \(pitch.keep2)"
         consoleView.set(text: text)
         #endif
     }
