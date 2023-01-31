@@ -21,13 +21,21 @@ class LocalPitchView: UIView {
     var defaultPitchCursorX: CGFloat = 100
     /// 是否隐藏粒子动画效果
     var particleEffectHidden: Bool = false
+    /** 游标偏移量(X轴) 游标的中心到竖线中心的距离
+     - 等于0：游标中心点和竖线中线点重合
+     - 小于0: 游标向左偏移
+     - 大于0：游标向向偏移 **/
+    var localPitchCursorOffsetX: CGFloat = -3 { didSet { updateUI() } }
+    /// 游标的图片
+    var localPitchCursorImage: UIImage? = nil { didSet { updateUI() } }
     var emitterImages = [UIImage]() {
         didSet {
             emitter.images = emitterImages
         }
     }
-    private var indicatedViewCenterYAnchor: NSLayoutConstraint!
+    private var indicatedViewCenterYConstraint, indicatedViewCenterXConstraint: NSLayoutConstraint!
     fileprivate let logTag = "LocalPitchView"
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -74,9 +82,15 @@ class LocalPitchView: UIView {
             labelCenterYConstraints.append(labelCenterYConstraint)
         }
         
-        indicatedView.rightAnchor.constraint(equalTo: rightAnchor, constant: -1 * LocalPitchView.scoreAnimateWidth).isActive = true
-        indicatedViewCenterYAnchor = indicatedView.centerYAnchor.constraint(equalTo: bottomAnchor, constant: 0)
-        indicatedViewCenterYAnchor.isActive = true
+        indicatedViewCenterXConstraint = indicatedView.centerXAnchor.constraint(equalTo: verticalLineView.centerXAnchor, constant: localPitchCursorOffsetX)
+        indicatedViewCenterYConstraint = indicatedView.centerYAnchor.constraint(equalTo: bottomAnchor, constant: 0)
+        indicatedViewCenterXConstraint.isActive = true
+        indicatedViewCenterYConstraint.isActive = true
+    }
+    
+    private func updateUI() {
+        indicatedViewCenterXConstraint.constant = localPitchCursorOffsetX
+        indicatedView.image = localPitchCursorImage ?? Bundle.currentBundle.image(name: "icon_trangle")
     }
     
     /// 设置游标位置
@@ -85,7 +99,7 @@ class LocalPitchView: UIView {
         let constant = (bounds.height - y) * -1
         let duration: TimeInterval = indicatedCenterYConstant < constant ? 0.05 : 0.15
         indicatedCenterYConstant = constant
-        indicatedViewCenterYAnchor.constant = constant
+        indicatedViewCenterYConstraint.constant = constant
         UIView.animate(withDuration: duration, delay: 0, options: []) { [weak self] in
             self?.layoutIfNeeded()
         }

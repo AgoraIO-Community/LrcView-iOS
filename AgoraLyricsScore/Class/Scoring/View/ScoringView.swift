@@ -22,16 +22,17 @@ public class ScoringView: UIView {
     public var standardPitchStickViewColor: UIColor = .gray { didSet { updateUI() } }
     /// 音准线匹配后的背景色
     public var standardPitchStickViewHighlightColor: UIColor = .orange { didSet { updateUI() } }
-    /// 游标背景色
-    public var localPitchCursorColor: UIColor = .systemPink { didSet { updateUI() } }
-    /// 游标的半径
-    public var localPitchCursorRadius: CGFloat = 20 { didSet { updateUI() } }
+    /** 游标偏移量(X轴) 游标的中心到竖线中心的距离
+     - 等于0：游标中心点和竖线中线点重合
+     - 小于0: 游标向左偏移
+     - 大于0：游标向向偏移 **/
+    public var localPitchCursorOffsetX: CGFloat = -3 { didSet { updateUI() } }
+    /// 游标的图片
+    public var localPitchCursorImage: UIImage? = nil { didSet { updateUI() } }
     /// 是否隐藏粒子动画效果
     public var particleEffectHidden: Bool = false { didSet { updateUI() } }
     /// 使用图片创建粒子动画
     public var emitterImages: [UIImage]? { didSet { updateUI() } }
-    /// 动画颜色 (emitterImages为空时，默认使用颜色创建粒子动画)
-    public var emitterColors: [UIColor] = [.red] { didSet { updateUI() } }
     /// 打分容忍度 范围：0-1
     public var hitScoreThreshold: Float = 0.7 { didSet { updateUI() } }
     /// use for debug only
@@ -111,6 +112,8 @@ public class ScoringView: UIView {
         
         localPitchView.particleEffectHidden = particleEffectHidden
         localPitchView.defaultPitchCursorX = defaultPitchCursorX
+        localPitchView.localPitchCursorOffsetX = localPitchCursorOffsetX
+        localPitchView.localPitchCursorImage = localPitchCursorImage
         let width = defaultPitchCursorX + LocalPitchView.scoreAnimateWidth /** 竖线的宽度是1 **/
         localPitchViewWidthConstraint.constant = width
         
