@@ -23,7 +23,7 @@ class MainTestVC: UIViewController {
     var songCode = 6599298157850480 /// 十年
     private var timer = GCDTimer()
     var cumulativeScore = 0
-    
+    var lyricModel: LyricModel!
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -31,6 +31,16 @@ class MainTestVC: UIViewController {
     }
     
     func setupUI() {
+//        karaokeView.scoringView.viewHeight = 160
+//        karaokeView.scoringView.topSpaces = 50
+        
+        karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
+        karaokeView.scoringView.viewHeight = 160
+        karaokeView.scoringView.topSpaces = 60
+        
+        karaokeView.spacing = 0.79
+        karaokeView.scoringView.showDebugView = true
+        
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)
         skipButton.backgroundColor = .red
@@ -52,12 +62,12 @@ class MainTestVC: UIViewController {
         karaokeView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         karaokeView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         karaokeView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        karaokeView.heightAnchor.constraint(equalToConstant: 350).isActive = true
+        karaokeView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height - 200).isActive = true
         
-        gradeView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: 10).isActive = true
+        gradeView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: 15).isActive = true
         gradeView.leftAnchor.constraint(equalTo: karaokeView.leftAnchor, constant: 15).isActive = true
         gradeView.rightAnchor.constraint(equalTo: karaokeView.rightAnchor, constant: -15).isActive = true
-        gradeView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        gradeView.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         incentiveView.heightAnchor.constraint(equalToConstant: incentiveView.heigth).isActive = true
         incentiveView.widthAnchor.constraint(equalToConstant: incentiveView.width).isActive = true
@@ -67,8 +77,8 @@ class MainTestVC: UIViewController {
         skipButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100).isActive = true
         skipButton.topAnchor.constraint(equalTo: karaokeView.bottomAnchor, constant: 30).isActive = true
         
-        skipButton.leftAnchor.constraint(equalTo: skipButton.leftAnchor, constant: 45).isActive = true
-        skipButton.topAnchor.constraint(equalTo: karaokeView.bottomAnchor, constant: 30).isActive = true
+        setButton.leftAnchor.constraint(equalTo: skipButton.rightAnchor, constant: 45).isActive = true
+        setButton.topAnchor.constraint(equalTo: karaokeView.bottomAnchor, constant: 30).isActive = true
     }
     
     func commonInit() {
@@ -142,8 +152,7 @@ class MainTestVC: UIViewController {
             return
         }
         print("== play success")
-        mpk.seek(toPosition: 13 * 1000)
-        
+        self.last = 0
         timer.scheduledMillisecondsTimer(withName: "AVPlayerTestVC",
                                          countDown: 1000000,
                                          milliseconds: 10,
@@ -171,13 +180,15 @@ class MainTestVC: UIViewController {
     
     @objc func buttonTap(_ sender: UIButton) {
         if sender == skipButton {
-            mpk.seek(toPosition: 14 * 1000)
+            if let data = lyricModel {
+                mpk.seek(toPosition: data.preludeEndPosition - 2000)
+            }
             return
         }
         
         let vc = ParamSetVC()
         vc.delegate = self
-        vc.modalPresentationStyle = .fullScreen
+        vc.modalPresentationStyle = .pageSheet
         present(vc, animated: true)
     }
     
@@ -194,6 +205,7 @@ class MainTestVC: UIViewController {
         karaokeView.lyricsView.textSelectedColor = param.lyric.textSelectedColor
         karaokeView.lyricsView.waitingViewHidden = param.lyric.waitingViewHidden
         karaokeView.lyricsView.maxWidth = param.lyric.maxWidth
+        karaokeView.lyricsView.draggable = param.lyric.draggable
 //        param.lyric.firstToneHintViewStyle
         
         karaokeView.scoringView.particleEffectHidden = param.scoring.particleEffectHidden
@@ -244,6 +256,7 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
         let model = KaraokeView.parseLyricData(data: data)!
+        self.lyricModel = model
         DispatchQueue.main.async { [weak self] in
             self?.karaokeView.setLyricData(data: model)
             self?.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
@@ -299,6 +312,8 @@ extension MainTestVC: KaraokeDelegate {
 extension MainTestVC: ParamSetVCDelegate {
     func didSetParam(param: Param) {
         mpk.stop()
+        timer.destoryTimer(withName: "AVPlayerTestVC")
+        self.last = 0
         karaokeView.reset()
         updateView(param: param)
         mccPreload()

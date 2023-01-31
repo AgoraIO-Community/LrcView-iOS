@@ -21,7 +21,7 @@ public class ScoringView: UIView {
     /// 音准线默认的背景色
     public var standardPitchStickViewColor: UIColor = .gray { didSet { updateUI() } }
     /// 音准线匹配后的背景色
-    public var standardPitchStickViewHighlightColor: UIColor = .orange { didSet { updateUI() } }
+    public var standardPitchStickViewHighlightColor: UIColor = .colorWithHex(hexStr: "#FF8AB4") { didSet { updateUI() } }
     /** 游标偏移量(X轴) 游标的中心到竖线中心的距离
      - 等于0：游标中心点和竖线中线点重合
      - 小于0: 游标向左偏移
@@ -111,9 +111,11 @@ public class ScoringView: UIView {
         canvasView.standardPitchStickViewHighlightColor = standardPitchStickViewHighlightColor
         
         localPitchView.particleEffectHidden = particleEffectHidden
+        localPitchView.emitterImages = emitterImages
         localPitchView.defaultPitchCursorX = defaultPitchCursorX
         localPitchView.localPitchCursorOffsetX = localPitchCursorOffsetX
         localPitchView.localPitchCursorImage = localPitchCursorImage
+        
         let width = defaultPitchCursorX + LocalPitchView.scoreAnimateWidth /** 竖线的宽度是1 **/
         localPitchViewWidthConstraint.constant = width
         

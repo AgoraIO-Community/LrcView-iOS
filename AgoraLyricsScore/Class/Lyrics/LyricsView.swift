@@ -38,7 +38,7 @@ public class LyricsView: UIView {
     /// 选中的歌词颜色
     public var textSelectedColor: UIColor = .white
     /// 高亮的歌词颜色 （命中）
-    public var textHighlightedColor: UIColor = .orange
+    public var textHighlightedColor: UIColor = .colorWithHex(hexStr: "#FF8AB4")
     /// 正常歌词文字大小
     public var textNormalFontSize = UIFont(name: "PingFangSC-Semibold", size: 15)!
     /// 高亮歌词文字大小
@@ -115,9 +115,11 @@ public class LyricsView: UIView {
         progress = 0
         currentIndex = 0
         tableView.reloadData()
+        Log.info(text: "reset", tag: logTag)
     }
     
     private func updateProgress() {
+        Log.info(text: "updateProgress \(progress)", tag: logTag)
         if isDragging {
             return
         }

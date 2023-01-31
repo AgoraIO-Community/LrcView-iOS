@@ -44,7 +44,8 @@ class ViewController: UIViewController {
                                             .init(title: "用AVPlayer测试"),
                                             .init(title: "Emitter测试"),
                                             .init(title: "得分动画测试"),
-                                            .init(title: "激励动画测试")])]
+                                            .init(title: "激励动画测试"),
+                                            .init(title: "LyricLabel测试")])]
     }
 }
 
@@ -117,6 +118,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             
             if indexPath.row == 6 { /** 激励动画测试 **/
                 let vc = IncentiveVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 7 { /** LyricLabel测试 **/
+                let vc = LyricLabelVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }

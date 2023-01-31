@@ -33,6 +33,7 @@ public class KaraokeView: UIView {
     fileprivate var scoringViewHeightConstraint: NSLayoutConstraint!
     fileprivate var lyricData: LyricModel?
     fileprivate var pitchIsZeroCount = 0
+    fileprivate var isStart = false
     fileprivate let logTag = "KaraokeView"
     
     public override init(frame: CGRect) {
@@ -50,6 +51,7 @@ public class KaraokeView: UIView {
 extension KaraokeView {
     /// 重置, 歌曲停止、切歌需要调用
     public func reset() {
+        isStart = false
         pitchIsZeroCount = 0
         lyricsView.reset()
         scoringView.reset()
@@ -71,19 +73,23 @@ extension KaraokeView {
         scoringEnabled = data != nil
         lyricsView.setLyricData(data: data)
         scoringView.setLyricData(data: data)
+        isStart = true
     }
     
     /// 设置实时采集(mic)的Pitch
     /// - Note: 可以从AgoraRTC回调方法 `- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine reportAudioVolumeIndicationOfSpeakers:(NSArray<AgoraRtcAudioVolumeInfo *> * _Nonnull)speakers totalVolume:(NSInteger)totalVolume`  获取
     /// - Parameter pitch: 实时音调值
     public func setPitch(pitch: Double) {
+        guard isStart else {
+            return
+        }
         if pitch == 0 {
             pitchIsZeroCount += 1
         }
         else {
             pitchIsZeroCount = 0
         }
-        if pitch > 0 || pitchIsZeroCount >= 5 { /** 过滤5个0的情况* **/
+        if pitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
             pitchIsZeroCount = 0
             scoringView.setPitch(pitch: pitch)
         }
@@ -93,6 +99,9 @@ extension KaraokeView {
     /// - Note: 可以获取播放器的当前进度进行设置
     /// - Parameter progress: 歌曲进度 (ms)
     public func setProgress(progress: Int) {
+        guard isStart else {
+            return
+        }
         var t = progress
         if t > 250 { /** 进度提前250ms **/
             t -= 250

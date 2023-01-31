@@ -28,7 +28,7 @@ class LocalPitchView: UIView {
     var localPitchCursorOffsetX: CGFloat = -3 { didSet { updateUI() } }
     /// 游标的图片
     var localPitchCursorImage: UIImage? = nil { didSet { updateUI() } }
-    var emitterImages = [UIImage]() {
+    var emitterImages: [UIImage]? {
         didSet {
             emitter.images = emitterImages
         }
@@ -103,7 +103,7 @@ class LocalPitchView: UIView {
         UIView.animate(withDuration: duration, delay: 0, options: []) { [weak self] in
             self?.layoutIfNeeded()
         }
-        emitter.setupEmitterPoint(point: .init(x: defaultPitchCursorX, y: y))
+        emitter.setupEmitterPoint(point: .init(x: defaultPitchCursorX-3, y: y))
     }
       
     /// 开启粒子动画
@@ -114,7 +114,6 @@ class LocalPitchView: UIView {
     
     /// 暂停粒子动画
     func stopEmitter() {
-        if particleEffectHidden { return }
         emitter.stop()
     }
     
@@ -124,7 +123,7 @@ class LocalPitchView: UIView {
         let label = labels[index]
         label.text = "+\(score)"
         let constraint = labelCenterYConstraints[index]
-        let startConstant: CGFloat = .random(in: 10...90) * -1
+        let startConstant: CGFloat = indicatedViewCenterYConstraint.constant
         let endConstant: CGFloat = (viewHeight - 10) * -1
         constraint.constant = startConstant
         label.alpha = 1
@@ -149,16 +148,17 @@ class LocalPitchView: UIView {
 
 class Emitter {
     let layer = CAEmitterLayer()
-    var images = [UIImage]() {
+    var images: [UIImage]? {
         didSet {
             updateImageCells()
         }
     }
+    private let logTag = "Emitter"
     
     var defaultImages: [UIImage] {
         var list = [UIImage]()
         let bundle = Bundle.currentBundle
-        for i in 1..<9 {
+        for i in 1...8 {
             let image = bundle.image(name: "star\(i)")!
             list.append(image)
         }
@@ -177,9 +177,12 @@ class Emitter {
     }
     
     func updateImageCells() {
-        let imgs = images.isEmpty ? defaultImages : images
+        if images != nil {
+            Log.debug(text: "use custom emitterImages", tag: logTag)
+        }
+        let imgs = (images != nil) ? images! : defaultImages
         let count = imgs.count
-        layer.emitterCells  = imgs.map({ Emitter.createEmitterCell(name: "cell", image: $0, birthRate: count) })
+        layer.emitterCells = imgs.enumerated().map({ Emitter.createEmitterCell(name: "cell", image: $0.1, birthRate: count) })
     }
     
     func setupEmitterPoint(point: CGPoint) {
@@ -206,14 +209,14 @@ class Emitter {
         /// 设置粒子方向
         cell.emissionLongitude = CGFloat.pi * 3
         cell.emissionRange = CGFloat.pi / 6
-        /// 设置例子的存活时间
-        cell.lifetime = 3
-        cell.lifetimeRange = 2.5
+        /// 设置粒子的存活时间
+        cell.lifetime = 20
+        cell.lifetimeRange = 1
         /// 设置粒子旋转
         cell.spin = CGFloat.pi / 2
         cell.spinRange = CGFloat.pi / 4
         /// 设置例子每秒弹出的个数
-        cell.birthRate = 5
+        cell.birthRate = Float(birthRate)
         cell.alphaRange = 0.75
         cell.alphaSpeed = -0.35
         /// 初始速度
