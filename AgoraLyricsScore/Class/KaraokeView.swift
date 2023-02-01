@@ -102,12 +102,12 @@ extension KaraokeView {
         guard isStart else {
             return
         }
-        var t = progress
-        if t > 250 { /** 进度提前250ms **/
-            t -= 250
+        var time = progress
+        if time > 250 { /** 进度提前250ms **/
+            time -= 250
         }
-        lyricsView.progress = t
-        scoringView.progress = t
+        lyricsView.progress = time
+        scoringView.progress = time
     }
     
     /// 设置自定义分数计算对象
@@ -137,6 +137,10 @@ extension KaraokeView {
             return
         }
         scoringView.scoreCompensationOffset = offset
+    }
+    
+    public func getCumulativeScore() {
+        
     }
 }
 
@@ -191,6 +195,7 @@ extension KaraokeView {
 
 extension KaraokeView: LyricsViewDelegate {
     func onLyricsView(view: LyricsView, didDragTo position: Int) {
+        Log.debug(text: "=== didDragTo \(position)", tag: "drag")
         delegate?.onKaraokeView?(view: self, didDragTo: position)
     }
 }
@@ -201,14 +206,16 @@ extension KaraokeView: ScoringViewDelegate {
     }
     
     func scoringView(_ vm: ScoringView,
-                   didFinishLineWith model: LyricLineModel,
-                   score: Int,
-                   lineIndex: Int,
-                   lineCount: Int) {
-        Log.info(text: "didFinishLineWith score:\(score) lineIndex:\(lineIndex) lineCount:\(lineCount)", tag: logTag)
+                     didFinishLineWith model: LyricLineModel,
+                     score: Int,
+                     cumulativeScore: Int,
+                     lineIndex: Int,
+                     lineCount: Int) {
+        Log.info(text: "didFinishLineWith score:\(score) lineIndex:\(lineIndex) lineCount:\(lineCount) cumulativeScore:\(cumulativeScore)", tag: logTag)
         delegate?.onKaraokeView?(view: self,
                                  didFinishLineWith: model,
                                  score: score,
+                                 cumulativeScore: cumulativeScore,
                                  lineIndex: lineIndex,
                                  lineCount: lineCount)
     }

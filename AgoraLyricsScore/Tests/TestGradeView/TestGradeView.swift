@@ -1,5 +1,5 @@
 //
-//  TestScoreAlgorithm.swift
+//  TestGradeView.swift
 //  AgoraLyricsScore-Unit-Tests
 //
 //  Created by ZYP on 2023/1/28.
@@ -8,7 +8,7 @@
 import XCTest
 @testable import AgoraLyricsScore
 
-class TestScoreAlgorithm: XCTestCase {
+class TestGradeView: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -19,7 +19,7 @@ class TestScoreAlgorithm: XCTestCase {
     }
 
     func testTotalGradeIndex() throws {
-        let sa = ScoreAlgorithm()
+        let sa = GradeView()
         XCTAssertNil(sa.totalGradeIndex(cumulativeScore: -1, totalScore: 100, gradeScores: [30, 60, 80, 90]), "nil")
         XCTAssertNil(sa.totalGradeIndex(cumulativeScore: 0, totalScore: 100, gradeScores: [30, 60, 80, 90]), "nil")
         XCTAssertNil(sa.totalGradeIndex(cumulativeScore: 10, totalScore: 100, gradeScores: [30, 60, 80, 90]), "nil")

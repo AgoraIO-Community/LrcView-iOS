@@ -25,6 +25,7 @@ protocol ScoringVMDelegate: NSObjectProtocol {
     func scoringVM(_ vm: ScoringVM,
                    didFinishLineWith model: LyricLineModel,
                    score: Int,
+                   cumulativeScore: Int,
                    lineIndex: Int,
                    lineCount: Int)
 }
@@ -70,12 +71,14 @@ extension ScoringVM { /** invoke **/
     
     func invokeScoringVM(didFinishLineWith model: LyricLineModel,
                          score: Int,
+                         cumulativeScore: Int,
                          lineIndex: Int,
                          lineCount: Int) {
         if Thread.isMainThread {
             delegate?.scoringVM(self,
                                 didFinishLineWith: model,
                                 score: score,
+                                cumulativeScore: cumulativeScore,
                                 lineIndex: lineIndex,
                                 lineCount: lineCount)
             return
@@ -86,6 +89,7 @@ extension ScoringVM { /** invoke **/
             self.delegate?.scoringVM(self,
                                      didFinishLineWith: model,
                                      score: score,
+                                     cumulativeScore: cumulativeScore,
                                      lineIndex: lineIndex,
                                      lineCount: lineCount)
         }

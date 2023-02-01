@@ -37,9 +37,11 @@ class ScoringVM {
     fileprivate let pitchDuration = 50
     fileprivate var canvasViewSize: CGSize = .zero
     fileprivate var toneScores = [ToneScoreModel]()
+    fileprivate var lineScores = [Int]()
     fileprivate let queue = DispatchQueue(label: "ScoringVM.queue")
-    fileprivate var currentIndexOfLineEnd = -1
+    fileprivate var currentIndexOfLine = 0
     fileprivate var lyricData: LyricModel?
+    fileprivate var cumulativeScore = 0
     fileprivate let logTag = "ScoringVM"
     
     func setLyricData(data: LyricModel?) {
@@ -54,6 +56,7 @@ class ScoringVM {
         minPitch = min
         maxPitch = max
         toneScores = lyricData.lines[0].tones.map({ ToneScoreModel(tone: $0, score: 0) })
+        lineScores = .init(repeating: 0, count: lyricData.lines.count)
         updateProgress()
     }
     
@@ -61,8 +64,19 @@ class ScoringVM {
         self.scoreAlgorithm = algorithm
     }
     
+    func getCumulativeScore() -> Int {
+        guard let index = findCurrentIndexOfLine(progress: progress, lineEndTimes: lineEndTimes) else {
+            return cumulativeScore
+        }
+        let ret = calculatedCumulativeScore(indexOfLine: index-1, lineScores: lineScores)
+        Log.debug(text: "== getCumulativeScore index:\(index-1) ret:\(ret)", tag: "drag")
+        return ret
+    }
+    
     func reset() {
-        currentIndexOfLineEnd = -1
+        cumulativeScore = 0
+        currentIndexOfLine = 0
+        lineScores = []
         toneScores = []
         progress = 0
     }
@@ -72,12 +86,15 @@ class ScoringVM {
         let (visiableDrawInfos, highlightDrawInfos) = makeInfos()
         invokeScoringVM(didUpdateDraw: visiableDrawInfos, highlightInfos: highlightDrawInfos)
         
-        /// 检查结束的行
-        if let indexOfLine = findIndexOfEndLine(progress: progress, lineEndTimes: lineEndTimes) {
-            if currentIndexOfLineEnd != indexOfLine {
-                currentIndexOfLineEnd = indexOfLine
-                didLineEnd()
+        guard let index = findCurrentIndexOfLine(progress: progress, lineEndTimes: lineEndTimes)  else {
+            return
+        }
+        
+        if currentIndexOfLine != index {
+            if index - currentIndexOfLine == 1 { /** 过滤拖拽导致的进度变化,只有正常进度才回调 **/
+                didLineEnd(indexOfLineEnd: currentIndexOfLine)
             }
+            currentIndexOfLine = index
         }
     }
     
@@ -103,16 +120,26 @@ class ScoringVM {
         invokeScoringVM(didUpdateCursor: y, showAnimation: showAnimation, pitch: pitch)
     }
     
-    private func didLineEnd() {
+    private func didLineEnd(indexOfLineEnd: Int) {
+        guard let data = lyricData, indexOfLineEnd <= data.lines.count else {
+            return
+        }
+
         let lineScore = scoreAlgorithm.getLineScore(with: toneScores)
-        if let data = lyricData, currentIndexOfLineEnd < data.lines.count {
-            invokeScoringVM(didFinishLineWith: data.lines[currentIndexOfLineEnd],
-                            score: lineScore,
-                            lineIndex: currentIndexOfLineEnd,
-                            lineCount: data.lines.count)
-            if currentIndexOfLineEnd + 1 < data.lines.count {
-                toneScores = data.lines[currentIndexOfLineEnd + 1].tones.map({ ToneScoreModel(tone: $0, score: 0) })
-            }
+        lineScores[indexOfLineEnd] = lineScore
+        
+        cumulativeScore = calculatedCumulativeScore(indexOfLine: indexOfLineEnd,
+                                                    lineScores: lineScores)
+        Log.debug(text: "didLineEnd indexOfLineEnd: \(indexOfLineEnd) \(lineScores) cumulativeScore:\(cumulativeScore)", tag: "drag")
+        
+        invokeScoringVM(didFinishLineWith: data.lines[indexOfLineEnd],
+                        score: lineScore,
+                        cumulativeScore: cumulativeScore,
+                        lineIndex: indexOfLineEnd,
+                        lineCount: data.lines.count)
+        let nextIndex = indexOfLineEnd + 1
+        if nextIndex < data.lines.count {
+            toneScores = data.lines[nextIndex].tones.map({ ToneScoreModel(tone: $0, score: 0) })
         }
     }
 }
@@ -264,31 +291,28 @@ extension ScoringVM { /** Data handle **/
         }
     }
     
-    /// 查找句子结束位置
-    private func findIndexOfEndLine(progress: Int, lineEndTimes: [Int]) -> Int? {
+    /// 查找当前句子的索引
+    /// - Parameters:
+    /// - Returns: `nil` 表示不合法或者超过最后一句的结束时间。
+    func findCurrentIndexOfLine(progress: Int, lineEndTimes: [Int]) -> Int? {
         if lineEndTimes.isEmpty {
             return nil
         }
         
-        if progress >= lineEndTimes.last! {
-            return lineEndTimes.count - 1
+        if progress > lineEndTimes.last! {
+            return nil
         }
         
-        var index: Int?
-        let gap = 30 /// 冗余
-        for item in lineEndTimes.enumerated() {
-            if item.element + gap == progress {
-                return item.offset
+        if progress <= lineEndTimes.first! {
+            return 0
+        }
+        
+        var lastEnd = 0
+        for (offset, value) in lineEndTimes.enumerated() {
+            if progress > lastEnd, progress <= value  {
+                return offset
             }
-            
-            if item.element + gap < progress {
-                index = item.offset
-                continue
-            }
-            
-            if item.element + gap > progress {
-                return index
-            }
+            lastEnd = value
         }
         return nil
     }
@@ -347,5 +371,18 @@ extension ScoringVM { /** Data handle **/
         let distance = (value / (maxPitch - minPitch)) * canvasViewHeight
         let y = canvasViewHeight - distance
         return y
+    }
+    
+    /// 计算累计分数
+    /// - Parameters:
+    ///   - indexOfLine: 计算到此index 如：2, 会计算0,1,2的累加值
+    func calculatedCumulativeScore(indexOfLine: Int, lineScores: [Int]) -> Int {
+        var cumulativeScore = 0
+        for (offset, value) in lineScores.enumerated() {
+            if offset <= indexOfLine {
+                cumulativeScore += value
+            }
+        }
+        return cumulativeScore
     }
 }

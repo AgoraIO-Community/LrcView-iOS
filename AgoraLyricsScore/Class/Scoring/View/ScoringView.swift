@@ -62,6 +62,11 @@ public class ScoringView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /// 获取当前累计分数
+    public func getCumulativeScore() -> Int {
+        vm.getCumulativeScore()
+    }
+    
     func setLyricData(data: LyricModel?) {
         vm.setLyricData(data: data)
     }
@@ -168,13 +173,15 @@ extension ScoringView: ScoringVMDelegate {
     func scoringVM(_ vm: ScoringVM,
                    didFinishLineWith model: LyricLineModel,
                    score: Int,
+                   cumulativeScore: Int,
                    lineIndex: Int,
                    lineCount: Int) {
         localPitchView.showScoreView(score: score)
         delegate?.scoringView(self,
-                            didFinishLineWith: model,
-                            score: score,
-                            lineIndex: lineIndex,
-                            lineCount: lineCount)
+                              didFinishLineWith: model,
+                              score: score,
+                              cumulativeScore: cumulativeScore,
+                              lineIndex: lineIndex,
+                              lineCount: lineCount)
     }
 }

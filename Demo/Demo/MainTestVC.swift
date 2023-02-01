@@ -37,9 +37,10 @@ class MainTestVC: UIViewController {
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         karaokeView.scoringView.viewHeight = 160
         karaokeView.scoringView.topSpaces = 60
-        
+        karaokeView.lyricsView.draggable = true
         karaokeView.spacing = 0.79
         karaokeView.scoringView.showDebugView = true
+        
         
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)
@@ -295,15 +296,20 @@ extension MainTestVC: AgoraRtcMediaPlayerDelegate {
 
 extension MainTestVC: KaraokeDelegate {
     func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
+        self.last = position
         mpk.seek(toPosition: position)
+        view.setProgress(progress: position)
+        cumulativeScore = view.scoringView.getCumulativeScore()
+        gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lyricModel.lines.count * 100)
     }
     
     func onKaraokeView(view: KaraokeView,
                        didFinishLineWith model: LyricLineModel,
                        score: Int,
+                       cumulativeScore: Int,
                        lineIndex: Int,
                        lineCount: Int) {
-        cumulativeScore += score
+        self.cumulativeScore = cumulativeScore
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lineCount * 100)
         incentiveView.show(score: score)
     }

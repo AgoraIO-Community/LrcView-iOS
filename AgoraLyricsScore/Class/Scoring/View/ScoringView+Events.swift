@@ -12,6 +12,7 @@ protocol ScoringViewDelegate: NSObjectProtocol {
     func scoringView(_ view: ScoringView,
                      didFinishLineWith model: LyricLineModel,
                      score: Int,
+                     cumulativeScore: Int,
                      lineIndex: Int,
                      lineCount: Int)
     

@@ -102,7 +102,7 @@ public class GradeView: UIView {
     /// - Parameter score: 每一句的分数
     /// - Parameter gradeScores: 等级参考分数
     /// - Returns: 等级索引, `nil`表示没有匹配上
-    private func totalGradeIndex(cumulativeScore: Int,
+    func totalGradeIndex(cumulativeScore: Int,
                                  totalScore: Int,
                                  gradeScores: [Int]) -> Int? {
         guard !gradeScores.isEmpty else {

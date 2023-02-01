@@ -19,11 +19,13 @@ import Foundation
     /// - Parameters:
     ///   - model: 行信息
     ///   - score: 当前行得分 [0, 100]
+    ///   - cumulativeScore: 累计分数
     ///   - lineIndex: 行索引号 最小值：0
     ///   - lineCount: 总行数
     @objc optional func onKaraokeView(view: KaraokeView,
                                       didFinishLineWith model: LyricLineModel,
                                       score: Int,
+                                      cumulativeScore: Int,
                                       lineIndex: Int,
                                       lineCount: Int)
 }
