@@ -68,8 +68,9 @@ class ScoringVM {
         guard let index = findCurrentIndexOfLine(progress: progress, lineEndTimes: lineEndTimes) else {
             return cumulativeScore
         }
-        let ret = calculatedCumulativeScore(indexOfLine: index-1, lineScores: lineScores)
-        Log.debug(text: "== getCumulativeScore index:\(index-1) ret:\(ret)", tag: "drag")
+        let indexOfLine = max(index-1, 0)
+        let ret = calculatedCumulativeScore(indexOfLine: indexOfLine, lineScores: lineScores)
+        Log.debug(text: "== getCumulativeScore index:\(indexOfLine) ret:\(ret)", tag: "drag")
         return ret
     }
     
@@ -293,14 +294,14 @@ extension ScoringVM { /** Data handle **/
     
     /// 查找当前句子的索引
     /// - Parameters:
-    /// - Returns: `nil` 表示不合法或者超过最后一句的结束时间。
+    /// - Returns: `nil` 表示不合法, 等于 `lineEndTimes.count` 表示最后一句已经结束
     func findCurrentIndexOfLine(progress: Int, lineEndTimes: [Int]) -> Int? {
         if lineEndTimes.isEmpty {
             return nil
         }
         
         if progress > lineEndTimes.last! {
-            return nil
+            return lineEndTimes.count
         }
         
         if progress <= lineEndTimes.first! {
