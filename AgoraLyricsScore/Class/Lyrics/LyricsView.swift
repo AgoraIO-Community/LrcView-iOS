@@ -8,6 +8,7 @@
 import UIKit
 
 protocol LyricsViewDelegate: NSObjectProtocol {
+    func onLyricsViewBegainDrag(view: LyricsView)
     func onLyricsView(view: LyricsView, didDragTo position: Int)
 }
 
@@ -119,13 +120,9 @@ public class LyricsView: UIView {
     }
     
     private func updateProgress() {
+        guard let data = lyricData else { return }
+        guard !isDragging else { return }
         Log.info(text: "updateProgress \(progress)", tag: logTag)
-        if isDragging {
-            return
-        }
-        guard let data = lyricData else {
-            return
-        }
         let remainingTime = data.preludeEndPosition - progress
         firstToneHintView.setRemainingTime(time: remainingTime)
         
@@ -141,9 +138,6 @@ public class LyricsView: UIView {
                     last.update(progressRate: 0)
                     Log.debug(text: "currentIndex: \(currentIndex) progressRate: 0", tag: logTag)
                     let lastIndexPath = IndexPath(row: lastIndex, section: 0)
-                    UIView.performWithoutAnimation {
-                        tableView.reloadRows(at: [lastIndexPath], with: .fade)
-                    }
                     
                     /// 更新当前
                     currentIndex = newCurrentIndex
@@ -155,8 +149,9 @@ public class LyricsView: UIView {
                     }
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
+                    
                     UIView.performWithoutAnimation {
-                        tableView.reloadRows(at: [indexPath], with: .fade)
+                        tableView.reloadRows(at: [indexPath, lastIndexPath], with: .fade)
                     }
                     tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
                     Log.debug(text: "currentIndex: \(currentIndex) progressRate: \(progressRate)", tag: logTag)
@@ -185,8 +180,11 @@ public class LyricsView: UIView {
     
     private func dragCellHandler(scrollView: UIScrollView) {
         let point = CGPoint(x: 0, y: scrollView.contentOffset.y + scrollView.bounds.height * 0.5)
-        guard let indexPath = tableView.indexPathForRow(at: point) else { return }
-        let model = dataList[indexPath.row]
+        var indexPath = tableView.indexPathForRow(at: point)
+        if indexPath == nil { /** 顶部和底部空隙 **/
+            indexPath = scrollView.contentOffset.y < 0 ? IndexPath(row: 0, section: 0) : IndexPath(row: dataList.count - 1, section: 0)
+        }
+        let model = dataList[indexPath!.row]
         delegate?.onLyricsView(view: self, didDragTo: model.beginTime)
     }
     
@@ -258,6 +256,12 @@ extension LyricsView {
         tableView.isHidden = isNoLyric
         tableView.isScrollEnabled = draggable
         firstToneHintView.isHidden = waitingViewHidden || isNoLyric
+        
+        if tableView.bounds.width > 0 {
+            let viewFrame = CGRect(x: 0, y: 0, width: tableView.bounds.width/2, height: tableView.bounds.height/2)
+            tableView.tableHeaderView = .init(frame: viewFrame)
+            tableView.tableFooterView = .init(frame: viewFrame)
+        }
     }
 }
 
@@ -284,11 +288,14 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
     
     public func scrollViewWillBeginDragging(_: UIScrollView) {
         isDragging = true
+        delegate?.onLyricsViewBegainDrag(view: self)
     }
     
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate _: Bool) {
-        dragCellHandler(scrollView: scrollView)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: { [weak self] in /** 延时0.3秒放开，避免跳动 **/
+        if isDragging {
+            dragCellHandler(scrollView: scrollView)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in /** 延时0.1秒放开，避免跳动 **/
             guard let self = self else {
                 return
             }
@@ -297,8 +304,10 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
     }
     
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        dragCellHandler(scrollView: scrollView)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: { [weak self] in /** 延时0.3秒放开，避免跳动 **/
+        if isDragging {
+            dragCellHandler(scrollView: scrollView)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in /** 延时0.1秒放开，避免跳动 **/
             guard let self = self else {
                 return
             }

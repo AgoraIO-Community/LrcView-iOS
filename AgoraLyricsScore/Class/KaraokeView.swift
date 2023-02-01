@@ -194,8 +194,13 @@ extension KaraokeView {
 }
 
 extension KaraokeView: LyricsViewDelegate {
+    func onLyricsViewBegainDrag(view: LyricsView) {
+        scoringView.dragBegain()
+    }
+    
     func onLyricsView(view: LyricsView, didDragTo position: Int) {
         Log.debug(text: "=== didDragTo \(position)", tag: "drag")
+        scoringView.dragDidEnd(position: position)
         delegate?.onKaraokeView?(view: self, didDragTo: position)
     }
 }

@@ -36,11 +36,9 @@ class TestScoringVM: XCTestCase {
     func testCalculatedCumulativeScore() throws {
         let vm = ScoringVM()
         let lineScores = [10, 20, 5]
+        XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: -1, lineScores: lineScores), 0)
         XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: 0, lineScores: lineScores), 10)
         XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: 1, lineScores: lineScores), 10+20)
         XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: 2, lineScores: lineScores), 10+20+5)
     }
-
-    
-
 }

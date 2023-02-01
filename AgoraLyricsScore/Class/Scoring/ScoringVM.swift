@@ -8,7 +8,6 @@
 import Foundation
 
 class ScoringVM {
-    var progress: Int = 0 { didSet { updateProgress() } }
     /// 游标的起始位置
     var defaultPitchCursorX: CGFloat = 100
     /// 音准线的高度
@@ -17,14 +16,12 @@ class ScoringVM {
     var movingSpeedFactor: CGFloat = 120
     /// 打分容忍度 范围：0-1
     var hitScoreThreshold: Float = 0.7
-    
     var scoreLevel = 10
     var scoreCompensationOffset = 0
-    
     var scoreAlgorithm: IScoreAlgorithm = ScoreAlgorithm()
-
     weak var delegate: ScoringVMDelegate?
     
+    fileprivate var progress: Int = 0
     fileprivate var widthPreMs: CGFloat { movingSpeedFactor / 1000 }
     fileprivate var dataList = [Info]()
     fileprivate var lineEndTimes = [Int]()
@@ -32,7 +29,6 @@ class ScoringVM {
     fileprivate var currentHighlightInfos = [Info]()
     fileprivate var maxPitch: Double = 0
     fileprivate var minPitch: Double = 0
-    
     /// 产生pitch花费的时间 ms
     fileprivate let pitchDuration = 50
     fileprivate var canvasViewSize: CGSize = .zero
@@ -42,6 +38,7 @@ class ScoringVM {
     fileprivate var currentIndexOfLine = 0
     fileprivate var lyricData: LyricModel?
     fileprivate var cumulativeScore = 0
+    fileprivate var isDragging = false
     fileprivate let logTag = "ScoringVM"
     
     func setLyricData(data: LyricModel?) {
@@ -68,10 +65,16 @@ class ScoringVM {
         guard let index = findCurrentIndexOfLine(progress: progress, lineEndTimes: lineEndTimes) else {
             return cumulativeScore
         }
-        let indexOfLine = max(index-1, 0)
+        let indexOfLine = index-1
         let ret = calculatedCumulativeScore(indexOfLine: indexOfLine, lineScores: lineScores)
         Log.debug(text: "== getCumulativeScore index:\(indexOfLine) ret:\(ret)", tag: "drag")
         return ret
+    }
+    
+    func setProgress(progress: Int) {
+        guard !isDragging else { return }
+        self.progress = progress
+        updateProgress()
     }
     
     func reset() {
@@ -100,6 +103,7 @@ class ScoringVM {
     }
     
     func setPitch(pitch: Double) {
+        guard !isDragging else { return }
         guard canvasViewSize.height > 0 else { return } /** setLyricData 后执行 **/
         
         let y = getCenterY(pitch: pitch)
@@ -121,11 +125,36 @@ class ScoringVM {
         invokeScoringVM(didUpdateCursor: y, showAnimation: showAnimation, pitch: pitch)
     }
     
+    func dragBegain() {
+        isDragging = true
+    }
+    
+    func dragDidEnd(position: Int) {
+        guard let index = findCurrentIndexOfLine(progress: position, lineEndTimes: lineEndTimes) else {
+            return
+        }
+        
+        if index >= 0, index < lineEndTimes.count, let data = lyricData {
+            toneScores = data.lines[index].tones.map({ ToneScoreModel(tone: $0, score: 0) })
+            
+            for offset in index..<lineEndTimes.count {
+                lineScores[offset] = 0
+            }
+        }
+        
+        progress = position
+        updateProgress()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in /** 延时0.1秒放开，避免数据错乱 **/
+            guard let self = self else { return }
+            self.isDragging = false
+        })
+    }
+    
     private func didLineEnd(indexOfLineEnd: Int) {
         guard let data = lyricData, indexOfLineEnd <= data.lines.count else {
             return
         }
-
+        
         let lineScore = scoreAlgorithm.getLineScore(with: toneScores)
         lineScores[indexOfLineEnd] = lineScore
         

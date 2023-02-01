@@ -79,12 +79,20 @@ public class ScoringView: UIView {
         vm.scoreAlgorithm = algorithm
     }
     
+    func dragBegain() {
+        vm.dragBegain()
+    }
+    
+    func dragDidEnd(position: Int) {
+        vm.dragDidEnd(position: position)
+    }
+    
     func reset() {
         vm.reset()
     }
     
     private func updateProgress() {
-        vm.progress = progress
+        vm.setProgress(progress: progress)
     }
     
     private func setupUI() {

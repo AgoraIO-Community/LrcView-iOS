@@ -63,7 +63,7 @@ class MainTestVC: UIViewController {
         karaokeView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         karaokeView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         karaokeView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        karaokeView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height - 200).isActive = true
+        karaokeView.heightAnchor.constraint(equalToConstant: 350).isActive = true
         
         gradeView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: 15).isActive = true
         gradeView.leftAnchor.constraint(equalTo: karaokeView.leftAnchor, constant: 15).isActive = true
@@ -154,7 +154,7 @@ class MainTestVC: UIViewController {
         }
         print("== play success")
         self.last = 0
-        timer.scheduledMillisecondsTimer(withName: "AVPlayerTestVC",
+        timer.scheduledMillisecondsTimer(withName: "MainTestVC",
                                          countDown: 1000000,
                                          milliseconds: 10,
                                          queue: .main) { [weak self](_, time) in
@@ -298,7 +298,6 @@ extension MainTestVC: KaraokeDelegate {
     func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
         self.last = position
         mpk.seek(toPosition: position)
-        view.setProgress(progress: position)
         cumulativeScore = view.scoringView.getCumulativeScore()
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lyricModel.lines.count * 100)
     }
@@ -318,7 +317,7 @@ extension MainTestVC: KaraokeDelegate {
 extension MainTestVC: ParamSetVCDelegate {
     func didSetParam(param: Param) {
         mpk.stop()
-        timer.destoryTimer(withName: "AVPlayerTestVC")
+        timer.destoryTimer(withName: "MainTestVC")
         self.last = 0
         karaokeView.reset()
         updateView(param: param)
