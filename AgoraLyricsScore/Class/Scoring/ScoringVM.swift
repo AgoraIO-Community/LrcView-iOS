@@ -62,13 +62,8 @@ class ScoringVM {
     }
     
     func getCumulativeScore() -> Int {
-        guard let index = findCurrentIndexOfLine(progress: progress, lineEndTimes: lineEndTimes) else {
-            return cumulativeScore
-        }
-        let indexOfLine = index-1
-        let ret = calculatedCumulativeScore(indexOfLine: indexOfLine, lineScores: lineScores)
-        Log.debug(text: "== getCumulativeScore index:\(indexOfLine) ret:\(ret)", tag: "drag")
-        return ret
+        Log.debug(text: "== getCumulativeScore cumulativeScore:\(cumulativeScore)", tag: "drag")
+        return cumulativeScore
     }
     
     func setProgress(progress: Int) {
@@ -134,9 +129,12 @@ class ScoringVM {
             return
         }
         
+        let indexOfLine = index-1
+        cumulativeScore = calculatedCumulativeScore(indexOfLine: indexOfLine, lineScores: lineScores)
+        Log.debug(text: "== dragDidEnd cumulativeScore:\(cumulativeScore)", tag: "drag")
+        
         if index >= 0, index < lineEndTimes.count, let data = lyricData {
             toneScores = data.lines[index].tones.map({ ToneScoreModel(tone: $0, score: 0) })
-            
             for offset in index..<lineEndTimes.count {
                 lineScores[offset] = 0
             }
