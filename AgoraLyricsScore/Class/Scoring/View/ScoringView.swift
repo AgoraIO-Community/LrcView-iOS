@@ -9,34 +9,34 @@ import UIKit
 
 public class ScoringView: UIView {
     /// 评分视图高度
-    public var viewHeight: CGFloat = 120 { didSet { updateUI() } }
+    @objc public var viewHeight: CGFloat = 120 { didSet { updateUI() } }
     /// 渲染视图到顶部的间距
-    public var topSpaces: CGFloat = 0 { didSet { updateUI() } }
+    @objc public var topSpaces: CGFloat = 0 { didSet { updateUI() } }
     /// 游标的起始位置
-    public var defaultPitchCursorX: CGFloat = 100 { didSet { updateUI() } }
+    @objc public var defaultPitchCursorX: CGFloat = 100 { didSet { updateUI() } }
     /// 音准线的高度
-    public var standardPitchStickViewHeight: CGFloat = 3 { didSet { updateUI() } }
+    @objc public var standardPitchStickViewHeight: CGFloat = 3 { didSet { updateUI() } }
     /// 音准线的基准因子
-    public var movingSpeedFactor: CGFloat = 120 { didSet { updateUI() } }
+    @objc public var movingSpeedFactor: CGFloat = 120 { didSet { updateUI() } }
     /// 音准线默认的背景色
-    public var standardPitchStickViewColor: UIColor = .gray { didSet { updateUI() } }
+    @objc public var standardPitchStickViewColor: UIColor = .gray { didSet { updateUI() } }
     /// 音准线匹配后的背景色
-    public var standardPitchStickViewHighlightColor: UIColor = .colorWithHex(hexStr: "#FF8AB4") { didSet { updateUI() } }
+    @objc public var standardPitchStickViewHighlightColor: UIColor = .colorWithHex(hexStr: "#FF8AB4") { didSet { updateUI() } }
     /** 游标偏移量(X轴) 游标的中心到竖线中心的距离
      - 等于0：游标中心点和竖线中线点重合
      - 小于0: 游标向左偏移
      - 大于0：游标向向偏移 **/
-    public var localPitchCursorOffsetX: CGFloat = -3 { didSet { updateUI() } }
+    @objc public var localPitchCursorOffsetX: CGFloat = -3 { didSet { updateUI() } }
     /// 游标的图片
-    public var localPitchCursorImage: UIImage? = nil { didSet { updateUI() } }
+    @objc public var localPitchCursorImage: UIImage? = nil { didSet { updateUI() } }
     /// 是否隐藏粒子动画效果
-    public var particleEffectHidden: Bool = false { didSet { updateUI() } }
+    @objc public var particleEffectHidden: Bool = false { didSet { updateUI() } }
     /// 使用图片创建粒子动画
-    public var emitterImages: [UIImage]? { didSet { updateUI() } }
+    @objc public var emitterImages: [UIImage]? { didSet { updateUI() } }
     /// 打分容忍度 范围：0-1
-    public var hitScoreThreshold: Float = 0.7 { didSet { updateUI() } }
+    @objc public var hitScoreThreshold: Float = 0.7 { didSet { updateUI() } }
     /// use for debug only
-    public var showDebugView = false { didSet { updateUI() } }
+    @objc public var showDebugView = false { didSet { updateUI() } }
     
     var scoreLevel = 10
     var scoreCompensationOffset = 0
@@ -63,7 +63,7 @@ public class ScoringView: UIView {
     }
     
     /// 获取当前累计分数
-    public func getCumulativeScore() -> Int {
+    @objc public func getCumulativeScore() -> Int {
         vm.getCumulativeScore()
     }
     

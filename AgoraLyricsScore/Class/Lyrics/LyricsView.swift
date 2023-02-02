@@ -14,40 +14,40 @@ protocol LyricsViewDelegate: NSObjectProtocol {
 
 public class FirstToneHintViewStyle: NSObject {
     /// 背景色
-    public var backgroundColor: UIColor? = .gray
+    @objc public var backgroundColor: UIColor? = .gray
     /// 大小
-    public var size: CGFloat = 10
+    @objc public var size: CGFloat = 10
     /// 底部间距
-    public var bottomMargin: CGFloat = 0
+    @objc public var bottomMargin: CGFloat = 0
 }
 
 public class LyricsView: UIView {
     /// 无歌词提示文案
-    public var noLyricTipsText: String = "无歌词"
+    @objc public var noLyricTipsText: String = "无歌词"
     /// 无歌词提示文字颜色
-    public var noLyricTipsColor: UIColor = .orange
+    @objc public var noLyricTipsColor: UIColor = .orange
     /// 无歌词提示文字大小
-    public var noLyricTipsFont: UIFont = .systemFont(ofSize: 17)
+    @objc public var noLyricTipsFont: UIFont = .systemFont(ofSize: 17)
     /// 是否隐藏等待开始圆点
-    public var waitingViewHidden: Bool = false { didSet { updateUI() } }
+    @objc public var waitingViewHidden: Bool = false { didSet { updateUI() } }
     /// 正常歌词颜色
-    public var textNormalColor: UIColor = .gray
+    @objc public var textNormalColor: UIColor = .gray
     /// 选中的歌词颜色
-    public var textSelectedColor: UIColor = .white
+    @objc public var textSelectedColor: UIColor = .white
     /// 高亮的歌词颜色 （命中）
-    public var textHighlightedColor: UIColor = .colorWithHex(hexStr: "#FF8AB4")
+    @objc public var textHighlightedColor: UIColor = .colorWithHex(hexStr: "#FF8AB4")
     /// 正常歌词文字大小
-    public var textNormalFontSize = UIFont(name: "PingFangSC-Semibold", size: 15)!
+    @objc public var textNormalFontSize = UIFont(name: "PingFangSC-Semibold", size: 15)!
     /// 高亮歌词文字大小
-    public var textHighlightFontSize = UIFont(name: "PingFangSC-Semibold", size: 18)!
+    @objc public var textHighlightFontSize = UIFont(name: "PingFangSC-Semibold", size: 18)!
     /// 歌词最大宽度
-    public var maxWidth: CGFloat = UIScreen.main.bounds.width - 30
+    @objc public var maxWidth: CGFloat = UIScreen.main.bounds.width - 30
     /// 歌词上下间距
-    public var lyricLineSpacing: CGFloat = 10
+    @objc public var lyricLineSpacing: CGFloat = 10
     /// 等待开始圆点风格
-    public var firstToneHintViewStyle: FirstToneHintViewStyle = .init()
+    @objc public var firstToneHintViewStyle: FirstToneHintViewStyle = .init()
     /// 是否开启拖拽
-    public var draggable: Bool = false
+    @objc public var draggable: Bool = false
     
     var delegate: LyricsViewDelegate?
     /// 倒计时view

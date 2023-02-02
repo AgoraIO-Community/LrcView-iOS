@@ -7,7 +7,7 @@
 
 import Foundation
 
-@objc public protocol KaraokeDelegate {
+@objc public protocol KaraokeDelegate: NSObjectProtocol {
     /// 拖拽歌词结束后回调
     /// - Note: 当 `KaraokeConfig.lyricConfig.draggable == true` 且 用户进行拖动歌词时候 调用
     /// - Parameters:
