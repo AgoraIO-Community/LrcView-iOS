@@ -8,7 +8,7 @@
 import UIKit
 
 class FirstToneHintView: UIView {
-    private var style = FirstToneHintViewStyle()
+    var style = FirstToneHintViewStyle() { didSet { updateUI() } }
     private let loadViews: [UIView] = [.init(), .init(), .init()]
     private var loadViewConstraints = [NSLayoutConstraint]()
     /// 剩余开始时间 ms

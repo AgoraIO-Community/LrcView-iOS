@@ -41,9 +41,16 @@
     [gview setup];
     [gview setScoreWithCumulativeScore:1110 totalScore:4000];
     
+    /** 1 **/
+    karaokeView.lyricsView.firstToneHintViewStyle.size = 15;
+    karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = 25;
+    karaokeView.lyricsView.firstToneHintViewStyle.backgroundColor = [UIColor redColor];
     
-    lView.firstToneHintViewStyle.size = 5;
     lView.draggable = YES;
+    lView.noLyricTipsFont = [UIFont systemFontOfSize:23];
+    lView.noLyricTipsText = @"没有歌词呢";
+    lView.noLyricTipsColor = [UIColor redColor];
+//    [karaokeView setLyricDataWithData:nil];
 }
 
 

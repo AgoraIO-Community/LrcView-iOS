@@ -14,20 +14,24 @@ protocol LyricsViewDelegate: NSObjectProtocol {
 
 public class FirstToneHintViewStyle: NSObject {
     /// 背景色
-    @objc public var backgroundColor: UIColor? = .gray
+    @objc public var backgroundColor: UIColor = .gray { didSet { didUpdate?() } }
     /// 大小
-    @objc public var size: CGFloat = 10
+    @objc public var size: CGFloat = 10 { didSet { didUpdate?() } }
     /// 底部间距
-    @objc public var bottomMargin: CGFloat = 0
+    @objc public var bottomMargin: CGFloat = 0 { didSet { didUpdate?() } }
+    
+    typealias VoidBlock = () -> Void
+    
+    var didUpdate: VoidBlock?
 }
 
 public class LyricsView: UIView {
     /// 无歌词提示文案
-    @objc public var noLyricTipsText: String = "无歌词"
+    @objc public var noLyricTipsText: String = "无歌词" { didSet { updateUI() } }
     /// 无歌词提示文字颜色
-    @objc public var noLyricTipsColor: UIColor = .orange
+    @objc public var noLyricTipsColor: UIColor = .orange { didSet { updateUI() } }
     /// 无歌词提示文字大小
-    @objc public var noLyricTipsFont: UIFont = .systemFont(ofSize: 17)
+    @objc public var noLyricTipsFont: UIFont = .systemFont(ofSize: 17) { didSet { updateUI() } }
     /// 是否隐藏等待开始圆点
     @objc public var waitingViewHidden: Bool = false { didSet { updateUI() } }
     /// 正常歌词颜色
@@ -45,7 +49,7 @@ public class LyricsView: UIView {
     /// 歌词上下间距
     @objc public var lyricLineSpacing: CGFloat = 10
     /// 等待开始圆点风格
-    @objc public var firstToneHintViewStyle: FirstToneHintViewStyle = .init()
+    @objc public let firstToneHintViewStyle: FirstToneHintViewStyle = .init()
     /// 是否开启拖拽
     @objc public var draggable: Bool = false
     
@@ -63,6 +67,7 @@ public class LyricsView: UIView {
     fileprivate var currentIndex = 0
     fileprivate let referenceLineView = UIView()
     fileprivate var isDragging = false { didSet { referenceLineView.isHidden = !isDragging } }
+    fileprivate var tableViewTopConstraint: NSLayoutConstraint!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -203,6 +208,7 @@ extension LyricsView {
         tableView.showsVerticalScrollIndicator = false
         referenceLineView.backgroundColor = .red
         referenceLineView.isHidden = true
+        firstToneHintView.style = firstToneHintViewStyle
         addSubview(noLyricTipsLabel)
         addSubview(firstToneHintView)
         addSubview(tableView)
@@ -222,7 +228,8 @@ extension LyricsView {
         firstToneHintView.heightAnchor.constraint(equalToConstant: firstToneHintViewStyle.size).isActive = true
         
         let constant = firstToneHintViewStyle.size + firstToneHintViewStyle.bottomMargin
-        tableView.topAnchor.constraint(equalTo: topAnchor, constant: constant).isActive = true
+        tableViewTopConstraint = tableView.topAnchor.constraint(equalTo: topAnchor, constant: constant)
+        tableViewTopConstraint.isActive = true
         tableView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         tableView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -233,10 +240,16 @@ extension LyricsView {
         referenceLineView.centerYAnchor.constraint(equalTo: tableView.centerYAnchor).isActive = true
     }
     
+    
+    
     fileprivate func commonInit() {
         tableView.register(LyricCell.self, forCellReuseIdentifier: "LyricsCell")
         tableView.delegate = self
         tableView.dataSource = self
+        firstToneHintViewStyle.didUpdate = { [weak self] in
+            guard let self = self else { return }
+            self.updateUI()
+        }
     }
     
     fileprivate func updateUI() {
@@ -247,6 +260,9 @@ extension LyricsView {
         tableView.isHidden = isNoLyric
         tableView.isScrollEnabled = draggable
         firstToneHintView.isHidden = waitingViewHidden || isNoLyric
+        firstToneHintView.style = firstToneHintViewStyle
+        let constant = firstToneHintViewStyle.size + firstToneHintViewStyle.bottomMargin
+        tableViewTopConstraint.constant = constant
         
         if tableView.bounds.width > 0 {
             let viewFrame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: tableView.bounds.height/2)
