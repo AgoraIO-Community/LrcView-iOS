@@ -12,15 +12,12 @@ public class GradeView: UIView {
     private let titleLabel = UILabel()
     private let gradeImageView = UIImageView()
     private let scoreLabel = UILabel()
-    private let progressView: GradeProgressView
-    private let gradeItems: [GradeItem]
-    private let gradeScores: [Int]
+    private let progressView = GradeProgressView()
+    private var gradeItems: [GradeItem]!
+    private var gradeScores: [Int]!
     
-    public init(gradeItems: [GradeItem] = GradeView.createData()) {
-        self.progressView = GradeProgressView(gradeItems: gradeItems)
-        self.gradeItems = gradeItems
-        self.gradeScores = gradeItems.map({ $0.score })
-        super.init(frame: .zero)
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
         setupUI()
     }
     
@@ -28,11 +25,18 @@ public class GradeView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func setTitle(title: String) {
+    @objc public func setup() {
+        let gradeItems = createData()
+        self.gradeItems = gradeItems
+        self.gradeScores = gradeItems.map({ $0.score })
+        progressView.setup(gradeItems: gradeItems)
+    }
+    
+    @objc public func setTitle(title: String) {
         titleLabel.text = title
     }
     
-    public func setScore(cumulativeScore: Int, totalScore: Int) {
+    @objc public func setScore(cumulativeScore: Int, totalScore: Int) {
         if totalScore > 0 {
             let progress = Float(cumulativeScore) / Float(totalScore)
             progressView.setProgress(progress: progress)
@@ -49,13 +53,13 @@ public class GradeView: UIView {
         }
     }
     
-    public func reset() {
+    @objc public func reset() {
         scoreLabel.text = "0分"
         setGradeImage(image: nil)
         progressView.reset()
     }
     
-    public static func createData() -> [GradeItem] {
+    private func createData() -> [GradeItem] {
         return [.init(score: 5, description: "C", image: Bundle.currentBundle.image(name: "icon-C")!),
                 .init(score: 70, description: "B", image: Bundle.currentBundle.image(name: "icon-B")!),
                 .init(score: 80, description: "A", image: Bundle.currentBundle.image(name: "icon-A")!),
@@ -149,9 +153,8 @@ class GradeProgressView: UIView {
                                                       UIColor.colorWithHex(hexStr: "#D598FF")]
     fileprivate var gradeItems: [GradeItem]!
     
-    init(gradeItems: [GradeItem]) {
-        super.init(frame: .zero)
-        self.gradeItems = gradeItems
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupUI()
     }
     
@@ -179,17 +182,32 @@ class GradeProgressView: UIView {
         progressBackgroundView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         progressBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
+        
+    }
+    var lebelLeftConstraints = [NSLayoutConstraint]()
+    var isSetup = false
+    
+    func setup(gradeItems: [GradeItem]) {
+        guard frame.size.width > 0 else {
+            return
+        }
+        guard !isSetup else {
+            return
+        }
+        isSetup = true
         for item in gradeItems {
             let label = UILabel()
             let rate = Float(item.score) / 100
-            let x = CGFloat(rate) * (UIScreen.main.bounds.width - 30)
+            let x = CGFloat(rate) * (frame.size.width)
             label.textColor = .white
             label.font = .systemFont(ofSize: 10)
             label.text = "| " + item.description
             progressBackgroundView.insertSubview(label, at: 0)
             label.translatesAutoresizingMaskIntoConstraints = false
             label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            label.leftAnchor.constraint(equalTo: leftAnchor, constant: x).isActive = true
+            let lebelLeftConstraint = label.leftAnchor.constraint(equalTo: leftAnchor, constant: x)
+            lebelLeftConstraint.isActive = true
+            lebelLeftConstraints.append(lebelLeftConstraint)
             labels.append(label)
         }
     }

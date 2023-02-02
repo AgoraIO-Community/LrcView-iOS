@@ -102,12 +102,12 @@ extension KaraokeView {
         guard isStart else {
             return
         }
-        var time = progress
-        if time > 250 { /** 进度提前250ms **/
-            time -= 250
-        }
-        lyricsView.progress = time
-        scoringView.progress = time
+//        var time = progress
+//        if time > 250 { /** 进度提前250ms **/
+//            time -= 250
+//        }
+        lyricsView.progress = progress
+        scoringView.progress = progress
     }
     
     /// 设置自定义分数计算对象

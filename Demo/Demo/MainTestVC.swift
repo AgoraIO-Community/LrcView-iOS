@@ -28,6 +28,8 @@ class MainTestVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         commonInit()
+        view.layoutIfNeeded()
+        gradeView.setup()
     }
     
     func setupUI() {
@@ -169,8 +171,11 @@ class MainTestVC: UIViewController {
             current += 10
             
             self.last = current
-            
-            self.karaokeView.setProgress(progress: self.last )
+//            var time = current
+//            if time > 250 { /** 进度提前250ms **/
+//                time -= 250
+//            }
+            self.karaokeView.setProgress(progress: current )
         }
     }
     

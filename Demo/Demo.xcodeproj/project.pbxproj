@@ -32,6 +32,7 @@
 		26C545322955B684009E0F37 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 26C545312955B684009E0F37 /* music.mp3 */; };
 		26C545342955B6C2009E0F37 /* 105780.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26C545332955B6C2009E0F37 /* 105780.xml */; };
 		26D01F9A2977D7F500B9D31A /* ScoreAniVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D01F992977D7F500B9D31A /* ScoreAniVC.swift */; };
+		26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E8030E298BAF1B00DBF23F /* OCVC.m */; };
 		F88793560A341F9CBCF66020 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +66,9 @@
 		26C545312955B684009E0F37 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
 		26C545332955B6C2009E0F37 /* 105780.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 105780.xml; sourceTree = "<group>"; };
 		26D01F992977D7F500B9D31A /* ScoreAniVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreAniVC.swift; sourceTree = "<group>"; };
+		26E8030C298BAF1A00DBF23F /* Demo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Demo-Bridging-Header.h"; sourceTree = "<group>"; };
+		26E8030D298BAF1B00DBF23F /* OCVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCVC.h; sourceTree = "<group>"; };
+		26E8030E298BAF1B00DBF23F /* OCVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCVC.m; sourceTree = "<group>"; };
 		474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		97B9305873CDD18897DEA957 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		B11BABF3447B1F591F0171BB /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -130,10 +134,13 @@
 				2689ED472988FDE10012BC4D /* LyricLabelVC.swift */,
 				2682B05829544EF8005285B9 /* GCDTimer.swift */,
 				26C5452B2955B2FE009E0F37 /* Config.swift */,
+				26E8030D298BAF1B00DBF23F /* OCVC.h */,
+				26E8030E298BAF1B00DBF23F /* OCVC.m */,
 				260942DC2952B5050022A50D /* Main.storyboard */,
 				260942DF2952B5060022A50D /* Assets.xcassets */,
 				260942E12952B5060022A50D /* LaunchScreen.storyboard */,
 				260942E42952B5060022A50D /* Info.plist */,
+				26E8030C298BAF1A00DBF23F /* Demo-Bridging-Header.h */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -194,6 +201,7 @@
 				TargetAttributes = {
 					260942D22952B5050022A50D = {
 						CreatedOnToolsVersion = 13.4.1;
+						LastSwiftMigration = 1340;
 					};
 				};
 			};
@@ -290,6 +298,7 @@
 				260942D92952B5050022A50D /* SceneDelegate.swift in Sources */,
 				26C5452429557D25009E0F37 /* LyricsTestVC.swift in Sources */,
 				2682B05929544EF8005285B9 /* GCDTimer.swift in Sources */,
+				26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */,
 				2689ED442987CD2D0012BC4D /* MainTestVC.swift in Sources */,
 				2689ED422987C8890012BC4D /* ParamSetVC.swift in Sources */,
 				26105FE52966787A00712EDA /* EmitterVC.swift in Sources */,
@@ -442,6 +451,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YS397FG5PA;
@@ -462,6 +472,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Agora.Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Demo/Demo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -473,6 +485,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YS397FG5PA;
@@ -493,6 +506,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Agora.Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Demo/Demo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
