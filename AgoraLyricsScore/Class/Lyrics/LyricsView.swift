@@ -29,11 +29,7 @@ public class LyricsView: UIView {
     /// 无歌词提示文字大小
     public var noLyricTipsFont: UIFont = .systemFont(ofSize: 17)
     /// 是否隐藏等待开始圆点
-    public var waitingViewHidden: Bool = false {
-        didSet {
-            updateUI()
-        }
-    }
+    public var waitingViewHidden: Bool = false { didSet { updateUI() } }
     /// 正常歌词颜色
     public var textNormalColor: UIColor = .gray
     /// 选中的歌词颜色
@@ -66,11 +62,7 @@ public class LyricsView: UIView {
     /// 当前滚动到的索引
     fileprivate var currentIndex = 0
     fileprivate let referenceLineView = UIView()
-    fileprivate var isDragging = false {
-        didSet {
-            referenceLineView.isHidden = !isDragging
-        }
-    }
+    fileprivate var isDragging = false { didSet { referenceLineView.isHidden = !isDragging } }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -136,7 +128,6 @@ public class LyricsView: UIView {
                     let last = dataList[lastIndex]
                     last.update(status: .normal)
                     last.update(progressRate: 0)
-                    Log.debug(text: "currentIndex: \(currentIndex) progressRate: 0", tag: logTag)
                     let lastIndexPath = IndexPath(row: lastIndex, section: 0)
                     
                     /// 更新当前
@@ -258,7 +249,7 @@ extension LyricsView {
         firstToneHintView.isHidden = waitingViewHidden || isNoLyric
         
         if tableView.bounds.width > 0 {
-            let viewFrame = CGRect(x: 0, y: 0, width: tableView.bounds.width/2, height: tableView.bounds.height/2)
+            let viewFrame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: tableView.bounds.height/2)
             tableView.tableHeaderView = .init(frame: viewFrame)
             tableView.tableFooterView = .init(frame: viewFrame)
         }
