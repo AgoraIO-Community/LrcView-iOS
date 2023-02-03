@@ -107,8 +107,8 @@ public class GradeView: UIView {
     /// - Parameter gradeScores: 等级参考分数
     /// - Returns: 等级索引, `nil`表示没有匹配上
     func totalGradeIndex(cumulativeScore: Int,
-                                 totalScore: Int,
-                                 gradeScores: [Int]) -> Int? {
+                         totalScore: Int,
+                         gradeScores: [Int]) -> Int? {
         guard !gradeScores.isEmpty else {
             return nil
         }
@@ -149,8 +149,8 @@ class GradeProgressView: UIView {
     private var gradeViewNormalColor: UIColor = UIColor.black.withAlphaComponent(0.3)
     /// 等级视图的高亮颜色 (渐变色)
     private var gradeViewHighlightColors: [UIColor] = [UIColor.colorWithHex(hexStr: "#99F5FF"),
-                                                      UIColor.colorWithHex(hexStr: "#1B6FFF"),
-                                                      UIColor.colorWithHex(hexStr: "#D598FF")]
+                                                       UIColor.colorWithHex(hexStr: "#1B6FFF"),
+                                                       UIColor.colorWithHex(hexStr: "#D598FF")]
     fileprivate var gradeItems: [GradeItem]!
     
     override init(frame: CGRect) {
@@ -175,7 +175,7 @@ class GradeProgressView: UIView {
         progressBackgroundView.layer.addSublayer(gradientLayer)
         
         addSubview(progressBackgroundView)
-
+        
         progressBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         progressBackgroundView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         progressBackgroundView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true

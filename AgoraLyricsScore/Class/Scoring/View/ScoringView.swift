@@ -38,8 +38,8 @@ public class ScoringView: UIView {
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
     
-    var scoreLevel = 10
-    var scoreCompensationOffset = 0
+    var scoreLevel = 10 { didSet { updateUI() } }
+    var scoreCompensationOffset = 0 { didSet { updateUI() } }
     
     var progress: Int = 0 { didSet { updateProgress() } }
     fileprivate let localPitchView = LocalPitchView()
@@ -89,6 +89,7 @@ public class ScoringView: UIView {
     
     func reset() {
         vm.reset()
+        localPitchView.reset()
     }
     
     private func updateProgress() {
@@ -143,13 +144,18 @@ public class ScoringView: UIView {
         
         delegate?.scoringViewShouldUpdateViewLayout(view: self)
         
-        if showDebugView, !subviews.contains(consoleView) {
-            addSubview(consoleView)
-            consoleView.translatesAutoresizingMaskIntoConstraints = false
-            consoleView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-            consoleView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-            consoleView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-            consoleView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        if showDebugView {
+            if !subviews.contains(consoleView) {
+                addSubview(consoleView)
+                consoleView.translatesAutoresizingMaskIntoConstraints = false
+                consoleView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+                consoleView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+                consoleView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+                consoleView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            }
+            else {
+                consoleView.removeFromSuperview()
+            }
         }
     }
 }

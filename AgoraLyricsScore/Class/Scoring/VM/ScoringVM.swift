@@ -123,16 +123,14 @@ class ScoringVM {
         guard !isDragging else { return }
         guard lyricData != nil else { return } /** setLyricData 后执行 **/
         
-        if pitch <= 0 {
-            let y = getCenterY(pitch: pitch,
+        if pitch < 0 {
+            let y = getCenterY(pitch: 0,
                                canvasViewSize: canvasViewSize,
                                minPitch: minPitch,
                                maxPitch: maxPitch)
             invokeScoringVM(didUpdateCursor: y, showAnimation: false, pitch: pitch)
             return
         }
-        
-        guard pitch >= minPitch, pitch <= maxPitch else { return }
         
         /** 1.get hitedInfo **/
         guard let hitedInfo = getHitedInfo(progress: progress,

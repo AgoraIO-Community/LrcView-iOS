@@ -80,9 +80,7 @@ extension KaraokeView {
     /// - Note: 可以从AgoraRTC回调方法 `- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine reportAudioVolumeIndicationOfSpeakers:(NSArray<AgoraRtcAudioVolumeInfo *> * _Nonnull)speakers totalVolume:(NSInteger)totalVolume`  获取
     /// - Parameter pitch: 实时音调值
     @objc public func setPitch(pitch: Double) {
-        guard isStart else {
-            return
-        }
+        guard isStart else { return }
         if pitch == 0 {
             pitchIsZeroCount += 1
         }
@@ -99,15 +97,18 @@ extension KaraokeView {
     /// - Note: 可以获取播放器的当前进度进行设置
     /// - Parameter progress: 歌曲进度 (ms)
     @objc public func setProgress(progress: Int) {
-        guard isStart else {
-            return
-        }
-//        var time = progress
-//        if time > 250 { /** 进度提前250ms **/
-//            time -= 250
-//        }
+        guard isStart else { return }
         lyricsView.progress = progress
         scoringView.progress = progress
+    }
+    
+    /// 同时设置进度和Pitch (建议观众端使用)
+    /// - Parameters:
+    ///   - pitch: 实时音调值
+    ///   - progress: 歌曲进度 (ms)
+    @objc public func setPitch(pitch: Double, progress: Int) {
+        setProgress(progress: progress)
+        setPitch(pitch: pitch)
     }
     
     /// 设置自定义分数计算对象
@@ -152,7 +153,7 @@ extension KaraokeView {
         addSubview(backgroundImageView)
         addSubview(scoringView)
         addSubview(lyricsView)
-
+        
         scoringView.translatesAutoresizingMaskIntoConstraints = false
         lyricsView.translatesAutoresizingMaskIntoConstraints = false
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false

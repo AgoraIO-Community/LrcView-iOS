@@ -9,6 +9,7 @@ import UIKit
 
 class FirstToneHintView: UIView {
     var style = FirstToneHintViewStyle() { didSet { updateUI() } }
+    var mustHidden = false
     private let loadViews: [UIView] = [.init(), .init(), .init()]
     private var loadViewConstraints = [NSLayoutConstraint]()
     /// 剩余开始时间 ms
@@ -87,7 +88,6 @@ class FirstToneHintView: UIView {
         
         remainingTime = time
         Log.info(text: "remainingTime: \(remainingTime)", tag: logTag)
-        isHidden = remainingTime < 1 * 1000 && time < 115
         loadViews[0].isHidden = (remainingTime >= 3 * 1000) ? !loadViews[0].isHidden : true
         loadViews[1].isHidden = !(remainingTime >= 2 * 1000)
         loadViews[2].isHidden = !(remainingTime >= 1 * 1000)

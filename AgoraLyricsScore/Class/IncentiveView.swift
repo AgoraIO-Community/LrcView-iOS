@@ -57,7 +57,7 @@ public class IncentiveView: UIView {
         guard let path = Bundle.currentBundle.path(forResource: name, ofType: "gif") else {
             return
         }
-
+        
         if lastName == name {
             if combo == 0 {
                 combo += 2
@@ -212,12 +212,12 @@ class IncentiveLabel: UILabel {
         c?.setTextDrawingMode(.strokeClip)
         textColor = UIColor.colorWithHex(hexStr: "#368CFF")
         super.drawText(in: rect)
-
+        
         c?.setTextDrawingMode(.fill)
         textColor = color
         shadowOffset = .zero
         super.drawText(in: rect)
-
+        
         shadowOffset = offset
     }
 }

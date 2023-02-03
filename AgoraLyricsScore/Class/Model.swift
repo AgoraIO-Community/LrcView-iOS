@@ -22,7 +22,7 @@ public enum MusicType: Int, CustomStringConvertible {
         }
     }
 }
- 
+
 public class LyricModel: NSObject {
     /// 歌曲名称
     public var name: String
@@ -89,7 +89,7 @@ public class LyricModel: NSObject {
         return "\(dict)"
     }
 }
- 
+
 public class LyricLineModel: NSObject {
     /// 开始时间 单位为毫秒
     public var beginTime: Int
@@ -110,7 +110,7 @@ public class LyricLineModel: NSObject {
         self.tones = tones
     }
 }
- 
+
 public class LyricToneModel: NSObject {
     public let beginTime: Int
     public let duration: Int
@@ -133,7 +133,7 @@ public class LyricToneModel: NSObject {
         self.pronounce = pronounce
     }
 }
- 
+
 /// 字得分
 public class ToneScoreModel: NSObject {
     public let tone: LyricToneModel

@@ -36,6 +36,9 @@ class KaraokeViewParam {
     
     /// 评分组件和歌词组件之间的间距 默认: 0
     var spacing: CGFloat = 0
+    
+    var scoreLevel = 10
+    var scoreCompensationOffset = 0
 }
 
 class LyricViewParam {
@@ -87,7 +90,7 @@ class ScoringViewParam {
     /// 使用图片创建粒子动画
     var emitterImages: [UIImage]?
     /// 打分容忍度 范围：0-1
-    var hitScoreThreshold: Float = 0.0
+    var hitScoreThreshold: Float = 0.7
     /// use for debug only
     var showDebugView = false
 }

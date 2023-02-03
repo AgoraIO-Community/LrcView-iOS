@@ -117,6 +117,11 @@ class LocalPitchView: UIView {
         emitter.stop()
     }
     
+    func reset() {
+        setIndicatedViewY(y: bounds.height)
+        stopEmitter()
+    }
+    
     func showScoreView(score: Int) {
         let viewHeight = bounds.height
         let index = findIndexOfLabel()

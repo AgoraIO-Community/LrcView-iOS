@@ -18,9 +18,6 @@ class ToneCalculator {
                               maxPitch: Double,
                               scoreLevel: Int,
                               scoreCompensationOffset: Int) -> Float {
-        if voicePitch < minPitch || voicePitch > maxPitch {
-            return 0
-        }
         let stdTone = ToneCalculator.pitchToTone(pitch: stdPitch)
         let voiceTone = ToneCalculator.pitchToTone(pitch: voicePitch)
         var match = 1 - Float(scoreLevel)/100 * Float(abs(voiceTone - stdTone)) + Float(scoreCompensationOffset)/100

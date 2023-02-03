@@ -24,6 +24,7 @@ class MainTestVC: UIViewController {
     private var timer = GCDTimer()
     var cumulativeScore = 0
     var lyricModel: LyricModel!
+    var noLyric = false
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -41,7 +42,7 @@ class MainTestVC: UIViewController {
         karaokeView.scoringView.topSpaces = 60
         karaokeView.lyricsView.draggable = true
         karaokeView.spacing = 0.79
-        karaokeView.scoringView.showDebugView = true
+        karaokeView.scoringView.showDebugView = false
         
         
         skipButton.setTitle("跳过前奏", for: .normal)
@@ -171,10 +172,10 @@ class MainTestVC: UIViewController {
             current += 10
             
             self.last = current
-//            var time = current
-//            if time > 250 { /** 进度提前250ms **/
-//                time -= 250
-//            }
+            var time = current
+            if time > 250 { /** 进度提前250ms **/
+                time -= 250
+            }
             self.karaokeView.setProgress(progress: current )
         }
     }
@@ -202,6 +203,8 @@ class MainTestVC: UIViewController {
         karaokeView.backgroundImage = param.karaoke.backgroundImage
         karaokeView.scoringEnabled = param.karaoke.scoringEnabled
         karaokeView.spacing = param.karaoke.spacing
+        karaokeView.setScoreLevel(level: param.karaoke.scoreLevel)
+        karaokeView.setScoreCompensationOffset(offset: param.karaoke.scoreCompensationOffset)
         
         karaokeView.lyricsView.lyricLineSpacing = param.lyric.lyricLineSpacing
         karaokeView.lyricsView.noLyricTipsColor = param.lyric.noLyricTipsColor
@@ -209,7 +212,11 @@ class MainTestVC: UIViewController {
         karaokeView.lyricsView.textHighlightFontSize = param.lyric.textHighlightFontSize
         karaokeView.lyricsView.textNormalColor = param.lyric.textNormalColor
         karaokeView.lyricsView.textSelectedColor = param.lyric.textSelectedColor
+        karaokeView.lyricsView.textHighlightedColor = param.lyric.textHighlightedColor
         karaokeView.lyricsView.waitingViewHidden = param.lyric.waitingViewHidden
+        karaokeView.lyricsView.firstToneHintViewStyle.backgroundColor = param.lyric.firstToneHintViewStyle.backgroundColor
+        karaokeView.lyricsView.firstToneHintViewStyle.size = param.lyric.firstToneHintViewStyle.size
+        karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = param.lyric.firstToneHintViewStyle.bottomMargin
         karaokeView.lyricsView.maxWidth = param.lyric.maxWidth
         karaokeView.lyricsView.draggable = param.lyric.draggable
 //        param.lyric.firstToneHintViewStyle
@@ -264,9 +271,20 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         let model = KaraokeView.parseLyricData(data: data)!
         self.lyricModel = model
         DispatchQueue.main.async { [weak self] in
-            self?.karaokeView.setLyricData(data: model)
-            self?.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-            self?.mccPlay()
+            guard let self = self else {
+                return
+            }
+            if !self.noLyric {
+                self.karaokeView.setLyricData(data: model)
+                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+                self.gradeView.isHidden = false
+            }
+            else {
+                self.karaokeView.setLyricData(data: nil)
+                self.gradeView.isHidden = true
+            }
+            
+            self.mccPlay()
         }
         
     }
@@ -301,7 +319,7 @@ extension MainTestVC: AgoraRtcMediaPlayerDelegate {
 
 extension MainTestVC: KaraokeDelegate {
     func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
-        self.last = position
+        self.last = position + 250
         mpk.seek(toPosition: position)
         cumulativeScore = view.scoringView.getCumulativeScore()
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lyricModel.lines.count * 100)
@@ -320,7 +338,8 @@ extension MainTestVC: KaraokeDelegate {
 }
 
 extension MainTestVC: ParamSetVCDelegate {
-    func didSetParam(param: Param) {
+    func didSetParam(param: Param, noLyric: Bool) {
+        self.noLyric = noLyric
         mpk.stop()
         timer.destoryTimer(withName: "MainTestVC")
         self.last = 0

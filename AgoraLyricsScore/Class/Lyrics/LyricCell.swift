@@ -18,7 +18,7 @@ class LyricCell: UITableViewCell {
         didSet { updateUI() }
     }
     /// 高亮的歌词填充颜色
-    var textHighlightedColor: UIColor = .orange {
+    var textHighlightedColor: UIColor = .colorWithHex(hexStr: "#FF8AB4") {
         didSet { updateUI() }
     }
     /// 正常歌词文字大小

@@ -9,12 +9,13 @@ import UIKit
 import AgoraLyricsScore
 
 protocol ParamSetVCDelegate: NSObjectProtocol {
-    func didSetParam(param: Param)
+    func didSetParam(param: Param, noLyric: Bool)
 }
 
 class ParamSetVC: UIViewController {
     let tableview = UITableView(frame: .zero, style: .grouped)
     let button = UIButton()
+    let noLyricButton = UIButton()
     var list = [Section]()
     let param = Param.default
     weak var delegate: ParamSetVCDelegate?
@@ -30,7 +31,9 @@ class ParamSetVC: UIViewController {
     func createData() {
         list = [Section(title: "karaoke", rows: [.init(title: "backgroundImage"),
                                                  .init(title: "spacing"),
-                                                 .init(title: "scoringEnabled")]),
+                                                 .init(title: "scoringEnabled"),
+                                                 .init(title: "打分难易程度（越大越难）"),
+                                                 .init(title: "打分分值补偿")]),
                 Section(title: "Lyrics", rows: [.init(title: "隐藏等待开始圆点"),
                                                 .init(title: "等待开始圆点颜色"),
                                                 .init(title: "等待开始圆点大小"),
@@ -42,7 +45,10 @@ class ParamSetVC: UIViewController {
                                                 .init(title: "高亮歌词文字大小"),
                                                 .init(title: "歌词上下间距"),
                                                 .init(title: "歌词最大宽度"),
-                                                .init(title: "拖拽")]),
+                                                .init(title: "拖拽"),
+                                                .init(title: "无歌词提示文案"),
+                                                .init(title: "无歌词提示文字颜色"),
+                                                .init(title: "无歌词提示文字大小")]),
                 Section(title: "Scoring", rows: [.init(title: "评分视图高度"),
                                                  .init(title: "渲染视图到顶部的间距"),
                                                  .init(title: "游标的起始位置"),
@@ -61,10 +67,14 @@ class ParamSetVC: UIViewController {
     func setupUI() {
         button.setTitle("确 定", for: .normal)
         button.backgroundColor = .red
+        noLyricButton.setTitle("确定(无歌词)", for: .normal)
+        noLyricButton.backgroundColor = .red
         view.addSubview(tableview)
         view.addSubview(button)
+        view.addSubview(noLyricButton)
         tableview.translatesAutoresizingMaskIntoConstraints = false
         button.translatesAutoresizingMaskIntoConstraints = false
+        noLyricButton.translatesAutoresizingMaskIntoConstraints = false
         
         tableview.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         tableview.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
@@ -73,10 +83,14 @@ class ParamSetVC: UIViewController {
         
         button.topAnchor.constraint(equalTo: tableview.bottomAnchor, constant: 10).isActive = true
         button.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 45).isActive = true
+        
+        noLyricButton.topAnchor.constraint(equalTo: tableview.bottomAnchor, constant: 10).isActive = true
+        noLyricButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 45 + 100).isActive = true
     }
     
     func commonInit() {
         button.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
+        noLyricButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         tableview.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableview.dataSource = self
         tableview.delegate = self
@@ -84,7 +98,13 @@ class ParamSetVC: UIViewController {
     }
     
     @objc func buttonTap(_ sender: UIButton) {
-        delegate?.didSetParam(param: param)
+        if sender != noLyricButton {
+            delegate?.didSetParam(param: param, noLyric: false)
+            dismiss(animated: true)
+            return
+        }
+        
+        delegate?.didSetParam(param: param, noLyric: true)
         dismiss(animated: true)
     }
     
@@ -100,6 +120,14 @@ class ParamSetVC: UIViewController {
             
             if indexPath.row == 2 { /** karaokeView.scoringEnabled **/
                 cell.detailTextLabel?.text = "\(param.karaoke.scoringEnabled ? "true" : "false")"
+            }
+            
+            if indexPath.row == 3 {
+                cell.detailTextLabel?.text = "\(param.karaoke.scoreLevel)"
+            }
+            
+            if indexPath.row == 4 { /** karaokeView.scoringEnabled **/
+                cell.detailTextLabel?.text = "\(param.karaoke.scoreCompensationOffset)"
             }
         }
         
@@ -141,6 +169,16 @@ class ParamSetVC: UIViewController {
             }
             if indexPath.row == 11 { /** param.lyric.draggable **/
                 cell.detailTextLabel?.text = param.lyric.draggable ? "true" : "false"
+            }
+            if indexPath.row == 12 {
+                cell.detailTextLabel?.text = param.lyric.noLyricTipsText
+            }
+            if indexPath.row == 13 {
+                cell.backgroundColor = param.lyric.noLyricTipsColor
+            }
+            if indexPath.row == 14 {
+                cell.detailTextLabel?.text = "字体"
+                cell.detailTextLabel?.font = param.lyric.noLyricTipsFont
             }
         }
         
@@ -211,6 +249,24 @@ class ParamSetVC: UIViewController {
             if indexPath.row == 2 { /** karaokeView.scoringEnabled **/
                 param.karaoke.scoringEnabled = !param.karaoke.scoringEnabled
             }
+            
+            if indexPath.row == 3 {
+                var temp = param.karaoke.scoreLevel
+                temp += 5
+                if temp >= 100 {
+                    temp = 0
+                }
+                param.karaoke.scoreLevel = temp
+            }
+            
+            if indexPath.row == 4 { /** karaokeView.scoringEnabled **/
+                var temp = param.karaoke.scoreCompensationOffset
+                temp += 5
+                if temp >= 100 {
+                    temp = -100
+                }
+                param.karaoke.scoreCompensationOffset = temp
+            }
         }
         
         if indexPath.section == 1 {
@@ -245,10 +301,19 @@ class ParamSetVC: UIViewController {
                 param.lyric.lyricLineSpacing = .random(in: 0...50)
             }
             if indexPath.row == 10 { /** lyricsView.maxWidth **/
-                param.lyric.maxWidth = .random(in: (UIScreen.main.bounds.width * 0.5)...(UIScreen.main.bounds.width-30))
+                param.lyric.maxWidth = .random(in: (30)...(UIScreen.main.bounds.width-30))
             }
             if indexPath.row == 11 { /** param.lyric.draggable **/
                 param.lyric.draggable = !param.lyric.draggable
+            }
+            if indexPath.row == 12 {
+                param.lyric.noLyricTipsText = "\(Int.random(in: 0...100))"
+            }
+            if indexPath.row == 13 {
+                param.lyric.noLyricTipsColor = .random
+            }
+            if indexPath.row == 14 {
+                param.lyric.noLyricTipsFont = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
             }
         }
         
