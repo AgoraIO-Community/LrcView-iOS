@@ -88,7 +88,6 @@ class LyricCell: UITableViewCell {
         label.text = model.text
         label.status = model.status
         label.progressRate = CGFloat(model.progressRate)
-        Log.info(text: "update progressRate: \(model.progressRate) \(model.status)", tag: "kkkk")
     }
     
     override func prepareForReuse() {

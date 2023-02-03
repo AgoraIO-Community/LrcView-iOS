@@ -38,6 +38,7 @@ public class KaraokeView: UIView {
     
     @objc public override init(frame: CGRect) {
         super.init(frame: frame)
+        Log.debug(text: "AgoraLyricsScore version \(versionName)", tag: logTag)
         setupUI()
         commonInit()
     }
@@ -49,14 +50,6 @@ public class KaraokeView: UIView {
 
 // MARK: - Public Method
 extension KaraokeView {
-    /// 重置, 歌曲停止、切歌需要调用
-    @objc public func reset() {
-        isStart = false
-        pitchIsZeroCount = 0
-        lyricsView.reset()
-        scoringView.reset()
-    }
-    
     /// 解析歌词文件xml数据
     /// - Parameter data: xml二进制数据
     /// - Returns: 歌词信息
@@ -68,12 +61,22 @@ extension KaraokeView {
     /// 设置歌词数据信息
     /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `.empty`.
     @objc public func setLyricData(data: LyricModel?) {
+        Log.info(text: "setLyricData \(data?.name ?? "nil")", tag: logTag)
         lyricData = data
         /** 无歌词状态下强制关闭 **/
         scoringEnabled = data != nil
         lyricsView.setLyricData(data: data)
         scoringView.setLyricData(data: data)
         isStart = true
+    }
+    
+    /// 重置, 歌曲停止、切歌需要调用
+    @objc public func reset() {
+        Log.info(text: "reset", tag: logTag)
+        isStart = false
+        pitchIsZeroCount = 0
+        lyricsView.reset()
+        scoringView.reset()
     }
     
     /// 设置实时采集(mic)的Pitch
@@ -188,6 +191,13 @@ extension KaraokeView {
         lyricsViewTopConstraint.constant = scoringEnabled ? scoringView.viewHeight + spacing : 0
         scoringViewHeightConstraint.constant = scoringView.viewHeight
         scoringView.isHidden = !scoringEnabled
+    }
+    
+    fileprivate var versionName: String {
+        guard let version = Bundle.currentBundle.infoDictionary?["CFBundleShortVersionString"] as? String else {
+            return "unknow version"
+        }
+        return version
     }
 }
 

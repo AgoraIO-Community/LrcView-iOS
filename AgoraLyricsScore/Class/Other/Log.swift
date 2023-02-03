@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class Log {
-    fileprivate static let provider = LogProvider(domainName: "AgoraLrcScoreView")
+    fileprivate static let provider = LogProvider(domainName: "AgoraLyricsScore")
     
     static func errorText(text: String,
                           tag: String? = nil) {
@@ -38,13 +38,11 @@ class Log {
 }
 
 class LogProvider {
-    private let domainName: String
-    private let folderPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!.appending("/Logs")
-    private let logger: LogUtil
+    private let logger = Logger()
+    private let queue = DispatchQueue(label: "LogProvider")
     
     fileprivate init(domainName: String) {
-        self.domainName = domainName
-        logger = LogUtil(domainName: domainName)
+        logger.name = domainName
     }
     
     fileprivate func error(error: Error?,
@@ -102,16 +100,18 @@ class LogProvider {
         let string = getString(text: text,
                                tag: tag,
                                levelName: levelName)
-        logger.log(message: string)
+        queue.async { [weak self] in
+            self?.logger.write(string)
+        }
     }
     
     private func getString(text: String,
                            tag: String?,
                            levelName: String) -> String {
-        if let `tag` = tag {
-            return "[\(domainName)][\(levelName)][\(tag)]: " + text
+        if let tag = tag {
+            return "[\(levelName)][\(tag)]: " + text
         }
-        return "[\(domainName)][\(levelName)]: " + text
+        return "[\(levelName)]: " + text
     }
 }
 
@@ -133,70 +133,3 @@ extension LogProvider {
     }
 }
 
-class LogUtil {
-    private var logs = [LogItem]()
-    private let logFolder: String
-    private var appLogPath: String
-    
-    init(domainName: String) {
-        self.logFolder = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/logs"
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let time = formatter.string(from: Date())
-        self.appLogPath = logFolder + "/\(domainName)-\(time).log"
-        try? FileManager.default.createDirectory(atPath: logFolder, withIntermediateDirectories: true, attributes: nil)
-    }
-    
-    func log(message: String) {
-        let item = LogItem(message: message, dateTime: Date())
-        logs.append(item)
-        #if DEBUG
-        print(item.description)
-        #endif
-        writeAppLogsToDisk()
-    }
-    
-    func removeAll() {
-        logs.removeAll()
-    }
-    
-    func writeAppLogsToDisk() {
-        if let outputStream = OutputStream(url: URL(fileURLWithPath: appLogPath), append: true) {
-            outputStream.open()
-            for log in logs {
-                let msg = log.description + "\n"
-                let bytesWritten = outputStream.write(msg, maxLength: msg.count)
-                if bytesWritten < 0 { print("write failure") }
-            }
-            outputStream.close()
-            removeAll()
-        } else {
-            print("Unable to open file")
-        }
-    }
-    
-    func cleanUp() {
-        let url = URL(fileURLWithPath: logFolder, isDirectory: true)
-        try? FileManager.default.removeItem(at: url)
-    }
-}
-
-extension LogUtil {
-    struct LogItem: CustomStringConvertible {
-        var message: String
-        var dateTime: Date
-        private let formatter = DateFormatter()
-        
-        init(message: String, dateTime: Date) {
-            self.message = message
-            self.dateTime = dateTime
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        }
-        
-        var description: String {
-            let time = formatter.string(from: dateTime)
-            let msg = "\(time) \(message)"
-            return msg
-        }
-    }
-}

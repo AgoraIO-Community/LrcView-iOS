@@ -114,8 +114,8 @@ class ScoringVM {
             if index - currentIndexOfLine == 1 { /** 过滤拖拽导致的进度变化,只有正常进度才回调 **/
                 didLineEnd(indexOfLineEnd: currentIndexOfLine)
             }
+            Log.debug(text: "currentIndexOfLine: \(index) from old: \(currentIndexOfLine)", tag: "drag")
             currentIndexOfLine = index
-            Log.debug(text: "currentIndexOfLine: \(currentIndexOfLine)", tag: "drag")
         }
     }
     
