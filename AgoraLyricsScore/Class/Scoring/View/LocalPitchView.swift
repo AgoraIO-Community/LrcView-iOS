@@ -106,13 +106,11 @@ class LocalPitchView: UIView {
         emitter.setupEmitterPoint(point: .init(x: defaultPitchCursorX-3, y: y))
     }
       
-    /// 开启粒子动画
     func startEmitter() {
         if particleEffectHidden { return }
         emitter.start()
     }
     
-    /// 暂停粒子动画
     func stopEmitter() {
         emitter.stop()
     }
@@ -120,6 +118,7 @@ class LocalPitchView: UIView {
     func reset() {
         setIndicatedViewY(y: bounds.height)
         stopEmitter()
+        emitter.reset()
     }
     
     func showScoreView(score: Int) {
@@ -152,25 +151,35 @@ class LocalPitchView: UIView {
 }
 
 class Emitter {
-    let layer = CAEmitterLayer()
+    var layer = CAEmitterLayer()
     var images: [UIImage]? {
         didSet {
-            updateImageCells()
+            updateLayer()
         }
     }
+    private var count = 0
+    private var lastPoint: CGPoint = .zero
     private let logTag = "Emitter"
     
     var defaultImages: [UIImage] {
         var list = [UIImage]()
-        let bundle = Bundle.currentBundle
         for i in 1...8 {
-            let image = bundle.image(name: "star\(i)")!
+            let image = Bundle.currentBundle.image(name: "star\(i)")!
             list.append(image)
         }
         return list
     }
     
     init() {
+        updateLayer()
+    }
+    
+    func updateLayer() {
+        let superLayer = layer.superlayer
+        layer.removeFromSuperlayer()
+        
+        layer = CAEmitterLayer()
+        superLayer?.addSublayer(layer)
         layer.emitterPosition = .zero
         layer.preservesDepth = true
         layer.renderMode = .oldestLast
@@ -178,28 +187,38 @@ class Emitter {
         layer.emitterMode = .points
         layer.emitterShape = .circle
         layer.birthRate = 0
-        updateImageCells()
-    }
-    
-    func updateImageCells() {
-        if images != nil {
-            Log.debug(text: "use custom emitterImages", tag: logTag)
-        }
+        layer.emitterPosition = lastPoint
         let imgs = (images != nil) ? images! : defaultImages
         let count = imgs.count
         layer.emitterCells = imgs.enumerated().map({ Emitter.createEmitterCell(name: "cell", image: $0.1, birthRate: count) })
     }
     
+    func setCount() {
+        count += 1
+        if count >= 150 {
+            count = 0
+            updateLayer()
+        }
+    }
+    
     func setupEmitterPoint(point: CGPoint) {
+        lastPoint = point
         layer.emitterPosition = point
     }
     
     func start() {
+        setCount()
         layer.birthRate = 1
     }
     
     func stop() {
+        setCount()
         layer.birthRate = 0
+    }
+    
+    func reset(){
+        count = 0
+        updateLayer()
     }
     
     static func createEmitterCell(name: String, image: UIImage, birthRate: Int) -> CAEmitterCell {
@@ -215,8 +234,8 @@ class Emitter {
         cell.emissionLongitude = CGFloat.pi * 3
         cell.emissionRange = CGFloat.pi / 6
         /// 设置粒子的存活时间
-        cell.lifetime = 20
-        cell.lifetimeRange = 1
+        cell.lifetime = 100
+        cell.lifetimeRange = 0
         /// 设置粒子旋转
         cell.spin = CGFloat.pi / 2
         cell.spinRange = CGFloat.pi / 4
@@ -227,7 +246,7 @@ class Emitter {
         /// 初始速度
         cell.velocity = 90
         cell.name = name
-        
+        cell.isEnabled = true
         cell.contents = image.cgImage
         return cell
     }

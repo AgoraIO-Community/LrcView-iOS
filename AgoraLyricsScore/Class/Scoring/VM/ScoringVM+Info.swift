@@ -59,6 +59,14 @@ extension ScoringVM {
     struct DrawInfo {
         let rect: CGRect
     }
+    
+    struct DebugInfo {
+        /// 原始pitch
+        let originalPitch: Double
+        /// 男女音调算法改变后的pitch
+        let pitch: Double
+        let hitedInfo: ScoringVM.Info?
+    }
 }
 
 

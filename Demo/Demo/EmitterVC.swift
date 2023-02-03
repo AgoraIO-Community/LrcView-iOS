@@ -19,7 +19,7 @@ class EmitterVC: UIViewController {
         emitter.setupEmitterPoint(point: .init(x: 300, y: 300))
         view.layer.addSublayer(emitter.layer)
         
-        timer.scheduledMillisecondsTimer(withName: "EmitterVC", countDown: 1000000, milliseconds: 1000, queue: .main) { [weak self](_, time) in
+        timer.scheduledMillisecondsTimer(withName: "EmitterVC", countDown: 1000000, milliseconds: 200, queue: .main) { [weak self](_, time) in
             guard let self = self else { return }
             self.start ? self.emitter.stop() : self.emitter.start()
             self.start = !self.start
@@ -36,13 +36,17 @@ class EmitterVC: UIViewController {
     
 }
 
+
+
 class Emitter {
-    let layer = CAEmitterLayer()
+    var layer = CAEmitterLayer()
     var images: [UIImage]? {
         didSet {
-            updateImageCells()
+            updateLayer()
         }
     }
+    private var count = 0
+    private var lastPoint: CGPoint = .zero
     private let logTag = "Emitter"
     
     var defaultImages: [UIImage] {
@@ -55,6 +59,14 @@ class Emitter {
     }
     
     init() {
+        updateLayer()
+    }
+    
+    func updateLayer() {
+        let superLayer = layer.superlayer
+        layer.removeFromSuperlayer()
+        layer = CAEmitterLayer()
+        superLayer?.addSublayer(layer)
         layer.emitterPosition = .zero
         layer.preservesDepth = true
         layer.renderMode = .oldestLast
@@ -62,20 +74,24 @@ class Emitter {
         layer.emitterMode = .points
         layer.emitterShape = .circle
         layer.birthRate = 0
-        updateImageCells()
-    }
-    
-    func updateImageCells() {
+        layer.emitterPosition = lastPoint
         let imgs = (images != nil) ? images! : defaultImages
         let count = imgs.count
         layer.emitterCells = imgs.enumerated().map({ Emitter.createEmitterCell(name: "cell", image: $0.1, birthRate: count) })
     }
     
     func setupEmitterPoint(point: CGPoint) {
+        lastPoint = point
         layer.emitterPosition = point
     }
     
     func start() {
+        count += 1
+        if count >= 150 {
+            print("change ==")
+            count = 0
+            updateLayer()
+        }
         layer.birthRate = 1
     }
     
@@ -96,8 +112,8 @@ class Emitter {
         cell.emissionLongitude = CGFloat.pi * 3
         cell.emissionRange = CGFloat.pi / 6
         /// 设置粒子的存活时间
-        cell.lifetime = 0.5
-        cell.lifetimeRange = 0.2
+        cell.lifetime = 3
+        cell.lifetimeRange = 0.1
         /// 设置粒子旋转
         cell.spin = CGFloat.pi / 2
         cell.spinRange = CGFloat.pi / 4

@@ -19,7 +19,7 @@ protocol ScoringVMDelegate: NSObjectProtocol {
     func scoringVM(_ vm: ScoringVM,
                    didUpdateCursor centerY: CGFloat,
                    showAnimation: Bool,
-                   pitch: Double)
+                   debugInfo: ScoringVM.DebugInfo)
     
     /// 更新句子分数
     func scoringVM(_ vm: ScoringVM,
@@ -51,12 +51,12 @@ extension ScoringVM { /** invoke **/
     
     func invokeScoringVM(didUpdateCursor centerY: CGFloat,
                          showAnimation: Bool,
-                         pitch: Double) {
+                         debugInfo: DebugInfo) {
         if Thread.isMainThread {
             delegate?.scoringVM(self,
                                 didUpdateCursor: centerY,
                                 showAnimation: showAnimation,
-                                pitch: pitch)
+                                debugInfo: debugInfo)
             return
         }
         
@@ -65,7 +65,7 @@ extension ScoringVM { /** invoke **/
             self.delegate?.scoringVM(self,
                                      didUpdateCursor: centerY,
                                      showAnimation: showAnimation,
-                                     pitch: pitch)
+                                     debugInfo: debugInfo)
         }
     }
     

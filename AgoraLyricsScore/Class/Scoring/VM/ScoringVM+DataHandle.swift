@@ -130,7 +130,7 @@ extension ScoringVM {
             highlightDrawInfos.append(drawInfo)
         }
         
-        return (visiableDrawInfos, highlightDrawInfos, currentVisiableInfos, currentHighlightInfos)
+        return (visiableDrawInfos, highlightDrawInfos, currentVisiableInfos, highlightInfos)
     }
     
     /// 生成最大、最小Pitch值

@@ -175,11 +175,11 @@ extension ScoringView: ScoringVMDelegate {
     func scoringVM(_ vm: ScoringVM,
                    didUpdateCursor centerY: CGFloat,
                    showAnimation: Bool,
-                   pitch: Double) {
+                   debugInfo: ScoringVM.DebugInfo) {
         localPitchView.setIndicatedViewY(y: centerY)
         showAnimation ? localPitchView.startEmitter() : localPitchView.stopEmitter()
         if showDebugView {
-            let text = "y: \(Float(centerY)) \npitch: \(pitch.keep2) \nani: \(showAnimation) "
+            let text = "y: \(Float(centerY)) \npitch: \(debugInfo.pitch.keep2) \nani: \(showAnimation) w:\(debugInfo.hitedInfo?.word ?? "")"
             consoleView.set(text: text)
         }
     }

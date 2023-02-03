@@ -123,12 +123,13 @@ class ScoringVM {
         guard !isDragging else { return }
         guard lyricData != nil else { return } /** setLyricData 后执行 **/
         
-        if pitch < 0 {
-            let y = getCenterY(pitch: 0,
+        if pitch <= 0 {
+            let y = getCenterY(pitch: pitch,
                                canvasViewSize: canvasViewSize,
                                minPitch: minPitch,
                                maxPitch: maxPitch)
-            invokeScoringVM(didUpdateCursor: y, showAnimation: false, pitch: pitch)
+            let debugInfo = DebugInfo(originalPitch: pitch, pitch: pitch, hitedInfo: nil)
+            invokeScoringVM(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
             return
         }
         
@@ -173,7 +174,9 @@ class ScoringVM {
                            canvasViewSize: canvasViewSize,
                            minPitch: minPitch,
                            maxPitch: maxPitch)
-        invokeScoringVM(didUpdateCursor: y, showAnimation: showAnimation, pitch: voicePitch)
+        
+        let debugInfo = DebugInfo(originalPitch: pitch, pitch: voicePitch, hitedInfo: hitedInfo)
+        invokeScoringVM(didUpdateCursor: y, showAnimation: showAnimation, debugInfo: debugInfo)
     }
     
     func dragBegain() {
