@@ -341,6 +341,7 @@ class AgoraLrcView: UIView {
         }
         var i = 0
         var progress: CGFloat = 0.0
+        var debugTexts = [String]()
         // 歌词滚动显示
         for (index, lrc) in lrcArray.enumerated() {
             let currentLrc = lrc
@@ -367,9 +368,16 @@ class AgoraLrcView: UIView {
                 return (i, currentLrc.toSentence(), progress, pitch)
             }
             else {
-                Log.debug(text: "getXmlLrc nil \(currentTime) currentStartTime:\(currentStartTime)  nextStartTime:\(nextStartTime) index: \(index)", tag: logTag)
+                let text = "getXmlLrc \(currentTime) currentStartTime:\(currentStartTime)  nextStartTime:\(nextStartTime) index: \(index)"
+                debugTexts.append(text)
             }
         }
+        
+        Log.error(error: "getXmlLrc nil start", tag: logTag)
+        for text in debugTexts {
+            Log.error(error: text, tag: logTag)
+        }
+        Log.error(error: "getXmlLrc nil end", tag: logTag)
         return nil
     }
 
