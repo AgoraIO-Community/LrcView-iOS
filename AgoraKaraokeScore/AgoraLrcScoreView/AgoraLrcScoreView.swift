@@ -337,7 +337,7 @@ public class AgoraLrcScoreView: UIView {
     }
 
     private func timerHandler(time: TimeInterval) {
-        lrcView?.start(currentTime: time)
+        lrcView?.start(progress: time)
         scoreView?.start(currentTime: time)
     }
 

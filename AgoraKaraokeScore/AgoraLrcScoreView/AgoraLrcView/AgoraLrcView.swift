@@ -33,7 +33,10 @@ class AgoraLrcView: UIView {
 
     var miguSongModel: AgoraMiguSongLyric? {
         didSet {
-            guard miguSongModel != nil else { return }
+            guard miguSongModel != nil else {
+                Log.debug(text: "miguSongModel == nil", tag: logTag)
+                return
+            }
             Log.info(text: "=== will miguSongModel setdataArray songName: \(miguSongModel?.name ?? "nil")  lines: \(miguSongModel?.sentences.count ?? 0) ", tag: logTag)
             dataArray = miguSongModel?.sentences
             // 计算总pitch数量
@@ -231,25 +234,24 @@ class AgoraLrcView: UIView {
         layoutIfNeeded()
     }
 
-    private var preTime: TimeInterval = 0
-    func start(currentTime: TimeInterval) {
+
+    func start(progress: TimeInterval) {
         guard !(dataArray?.isEmpty ?? false) else {
             Log.info(text: "start return empty", tag: logTag)
             return
         }
-        let time: TimeInterval = lrcDatas == nil ? 1000 : 1
+        let scale: TimeInterval = lrcDatas == nil ? 1000 : 1
         if self.currentTime == 0 {
             loadView.beginAnimation()
         }
-        var beginTime = ((dataArray?.first as? AgoraMiguLrcSentence)?.startTime() ?? 0) / time
+        var beginTime = ((dataArray?.first as? AgoraMiguLrcSentence)?.startTime() ?? 0) / scale
         if beginTime <= 0 {
             beginTime = (dataArray?.first as? AgoraLrcModel)?.time ?? 0
         }
-        if currentTime > beginTime && (dataArray?.count ?? 0) > 0 {
+        if progress > beginTime && (dataArray?.count ?? 0) > 0 {
             loadView.hiddenLoadView()
         }
-        self.currentTime = currentTime * time
-        preTime = currentTime
+        self.currentTime = progress * scale
         updatePerSecond()
     }
 
@@ -264,6 +266,7 @@ class AgoraLrcView: UIView {
     }
 
     func reset() {
+        Log.debug(text: "=== reset", tag: logTag)
         currentTime = 0
         scrollRow = -1
         preRow = -1
@@ -333,6 +336,7 @@ class AgoraLrcView: UIView {
     {
         guard let lrcArray = miguSongModel?.sentences,
               !lrcArray.isEmpty else {
+            Log.debug(text: "getXmlLrc nil return", tag: logTag)
             return nil
         }
         var i = 0
@@ -350,8 +354,10 @@ class AgoraLrcView: UIView {
                 nextLrc = lrcArray[index + 1]
                 nextStartTime = nextLrc?.startTime() ?? 0
             }
-            if currentTime >= currentLrc.startTime(),
-               currentLrc.startTime() > 0,
+            
+            let currentStartTime = currentLrc.startTime()
+            if currentTime >= currentStartTime,
+               currentStartTime > 0,
                currentTime < nextStartTime
             {
                 i = index
@@ -359,6 +365,9 @@ class AgoraLrcView: UIView {
                 progress = wordProgress
                 Log.info(text: "getXmlLrc progress:\(progress) \(lrcArray.count)", tag: logTag)
                 return (i, currentLrc.toSentence(), progress, pitch)
+            }
+            else {
+                Log.debug(text: "getXmlLrc nil \(currentTime) currentStartTime:\(currentStartTime)  nextStartTime:\(nextStartTime) index: \(index)", tag: logTag)
             }
         }
         return nil
