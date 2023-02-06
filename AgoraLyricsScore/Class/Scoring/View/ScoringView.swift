@@ -46,7 +46,7 @@ public class ScoringView: UIView {
     fileprivate let canvasView = ScoringCanvasView()
     /// use for debug only
     fileprivate let consoleView = ConsoleView()
-    private var canvasViewTopConstraint, localPitchViewWidthConstraint: NSLayoutConstraint!
+    private var canvasViewHeightConstraint, localPitchViewWidthConstraint: NSLayoutConstraint!
     
     fileprivate let vm = ScoringVM()
     weak var delegate: ScoringViewDelegate?
@@ -104,10 +104,10 @@ public class ScoringView: UIView {
         localPitchView.translatesAutoresizingMaskIntoConstraints = false
         
         canvasView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        canvasViewTopConstraint = canvasView.topAnchor.constraint(equalTo: topAnchor, constant: topSpaces)
-        canvasViewTopConstraint.isActive = true
-        canvasView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         canvasView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
+        canvasView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        canvasViewHeightConstraint = canvasView.heightAnchor.constraint(equalToConstant: viewHeight)
+        canvasViewHeightConstraint.isActive = true
         
         localPitchView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         localPitchView.topAnchor.constraint(equalTo: canvasView.topAnchor).isActive = true
@@ -132,8 +132,7 @@ public class ScoringView: UIView {
         
         let width = defaultPitchCursorX + LocalPitchView.scoreAnimateWidth /** 竖线的宽度是1 **/
         localPitchViewWidthConstraint.constant = width
-        
-        canvasViewTopConstraint.constant = topSpaces
+        canvasViewHeightConstraint.constant = viewHeight
         
         vm.defaultPitchCursorX = defaultPitchCursorX
         vm.standardPitchStickViewHeight = standardPitchStickViewHeight

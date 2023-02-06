@@ -30,7 +30,7 @@ public class KaraokeView: UIView {
     @objc public let scoringView = ScoringView()
     fileprivate let backgroundImageView = UIImageView()
     fileprivate var lyricsViewTopConstraint: NSLayoutConstraint!
-    fileprivate var scoringViewHeightConstraint: NSLayoutConstraint!
+    fileprivate var scoringViewHeightConstraint, scoringViewTopConstraint: NSLayoutConstraint!
     fileprivate var lyricData: LyricModel?
     fileprivate var pitchIsZeroCount = 0
     fileprivate var isStart = false
@@ -163,13 +163,14 @@ extension KaraokeView {
         
         scoringView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scoringView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        scoringView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         scoringViewHeightConstraint = scoringView.heightAnchor.constraint(equalToConstant: scoringView.viewHeight)
         scoringViewHeightConstraint.isActive = true
+        scoringViewTopConstraint = scoringView.topAnchor.constraint(equalTo: topAnchor, constant: scoringView.topSpaces)
+        scoringViewTopConstraint.isActive = true
         
         lyricsView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         lyricsView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        lyricsViewTopConstraint = lyricsView.topAnchor.constraint(equalTo: topAnchor, constant: scoringView.viewHeight + spacing)
+        lyricsViewTopConstraint = lyricsView.topAnchor.constraint(equalTo: scoringView.bottomAnchor, constant: spacing)
         lyricsViewTopConstraint.isActive = true
         lyricsView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
@@ -188,9 +189,10 @@ extension KaraokeView {
         backgroundImageView.image = backgroundImage
         backgroundImageView.isHidden = backgroundImage == nil
         
-        lyricsViewTopConstraint.constant = scoringEnabled ? scoringView.viewHeight + spacing : 0
+        lyricsViewTopConstraint.constant = scoringEnabled ? spacing : 0
         scoringViewHeightConstraint.constant = scoringView.viewHeight
         scoringView.isHidden = !scoringEnabled
+        scoringViewTopConstraint.constant = scoringView.topSpaces
     }
     
     fileprivate var versionName: String {

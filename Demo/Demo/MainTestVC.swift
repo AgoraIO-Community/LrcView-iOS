@@ -38,10 +38,9 @@ class MainTestVC: UIViewController {
 //        karaokeView.scoringView.topSpaces = 50
         
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
-        karaokeView.scoringView.viewHeight = 160
-        karaokeView.scoringView.topSpaces = 65
+        karaokeView.scoringView.viewHeight = 100
+        karaokeView.scoringView.topSpaces = 80
         karaokeView.lyricsView.draggable = true
-        karaokeView.spacing = 0.79
         karaokeView.scoringView.showDebugView = false
         
         skipButton.setTitle("跳过前奏", for: .normal)
