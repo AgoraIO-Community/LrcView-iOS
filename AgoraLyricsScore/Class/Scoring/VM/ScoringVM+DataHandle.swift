@@ -142,12 +142,7 @@ extension ScoringVM {
         let pitchs = dataList.filter({ $0.word != " " }).map({ $0.pitch })
         let maxValue = pitchs.max() ?? 0
         let minValue = pitchs.min() ?? 0
-        /// UI上的一个点对于的pitch数量
-        let pitchPerPoint = (CGFloat(maxValue) - CGFloat(minValue)) / canvasViewSize.height
-        let extend = pitchPerPoint * standardPitchStickViewHeight
-        let maxPitch = maxValue + extend
-        let minPitch = max(minValue - extend, 0)
-        return (minPitch, maxPitch)
+        return (minValue, maxValue)
     }
     
     /// 获取击中数据
@@ -162,7 +157,7 @@ extension ScoringVM {
     
     /// 查找当前句子的索引
     /// - Parameters:
-    /// - Returns: `nil` 表示不合法, 等于 `lineEndTimes.count` 表示最后一句已经结束
+    /// - Returns: `nil` 表示不合法, ==`lineEndTimes.count` 表示最后一句已经结束
     func findCurrentIndexOfLine(progress: Int, lineEndTimes: [Int]) -> Int? {
         if lineEndTimes.isEmpty {
             return nil
@@ -233,10 +228,11 @@ extension ScoringVM { /** ui 位置 **/
         /// 视图最左边到游标这段距离对应的时长
         let defaultPitchCursorXTime = Int(defaultPitchCursorX / widthPreMs)
         let x = CGFloat(beginTime - (progress - defaultPitchCursorXTime)) * widthPreMs
-        let y = getY(pitch: pitch,
-                     canvasViewSize: canvasViewSize,
-                     minPitch: minPitch,
-                     maxPitch: maxPitch) - (standardPitchStickViewHeight / 2)
+        let y = calculatedY(pitch: pitch,
+                                     viewHeight: canvasViewSize.height,
+                                     minPitch: minPitch,
+                                     maxPitch: maxPitch,
+                                     standardPitchStickViewHeight: standardPitchStickViewHeight) - (standardPitchStickViewHeight / 2)
         let w = widthPreMs * CGFloat(duration)
         let h = standardPitchStickViewHeight
         
@@ -244,29 +240,31 @@ extension ScoringVM { /** ui 位置 **/
         return rect
     }
     
-    /// 计算Y的位置 pitch 对应的视图Y坐标
-    func getY(pitch: Double,
-              canvasViewSize: CGSize,
-              minPitch: Double,
-              maxPitch: Double) -> CGFloat {
-        let canvasViewHeight = canvasViewSize.height
-        
-        if pitch <= 0 {
-            return canvasViewHeight
-        }
+    func calculatedY(pitch: Double,
+                     viewHeight: CGFloat,
+                     minPitch: Double,
+                     maxPitch: Double,
+                     standardPitchStickViewHeight: CGFloat) -> CGFloat {
+        /** 计算扩展 **/
+        let pitchPerPoint = (CGFloat(maxPitch) - CGFloat(minPitch)) / viewHeight
+        let extends = pitchPerPoint * standardPitchStickViewHeight
         
         if pitch < minPitch {
-            return canvasViewHeight
-        }
-        if pitch > maxPitch {
-            return 0
+            return viewHeight - extends/2
         }
         
-        /// 映射成从0开始
-        let value = pitch - minPitch
-        /// 计算相对偏移
-        let distance = (value / (maxPitch - minPitch)) * canvasViewHeight
-        let y = canvasViewHeight - distance
-        return y
+        if pitch > maxPitch {
+            return extends/2
+        }
+        
+        /** 计算实际的渲染高度 **/
+        let rate = (pitch - minPitch) / (maxPitch - minPitch)
+        let renderingHeight = viewHeight - extends
+        
+        /** 计算距离 （从bottom到top） **/
+        let distance = extends/2 + (renderingHeight * rate)
+        
+        /** 计算y **/
+        return viewHeight - distance
     }
 }

@@ -124,10 +124,7 @@ class ScoringVM {
         guard lyricData != nil else { return } /** setLyricData 后执行 **/
         
         if pitch <= 0 {
-            let y = getY(pitch: pitch,
-                               canvasViewSize: canvasViewSize,
-                               minPitch: minPitch,
-                               maxPitch: maxPitch)
+            let y = canvasViewSize.height
             let debugInfo = DebugInfo(originalPitch: pitch,
                                       pitch: pitch,
                                       hitedInfo: nil,
@@ -149,8 +146,6 @@ class ScoringVM {
         /** 3.calculted score **/
         let score = ToneCalculator.calculedScore(voicePitch: voicePitch,
                                                  stdPitch: hitedInfo.pitch,
-                                                 minPitch: minPitch,
-                                                 maxPitch: maxPitch,
                                                  scoreLevel: scoreLevel,
                                                  scoreCompensationOffset: scoreCompensationOffset)
         
@@ -173,10 +168,11 @@ class ScoringVM {
         
         /** 6.calculated ui info **/
         let showAnimation = score >= hitScoreThreshold * 100
-        let y = getY(pitch: voicePitch,
-                     canvasViewSize: canvasViewSize,
-                     minPitch: minPitch,
-                     maxPitch: maxPitch)
+        let y = calculatedY(pitch: voicePitch,
+                            viewHeight: canvasViewSize.height,
+                            minPitch: minPitch,
+                            maxPitch: maxPitch,
+                            standardPitchStickViewHeight: standardPitchStickViewHeight)
         
         let debugInfo = DebugInfo(originalPitch: pitch,
                                   pitch: voicePitch,

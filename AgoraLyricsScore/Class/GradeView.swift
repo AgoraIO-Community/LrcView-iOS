@@ -25,6 +25,7 @@ public class GradeView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /// 在布局完成后，调用此方法
     @objc public func setup() {
         let gradeItems = createData()
         self.gradeItems = gradeItems
@@ -37,6 +38,10 @@ public class GradeView: UIView {
     }
     
     @objc public func setScore(cumulativeScore: Int, totalScore: Int) {
+        if gradeScores == nil {
+            fatalError("please invkoe `setup` method")
+        }
+        
         if totalScore > 0 {
             let progress = Float(cumulativeScore) / Float(totalScore)
             progressView.setProgress(progress: progress)
@@ -195,6 +200,9 @@ class GradeProgressView: UIView {
             return
         }
         isSetup = true
+        for label in labels {
+            label.removeFromSuperview()
+        }
         for item in gradeItems {
             let label = UILabel()
             let rate = Float(item.score) / 100

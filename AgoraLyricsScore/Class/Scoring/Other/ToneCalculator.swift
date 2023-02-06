@@ -9,13 +9,8 @@ import Foundation
 
 class ToneCalculator {
     /// 计算tone分数
-    /// - Parameters:
-    ///   - minPitch: 来自歌词文件中最大值
-    ///   - maxPitch: 来自歌词文件中最小值
     static func calculedScore(voicePitch: Double,
                               stdPitch: Double,
-                              minPitch: Double,
-                              maxPitch: Double,
                               scoreLevel: Int,
                               scoreCompensationOffset: Int) -> Float {
         let stdTone = ToneCalculator.pitchToTone(pitch: stdPitch)

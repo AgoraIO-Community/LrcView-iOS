@@ -20,8 +20,8 @@ class MainTestVC: UIViewController {
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
-//    var songCode = 6599298157850480 /// 十年
-    var songCode = 6625526790242290
+    var songCode = 6599298157850480 /// 十年
+//    var songCode = 6625526790242290
     private var timer = GCDTimer()
     var cumulativeScore = 0
     var lyricModel: LyricModel!
@@ -43,6 +43,7 @@ class MainTestVC: UIViewController {
         karaokeView.scoringView.topSpaces = 80
         karaokeView.lyricsView.draggable = true
         karaokeView.scoringView.showDebugView = true
+//        karaokeView.scoringView.standardPitchStickViewHeight = 8
         
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)
@@ -167,12 +168,11 @@ class MainTestVC: UIViewController {
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
                 current = self.mpk.getPosition()
             }
-            
             current += 10
             
             self.last = current
             var time = current
-            if time > 250 { /** 进度提前250ms **/
+            if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
                 time -= 250
             }
             self.karaokeView.setProgress(progress: current )
@@ -265,7 +265,8 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
     
     func onLyricResult(_ requestId: String, lyricUrl: String) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
-        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "235653", ofType: "xml")!)
+//        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "235653", ofType: "xml")!)
+        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
         let model = KaraokeView.parseLyricData(data: data)!
         self.lyricModel = model
@@ -318,6 +319,7 @@ extension MainTestVC: AgoraRtcMediaPlayerDelegate {
 
 extension MainTestVC: KaraokeDelegate {
     func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
+        /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
         self.last = position + 250
         mpk.seek(toPosition: position)
         cumulativeScore = view.scoringView.getCumulativeScore()

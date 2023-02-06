@@ -43,13 +43,23 @@ class TestScoringVM: XCTestCase {
     }
     
     func testGetCenterY() {
-//        let vm = ScoringVM()
-//        let max = 100 + 1.5
-//        let min = 0 - 1.5
-//
-//
-//        XCTAssertEqual(vm.getY(pitch: 1, canvasViewSize: .init(width: 390, height: 100), minPitch: min, maxPitch: max), 1 + 1.5)
-//        XCTAssertEqual(vm.getY(pitch: 100, canvasViewSize: .init(width: 390, height: 100), minPitch: min, maxPitch: max), 100 - 1.5)
+        let vm = ScoringVM()
+        let standardPitchStickViewHeight: CGFloat = 3
+        let extend: CGFloat = standardPitchStickViewHeight
         
+        XCTAssertEqual(vm.calculatedY(pitch: -1, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 100-extend/2)
+        XCTAssertEqual(vm.calculatedY(pitch: -2, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 100-extend/2)
+        XCTAssertEqual(vm.calculatedY(pitch: 0, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 100-extend/2)
+
+        XCTAssertEqual(vm.calculatedY(pitch: 101, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), extend/2)
+        XCTAssertEqual(vm.calculatedY(pitch: 102, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), extend/2)
+        
+        XCTAssertEqual(vm.calculatedY(pitch: 99, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 2.469999999999999)
+        XCTAssertEqual(vm.calculatedY(pitch: 75, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 25.75)
+        XCTAssertEqual(vm.calculatedY(pitch: 50, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 50)
+        XCTAssertEqual(vm.calculatedY(pitch: 25, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 74.25)
+        XCTAssertEqual(vm.calculatedY(pitch: 10, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 88.8)
+        XCTAssertEqual(vm.calculatedY(pitch: 5, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 93.65)
+        XCTAssertEqual(vm.calculatedY(pitch: 1, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 97.53)
     }
 }
