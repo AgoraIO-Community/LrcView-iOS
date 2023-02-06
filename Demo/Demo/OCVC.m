@@ -18,7 +18,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
     
-    
+    [KaraokeView setLogWithPrintToConsole:true writeToFile:true];
     KaraokeView *karaokeView = [KaraokeView new];
     karaokeView.backgroundImage = [UIImage imageNamed:@"ktv_top_bgIcon"];
     karaokeView.spacing = 5;

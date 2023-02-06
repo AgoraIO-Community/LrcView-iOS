@@ -7,17 +7,15 @@
 
 import Foundation
 
-///The log class containing all the needed methods
-open class Logger {
-    
+class Logger {
     ///The max size a log file can be in Kilobytes. Default is 1024 (1 MB)
-    open var maxFileSize: UInt64 = 1024 * 8
+    var maxFileSize: UInt64 = 1024 * 15
     
     ///The max number of log file that will be stored. Once this point is reached, the oldest file is deleted.
-    open var maxFileCount = 8
+    var maxFileCount = 5
     
     ///The directory in which the log files will be written
-    open var directory = Logger.defaultDirectory() {
+    var directory = Logger.defaultDirectory() {
         didSet {
             directory = NSString(string: directory).expandingTildeInPath
             
@@ -31,22 +29,21 @@ open class Logger {
             }
         }
     }
-
-    open var currentPath: String {
+    
+    var currentPath: String {
         return "\(directory)/\(logName(0))"
     }
-
-    ///The name of the log files
-    open var name = "logfile"
+    
+    var name = "logfile"
     
     ///logging singleton
-    open class var logger: Logger {
+    class var logger: Logger {
         struct Static {
             static let instance: Logger = Logger()
         }
         return Static.instance
     }
-    //the date formatter
+    
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "MM-dd HH:mm:ss"
@@ -59,8 +56,7 @@ open class Logger {
         if !fileManager.fileExists(atPath: path) {
             do {
                 try "".write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
-            } catch _ {
-            }
+            } catch _ {}
         }
         let dateStr = dateFormatter.string(from: Date())
         let writeText = "[\(dateStr)]\(text)\n"
@@ -88,8 +84,7 @@ open class Logger {
             let fileManager = FileManager.default
             do {
                 try fileManager.removeItem(atPath: deletePath)
-            } catch _ {
-            }
+            } catch _ {}
         }
     }
     
@@ -113,8 +108,7 @@ open class Logger {
         }
         do {
             try fileManager.moveItem(atPath: path, toPath: newPath)
-        } catch _ {
-        }
+        } catch _ {}
     }
     
     ///gets the log name
@@ -131,8 +125,7 @@ open class Logger {
         if !fileManager.fileExists(atPath: path) && path != ""  {
             do {
                 try fileManager.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
-            } catch _ {
-            }
+            } catch _ {}
         }
         return path
     }

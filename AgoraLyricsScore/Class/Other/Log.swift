@@ -35,11 +35,18 @@ class Log {
                         tag: String? = nil) {
         provider.warning(text: text, tag: tag)
     }
+    
+    static func setup(printToConsole: Bool, writeToFile: Bool) {
+        provider.printToConsole = printToConsole
+        provider.writeToFile = writeToFile
+    }
 }
 
 class LogProvider {
     private let logger = Logger()
     private let queue = DispatchQueue(label: "LogProvider")
+    fileprivate var printToConsole = false
+    fileprivate var writeToFile = true
     
     fileprivate init(domainName: String) {
         logger.name = domainName
@@ -102,7 +109,10 @@ class LogProvider {
                                levelName: levelName)
         
         queue.async { [weak self] in
-            self?.logger.write(string)
+            guard let self = self else { return }
+            self.logger.write(string,
+                              printToConsole: self.printToConsole,
+                              writeToFile: self.writeToFile)
         }
     }
     

@@ -143,6 +143,13 @@ extension KaraokeView {
         scoringView.scoreCompensationOffset = offset
     }
     
+    /// 设置Log偏好
+    /// - Parameters:
+    ///   - printToConsole: 是否打印到控制台 默认：false
+    ///   - writeToFile: 是否记录在文件 默认：true
+    @objc static public func setLog(printToConsole: Bool, writeToFile: Bool) {
+        Log.setup(printToConsole: printToConsole, writeToFile: writeToFile)
+    }
 }
 
 // MARK: - UI
