@@ -39,12 +39,8 @@ open class Logger {
     ///The name of the log files
     open var name = "logfile"
     
-    ///Whether or not logging also prints to the console
-    open var printToConsole = true
-    
     ///logging singleton
     open class var logger: Logger {
-        
         struct Static {
             static let instance: Logger = Logger()
         }
@@ -57,8 +53,7 @@ open class Logger {
         return formatter
     }
     
-    ///write content to the current log file.
-    open func write(_ text: String) {
+    func write(_ text: String, printToConsole: Bool = true, writeToFile: Bool = true) {
         let path = currentPath
         let fileManager = FileManager.default
         if !fileManager.fileExists(atPath: path) {
@@ -67,16 +62,18 @@ open class Logger {
             } catch _ {
             }
         }
-        if let fileHandle = FileHandle(forWritingAtPath: path) {
-            let dateStr = dateFormatter.string(from: Date())
-            let writeText = "[\(dateStr)]\(text)\n"
-            fileHandle.seekToEndOfFile()
-            fileHandle.write(writeText.data(using: String.Encoding.utf8)!)
-            fileHandle.closeFile()
-            if printToConsole {
-                print(writeText, terminator: "")
+        let dateStr = dateFormatter.string(from: Date())
+        let writeText = "[\(dateStr)]\(text)\n"
+        if writeToFile {
+            if let fileHandle = FileHandle(forWritingAtPath: path) {
+                fileHandle.seekToEndOfFile()
+                fileHandle.write(writeText.data(using: String.Encoding.utf8)!)
+                fileHandle.closeFile()
+                cleanup()
             }
-            cleanup()
+        }
+        if printToConsole {
+            print(writeText, terminator: "")
         }
     }
     ///do the checks and cleanup

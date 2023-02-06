@@ -100,6 +100,7 @@ class LogProvider {
         let string = getString(text: text,
                                tag: tag,
                                levelName: levelName)
+        
         queue.async { [weak self] in
             self?.logger.write(string)
         }
