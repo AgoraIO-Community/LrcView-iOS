@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum MusicType: Int, CustomStringConvertible {
+@objc public enum MusicType: Int, CustomStringConvertible {
     /// 快歌
     case fast = 1
     /// 慢歌
@@ -25,21 +25,21 @@ public enum MusicType: Int, CustomStringConvertible {
 
 public class LyricModel: NSObject {
     /// 歌曲名称
-    public var name: String
+    @objc public var name: String
     /// 歌星名称
-    public var singer: String
+    @objc public var singer: String
     /// 歌曲类型
-    public var type: MusicType
+    @objc public var type: MusicType
     /// 行信息
-    public var lines: [LyricLineModel]
+    @objc public var lines: [LyricLineModel]
     /// 前奏结束时间
-    public var preludeEndPosition: Int
+    @objc public var preludeEndPosition: Int
     /// 歌词总时长 (ms)
-    public var duration: Int
+    @objc public var duration: Int
     /// 是否有pitch值
-    public var hasPitch: Bool
+    @objc public var hasPitch: Bool
     
-    public init(name: String,
+    @objc public init(name: String,
                 singer: String,
                 type: MusicType,
                 lines: [LyricLineModel],
@@ -58,7 +58,7 @@ public class LyricModel: NSObject {
     /// 解析歌词文件xml数据
     /// - Parameter data: xml二进制数据
     /// - Returns: 歌词信息
-    public init(data: Data) throws {
+    @objc public init(data: Data) throws {
         self.name = "name"
         self.singer = "singer"
         self.type = .fast
@@ -68,7 +68,7 @@ public class LyricModel: NSObject {
         self.hasPitch = true
     }
     
-    public override init() {
+    @objc public override init() {
         self.name = ""
         self.singer = ""
         self.type = .fast
@@ -79,7 +79,7 @@ public class LyricModel: NSObject {
         super.init()
     }
     
-    public override var description: String {
+    @objc public override var description: String {
         let dict = ["name" : name,
                     "singer" : singer,
                     "type" : type,
@@ -92,15 +92,15 @@ public class LyricModel: NSObject {
 
 public class LyricLineModel: NSObject {
     /// 开始时间 单位为毫秒
-    public var beginTime: Int
+    @objc public var beginTime: Int
     /// 总时长 (ms)
-    public var duration: Int
+    @objc public var duration: Int
     /// 行内容
-    public var content: String
+    @objc public var content: String
     /// 每行歌词的字信息
-    public var tones: [LyricToneModel]
+    @objc public var tones: [LyricToneModel]
     
-    public init(beginTime: Int,
+    @objc public init(beginTime: Int,
                 duration: Int,
                 content: String,
                 tones: [LyricToneModel]) {
@@ -112,14 +112,14 @@ public class LyricLineModel: NSObject {
 }
 
 public class LyricToneModel: NSObject {
-    public let beginTime: Int
-    public let duration: Int
-    public var word: String
-    public let pitch: Double
-    public var lang: Lang
-    public let pronounce: String
+    @objc public let beginTime: Int
+    @objc public let duration: Int
+    @objc public var word: String
+    @objc public let pitch: Double
+    @objc public var lang: Lang
+    @objc public let pronounce: String
     
-    public init(beginTime: Int,
+    @objc public init(beginTime: Int,
                 duration: Int,
                 word: String,
                 pitch: Double,
@@ -136,10 +136,10 @@ public class LyricToneModel: NSObject {
 
 /// 字得分
 public class ToneScoreModel: NSObject {
-    public let tone: LyricToneModel
-    public var score: Int
+    @objc public let tone: LyricToneModel
+    @objc public var score: Int
     
-    public init(tone: LyricToneModel,
+    @objc public init(tone: LyricToneModel,
                 score: Int) {
         self.tone = tone
         self.score = score
@@ -155,7 +155,7 @@ public class ToneScoreModel: NSObject {
     }
 }
 
-public enum Lang: Int {
+@objc public enum Lang: Int {
     case zh = 1
     case en = 2
     case unknown = -1

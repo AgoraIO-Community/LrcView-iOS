@@ -36,7 +36,7 @@ public class IncentiveView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func show(score: Int) {
+    @objc public func show(score: Int) {
         var tempName: String?
         
         if score >= 60, score < 75 {
