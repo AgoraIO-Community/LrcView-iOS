@@ -20,7 +20,8 @@ class MainTestVC: UIViewController {
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
-    var songCode = 6599298157850480 /// 十年
+//    var songCode = 6599298157850480 /// 十年
+    var songCode = 6625526790242290
     private var timer = GCDTimer()
     var cumulativeScore = 0
     var lyricModel: LyricModel!
@@ -41,7 +42,7 @@ class MainTestVC: UIViewController {
         karaokeView.scoringView.viewHeight = 100
         karaokeView.scoringView.topSpaces = 80
         karaokeView.lyricsView.draggable = true
-        karaokeView.scoringView.showDebugView = false
+        karaokeView.scoringView.showDebugView = true
         
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)
@@ -264,7 +265,7 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
     
     func onLyricResult(_ requestId: String, lyricUrl: String) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
-        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
+        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "235653", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
         let model = KaraokeView.parseLyricData(data: data)!
         self.lyricModel = model

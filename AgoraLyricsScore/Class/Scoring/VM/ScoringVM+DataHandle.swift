@@ -233,21 +233,22 @@ extension ScoringVM { /** ui 位置 **/
         /// 视图最左边到游标这段距离对应的时长
         let defaultPitchCursorXTime = Int(defaultPitchCursorX / widthPreMs)
         let x = CGFloat(beginTime - (progress - defaultPitchCursorXTime)) * widthPreMs
-        let y = getCenterY(pitch: pitch,
-                           canvasViewSize: canvasViewSize,
-                           minPitch: minPitch,
-                           maxPitch: maxPitch) - (standardPitchStickViewHeight / 2)
+        let y = getY(pitch: pitch,
+                     canvasViewSize: canvasViewSize,
+                     minPitch: minPitch,
+                     maxPitch: maxPitch) - (standardPitchStickViewHeight / 2)
         let w = widthPreMs * CGFloat(duration)
         let h = standardPitchStickViewHeight
+        
         let rect = CGRect(x: x, y: y, width: w, height: h)
         return rect
     }
     
-    /// 计算y的位置
-    func getCenterY(pitch: Double,
-                    canvasViewSize: CGSize,
-                    minPitch: Double,
-                    maxPitch: Double) -> CGFloat {
+    /// 计算Y的位置 pitch 对应的视图Y坐标
+    func getY(pitch: Double,
+              canvasViewSize: CGSize,
+              minPitch: Double,
+              maxPitch: Double) -> CGFloat {
         let canvasViewHeight = canvasViewSize.height
         
         if pitch <= 0 {

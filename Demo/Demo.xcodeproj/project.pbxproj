@@ -32,6 +32,7 @@
 		26C545322955B684009E0F37 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 26C545312955B684009E0F37 /* music.mp3 */; };
 		26C545342955B6C2009E0F37 /* 105780.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26C545332955B6C2009E0F37 /* 105780.xml */; };
 		26D01F9A2977D7F500B9D31A /* ScoreAniVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D01F992977D7F500B9D31A /* ScoreAniVC.swift */; };
+		26E5BF7D2990D6B30051AF67 /* 235653.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26E5BF7C2990D6B30051AF67 /* 235653.xml */; };
 		26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E8030E298BAF1B00DBF23F /* OCVC.m */; };
 		F88793560A341F9CBCF66020 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
@@ -66,6 +67,7 @@
 		26C545312955B684009E0F37 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
 		26C545332955B6C2009E0F37 /* 105780.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 105780.xml; sourceTree = "<group>"; };
 		26D01F992977D7F500B9D31A /* ScoreAniVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreAniVC.swift; sourceTree = "<group>"; };
+		26E5BF7C2990D6B30051AF67 /* 235653.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 235653.xml; sourceTree = "<group>"; };
 		26E8030C298BAF1A00DBF23F /* Demo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Demo-Bridging-Header.h"; sourceTree = "<group>"; };
 		26E8030D298BAF1B00DBF23F /* OCVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCVC.h; sourceTree = "<group>"; };
 		26E8030E298BAF1B00DBF23F /* OCVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCVC.m; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 		260942F92952FD410022A50D /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				26E5BF7C2990D6B30051AF67 /* 235653.xml */,
 				260A433F2985378B00C2DB5D /* 123602.xml */,
 				260942FC295302370022A50D /* 745012.xml */,
 				2609430029530FCC0022A50D /* lrc.lrc */,
@@ -233,6 +236,7 @@
 				26C545322955B684009E0F37 /* music.mp3 in Resources */,
 				260942E32952B5060022A50D /* LaunchScreen.storyboard in Resources */,
 				260942E02952B5060022A50D /* Assets.xcassets in Resources */,
+				26E5BF7D2990D6B30051AF67 /* 235653.xml in Resources */,
 				26C545342955B6C2009E0F37 /* 105780.xml in Resources */,
 				260942DE2952B5050022A50D /* Main.storyboard in Resources */,
 				260A43402985378B00C2DB5D /* 123602.xml in Resources */,

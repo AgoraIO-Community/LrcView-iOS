@@ -88,4 +88,15 @@ class TestParser: XCTestCase {
             pre = info
         }
     }
+    
+    func testOneline() throws { /** Oneline **/
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "810507-oneline", ofType: "xml")!)
+        let data = try! Data(contentsOf: url)
+        guard let model = KaraokeView.parseLyricData(data: data) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count > 0)
+        XCTAssert(model.lines.first!.beginTime == 28970)
+    }
 }

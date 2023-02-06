@@ -41,4 +41,15 @@ class TestScoringVM: XCTestCase {
         XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: 1, lineScores: lineScores), 10+20)
         XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: 2, lineScores: lineScores), 10+20+5)
     }
+    
+    func testGetCenterY() {
+//        let vm = ScoringVM()
+//        let max = 100 + 1.5
+//        let min = 0 - 1.5
+//
+//
+//        XCTAssertEqual(vm.getY(pitch: 1, canvasViewSize: .init(width: 390, height: 100), minPitch: min, maxPitch: max), 1 + 1.5)
+//        XCTAssertEqual(vm.getY(pitch: 100, canvasViewSize: .init(width: 390, height: 100), minPitch: min, maxPitch: max), 100 - 1.5)
+        
+    }
 }

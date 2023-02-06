@@ -124,11 +124,14 @@ class ScoringVM {
         guard lyricData != nil else { return } /** setLyricData 后执行 **/
         
         if pitch <= 0 {
-            let y = getCenterY(pitch: pitch,
+            let y = getY(pitch: pitch,
                                canvasViewSize: canvasViewSize,
                                minPitch: minPitch,
                                maxPitch: maxPitch)
-            let debugInfo = DebugInfo(originalPitch: pitch, pitch: pitch, hitedInfo: nil)
+            let debugInfo = DebugInfo(originalPitch: pitch,
+                                      pitch: pitch,
+                                      hitedInfo: nil,
+                                      progress: progress)
             invokeScoringVM(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
             return
         }
@@ -170,12 +173,15 @@ class ScoringVM {
         
         /** 6.calculated ui info **/
         let showAnimation = score >= hitScoreThreshold * 100
-        let y = getCenterY(pitch: voicePitch,
-                           canvasViewSize: canvasViewSize,
-                           minPitch: minPitch,
-                           maxPitch: maxPitch)
+        let y = getY(pitch: voicePitch,
+                     canvasViewSize: canvasViewSize,
+                     minPitch: minPitch,
+                     maxPitch: maxPitch)
         
-        let debugInfo = DebugInfo(originalPitch: pitch, pitch: voicePitch, hitedInfo: hitedInfo)
+        let debugInfo = DebugInfo(originalPitch: pitch,
+                                  pitch: voicePitch,
+                                  hitedInfo: hitedInfo,
+                                  progress: progress)
         invokeScoringVM(didUpdateCursor: y, showAnimation: showAnimation, debugInfo: debugInfo)
     }
     

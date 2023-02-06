@@ -178,7 +178,7 @@ extension ScoringView: ScoringVMDelegate {
         localPitchView.setIndicatedViewY(y: centerY)
         showAnimation ? localPitchView.startEmitter() : localPitchView.stopEmitter()
         if showDebugView {
-            let text = "y: \(Float(centerY)) \npitch: \(debugInfo.pitch.keep2) \nani: \(showAnimation) w:\(debugInfo.hitedInfo?.word ?? "")"
+            let text = "y: \(Float(centerY)) \npitch: \(debugInfo.pitch.keep2) \nani: \(showAnimation) w:\(debugInfo.hitedInfo?.word ?? "") progress: \(debugInfo.progress)"
             consoleView.set(text: text)
         }
     }

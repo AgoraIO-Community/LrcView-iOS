@@ -66,6 +66,7 @@ extension ScoringVM {
         /// 男女音调算法改变后的pitch
         let pitch: Double
         let hitedInfo: ScoringVM.Info?
+        let progress: Int
     }
 }
 
