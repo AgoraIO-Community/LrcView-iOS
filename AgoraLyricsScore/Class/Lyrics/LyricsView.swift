@@ -53,7 +53,7 @@ public class LyricsView: UIView {
     /// 是否开启拖拽
     @objc public var draggable: Bool = false
     
-    var delegate: LyricsViewDelegate?
+    weak var delegate: LyricsViewDelegate?
     /// 倒计时view
     fileprivate let firstToneHintView = FirstToneHintView()
     fileprivate let noLyricTipsLabel = UILabel()

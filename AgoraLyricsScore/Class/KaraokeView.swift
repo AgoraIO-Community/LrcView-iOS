@@ -38,13 +38,17 @@ public class KaraokeView: UIView {
     
     @objc public override init(frame: CGRect) {
         super.init(frame: frame)
-        Log.debug(text: "AgoraLyricsScore version \(versionName)", tag: logTag)
+        Log.debug(text: "version \(versionName)", tag: logTag)
         setupUI()
         commonInit()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        Log.info(text: "deinit", tag: logTag)
     }
 }
 

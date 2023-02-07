@@ -120,9 +120,9 @@ class LogProvider {
                            tag: String?,
                            levelName: String) -> String {
         if let tag = tag {
-            return "[\(levelName)][\(tag)]: " + text
+            return "[AgoraLyricsScore][\(levelName)][\(tag)]: " + text
         }
-        return "[\(levelName)]: " + text
+        return "[AgoraLyricsScore][\(levelName)]: " + text
     }
 }
 
