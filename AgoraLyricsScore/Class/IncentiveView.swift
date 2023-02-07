@@ -35,7 +35,7 @@ public class IncentiveView: UIView {
     @objc public func show(score: Int) {
         var tempName: String?
         
-        if score >= 0, score < 75 {
+        if score >= 60, score < 75 {
             tempName = "fair"
         }
         else if score >= 75, score < 90 {
@@ -120,19 +120,16 @@ class GifView: UIView, CAAnimationDelegate {
         imageView.image = image
         isHidden = false
         
-        /// 从放大1.6到1.0
         let transformAnimation = CABasicAnimation(keyPath: "transform.scale")
         transformAnimation.fromValue = 1.6
         transformAnimation.toValue = 1
         transformAnimation.duration = 0.3
         
-        /// 从隐藏到显示
         let opacityAnimation1 = CABasicAnimation(keyPath: "opacity")
         opacityAnimation1.fromValue = 0
         opacityAnimation1.toValue = 1
         opacityAnimation1.duration = 0.3
         
-        /// 从显示到隐藏
         let opacityAnimation2 = CABasicAnimation(keyPath: "opacity")
         opacityAnimation2.beginTime = 5
         opacityAnimation2.fromValue = 1
