@@ -36,7 +36,7 @@ class VoicePitchChanger {
             offset = min(offset, wordMaxPitch * 0.4)
         }
         
-        if abs(ToneCalculator.pitchToTone(pitch: voicePitch) - ToneCalculator.pitchToTone(pitch: stdPitch)) < 1 { /** tone差距过小，直接返回 **/
+        if abs(ToneCalculator.pitchToTone(pitch: voicePitch) - ToneCalculator.pitchToTone(pitch: stdPitch)) < 0.5 { /** tone差距过小，直接返回 **/
             return voicePitch
         }
         
