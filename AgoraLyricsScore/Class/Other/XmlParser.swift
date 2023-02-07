@@ -11,6 +11,7 @@ class XmlParser: NSObject {
     fileprivate let logTag = "XmlParser"
     fileprivate var parserTypes: [ParserType] = []
     fileprivate var song: LyricModel!
+    
     deinit {
         Log.info(text: "deinit", tag: logTag)
     }
@@ -109,19 +110,18 @@ extension XmlParser {
 
 // MARK: - XMLParserDelegate
 extension XmlParser: XMLParserDelegate {
-    
     func parserDidStartDocument(_: XMLParser) {}
-
+    
     func parserDidEndDocument(_: XMLParser) {}
-
+    
     func parser(_: XMLParser, parseErrorOccurred parseError: Error) {
         Log.error(error: parseError.localizedDescription, tag: logTag)
     }
-
+    
     func parser(_: XMLParser, validationErrorOccurred validationError: Error) {
         Log.error(error: validationError.localizedDescription, tag: logTag)
     }
-
+    
     func parser(_: XMLParser,
                 didStartElement elementName: String,
                 namespaceURI _: String?,
@@ -186,7 +186,7 @@ extension XmlParser: XMLParserDelegate {
             break
         }
     }
-
+    
     func parser(_: XMLParser, foundCharacters string: String) {
         if let last = parserTypes.last {
             switch last {
@@ -223,7 +223,7 @@ extension XmlParser: XMLParserDelegate {
             }
         }
     }
-
+    
     func parser(_: XMLParser,
                 didEndElement elementName: String,
                 namespaceURI _: String?,

@@ -40,12 +40,12 @@ public class LyricModel: NSObject {
     @objc public var hasPitch: Bool
     
     @objc public init(name: String,
-                singer: String,
-                type: MusicType,
-                lines: [LyricLineModel],
-                preludeEndPosition: Int,
-                duration: Int,
-                hasPitch: Bool) {
+                      singer: String,
+                      type: MusicType,
+                      lines: [LyricLineModel],
+                      preludeEndPosition: Int,
+                      duration: Int,
+                      hasPitch: Bool) {
         self.name = name
         self.singer = singer
         self.type = type
@@ -101,9 +101,9 @@ public class LyricLineModel: NSObject {
     @objc public var tones: [LyricToneModel]
     
     @objc public init(beginTime: Int,
-                duration: Int,
-                content: String,
-                tones: [LyricToneModel]) {
+                      duration: Int,
+                      content: String,
+                      tones: [LyricToneModel]) {
         self.beginTime = beginTime
         self.duration = duration
         self.content = content
@@ -120,11 +120,11 @@ public class LyricToneModel: NSObject {
     @objc public let pronounce: String
     
     @objc public init(beginTime: Int,
-                duration: Int,
-                word: String,
-                pitch: Double,
-                lang: Lang,
-                pronounce: String) {
+                      duration: Int,
+                      word: String,
+                      pitch: Double,
+                      lang: Lang,
+                      pronounce: String) {
         self.beginTime = beginTime
         self.duration = duration
         self.word = word
@@ -140,7 +140,7 @@ public class ToneScoreModel: NSObject {
     @objc public var score: Int
     
     @objc public init(tone: LyricToneModel,
-                score: Int) {
+                      score: Int) {
         self.tone = tone
         self.score = score
     }

@@ -229,10 +229,10 @@ extension ScoringVM { /** ui 位置 **/
         let defaultPitchCursorXTime = Int(defaultPitchCursorX / widthPreMs)
         let x = CGFloat(beginTime - (progress - defaultPitchCursorXTime)) * widthPreMs
         let y = calculatedY(pitch: pitch,
-                                     viewHeight: canvasViewSize.height,
-                                     minPitch: minPitch,
-                                     maxPitch: maxPitch,
-                                     standardPitchStickViewHeight: standardPitchStickViewHeight) - (standardPitchStickViewHeight / 2)
+                            viewHeight: canvasViewSize.height,
+                            minPitch: minPitch,
+                            maxPitch: maxPitch,
+                            standardPitchStickViewHeight: standardPitchStickViewHeight) - (standardPitchStickViewHeight / 2)
         let w = widthPreMs * CGFloat(duration)
         let h = standardPitchStickViewHeight
         
