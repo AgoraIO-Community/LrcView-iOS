@@ -104,7 +104,7 @@ class MainTestVC: UIViewController {
         skipButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         setButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         changeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
-        changeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
+        quickButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         cumulativeScore = 0
         token = TokenBuilder.buildToken(Config.mccAppId,
                                         appCertificate: Config.mccCertificate,
@@ -235,6 +235,7 @@ class MainTestVC: UIViewController {
             karaokeView.reset()
             gradeView.reset()
             incentiveView.reset()
+            navigationController?.popViewController(animated: true)
             return
         default:
             break
