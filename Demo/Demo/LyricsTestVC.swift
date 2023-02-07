@@ -60,9 +60,7 @@ class LyricsTestVC: UIViewController {
         gradeView.rightAnchor.constraint(equalTo: karaokeView.rightAnchor, constant: -15).isActive = true
         gradeView.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        incentiveView.heightAnchor.constraint(equalToConstant: incentiveView.heigth).isActive = true
-        incentiveView.widthAnchor.constraint(equalToConstant: incentiveView.width).isActive = true
-        incentiveView.topAnchor.constraint(equalTo: gradeView.bottomAnchor, constant: 15).isActive = true
+        incentiveView.centerYAnchor.constraint(equalTo: karaokeView.scoringView.centerYAnchor).isActive = true
         incentiveView.centerXAnchor.constraint(equalTo: karaokeView.centerXAnchor, constant: -10).isActive = true
     }
     

@@ -18,14 +18,18 @@ class IncentiveVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .black
         view.addSubview(incentiveView)
-        incentiveView.frame = .init(x: 0, y: 150, width: incentiveView.width, height: incentiveView.heigth)
-        timer.scheduledMillisecondsTimer(withName: "EmitterVC", countDown: 1000000, milliseconds: 1000, queue: .main) { [weak self](_, time) in
-            guard let self = self else { return }
-            /// Int.random(in: 40...100)
-            self.incentiveView.show(score: 80)
-        }
+        incentiveView.frame = .init(x: 100, y: 100, width: 200, height: 200)
+        
     }
     
-
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        timer.scheduledMillisecondsTimer(withName: "EmitterVC", countDown: 1000000, milliseconds: 500, queue: .main) { [weak self](_, time) in
+            guard let self = self else { return }
+            /// Int.random(in: 40...100)
+            self.incentiveView.show(score: Int.random(in: 40...100))
+        }
+//        incentiveView.show(score: Int.random(in: 40...100))
+    }
 }

@@ -9,17 +9,15 @@ import UIKit
 import WebKit
 
 public class IncentiveView: UIView {
-    private let gifViews: [GifView] = [.init(), .init(), .init()]
+    private var gifViews: [GifView]!
     private var currentIndex = 0
-    public let width: CGFloat = 384/2
-    public let heigth: CGFloat = 90/2
-    private var link: CADisplayLink?
     private var combo = 0
     private var lastName = ""
+    private let logTag = "IncentiveView"
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        gifViews = [.init(), .init(), .init(), .init(), .init()]
         for gifView in gifViews {
             gifView.isHidden = true
             addSubview(gifView)
@@ -27,8 +25,6 @@ public class IncentiveView: UIView {
             gifView.contentMode = .scaleAspectFit
             gifView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
             gifView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            gifView.heightAnchor.constraint(equalToConstant: heigth).isActive = true
-            gifView.widthAnchor.constraint(equalToConstant: width).isActive = true
         }
     }
     
@@ -39,7 +35,7 @@ public class IncentiveView: UIView {
     @objc public func show(score: Int) {
         var tempName: String?
         
-        if score >= 60, score < 75 {
+        if score >= 0, score < 75 {
             tempName = "fair"
         }
         else if score >= 75, score < 90 {
@@ -53,8 +49,7 @@ public class IncentiveView: UIView {
         }
         
         guard let name = tempName else { return }
-        
-        guard let path = Bundle.currentBundle.path(forResource: name, ofType: "gif") else {
+        guard let image =  Bundle.currentBundle.image(name: name) else {
             return
         }
         
@@ -71,50 +66,28 @@ public class IncentiveView: UIView {
             combo = 0
         }
         
-        let index = findIndexOfLabel()
-        bringSubviewToFront(gifViews[index])
-        gifViews[index].startGif(filePath: path, combo: combo)
-        gifViews[index].isHidden = false
-        setupLinkIfNeed()
+        guard let view = getView() else {
+            Log.error(error: "getView == nil", tag: logTag)
+            return
+        }
+        bringSubviewToFront(view)
+        view.showAnimation(image: image, combo: combo)
     }
     
     public func reset() {
-        link?.invalidate()
-        link = nil
         combo = 0
         lastName = ""
     }
     
-    private func findIndexOfLabel() -> Int {
-        var index = currentIndex + 1
-        index = index < gifViews.count ? index : 0
-        currentIndex = index
-        return index
-    }
-    
-    private func setupLinkIfNeed() {
-        if link == nil {
-            link = CADisplayLink(target: self, selector: #selector(timeOut))
-            link?.preferredFramesPerSecond = 5
-            link?.add(to: .current, forMode: .common)
-        }
-    }
-    
-    @objc func timeOut() {
-        let current = Date().milliStamp
-        for view in gifViews {
-            if current - view.time > 2000 {
-                view.isHidden = true
-                view.stopGif()
-            }
-        }
+    private func getView() -> GifView? {
+        return gifViews.first(where: { $0.canUse })
     }
 }
 
-class GifView: UIView {
+class GifView: UIView, CAAnimationDelegate {
     private let imageView = UIImageView()
     private let comboLabel = IncentiveLabel()
-    var time: Int64 = 0
+    fileprivate var canUse = true
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -129,75 +102,60 @@ class GifView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         comboLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        imageView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        imageView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        imageView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        imageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
         comboLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        comboLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 10).isActive = true
+        comboLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func startGif(filePath: String, combo: Int) {
-        imageView.startGif(filePath: filePath)
-        
+    func showAnimation(image: UIImage, combo: Int) {
+        canUse = false
         comboLabel.text = "×\(combo)"
         comboLabel.isHidden = combo == 0
+        imageView.image = image
+        isHidden = false
         
-        time = Date().milliStamp
+        /// 从放大1.6到1.0
+        let transformAnimation = CABasicAnimation(keyPath: "transform.scale")
+        transformAnimation.fromValue = 1.6
+        transformAnimation.toValue = 1
+        transformAnimation.duration = 0.3
+        
+        /// 从隐藏到显示
+        let opacityAnimation1 = CABasicAnimation(keyPath: "opacity")
+        opacityAnimation1.fromValue = 0
+        opacityAnimation1.toValue = 1
+        opacityAnimation1.duration = 0.3
+        
+        /// 从显示到隐藏
+        let opacityAnimation2 = CABasicAnimation(keyPath: "opacity")
+        opacityAnimation2.beginTime = 5
+        opacityAnimation2.fromValue = 1
+        opacityAnimation2.toValue = 0
+        opacityAnimation2.duration = 0.5
+        layer.add(opacityAnimation2, forKey: "opacityAnimation2")
+        
+        let animationGroup = CAAnimationGroup()
+        animationGroup.animations = [transformAnimation, opacityAnimation1, opacityAnimation2]
+        animationGroup.duration = 0.8
+        animationGroup.isRemovedOnCompletion = true
+        animationGroup.fillMode = .forwards
+        
+        animationGroup.delegate = self
+        layer.add(animationGroup, forKey: "animationGroup")
     }
     
-    func stopGif() {
-        time = 0
-        imageView.stopGif()
-    }
-}
-
-extension UIImageView {
-    func startGif(filePath: String) {
-        guard let data = NSData(contentsOfFile: filePath) else { return }
-        
-        guard let imageSource = CGImageSourceCreateWithData(data, nil) else { return }
-        let imageCount = CGImageSourceGetCount(imageSource)
-        
-        var images = [UIImage]()
-        var totalDuration: TimeInterval = 0
-        for i in 0..<imageCount {
-            
-            guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, i, nil) else {continue}
-            let image = UIImage(cgImage: cgImage)
-            images.append(image)
-            
-            guard let copyProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, i, nil) else {
-                continue
-            }
-            
-            let properties = copyProperties as NSDictionary
-            guard let gifDict = properties[kCGImagePropertyGIFDictionary]  as? NSDictionary else  {
-                continue
-            }
-            guard let frameDuration = gifDict[kCGImagePropertyGIFDelayTime] as? NSNumber else {
-                continue
-            }
-            totalDuration += frameDuration.doubleValue
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        if flag {
+            self.isHidden = true
+            self.canUse = true
+            layer.removeAnimation(forKey: "animationGroup")
         }
-        
-        animationImages = images
-        animationDuration = totalDuration
-        animationRepeatCount = 1
-        
-        startAnimating()
-    }
-    
-    func stopGif() {
-        stopAnimating()
-        animationImages = []
-        animationDuration = 0
-        animationRepeatCount = 0
     }
 }
 
