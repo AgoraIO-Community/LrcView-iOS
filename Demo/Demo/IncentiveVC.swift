@@ -25,11 +25,11 @@ class IncentiveVC: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        timer.scheduledMillisecondsTimer(withName: "EmitterVC", countDown: 1000000, milliseconds: 500, queue: .main) { [weak self](_, time) in
-            guard let self = self else { return }
-            /// Int.random(in: 40...100)
-            self.incentiveView.show(score: Int.random(in: 40...100))
-        }
-//        incentiveView.show(score: Int.random(in: 40...100))
+//        timer.scheduledMillisecondsTimer(withName: "EmitterVC", countDown: 1000000, milliseconds: 500, queue: .main) { [weak self](_, time) in
+//            guard let self = self else { return }
+//            /// Int.random(in: 40...100)
+//            self.incentiveView.show(score: Int.random(in: 40...100))
+//        }
+        incentiveView.show(score: Int.random(in: 40...100))
     }
 }
