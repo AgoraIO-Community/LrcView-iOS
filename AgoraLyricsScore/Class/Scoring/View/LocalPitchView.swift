@@ -239,8 +239,8 @@ class Emitter {
         /// 设置粒子旋转
         cell.spin = CGFloat.pi / 2
         cell.spinRange = CGFloat.pi / 4
-        /// 设置例子每秒弹出的个数
-        cell.birthRate = Float(birthRate)
+        /// 设置粒子每秒弹出的个数
+        cell.birthRate = 4
         cell.alphaRange = 0.75
         cell.alphaSpeed = -0.35
         /// 初始速度
