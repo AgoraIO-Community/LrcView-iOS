@@ -6,30 +6,33 @@
 //
 
 import UIKit
-import WebKit
 
+/// 激励视图
 public class IncentiveView: UIView {
-    private var gifViews: [GifView]!
-    private var currentIndex = 0
+    private var itemViews: [IncentiveItemView]!
     private var combo = 0
     private var lastName = ""
     private let logTag = "IncentiveView"
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        gifViews = [.init(), .init(), .init(), .init(), .init()]
-        for gifView in gifViews {
-            gifView.isHidden = true
-            addSubview(gifView)
-            gifView.translatesAutoresizingMaskIntoConstraints = false
-            gifView.contentMode = .scaleAspectFit
-            gifView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-            gifView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        itemViews = [.init(), .init(), .init(), .init(), .init()]
+        for view in itemViews {
+            view.isHidden = true
+            addSubview(view)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.contentMode = .scaleAspectFit
+            view.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+            view.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        Log.info(text: "deinit", tag: logTag)
     }
     
     @objc public func show(score: Int) {
@@ -79,12 +82,12 @@ public class IncentiveView: UIView {
         lastName = ""
     }
     
-    private func getView() -> GifView? {
-        return gifViews.first(where: { $0.canUse })
+    private func getView() -> IncentiveItemView? {
+        return itemViews.first(where: { $0.canUse })
     }
 }
 
-class GifView: UIView, CAAnimationDelegate {
+class IncentiveItemView: UIView, CAAnimationDelegate {
     private let imageView = UIImageView()
     private let comboLabel = IncentiveLabel()
     fileprivate var canUse = true
@@ -113,7 +116,7 @@ class GifView: UIView, CAAnimationDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func showAnimation(image: UIImage, combo: Int) {
+    fileprivate func showAnimation(image: UIImage, combo: Int) {
         canUse = false
         comboLabel.text = "×\(combo)"
         comboLabel.isHidden = combo == 0
@@ -135,23 +138,22 @@ class GifView: UIView, CAAnimationDelegate {
         opacityAnimation2.fromValue = 1
         opacityAnimation2.toValue = 0
         opacityAnimation2.duration = 0.5
-        layer.add(opacityAnimation2, forKey: "opacityAnimation2")
         
         let animationGroup = CAAnimationGroup()
         animationGroup.animations = [transformAnimation, opacityAnimation1, opacityAnimation2]
         animationGroup.duration = 0.8
         animationGroup.isRemovedOnCompletion = true
         animationGroup.fillMode = .forwards
-        
         animationGroup.delegate = self
+        
         layer.add(animationGroup, forKey: "animationGroup")
     }
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         if flag {
-            self.isHidden = true
-            self.canUse = true
+            isHidden = true
             layer.removeAnimation(forKey: "animationGroup")
+            canUse = true
         }
     }
 }
@@ -161,14 +163,14 @@ class IncentiveLabel: UILabel {
         let color = textColor
         let offset = shadowOffset
         
-        let c = UIGraphicsGetCurrentContext()
-        c?.setLineWidth(4.0)
-        c?.setLineJoin(.round)
-        c?.setTextDrawingMode(.strokeClip)
+        let context = UIGraphicsGetCurrentContext()
+        context?.setLineWidth(4.0)
+        context?.setLineJoin(.round)
+        context?.setTextDrawingMode(.strokeClip)
         textColor = UIColor.colorWithHex(hexStr: "#368CFF")
         super.drawText(in: rect)
         
-        c?.setTextDrawingMode(.fill)
+        context?.setTextDrawingMode(.fill)
         textColor = color
         shadowOffset = .zero
         super.drawText(in: rect)
