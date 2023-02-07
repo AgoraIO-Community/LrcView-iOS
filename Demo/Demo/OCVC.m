@@ -38,13 +38,17 @@
 
     [self.view addSubview:gview];
     [self.view layoutIfNeeded];
-    [gview setup];
     [gview setScoreWithCumulativeScore:1110 totalScore:4000];
     
-    /** 1 **/
     karaokeView.lyricsView.firstToneHintViewStyle.size = 15;
     karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = 25;
     karaokeView.lyricsView.firstToneHintViewStyle.backgroundColor = [UIColor redColor];
+    
+    IncentiveView *incentiveView = [IncentiveView new];
+    incentiveView.frame = karaokeView.scoringView.bounds;
+    [self.view addSubview:incentiveView];
+    
+    [incentiveView showWithScore:80];
     
     lView.draggable = YES;
     lView.noLyricTipsFont = [UIFont systemFontOfSize:23];

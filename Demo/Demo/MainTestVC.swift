@@ -16,39 +16,46 @@ class MainTestVC: UIViewController {
     let incentiveView = IncentiveView()
     let skipButton = UIButton()
     let setButton = UIButton()
+    let quickButton = UIButton()
+    let changeButton = UIButton()
     var agoraKit: AgoraRtcEngineKit!
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
-    var songCode = 6599298157850480 /// 十年
-//    var songCode = 6625526790242290
+    var songCode = 6599298157850480
+    /// 0：十年， 1: 王菲
+    var songCodes = [6599298157850480, 6599297819205290]
+    var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
     var lyricModel: LyricModel!
     var noLyric = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         commonInit()
-        view.layoutIfNeeded()
-        gradeView.setup()
+    }
+    
+    deinit {
+        print("=== deinit")
     }
     
     func setupUI() {
-//        karaokeView.scoringView.viewHeight = 160
-//        karaokeView.scoringView.topSpaces = 50
-        
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         karaokeView.scoringView.viewHeight = 100
         karaokeView.scoringView.topSpaces = 80
         karaokeView.lyricsView.draggable = true
         karaokeView.scoringView.showDebugView = true
-//        karaokeView.scoringView.standardPitchStickViewHeight = 8
         
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)
+        changeButton.setTitle("切歌", for: .normal)
+        quickButton.setTitle("退出", for: .normal)
         skipButton.backgroundColor = .red
         setButton.backgroundColor = .red
+        changeButton.backgroundColor = .red
+        quickButton.backgroundColor = .red
         
         view.backgroundColor = .black
         view.addSubview(karaokeView)
@@ -56,12 +63,16 @@ class MainTestVC: UIViewController {
         view.addSubview(incentiveView)
         view.addSubview(skipButton)
         view.addSubview(setButton)
+        view.addSubview(changeButton)
+        view.addSubview(quickButton)
         
         karaokeView.translatesAutoresizingMaskIntoConstraints = false
         gradeView.translatesAutoresizingMaskIntoConstraints = false
         incentiveView.translatesAutoresizingMaskIntoConstraints = false
         skipButton.translatesAutoresizingMaskIntoConstraints = false
         setButton.translatesAutoresizingMaskIntoConstraints = false
+        changeButton.translatesAutoresizingMaskIntoConstraints = false
+        quickButton.translatesAutoresizingMaskIntoConstraints = false
         
         karaokeView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         karaokeView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
@@ -81,11 +92,19 @@ class MainTestVC: UIViewController {
         
         setButton.leftAnchor.constraint(equalTo: skipButton.rightAnchor, constant: 45).isActive = true
         setButton.topAnchor.constraint(equalTo: karaokeView.bottomAnchor, constant: 30).isActive = true
+        
+        changeButton.leftAnchor.constraint(equalTo: skipButton.leftAnchor).isActive = true
+        changeButton.topAnchor.constraint(equalTo: setButton.bottomAnchor, constant: 30).isActive = true
+        
+        quickButton.leftAnchor.constraint(equalTo: setButton.leftAnchor).isActive = true
+        quickButton.topAnchor.constraint(equalTo: setButton.bottomAnchor, constant: 30).isActive = true
     }
     
     func commonInit() {
         skipButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         setButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
+        changeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
+        changeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         cumulativeScore = 0
         token = TokenBuilder.buildToken(Config.mccAppId,
                                         appCertificate: Config.mccCertificate,
@@ -183,17 +202,43 @@ class MainTestVC: UIViewController {
     }
     
     @objc func buttonTap(_ sender: UIButton) {
-        if sender == skipButton {
+        switch sender {
+        case skipButton:
             if let data = lyricModel {
                 mpk.seek(toPosition: data.preludeEndPosition - 2000)
             }
             return
+        case setButton:
+            let vc = ParamSetVC()
+            vc.delegate = self
+            vc.modalPresentationStyle = .pageSheet
+            present(vc, animated: true)
+            return
+        case changeButton:
+            currentSongIndex += 1
+            if currentSongIndex >= songCodes.count {
+                currentSongIndex = 0
+            }
+            songCode = songCodes[currentSongIndex]
+            mpk.stop()
+            timer.destoryTimer(withName: "MainTestVC")
+            self.last = 0
+            incentiveView.reset()
+            gradeView.reset()
+            karaokeView.reset()
+            mccPreload()
+            return
+        case quickButton:
+            timer.destoryAllTimer()
+            mpk.stop()
+            agoraKit.destroyMediaPlayer(mpk)
+            karaokeView.reset()
+            gradeView.reset()
+            incentiveView.reset()
+            return
+        default:
+            break
         }
-        
-        let vc = ParamSetVC()
-        vc.delegate = self
-        vc.modalPresentationStyle = .pageSheet
-        present(vc, animated: true)
     }
     
     func updateView(param: Param) {
@@ -216,7 +261,6 @@ class MainTestVC: UIViewController {
         karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = param.lyric.firstToneHintViewStyle.bottomMargin
         karaokeView.lyricsView.maxWidth = param.lyric.maxWidth
         karaokeView.lyricsView.draggable = param.lyric.draggable
-//        param.lyric.firstToneHintViewStyle
         
         karaokeView.scoringView.particleEffectHidden = param.scoring.particleEffectHidden
         karaokeView.scoringView.emitterImages = param.scoring.emitterImages
@@ -263,15 +307,13 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
     
     func onLyricResult(_ requestId: String, lyricUrl: String) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
-//        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "235653", ofType: "xml")!)
-        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
-        let data = try! Data(contentsOf: url)
-        let model = KaraokeView.parseLyricData(data: data)!
-        self.lyricModel = model
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                return
-            }
+        FileCache.fect(urlString: lyricUrl) { progress in
+            
+        } completion: { filePath in
+            let url = URL(fileURLWithPath: filePath)
+            let data = try! Data(contentsOf: url)
+            let model = KaraokeView.parseLyricData(data: data)!
+            self.lyricModel = model
             if !self.noLyric {
                 self.karaokeView.setLyricData(data: model)
                 self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
@@ -281,10 +323,10 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
                 self.karaokeView.setLyricData(data: nil)
                 self.gradeView.isHidden = true
             }
-            
             self.mccPlay()
+        } fail: { error in
+            print("fect fail")
         }
-        
     }
     
     func onPreLoadEvent(_ songCode: Int,
@@ -343,6 +385,8 @@ extension MainTestVC: ParamSetVCDelegate {
         timer.destoryTimer(withName: "MainTestVC")
         self.last = 0
         karaokeView.reset()
+        incentiveView.reset()
+        gradeView.reset()
         updateView(param: param)
         mccPreload()
     }
