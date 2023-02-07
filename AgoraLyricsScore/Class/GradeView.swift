@@ -15,6 +15,7 @@ public class GradeView: UIView {
     private let progressView = GradeProgressView()
     private var gradeItems: [GradeItem]!
     private var gradeScores: [Int]!
+    private let logTag = "GradeView"
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,12 +26,17 @@ public class GradeView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    /// 在布局完成后，调用此方法
-    @objc public func setup() {
-        let gradeItems = createData()
-        self.gradeItems = gradeItems
-        self.gradeScores = gradeItems.map({ $0.score })
-        progressView.setup(gradeItems: gradeItems)
+    deinit {
+        Log.info(text: "deinit", tag: logTag)
+    }
+    
+    private func setupIfNeed() {
+        if gradeItems == nil {
+            let items = createData()
+            gradeItems = items
+            gradeScores = items.map({ $0.score })
+            progressView.setup(gradeItems: gradeItems)
+        }
     }
     
     @objc public func setTitle(title: String) {
@@ -38,9 +44,7 @@ public class GradeView: UIView {
     }
     
     @objc public func setScore(cumulativeScore: Int, totalScore: Int) {
-        if gradeScores == nil {
-            fatalError("please invkoe `setup` method")
-        }
+        setupIfNeed()
         
         if totalScore > 0 {
             let progress = Float(cumulativeScore) / Float(totalScore)
@@ -190,16 +194,12 @@ class GradeProgressView: UIView {
         
     }
     var lebelLeftConstraints = [NSLayoutConstraint]()
-    var isSetup = false
     
     func setup(gradeItems: [GradeItem]) {
         guard frame.size.width > 0 else {
             return
         }
-        guard !isSetup else {
-            return
-        }
-        isSetup = true
+        
         for label in labels {
             label.removeFromSuperview()
         }
