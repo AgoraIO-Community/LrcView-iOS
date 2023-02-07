@@ -109,7 +109,7 @@ class IncentiveItemView: UIView, CAAnimationDelegate {
         imageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
         comboLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        comboLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
+        comboLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -5).isActive = true
     }
     
     required init?(coder: NSCoder) {
@@ -134,15 +134,15 @@ class IncentiveItemView: UIView, CAAnimationDelegate {
         opacityAnimation1.duration = 0.3
         
         let opacityAnimation2 = CABasicAnimation(keyPath: "opacity")
-        opacityAnimation2.beginTime = 5
+        opacityAnimation2.beginTime = 0.3 + 1.4
         opacityAnimation2.fromValue = 1
         opacityAnimation2.toValue = 0
-        opacityAnimation2.duration = 0.5
+        opacityAnimation2.duration = 0.3
         
         let animationGroup = CAAnimationGroup()
         animationGroup.animations = [transformAnimation, opacityAnimation1, opacityAnimation2]
-        animationGroup.duration = 0.8
-        animationGroup.isRemovedOnCompletion = true
+        animationGroup.duration = 2
+        animationGroup.isRemovedOnCompletion = false
         animationGroup.fillMode = .forwards
         animationGroup.delegate = self
         
