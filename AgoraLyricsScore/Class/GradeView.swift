@@ -69,7 +69,7 @@ public class GradeView: UIView {
     }
     
     private func createData() -> [GradeItem] {
-        return [.init(score: 5, description: "C", image: Bundle.currentBundle.image(name: "icon-C")!),
+        return [.init(score: 60, description: "C", image: Bundle.currentBundle.image(name: "icon-C")!),
                 .init(score: 70, description: "B", image: Bundle.currentBundle.image(name: "icon-B")!),
                 .init(score: 80, description: "A", image: Bundle.currentBundle.image(name: "icon-A")!),
                 .init(score: 90, description: "S", image: Bundle.currentBundle.image(name: "icon-S")!)]
@@ -224,14 +224,20 @@ class GradeProgressView: UIView {
     fileprivate func setProgress(progress: Float) {
         let constant = bounds.width * CGFloat(progress)
         gradientLayer.frame = .init(x: 0, y: 0, width: constant, height: GradeProgressView.viewHeight)
-        if progress > 0.8 { /** 大于80%有多种颜色 **/
-            gradientLayer.colors = gradeViewHighlightColors.map({ $0.cgColor })
+        if progress > 0, progress <= 0.1 {
+            if !gradeViewHighlightColors.isEmpty {
+                let colors = [gradeViewHighlightColors[0]]
+                gradientLayer.colors = colors.map({ $0.cgColor })
+            }
         }
-        else {
-            if gradeViewHighlightColors.count > 2 {
+        else if progress > 0.1, progress < 0.8 {
+            if gradeViewHighlightColors.count >= 2 {
                 let colors = [gradeViewHighlightColors[0], gradeViewHighlightColors[1]]
                 gradientLayer.colors = colors.map({ $0.cgColor })
             }
+        }
+        else {
+            gradientLayer.colors = gradeViewHighlightColors.map({ $0.cgColor })
         }
     }
     
