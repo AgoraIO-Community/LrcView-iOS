@@ -40,6 +40,7 @@ class TestScoringVM: XCTestCase {
         XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: 0, lineScores: lineScores), 10)
         XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: 1, lineScores: lineScores), 10+20)
         XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: 2, lineScores: lineScores), 10+20+5)
+        XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: 3, lineScores: lineScores), 10+20+5)
     }
     
     func testGetCenterY() {
@@ -61,5 +62,18 @@ class TestScoringVM: XCTestCase {
         XCTAssertEqual(vm.calculatedY(pitch: 10, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 88.8)
         XCTAssertEqual(vm.calculatedY(pitch: 5, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 93.65)
         XCTAssertEqual(vm.calculatedY(pitch: 1, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 97.53)
+    }
+    
+    func testHit() {
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "745012", ofType: "xml")!)
+        let data = try! Data(contentsOf: url)
+        guard let model = KaraokeView.parseLyricData(data: data) else {
+            XCTFail()
+            return
+        }
+        let vm = ScoringVM()
+        let (_, infos) = ScoringVM.createData(data: model)
+        XCTAssertNil(vm.getHitedInfo(progress: 0, currentVisiableInfos: infos, pitchDuration: 50))
+        
     }
 }
