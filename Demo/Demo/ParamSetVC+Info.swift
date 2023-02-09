@@ -72,9 +72,9 @@ class LyricViewParam {
 
 class ScoringViewParam {
     /// 评分视图高度
-    var viewHeight: CGFloat = 160
+    var viewHeight: CGFloat = 100
     /// 渲染视图到顶部的间距
-    var topSpaces: CGFloat = 60
+    var topSpaces: CGFloat = 80
     /// 游标的起始位置
     var defaultPitchCursorX: CGFloat = 100
     /// 音准线的高度

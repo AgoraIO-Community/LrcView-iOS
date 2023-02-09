@@ -1,4 +1,4 @@
-//
+    //
 //  KaraokeView.swift
 //  NewApi
 //
@@ -71,7 +71,9 @@ extension KaraokeView {
         }
         lyricData = data
         /** 无歌词状态下强制关闭 **/
-        scoringEnabled = data != nil
+        if data == nil {
+            scoringEnabled = false
+        }
         lyricsView.setLyricData(data: data)
         scoringView.setLyricData(data: data)
         isStart = true
@@ -223,8 +225,7 @@ extension KaraokeView {
     fileprivate func updateUI() {
         backgroundImageView.image = backgroundImage
         backgroundImageView.isHidden = backgroundImage == nil
-        
-        lyricsViewTopConstraint.constant = scoringEnabled ? spacing : 0
+        lyricsViewTopConstraint.constant = scoringEnabled ? spacing : 0 - scoringView.viewHeight
         scoringViewHeightConstraint.constant = scoringView.viewHeight
         scoringView.isHidden = !scoringEnabled
         scoringViewTopConstraint.constant = scoringView.topSpaces

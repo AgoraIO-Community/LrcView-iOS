@@ -243,7 +243,7 @@ class ParamSetVC: UIViewController {
             }
             
             if indexPath.row == 1 { /** karaokeView.spacing **/
-                param.karaoke.spacing = CGFloat.random(in: 0...200)
+                param.karaoke.spacing = genValue(current: param.karaoke.spacing, ops: [0, 50, 100, 200])
             }
             
             if indexPath.row == 2 { /** karaokeView.scoringEnabled **/
@@ -251,21 +251,11 @@ class ParamSetVC: UIViewController {
             }
             
             if indexPath.row == 3 {
-                var temp = param.karaoke.scoreLevel
-                temp += 5
-                if temp >= 100 {
-                    temp = 0
-                }
-                param.karaoke.scoreLevel = temp
+                param.karaoke.scoreLevel = genValue(current: param.karaoke.scoreLevel, ops: [0, 10, 30, 50, 70, 100])
             }
             
             if indexPath.row == 4 { /** karaokeView.scoringEnabled **/
-                var temp = param.karaoke.scoreCompensationOffset
-                temp += 5
-                if temp >= 100 {
-                    temp = -100
-                }
-                param.karaoke.scoreCompensationOffset = temp
+                param.karaoke.scoreCompensationOffset = genValue(current: param.karaoke.scoreCompensationOffset, ops: [-100, -70, -10, 0, 10, 70, 100])
             }
         }
         
@@ -277,10 +267,11 @@ class ParamSetVC: UIViewController {
                 param.lyric.firstToneHintViewStyle.backgroundColor = .random
             }
             if indexPath.row == 2 { /** lyrcis.FirstToneHintViewStyle.size **/
-                param.lyric.firstToneHintViewStyle.size = .random(in: 5...30)
+                param.lyric.firstToneHintViewStyle.size = genValue(current: param.lyric.firstToneHintViewStyle.size, ops: [5, 10, 20, 30])
             }
             if indexPath.row == 3 { /** lyrcis.FirstToneHintViewStyle.bottomMargin **/
-                param.lyric.firstToneHintViewStyle.bottomMargin = .random(in: 0...45)
+                param.lyric.firstToneHintViewStyle.bottomMargin = genValue(current: param.lyric.firstToneHintViewStyle.bottomMargin, ops: [0, 15, 30, 45])
+                
             }
             if indexPath.row == 4 { /** lyrcis.textNormalColor **/
                 param.lyric.textNormalColor = .random
@@ -298,10 +289,10 @@ class ParamSetVC: UIViewController {
                 param.lyric.textHighlightFontSize = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
             }
             if indexPath.row == 9 { /** lyricsView.lyricLineSpacing **/
-                param.lyric.lyricLineSpacing = .random(in: 0...50)
+                param.lyric.lyricLineSpacing = genValue(current: param.lyric.lyricLineSpacing, ops: [0, 5, 10, 15, 20])
             }
             if indexPath.row == 10 { /** lyricsView.maxWidth **/
-                param.lyric.maxWidth = .random(in: (30)...(UIScreen.main.bounds.width-30))
+                param.lyric.maxWidth = genValue(current: param.lyric.maxWidth, ops: [30, 100, 220, UIScreen.main.bounds.width-30])
             }
             if indexPath.row == 11 { /** param.lyric.draggable **/
                 param.lyric.draggable = !param.lyric.draggable
@@ -320,25 +311,26 @@ class ParamSetVC: UIViewController {
         if indexPath.section == 2 {
             /// 评分视图高度
             if indexPath.row == 0 {
-                param.scoring.viewHeight = .random(in: 120...400)
-                param.scoring.topSpaces = param.scoring.viewHeight * 0.3
+                param.scoring.viewHeight = genValue(current: param.scoring.viewHeight, ops: [100, 120, 150, 180, 200])
+//                param.scoring.topSpaces = param.scoring.viewHeight * 0.3
             }
             /// 渲染视图到顶部的间距
             if indexPath.row == 1 {
-                param.scoring.topSpaces = .random(in: 0...200)
-                param.scoring.viewHeight = param.scoring.topSpaces * 3
+                param.scoring.topSpaces = genValue(current: param.scoring.topSpaces, ops: [0, 30, 80, 120, 180])
+//                param.scoring.viewHeight = param.scoring.topSpaces * 3
             }
             /// 游标的起始位置
             if indexPath.row == 2 {
-                param.scoring.defaultPitchCursorX = .random(in: 30...(UIScreen.main.bounds.width-30))
+                param.scoring.defaultPitchCursorX = genValue(current: param.scoring.defaultPitchCursorX, ops: [30, 100, 120, 180, 220])
             }
             /// 音准线的高度
             if indexPath.row == 3 {
-                param.scoring.standardPitchStickViewHeight = .random(in: 3...30)
+                param.scoring.standardPitchStickViewHeight = genValue(current: param.scoring.standardPitchStickViewHeight, ops: [3, 6, 12, 24])
+                
             }
             /// 音准线的基准因子
             if indexPath.row == 4 {
-                param.scoring.movingSpeedFactor = .random(in: 30...240)
+                param.scoring.movingSpeedFactor = genValue(current: param.scoring.movingSpeedFactor, ops: [30, 60, 120, 240])
             }
             
             /// 音准线默认的背景色
@@ -368,7 +360,7 @@ class ParamSetVC: UIViewController {
             
             /// 打分容忍度 范围：0-1
             if indexPath.row == 9 {
-                param.scoring.hitScoreThreshold = .random(in: 0...1)
+                param.scoring.hitScoreThreshold = genValue(current: param.scoring.hitScoreThreshold, ops: [0, 0.2, 0.5, 0.7, 1])
             }
             
             /// showDebugView
@@ -376,6 +368,25 @@ class ParamSetVC: UIViewController {
                 param.scoring.showDebugView = !param.scoring.showDebugView
             }
         }
+    }
+    
+    func genValue<T>(current: T, ops: [T]) -> T where T : Comparable {
+        if !ops.contains(current) {
+            fatalError()
+        }
+        
+        for (index, value) in ops.enumerated() {
+            if current == value {
+                if index + 1 >= ops.count {
+                    return ops[0]
+                }
+                else {
+                    return ops[index + 1]
+                }
+            }
+        }
+        
+        fatalError("never call this")
     }
 }
 

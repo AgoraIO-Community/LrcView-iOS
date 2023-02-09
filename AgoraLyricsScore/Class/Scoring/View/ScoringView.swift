@@ -153,9 +153,9 @@ public class ScoringView: UIView {
                 consoleView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
                 consoleView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
             }
-            else {
-                consoleView.removeFromSuperview()
-            }
+        }
+        else {
+            consoleView.removeFromSuperview()
         }
     }
 }

@@ -45,8 +45,6 @@ class MainTestVC: UIViewController {
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         karaokeView.scoringView.viewHeight = 100
         karaokeView.scoringView.topSpaces = 80
-        karaokeView.lyricsView.draggable = true
-        karaokeView.scoringView.showDebugView = true
         
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)
@@ -128,6 +126,7 @@ class MainTestVC: UIViewController {
         agoraKit.enableAudioVolumeIndication(50, smooth: 3, reportVad: true)
         let option = AgoraRtcChannelMediaOptions()
         option.clientRoleType = .broadcaster
+        agoraKit.enableAudio()
         agoraKit.setClientRole(.broadcaster)
         let ret = agoraKit.joinChannel(byToken: nil,
                                        channelId: Config.channelId,
@@ -229,8 +228,10 @@ class MainTestVC: UIViewController {
             mccPreload()
             return
         case quickButton:
+            agoraKit.disableAudio()
             timer.destoryAllTimer()
             mpk.stop()
+            mcc.register(nil)
             agoraKit.destroyMediaPlayer(mpk)
             karaokeView.reset()
             gradeView.reset()
@@ -252,11 +253,13 @@ class MainTestVC: UIViewController {
         karaokeView.lyricsView.lyricLineSpacing = param.lyric.lyricLineSpacing
         karaokeView.lyricsView.noLyricTipsColor = param.lyric.noLyricTipsColor
         karaokeView.lyricsView.noLyricTipsText = param.lyric.noLyricTipsText
+        karaokeView.lyricsView.noLyricTipsFont = param.lyric.noLyricTipsFont
         karaokeView.lyricsView.textHighlightFontSize = param.lyric.textHighlightFontSize
         karaokeView.lyricsView.textNormalColor = param.lyric.textNormalColor
         karaokeView.lyricsView.textSelectedColor = param.lyric.textSelectedColor
         karaokeView.lyricsView.textHighlightedColor = param.lyric.textHighlightedColor
         karaokeView.lyricsView.waitingViewHidden = param.lyric.waitingViewHidden
+        karaokeView.lyricsView.textNormalFontSize = param.lyric.textNormalFontSize
         karaokeView.lyricsView.firstToneHintViewStyle.backgroundColor = param.lyric.firstToneHintViewStyle.backgroundColor
         karaokeView.lyricsView.firstToneHintViewStyle.size = param.lyric.firstToneHintViewStyle.size
         karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = param.lyric.firstToneHintViewStyle.bottomMargin
