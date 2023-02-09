@@ -224,9 +224,16 @@ class GradeProgressView: UIView {
     fileprivate func setProgress(progress: Float) {
         let constant = bounds.width * CGFloat(progress)
         gradientLayer.frame = .init(x: 0, y: 0, width: constant, height: GradeProgressView.viewHeight)
+        
+        /**
+         渐变色
+         <=0.1 -> 单色
+         >0.1 < 0.8 双色
+         >= 0.8 三色
+         **/
         if progress > 0, progress <= 0.1 {
             if !gradeViewHighlightColors.isEmpty {
-                let colors = [gradeViewHighlightColors[0]]
+                let colors = [gradeViewHighlightColors[0], gradeViewHighlightColors[0]]
                 gradientLayer.colors = colors.map({ $0.cgColor })
             }
         }
