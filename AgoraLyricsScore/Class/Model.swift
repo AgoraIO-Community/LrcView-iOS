@@ -137,21 +137,19 @@ public class LyricToneModel: NSObject {
 /// 字得分
 public class ToneScoreModel: NSObject {
     @objc public let tone: LyricToneModel
-    @objc public var score: Int
+    /// 0-100
+    @objc public var score: Float
+    var scores = [Float]()
     
     @objc public init(tone: LyricToneModel,
-                      score: Int) {
+                      score: Float) {
         self.tone = tone
         self.score = score
     }
     
-    func addScore(score: Int) {
-        if self.score > 0 {
-            self.score = (self.score + Int(score))/2
-        }
-        else {
-            self.score = Int(score)
-        }
+    func addScore(score: Float) {
+        scores.append(score)
+        self.score = scores.reduce(0, +) / Float(scores.count)
     }
 }
 

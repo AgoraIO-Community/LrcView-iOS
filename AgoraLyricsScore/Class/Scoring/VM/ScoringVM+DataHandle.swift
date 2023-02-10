@@ -47,11 +47,11 @@ extension ScoringVM {
     
     func makeHighlightInfos(progress: Int,
                             hitedInfo: Info,
-                            pitchDuration: Int,
                             currentVisiableInfos: [Info],
                             currentHighlightInfos: [Info]) -> [Info] {
+        let pitchDuration = 50
         if let preHitInfo = currentHighlightInfos.last, preHitInfo.beginTime == hitedInfo.beginTime { /** 判断是否需要追加 **/
-            let newDrawBeginTime = max(progress - pitchDuration, preHitInfo.beginTime)
+            let newDrawBeginTime = max(progress, preHitInfo.beginTime)
             let distance = newDrawBeginTime - preHitInfo.drawEndTime
             if distance < pitchDuration { /** 追加 **/
                 let drawDuration = min(preHitInfo.drawDuration + pitchDuration + distance, preHitInfo.duration)
@@ -62,7 +62,7 @@ extension ScoringVM {
         
         /** 新建 **/
         let stdInfo = hitedInfo
-        let drawBeginTime = max(progress - pitchDuration, stdInfo.beginTime)
+        let drawBeginTime = max(progress, stdInfo.beginTime)
         let drawDuration = min(pitchDuration, stdInfo.duration)
         let info = Info(beginTime: stdInfo.beginTime,
                         duration: stdInfo.duration,
@@ -147,9 +147,8 @@ extension ScoringVM {
     
     /// 获取击中数据
     func getHitedInfo(progress: Int,
-                      currentVisiableInfos: [Info],
-                      pitchDuration: Int) -> Info? {
-        let pitchBeginTime = progress - pitchDuration/2
+                      currentVisiableInfos: [Info]) -> Info? {
+        let pitchBeginTime = progress
         return currentVisiableInfos.first { info in
             return pitchBeginTime >= info.drawBeginTime && pitchBeginTime <= info.endTime
         }

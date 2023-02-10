@@ -29,8 +29,7 @@ class ScoringVM {
     fileprivate var currentHighlightInfos = [Info]()
     fileprivate var maxPitch: Double = 0
     fileprivate var minPitch: Double = 0
-    /// 产生pitch花费的时间 ms
-    fileprivate let pitchDuration = 50
+
     fileprivate var canvasViewSize: CGSize = .zero
     fileprivate var toneScores = [ToneScoreModel]()
     fileprivate var lineScores = [Int]()
@@ -109,7 +108,6 @@ class ScoringVM {
         guard let index = findCurrentIndexOfLine(progress: progress, lineEndTimes: lineEndTimes)  else {
             return
         }
-        
         if currentIndexOfLine != index {
             if index - currentIndexOfLine == 1 { /** 过滤拖拽导致的进度变化,只有正常进度才回调 **/
                 didLineEnd(indexOfLineEnd: currentIndexOfLine)
@@ -135,13 +133,15 @@ class ScoringVM {
         
         /** 1.get hitedInfo **/
         guard let hitedInfo = getHitedInfo(progress: progress,
-                                           currentVisiableInfos: currentVisiableInfos,
-                                           pitchDuration: pitchDuration) else {
+                                           currentVisiableInfos: currentVisiableInfos) else {
             return
         }
         
         /** 2.voice change **/
-        let voicePitch = voiceChanger.handlePitch(stdPitch: hitedInfo.pitch, voicePitch: pitch, wordMaxPitch: maxPitch)
+        let voicePitch = voiceChanger.handlePitch(stdPitch: hitedInfo.pitch,
+                                                  voicePitch: pitch,
+                                                  stdMaxPitch: maxPitch)
+        Log.debug(text: "pitch: \(pitch) after: \(voicePitch) stdPitch:\(hitedInfo.pitch)", tag: logTag)
         
         /** 3.calculted score **/
         let score = ToneCalculator.calculedScore(voicePitch: voicePitch,
@@ -151,7 +151,7 @@ class ScoringVM {
         
         /** 4.save tone score  **/
         if let hitToneScore = toneScores.first(where: { $0.tone.beginTime == hitedInfo.beginTime }) {
-            hitToneScore.addScore(score: Int(score))
+            hitToneScore.addScore(score: score)
         }
         else {
             Log.error(error: "ignore score \(score) progress: \(progress), beginTime: \(hitedInfo.beginTime), endTime: \(hitedInfo.endTime) \(toneScores.map({ "\($0.tone.beginTime)-" }).reduce("", +))", tag: logTag)
@@ -161,11 +161,10 @@ class ScoringVM {
         if score >= hitScoreThreshold * 100 {
             currentHighlightInfos = makeHighlightInfos(progress: progress,
                                                        hitedInfo: hitedInfo,
-                                                       pitchDuration: pitchDuration,
                                                        currentVisiableInfos: currentVisiableInfos,
                                                        currentHighlightInfos: currentHighlightInfos)
         }
-        
+        Log.debug(text: "score: \(score)", tag: logTag)
         /** 6.calculated ui info **/
         let showAnimation = score >= hitScoreThreshold * 100
         let y = calculatedY(pitch: voicePitch,
@@ -216,8 +215,7 @@ class ScoringVM {
         
         cumulativeScore = calculatedCumulativeScore(indexOfLine: indexOfLineEnd,
                                                     lineScores: lineScores)
-        Log.debug(text: "didLineEnd indexOfLineEnd: \(indexOfLineEnd) \(lineScores) cumulativeScore:\(cumulativeScore)", tag: "drag")
-        
+        Log.debug(text: "didLineEnd indexOfLineEnd: \(indexOfLineEnd) \(lineScore) \(lineScores) cumulativeScore:\(cumulativeScore)", tag: "drag")
         invokeScoringVM(didFinishLineWith: data.lines[indexOfLineEnd],
                         score: lineScore,
                         cumulativeScore: cumulativeScore,
