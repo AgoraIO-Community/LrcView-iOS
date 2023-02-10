@@ -19,7 +19,7 @@ class VoicePitchChanger {
     /// - Returns: 处理后的值
     func handlePitch(stdPitch: Double,
                      voicePitch: Double,
-                     wordMaxPitch: Double) -> Double {
+                     stdMaxPitch: Double) -> Double {
         if voicePitch <= 0 {
             return 0
         }
@@ -30,17 +30,17 @@ class VoicePitchChanger {
         offset = offset * (n - 1)/n + gap/n
         
         if offset < 0 {
-            offset = max(offset, -1 * wordMaxPitch * 0.4)
+            offset = max(offset, -1 * stdMaxPitch * 0.4)
         }
         else {
-            offset = min(offset, wordMaxPitch * 0.4)
+            offset = min(offset, stdMaxPitch * 0.4)
         }
         
         if abs(ToneCalculator.pitchToTone(pitch: voicePitch) - ToneCalculator.pitchToTone(pitch: stdPitch)) < 0.5 { /** tone差距过小，直接返回 **/
             return voicePitch
         }
         
-        return voicePitch + offset
+        return min(voicePitch + offset, stdMaxPitch)
     }
     
     func reset() {
