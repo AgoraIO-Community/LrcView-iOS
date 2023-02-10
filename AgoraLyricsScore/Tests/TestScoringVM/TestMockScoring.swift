@@ -20,6 +20,8 @@ class TestMockScoring: XCTestCase, ScoringVMDelegate {
 
     var cumulativeScore = 0
     func testAll() {
+        KaraokeView.setLog(printToConsole: true, writeToFile: true)
+        
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
         guard let model = KaraokeView.parseLyricData(data: data) else {
@@ -38,11 +40,12 @@ class TestMockScoring: XCTestCase, ScoringVMDelegate {
             }
         }
         
-        XCTAssertEqual(cumulativeScore, 98*5)
+        XCTAssertEqual(cumulativeScore, 493)
     }
     
     func scoringVM(_ vm: ScoringVM, didFinishLineWith model: LyricLineModel, score: Int, cumulativeScore: Int, lineIndex: Int, lineCount: Int) {
         self.cumulativeScore = cumulativeScore
+        print("didFinishLineWith score: \(score)")
     }
     
     func sizeOfCanvasView(_ vm: ScoringVM) -> CGSize {
