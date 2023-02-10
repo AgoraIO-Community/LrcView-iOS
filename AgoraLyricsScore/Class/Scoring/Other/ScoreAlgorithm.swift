@@ -10,6 +10,7 @@ import Foundation
 class ScoreAlgorithm: IScoreAlgorithm {
     func getLineScore(with toneScores: [ToneScoreModel]) -> Int {
         if toneScores.isEmpty { return 0 }
-        return toneScores.map({ $0.score }).reduce(0, +) / toneScores.count
+        let ret = toneScores.map({ $0.score }).reduce(0.0, +) / Float(toneScores.count)
+        return Int(ret)
     }
 }
