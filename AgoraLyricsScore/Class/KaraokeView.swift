@@ -119,7 +119,7 @@ extension KaraokeView {
             Log.error(error: "invoke setProgress not isMainThread ", tag: logTag)
         }
         guard isStart else { return }
-        lyricsView.progress = progress
+        lyricsView.setProgress(progress: progress)
         scoringView.progress = progress
     }
     

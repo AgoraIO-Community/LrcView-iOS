@@ -62,12 +62,13 @@ public class LyricsView: UIView {
     fileprivate let logTag = "LyricsView"
     fileprivate var dataList = [LyricCell.Model]()
     fileprivate var isNoLyric = false
-    var progress: Int = 0 { didSet { updateProgress() } }
+    fileprivate var progress: Int = 0
     /// 当前滚动到的索引
     fileprivate var currentIndex = 0
     fileprivate let referenceLineView = UIView()
     fileprivate var isDragging = false { didSet { referenceLineView.isHidden = !isDragging } }
     fileprivate var tableViewTopConstraint: NSLayoutConstraint!
+    fileprivate var ignoreAnimationAfterDrag = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -110,10 +111,16 @@ public class LyricsView: UIView {
     func reset() {
         firstToneHintView.reset()
         dataList = []
-        progress = 0
+        setProgress(progress: 0)
         currentIndex = 0
         tableView.reloadData()
         Log.info(text: "reset", tag: logTag)
+    }
+    
+    func setProgress(progress: Int) {
+        guard !isDragging else { return }
+        self.progress = progress
+        updateProgress()
     }
     
     private func updateProgress() {
@@ -149,7 +156,9 @@ public class LyricsView: UIView {
                     UIView.performWithoutAnimation {
                         tableView.reloadRows(at: [indexPath, lastIndexPath], with: .fade)
                     }
-                    tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+                    tableView.scrollToRow(at: indexPath, at: .middle, animated: !ignoreAnimationAfterDrag)
+                    ignoreAnimationAfterDrag = false
+                    
                     Log.debug(text: "currentIndex: \(currentIndex) progressRate: \(progressRate)", tag: logTag)
                     return
                 }
@@ -301,25 +310,17 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate _: Bool) {
         if isDragging {
             dragCellHandler(scrollView: scrollView)
+            ignoreAnimationAfterDrag = true
+            isDragging = false
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in /** 延时0.1秒放开，避免跳动 **/
-            guard let self = self else {
-                return
-            }
-            self.isDragging = false
-        })
     }
     
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if isDragging {
             dragCellHandler(scrollView: scrollView)
+            ignoreAnimationAfterDrag = true
+            isDragging = false
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in /** 延时0.1秒放开，避免跳动 **/
-            guard let self = self else {
-                return
-            }
-            self.isDragging = false
-        })
     }
 }
 
