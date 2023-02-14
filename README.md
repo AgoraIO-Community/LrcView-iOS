@@ -225,21 +225,6 @@ karaokeView.reset()
 }
 ```
 
-##### 评分Delegate
-
-```swift
-weak var scoreDelegate: AgoraKaraokeScoreDelegate?
-
-protocol AgoraKaraokeScoreDelegate {
-    /// 分数实时回调
-    /// score: 每次增加的分数
-    /// cumulativeScore: 累加分数
-    /// totalScore: 总分
-    @objc optional func agoraKaraokeScore(score: Double, cumulativeScore: Double, totalScore: Double)
-}
-
-```
-
 <br/>
 
 ### 集成方式
