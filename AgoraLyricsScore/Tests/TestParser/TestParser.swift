@@ -38,6 +38,12 @@ class TestParser: XCTestCase {
         }
         XCTAssert(model.lines.count > 0)
         XCTAssert(model.lines.first!.beginTime == 18487)
+        XCTAssert(model.name  == "十年 ")
+        XCTAssert(model.singer  == "陈奕迅")
+        XCTAssert(model.type  == .fast)
+        XCTAssert(model.duration  == 186022)
+        XCTAssert(model.preludeEndPosition  == 18487)
+        XCTAssertTrue(model.hasPitch)
     }
     
     func testEmptyData() { /** EmptyData **/
@@ -98,5 +104,18 @@ class TestParser: XCTestCase {
         }
         XCTAssert(model.lines.count > 0)
         XCTAssert(model.lines.first!.beginTime == 28970)
+    }
+    
+    func testNoWordInTone() {
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "noWordInTone", ofType: "xml")!)
+        let data = try! Data(contentsOf: url)
+        guard let model = KaraokeView.parseLyricData(data: data) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count > 0)
+        XCTAssert(model.lines[35].tones[4].beginTime == 155687)
+        XCTAssert(model.lines[35].tones[4].word  == "")
+        XCTAssert(model.lines[35].tones[5].word  == "独")
     }
 }
