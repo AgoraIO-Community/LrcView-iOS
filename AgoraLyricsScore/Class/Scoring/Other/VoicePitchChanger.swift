@@ -8,14 +8,16 @@
 import Foundation
 
 class VoicePitchChanger {
+    /// 累计的偏移值
     var offset: Double = 0.0
+    /// 记录调用次数
     var n: Double = 0
     
-    /// 处理Picth
+    /// 处理Pitch
     /// - Parameters:
-    ///   - wordPitch: 标准值 来自歌词文件
+    ///   - stdPitch: 标准值 来自歌词文件
     ///   - voicePitch: 实际值 来自rtc回调
-    ///   - wordMaxPitch: 最大值 来自标准值
+    ///   - stdMaxPitch: 最大值 来自标准值
     /// - Returns: 处理后的值
     func handlePitch(stdPitch: Double,
                      voicePitch: Double,
