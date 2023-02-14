@@ -128,6 +128,7 @@
 		260942D52952B5050022A50D /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				2632A2CC299B73AD00C2A534 /* Other */,
 				260942F92952FD410022A50D /* Resource */,
 				260942D62952B5050022A50D /* AppDelegate.swift */,
 				260942D82952B5050022A50D /* SceneDelegate.swift */,
@@ -136,19 +137,6 @@
 				2689ED412987C8890012BC4D /* ParamSetVC.swift */,
 				2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */,
 				2689ED432987CD2D0012BC4D /* MainTestVC.swift */,
-				26E5BF7E299245E10051AF67 /* SearchVC.swift */,
-				2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */,
-				26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */,
-				26C5452329557D25009E0F37 /* LyricsTestVC.swift */,
-				26C5452D2955B370009E0F37 /* AVPlayerTestVC.swift */,
-				26105FE42966787A00712EDA /* EmitterVC.swift */,
-				26D01F992977D7F500B9D31A /* ScoreAniVC.swift */,
-				2689ED3D298654C90012BC4D /* IncentiveVC.swift */,
-				2689ED472988FDE10012BC4D /* LyricLabelVC.swift */,
-				26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */,
-				26C5452B2955B2FE009E0F37 /* Config.swift */,
-				26E8030D298BAF1B00DBF23F /* OCVC.h */,
-				26E8030E298BAF1B00DBF23F /* OCVC.m */,
 				260942DC2952B5050022A50D /* Main.storyboard */,
 				260942DF2952B5060022A50D /* Assets.xcassets */,
 				260942E12952B5060022A50D /* LaunchScreen.storyboard */,
@@ -170,6 +158,26 @@
 				26C545312955B684009E0F37 /* music.mp3 */,
 			);
 			path = Resource;
+			sourceTree = "<group>";
+		};
+		2632A2CC299B73AD00C2A534 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				26E5BF7E299245E10051AF67 /* SearchVC.swift */,
+				2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */,
+				26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */,
+				26C5452329557D25009E0F37 /* LyricsTestVC.swift */,
+				26C5452D2955B370009E0F37 /* AVPlayerTestVC.swift */,
+				26105FE42966787A00712EDA /* EmitterVC.swift */,
+				26D01F992977D7F500B9D31A /* ScoreAniVC.swift */,
+				2689ED3D298654C90012BC4D /* IncentiveVC.swift */,
+				2689ED472988FDE10012BC4D /* LyricLabelVC.swift */,
+				26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */,
+				26C5452B2955B2FE009E0F37 /* Config.swift */,
+				26E8030D298BAF1B00DBF23F /* OCVC.h */,
+				26E8030E298BAF1B00DBF23F /* OCVC.m */,
+			);
+			path = Other;
 			sourceTree = "<group>";
 		};
 		26E5BF80299246C60051AF67 /* FileCache */ = {
