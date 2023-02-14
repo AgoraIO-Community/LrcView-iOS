@@ -137,6 +137,7 @@
 				2689ED412987C8890012BC4D /* ParamSetVC.swift */,
 				2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */,
 				2689ED432987CD2D0012BC4D /* MainTestVC.swift */,
+				26C5452B2955B2FE009E0F37 /* Config.swift */,
 				260942DC2952B5050022A50D /* Main.storyboard */,
 				260942DF2952B5060022A50D /* Assets.xcassets */,
 				260942E12952B5060022A50D /* LaunchScreen.storyboard */,
@@ -173,7 +174,6 @@
 				2689ED3D298654C90012BC4D /* IncentiveVC.swift */,
 				2689ED472988FDE10012BC4D /* LyricLabelVC.swift */,
 				26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */,
-				26C5452B2955B2FE009E0F37 /* Config.swift */,
 				26E8030D298BAF1B00DBF23F /* OCVC.h */,
 				26E8030E298BAF1B00DBF23F /* OCVC.m */,
 			);
