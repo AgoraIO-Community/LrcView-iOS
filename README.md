@@ -1,7 +1,5 @@
 #  KTV歌词解析, 音准评分组件
 
-<br/>
-
 ## 介绍
 
 支持XML歌词解析, LRC歌词解析, 解决了多行歌词进度渲染的问题, 评分根据人声实时计算评分
@@ -45,7 +43,7 @@ karaokeView.setPitch(pitch: pitch)
 karaokeView.reset()
 ```
 
-<br/>
+除以上之外，还可以参考源码中的MainTestVC.swift
 
 ### 对外接口
 
