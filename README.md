@@ -4,9 +4,6 @@
 
 支持XML歌词解析, LRC歌词解析, 解决了多行歌词进度渲染的问题, 评分根据人声实时计算评分
 
-
-![um0za-vj662.gif](cbe5c0eabd05bedff798ad2b4cc85df5.gif)
-
 ## 使用方法
 
 #### 1.初始化
@@ -17,7 +14,7 @@ karaokeView.frame = ....
 view.addSubview(karaokeView)
 karaokeView.delegate = self
 ```
-#####  2.设置歌词
+####  2.解析&设置歌词
 ```swift
 let url = URL(fileURLWithPath: filePath)
 let data = try! Data(contentsOf: url)
@@ -26,28 +23,32 @@ karaokeView.setLyricData(data: model)
 ```
 
 
-#####  3.设置进度
+####  3.设置进度
 ```swift
 karaokeView.setProgress(progress: progress)
 ```
 
-##### 4.设置演唱者音调
+#### 4.设置演唱者音调
 
 ```swift
 karaokeView.setPitch(pitch: pitch)
 ```
 
-##### 5.重置
+#### 5.重置
 
 ```swift
 karaokeView.reset()
 ```
 
-除以上之外，还可以参考源码中的MainTestVC.swift
+*除以上之外，还可以参考源码中的`MainTestVC.swift`*
 
-### 对外接口
+## 调用时序
 
-#####  主View：**KaraokeView**
+![](TimingDiagram.png)
+
+## 对外接口
+
+###  主View：**KaraokeView**
 
 ```swift
 /// 背景图
@@ -115,7 +116,7 @@ karaokeView.reset()
 @objc static public func setLog(printToConsole: Bool, writeToFile: Bool)
 ```
 
-##### 歌词：**LyricsView**
+### 歌词：**LyricsView**
 
 ```swift
 /// 无歌词提示文案
@@ -146,7 +147,7 @@ karaokeView.reset()
 @objc public var draggable: Bool
 ```
 
-##### 评分：**ScoringView**
+### 评分：**ScoringView**
 
 ```swift
 /// 评分视图高度
@@ -180,9 +181,9 @@ karaokeView.reset()
 @objc public var showDebugView = false
 ```
 
-### 事件回调
+## 事件回调
 
-##### **KaraokeDelegate**
+### **KaraokeDelegate**
 
 ```swift
 @objc public protocol KaraokeDelegate: NSObjectProtocol {
@@ -209,7 +210,7 @@ karaokeView.reset()
 }
 ```
 
-##### **分数计算协议**
+### **分数计算协议**
 
 ```swift
 @objc public protocol IScoreAlgorithm {
@@ -225,9 +226,9 @@ karaokeView.reset()
 
 <br/>
 
-### 集成方式
+## 集成方式
 
-##### pod引入
+### pod引入
 
 
 ```ruby
