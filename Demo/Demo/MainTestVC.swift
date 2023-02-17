@@ -22,9 +22,9 @@ class MainTestVC: UIViewController {
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
-    var songCode = 6599298157850480
-    /// 0：十年， 1: 王菲
-    var songCodes = [6599298157850480, 6599297819205290]
+    var songCode = 6625526603296890
+    /// 0：十年， 1: 王菲 2:晴天
+    var songCodes = [6599298157850480, 6599297819205290, 6625526603296890]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
@@ -45,6 +45,8 @@ class MainTestVC: UIViewController {
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         karaokeView.scoringView.viewHeight = 100
         karaokeView.scoringView.topSpaces = 80
+        karaokeView.lyricsView.showDebugView = false
+        KaraokeView.setLog(printToConsole: true, writeToFile: true)
         
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)
