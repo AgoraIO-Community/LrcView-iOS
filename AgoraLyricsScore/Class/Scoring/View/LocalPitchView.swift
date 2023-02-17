@@ -164,8 +164,12 @@ class Emitter {
     var defaultImages: [UIImage] {
         var list = [UIImage]()
         for i in 1...8 {
-            let image = Bundle.currentBundle.image(name: "star\(i)")!
-            list.append(image)
+            if let image = Bundle.currentBundle.image(name: "star\(i)") {
+                list.append(image)
+            }
+            else {
+                Log.error(error: "image == nil", tag: logTag)
+            }
         }
         return list
     }

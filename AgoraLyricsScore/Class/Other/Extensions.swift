@@ -34,8 +34,15 @@ extension LyricToneModel {
 extension Bundle {
     static var currentBundle: Bundle {
         let bundle = Bundle(for: AgoraLyricsScore.self)
-        let path = bundle.path(forResource: "AgoraLyricsScore", ofType: "bundle")!
-        return Bundle(path: path)!
+        let path = bundle.path(forResource: "AgoraLyricsScoreBundle", ofType: "bundle")
+        if path == nil {
+            Log.error(error: "bundle not found path", tag: "Bundle")
+        }
+        let current = Bundle(path: path!)
+        if current == nil {
+            Log.error(error: "bundle not found path: \(path!)", tag: "Bundle")
+        }
+        return current!
     }
     
     func image(name: String) -> UIImage? {

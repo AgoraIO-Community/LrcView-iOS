@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
   spec.swift_versions = "5.0"
   spec.requires_arc  = true
   spec.resource_bundles = {
-    'AgoraLyricsScore' => ['Resources/*.xcassets']
+    'AgoraLyricsScoreBundle' => ['Resources/*.xcassets']
   }
   
   spec.test_spec 'Tests' do |test_spec|
