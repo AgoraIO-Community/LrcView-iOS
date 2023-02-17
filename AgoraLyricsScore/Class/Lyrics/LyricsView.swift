@@ -52,10 +52,13 @@ public class LyricsView: UIView {
     @objc public let firstToneHintViewStyle: FirstToneHintViewStyle = .init()
     /// 是否开启拖拽
     @objc public var draggable: Bool = false
+    /// use for debug only
+    @objc public var showDebugView = false { didSet { updateUI() } }
     
     weak var delegate: LyricsViewDelegate?
     /// 倒计时view
     fileprivate let firstToneHintView = FirstToneHintView()
+    fileprivate let consoleView = ConsoleView()
     fileprivate let noLyricTipsLabel = UILabel()
     fileprivate let tableView = UITableView()
     fileprivate var lyricData: LyricModel?
@@ -148,7 +151,7 @@ public class LyricsView: UIView {
                     current.update(status: .selectedOrHighlighted)
                     var progressRate: Double = 0
                     if progress > item.element.beginTime, progress <= item.element.endTime { /** 计算比例 **/
-                        progressRate = calculateProgressRate(progress: progress, model: item.element)
+                        progressRate = LyricsView.calculateProgressRate(progress: progress, model: item.element) ?? current.progressRate
                     }
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
@@ -159,7 +162,8 @@ public class LyricsView: UIView {
                     tableView.scrollToRow(at: indexPath, at: .middle, animated: !ignoreAnimationAfterDrag)
                     ignoreAnimationAfterDrag = false
                     
-                    Log.debug(text: "currentIndex: \(currentIndex) progressRate: \(progressRate)", tag: logTag)
+                    Log.debug(text: "currentIndex: \(currentIndex) progressRate: \(progressRate) progress:\(progress)", tag: logTag)
+                    consoleView.set(text: "new \(currentIndex) progressRate: \(progressRate) progress:\(progress)")
                     return
                 }
                 
@@ -168,13 +172,14 @@ public class LyricsView: UIView {
                    progress <= item.element.endTime { /** 还在原来的句子 **/
                     
                     let current = dataList[currentIndex]
-                    let progressRate: Double = calculateProgressRate(progress: progress, model: item.element)
+                    let progressRate: Double = LyricsView.calculateProgressRate(progress: progress, model: item.element) ?? current.progressRate
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
                     UIView.performWithoutAnimation {
                         tableView.reloadRows(at: [indexPath], with: .fade)
                     }
-                    Log.debug(text: "currentIndex: \(currentIndex) progressRate: \(progressRate)", tag: logTag)
+                    Log.debug(text: "currentIndex: \(currentIndex) progressRate: \(progressRate) progress:\(progress)", tag: logTag)
+                    consoleView.set(text: "append \(currentIndex) progressRate: \(progressRate) progress:\(progress)")
                 }
             }
             else {
@@ -193,18 +198,19 @@ public class LyricsView: UIView {
         delegate?.onLyricsView(view: self, didDragTo: model.beginTime)
     }
     
-    /// 计算一个句子的进度
-    private func calculateProgressRate(progress: Int, model: LyricCell.Model) -> Double {
+    /// 计算句子的进度
+    /// - Parameters:
+    /// - Returns: `nil` 表示无法计算, 其他： [0, 1]
+    static func calculateProgressRate(progress: Int, model: LyricCell.Model) -> Double? {
         let toneCount = model.tones.filter({ $0.word.isEmpty == false }).count
         for (index, tone) in model.tones.enumerated() {
             if progress >= tone.beginTime, progress <= tone.beginTime + tone.duration {
                 let progressRate = Double((progress - tone.beginTime)) / Double(tone.duration)
                 let total = (Double(index) + progressRate) / Double(toneCount)
-                Log.debug(text: "total: \(total)", tag: logTag)
                 return total
             }
         }
-        return 0
+        return nil
     }
 }
 
@@ -249,8 +255,6 @@ extension LyricsView {
         referenceLineView.centerYAnchor.constraint(equalTo: tableView.centerYAnchor).isActive = true
     }
     
-    
-    
     fileprivate func commonInit() {
         tableView.register(LyricCell.self, forCellReuseIdentifier: "LyricsCell")
         tableView.delegate = self
@@ -277,6 +281,20 @@ extension LyricsView {
             let viewFrame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: tableView.bounds.height/2)
             tableView.tableHeaderView = .init(frame: viewFrame)
             tableView.tableFooterView = .init(frame: viewFrame)
+        }
+        
+        if showDebugView {
+            if !subviews.contains(consoleView) {
+                addSubview(consoleView)
+                consoleView.translatesAutoresizingMaskIntoConstraints = false
+                consoleView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+                consoleView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+                consoleView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+                consoleView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+            }
+        }
+        else {
+            consoleView.removeFromSuperview()
         }
     }
 }
