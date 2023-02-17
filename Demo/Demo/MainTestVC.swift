@@ -7,7 +7,7 @@
 
 import UIKit
 import AgoraRtcKit
-import TokenBuilder
+import RTMTokenBuilder
 import AgoraLyricsScore
 
 class MainTestVC: UIViewController {

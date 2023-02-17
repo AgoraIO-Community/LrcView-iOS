@@ -6,7 +6,7 @@ target 'Demo' do
   use_frameworks!
 
   pod "AgoraLyricsScore", :path => "../AgoraLyricsScore/AgoraLyricsScore.podspec", :testspecs => ['Tests']
-  pod 'TokenBuilder', :path => '/Volumes/T5/PodSpec/TokenBuilder/TokenBuilder.podspec'
+  pod 'RTMTokenBuilder', "1.0.0"
   pod 'AgoraRtcEngine_iOS', :path => '/Volumes/T5/PodSpec/Audio50ms/AgoraRtcEngine_iOS.podspec'
   pod "Zip"
 end
