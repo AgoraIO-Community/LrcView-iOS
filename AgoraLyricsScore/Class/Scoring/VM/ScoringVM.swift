@@ -48,9 +48,7 @@ class ScoringVM {
         let (lineEnds, infos) = ScoringVM.createData(data: lyricData)
         dataList = infos
         lineEndTimes = lineEnds
-        let (min, max) = makeMinMaxPitch(dataList: dataList,
-                                         canvasViewSize: canvasViewSize,
-                                         standardPitchStickViewHeight: standardPitchStickViewHeight)
+        let (min, max) = makeMinMaxPitch(dataList: dataList)
         minPitch = min
         maxPitch = max
         toneScores = lyricData.lines[0].tones.map({ ToneScoreModel(tone: $0, score: 0) })

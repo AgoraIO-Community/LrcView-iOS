@@ -135,9 +135,7 @@ extension ScoringVM {
     
     /// 生成最大、最小Pitch值
     /// - Returns: (minPitch, maxPitch)
-    func makeMinMaxPitch(dataList: [Info],
-                         canvasViewSize: CGSize,
-                         standardPitchStickViewHeight: CGFloat) -> (Double, Double) {
+    func makeMinMaxPitch(dataList: [Info]) -> (Double, Double) {
         /** set value **/
         let pitchs = dataList.filter({ $0.word != " " }).map({ $0.pitch })
         let maxValue = pitchs.max() ?? 0
