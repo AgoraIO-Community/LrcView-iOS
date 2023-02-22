@@ -177,7 +177,7 @@ class MainTestVC: UIViewController {
         self.last = 0
         timer.scheduledMillisecondsTimer(withName: "MainTestVC",
                                          countDown: 1000000,
-                                         milliseconds: 10,
+                                         milliseconds: 20,
                                          queue: .main) { [weak self](_, time) in
             
             guard let self = self else { return }
@@ -186,7 +186,7 @@ class MainTestVC: UIViewController {
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
                 current = self.mpk.getPosition()
             }
-            current += 10
+            current += 20
             
             self.last = current
             var time = current
