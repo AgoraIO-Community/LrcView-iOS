@@ -313,9 +313,9 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
     
     func onLyricResult(_ requestId: String, lyricUrl: String) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
-        FileCache.fect(urlString: lyricUrl) { progress in
-            
-        } completion: { filePath in
+        
+        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
+        DispatchQueue.main.async {
             let url = URL(fileURLWithPath: filePath)
             let data = try! Data(contentsOf: url)
             let model = KaraokeView.parseLyricData(data: data)!
@@ -330,9 +330,14 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
                 self.gradeView.isHidden = true
             }
             self.mccPlay()
-        } fail: { error in
-            print("fect fail")
         }
+//        FileCache.fect(urlString: lyricUrl) { progress in
+//
+//        } completion: { filePath in
+            
+//        } fail: { error in
+//            print("fect fail")
+//        }
     }
     
     func onPreLoadEvent(_ songCode: Int,

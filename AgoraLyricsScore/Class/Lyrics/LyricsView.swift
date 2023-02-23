@@ -162,7 +162,7 @@ public class LyricsView: UIView {
                     tableView.scrollToRow(at: indexPath, at: .middle, animated: !ignoreAnimationAfterDrag)
                     ignoreAnimationAfterDrag = false
                     
-                    Log.debug(text: "currentIndex: \(currentIndex) progressRate: \(progressRate) progress:\(progress)", tag: logTag)
+                    Log.debug(text: "new currentIndex: \(currentIndex) progressRate: \(progressRate) progress:\(progress)", tag: logTag)
                     consoleView.set(text: "new \(currentIndex) progressRate: \(progressRate) progress:\(progress)")
                     return
                 }
@@ -175,8 +175,8 @@ public class LyricsView: UIView {
                     let progressRate: Double = LyricsView.calculateProgressRate(progress: progress, model: item.element) ?? current.progressRate
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
-                    UIView.performWithoutAnimation {
-                        tableView.reloadRows(at: [indexPath], with: .fade)
+                    if let cell = tableView.cellForRow(at: indexPath) as? LyricCell {
+                        cell.update(model: current)
                     }
                     Log.debug(text: "currentIndex: \(currentIndex) progressRate: \(progressRate) progress:\(progress)", tag: logTag)
                     consoleView.set(text: "append \(currentIndex) progressRate: \(progressRate) progress:\(progress)")
