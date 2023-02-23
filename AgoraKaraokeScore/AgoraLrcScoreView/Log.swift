@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class Log {
-    fileprivate static let provider = LogProvider(domainName: "AgoraLrcScoreView")
+    fileprivate static let provider = LogProvider(domainName: "ALRC")
     
     static func errorText(text: String,
                           tag: String? = nil) {
@@ -35,16 +35,21 @@ class Log {
                         tag: String? = nil) {
         provider.warning(text: text, tag: tag)
     }
+    
+    static func set(delegate: AgoraLogDelegate?) {
+        provider.delegate = delegate
+    }
 }
 
 class LogProvider {
     private let domainName: String
-    private let folderPath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!.appending("/Logs")
-    private let logger: LogUtil
+    private let formatter = DateFormatter()
+    fileprivate weak var delegate: AgoraLogDelegate?
+    private let queue = DispatchQueue(label: "queue.agoraLRC.LogProvider")
     
     fileprivate init(domainName: String) {
         self.domainName = domainName
-        logger = LogUtil(domainName: domainName)
+        formatter.dateFormat = "MM-dd HH:mm:ss"
     }
     
     fileprivate func error(error: Error?,
@@ -98,11 +103,23 @@ class LogProvider {
     fileprivate func log(type: AgoraLogType,
                          text: String,
                          tag: String?) {
+        queue.async { [weak self] in
+            self?._log(type: type,
+                       text: text,
+                       tag: tag)
+        }
+    }
+    
+    fileprivate func _log(type: AgoraLogType,
+                          text: String,
+                          tag: String?) {
         let levelName = type.name
-        let string = getString(text: text,
-                               tag: tag,
-                               levelName: levelName)
-        logger.log(message: string)
+        let content = getString(text: text,
+                                tag: tag,
+                                levelName: levelName)
+        let time = formatter.string(from: Date())
+        let msg = "\(time) \(content)"
+        delegate?.onLog?(msg: msg)
     }
     
     private func getString(text: String,
@@ -121,82 +138,20 @@ extension LogProvider {
         fileprivate var name: String {
             switch self {
             case .debug:
-                return "Debug"
+                return "D"
             case .info:
-                return "Info"
+                return "I"
             case .error:
-                return "Error"
+                return "E"
             case .warning:
-                return "Warning"
+                return "W"
             }
         }
     }
 }
 
-class LogUtil {
-    private var logs = [LogItem]()
-    private let logFolder: String
-    private var appLogPath: String
-    
-    init(domainName: String) {
-        self.logFolder = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/logs"
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let time = formatter.string(from: Date())
-        self.appLogPath = logFolder + "/\(domainName)-\(time).log"
-        try? FileManager.default.createDirectory(atPath: logFolder, withIntermediateDirectories: true, attributes: nil)
-    }
-    
-    func log(message: String) {
-        let item = LogItem(message: message, dateTime: Date())
-        logs.append(item)
-        #if DEBUG
-        print(item.description)
-        #endif
-        writeAppLogsToDisk()
-    }
-    
-    func removeAll() {
-        logs.removeAll()
-    }
-    
-    func writeAppLogsToDisk() {
-        if let outputStream = OutputStream(url: URL(fileURLWithPath: appLogPath), append: true) {
-            outputStream.open()
-            for log in logs {
-                let msg = log.description + "\n"
-                let bytesWritten = outputStream.write(msg, maxLength: msg.count)
-                if bytesWritten < 0 { print("write failure") }
-            }
-            outputStream.close()
-            removeAll()
-        } else {
-            print("Unable to open file")
-        }
-    }
-    
-    func cleanUp() {
-        let url = URL(fileURLWithPath: logFolder, isDirectory: true)
-        try? FileManager.default.removeItem(at: url)
-    }
-}
-
-extension LogUtil {
-    struct LogItem: CustomStringConvertible {
-        var message: String
-        var dateTime: Date
-        private let formatter = DateFormatter()
-        
-        init(message: String, dateTime: Date) {
-            self.message = message
-            self.dateTime = dateTime
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        }
-        
-        var description: String {
-            let time = formatter.string(from: dateTime)
-            let msg = "\(time) \(message)"
-            return msg
-        }
-    }
+@objc(AgoraLogDelegate)
+public protocol AgoraLogDelegate: NSObjectProtocol {
+    /// 日志回调（在子线程进行）
+    @objc optional func onLog(msg: String)
 }

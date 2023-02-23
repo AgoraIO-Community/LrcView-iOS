@@ -167,8 +167,10 @@ public class AgoraLrcScoreView: UIView {
     private var totalTime: TimeInterval = 0
     let logTag = "AgoraLrcScoreView"
     
-    public init(delegate: AgoraLrcViewDelegate) {
+    public init(delegate: AgoraLrcViewDelegate,
+                logDelegate: AgoraLogDelegate?) {
         super.init(frame: .zero)
+        Log.set(delegate: logDelegate)
         Log.info(text: "init == ", tag: logTag)
         setupUI()
         self.delegate = delegate
@@ -337,7 +339,7 @@ public class AgoraLrcScoreView: UIView {
     }
 
     private func timerHandler(time: TimeInterval) {
-        lrcView?.start(currentTime: time)
+        lrcView?.start(progress: time)
         scoreView?.start(currentTime: time)
     }
 
