@@ -532,7 +532,7 @@ public class AgoraKaraokeScoreView: UIView {
     }
     
     private func insertStartLrcData(lrcData: [AgoraMiguLrcTone]) -> AgoraScoreItemModel? {
-        guard let firstTone = lrcData.first(where: { $0.pitch > 0 }) else { return nil }
+        guard let firstTone = lrcData.first else { return nil }
         let endTime = firstTone.begin / 1000
         let model = AgoraScoreItemModel()
         model.width = calcuToWidth(time: endTime)
