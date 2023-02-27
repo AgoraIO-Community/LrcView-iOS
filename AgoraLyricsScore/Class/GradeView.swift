@@ -60,6 +60,10 @@ public class GradeView: UIView {
                 setGradeImage(image: nil)
             }
         }
+        
+        if totalScore < 100 {
+            Log.error(error: "totalScore invalid", tag: logTag)
+        }
     }
     
     @objc public func reset() {

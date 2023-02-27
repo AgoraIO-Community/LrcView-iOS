@@ -35,7 +35,14 @@ public class IncentiveView: UIView {
         Log.info(text: "deinit", tag: logTag)
     }
     
+    /// show
+    /// - Parameter score: [0, 100]
     @objc public func show(score: Int) {
+        guard score > 100 || score < 0 else {
+            Log.error(error: "score invalid", tag: logTag)
+            return
+        }
+        
         var tempName: String?
         
         if score >= 60, score < 75 {
@@ -49,6 +56,7 @@ public class IncentiveView: UIView {
         }
         else {
             combo = 0
+            return
         }
         
         guard let name = tempName else { return }
