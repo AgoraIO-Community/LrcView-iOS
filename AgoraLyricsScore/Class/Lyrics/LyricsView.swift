@@ -112,6 +112,7 @@ public class LyricsView: UIView {
     }
     
     func reset() {
+        tableView.isScrollEnabled = false
         firstToneHintView.reset()
         dataList = []
         setProgress(progress: 0)
@@ -189,6 +190,10 @@ public class LyricsView: UIView {
     }
     
     private func dragCellHandler(scrollView: UIScrollView) {
+        guard !dataList.isEmpty else {
+            Log.error(error: "dragCellHandler dataList isEmpty", tag: logTag)
+            return
+        }
         let point = CGPoint(x: 0, y: scrollView.contentOffset.y + scrollView.bounds.height * 0.5)
         var indexPath = tableView.indexPathForRow(at: point)
         if indexPath == nil { /** 顶部和底部空隙 **/

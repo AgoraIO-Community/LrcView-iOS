@@ -51,16 +51,20 @@ class Logger {
     }
     
     func write(_ text: String, printToConsole: Bool = true, writeToFile: Bool = true) {
-        let path = currentPath
-        let fileManager = FileManager.default
-        if !fileManager.fileExists(atPath: path) {
-            do {
-                try "".write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
-            } catch _ {}
+        guard printToConsole || writeToFile else {
+            return
         }
+        
         let dateStr = dateFormatter.string(from: Date())
         let writeText = "[\(dateStr)]\(text)\n"
         if writeToFile {
+            let path = currentPath
+            let fileManager = FileManager.default
+            if !fileManager.fileExists(atPath: path) {
+                do {
+                    try "".write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
+                } catch _ {}
+            }
             if let fileHandle = FileHandle(forWritingAtPath: path) {
                 fileHandle.seekToEndOfFile()
                 fileHandle.write(writeText.data(using: String.Encoding.utf8)!)

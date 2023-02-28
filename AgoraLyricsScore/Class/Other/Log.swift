@@ -103,13 +103,16 @@ class LogProvider {
     fileprivate func log(type: AgoraLogType,
                          text: String,
                          tag: String?) {
-        let levelName = type.name
-        let string = getString(text: text,
-                               tag: tag,
-                               levelName: levelName)
+        guard printToConsole || writeToFile else {
+            return
+        }
         
         queue.async { [weak self] in
             guard let self = self else { return }
+            let levelName = type.name
+            let string = self.getString(text: text,
+                                        tag: tag,
+                                        levelName: levelName)
             self.logger.write(string,
                               printToConsole: self.printToConsole,
                               writeToFile: self.writeToFile)

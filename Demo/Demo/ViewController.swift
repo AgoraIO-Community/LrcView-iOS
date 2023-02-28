@@ -46,7 +46,8 @@ class ViewController: UIViewController {
                                             .init(title: "得分动画测试"),
                                             .init(title: "激励动画测试"),
                                             .init(title: "LyricLabel测试"),
-                                            .init(title: "OC")])]
+                                            .init(title: "OC"),
+                                            .init(title: "profile")])]
 //        list = [Section(title: "UI", rows: [.init(title: "View配置")])]
     }
 }
@@ -132,6 +133,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
             if indexPath.row == 8 { /** oc测试 **/
                 let vc = OCVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 9 { /** Profile **/
+                let vc = ProfileVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }

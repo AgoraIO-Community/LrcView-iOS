@@ -17,6 +17,7 @@
 		2609430129530FCC0022A50D /* lrc.lrc in Resources */ = {isa = PBXBuildFile; fileRef = 2609430029530FCC0022A50D /* lrc.lrc */; };
 		260A43402985378B00C2DB5D /* 123602.xml in Resources */ = {isa = PBXBuildFile; fileRef = 260A433F2985378B00C2DB5D /* 123602.xml */; };
 		26105FE52966787A00712EDA /* EmitterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26105FE42966787A00712EDA /* EmitterVC.swift */; };
+		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
 		2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */; };
 		2689ED3E298654C90012BC4D /* IncentiveVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED3D298654C90012BC4D /* IncentiveVC.swift */; };
@@ -56,6 +57,7 @@
 		2609430029530FCC0022A50D /* lrc.lrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lrc.lrc; sourceTree = "<group>"; };
 		260A433F2985378B00C2DB5D /* 123602.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 123602.xml; sourceTree = "<group>"; };
 		26105FE42966787A00712EDA /* EmitterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitterVC.swift; sourceTree = "<group>"; };
+		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstToneHintViewTestVC.swift; sourceTree = "<group>"; };
 		2689ED3D298654C90012BC4D /* IncentiveVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncentiveVC.swift; sourceTree = "<group>"; };
 		2689ED412987C8890012BC4D /* ParamSetVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamSetVC.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				26D01F992977D7F500B9D31A /* ScoreAniVC.swift */,
 				2689ED3D298654C90012BC4D /* IncentiveVC.swift */,
 				2689ED472988FDE10012BC4D /* LyricLabelVC.swift */,
+				2643DDB729ACCB9600018224 /* ProfileVC.swift */,
 				26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */,
 				26E8030D298BAF1B00DBF23F /* OCVC.h */,
 				26E8030E298BAF1B00DBF23F /* OCVC.m */,
@@ -335,6 +338,7 @@
 				26E5BF7F299245E10051AF67 /* SearchVC.swift in Sources */,
 				26E5BF9529924A2A0051AF67 /* Downloader.swift in Sources */,
 				26E5BFA729924B970051AF67 /* AgoraStringExtention.swift in Sources */,
+				2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */,
 				26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */,
 				26E5BF9829924AA60051AF67 /* FileCache.swift in Sources */,
 				2689ED442987CD2D0012BC4D /* MainTestVC.swift in Sources */,
@@ -404,7 +408,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

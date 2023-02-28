@@ -126,4 +126,18 @@ class TestScoringVM: XCTestCase {
         XCTAssertEqual(vm.getHitedInfo(progress: 185160, currentVisiableInfos: infos)!.pitch, 130)
         XCTAssertEqual(vm.getHitedInfo(progress: 185161, currentVisiableInfos: infos)!.pitch, 213)
     }
+    
+    func testPerformanceExample() throws {
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
+        let data = try! Data(contentsOf: url)
+        guard let model = KaraokeView.parseLyricData(data: data) else {
+            XCTFail()
+            return
+        }
+        let vm = ScoringVM()
+        let (_, infos) = ScoringVM.createData(data: model)
+        self.measure {
+            let _ = vm.getHitedInfo(progress: 242000, currentVisiableInfos: infos)
+        }
+    }
 }

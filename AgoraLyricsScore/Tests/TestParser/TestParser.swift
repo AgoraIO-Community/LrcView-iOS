@@ -114,8 +114,8 @@ class TestParser: XCTestCase {
             return
         }
         XCTAssert(model.lines.count > 0)
-        XCTAssert(model.lines[35].tones[4].beginTime == 155687)
-        XCTAssert(model.lines[35].tones[4].word  == "")
-        XCTAssert(model.lines[35].tones[5].word  == "独")
+        XCTAssert(model.lines[0].tones[0].beginTime == 34129)
+        XCTAssert(model.lines[0].tones[1].word  == "")
+        XCTAssert(model.lines[0].tones[2].word  == "响")
     }
 }

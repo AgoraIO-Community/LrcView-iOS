@@ -22,7 +22,7 @@ class MainTestVC: UIViewController {
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
-    var songCode = 6625526603296890
+    var songCode = 6599298157850480
     /// 0：十年， 1: 王菲 2:晴天
     var songCodes = [6599298157850480, 6599297819205290, 6625526603296890]
     var currentSongIndex = 0
@@ -46,7 +46,8 @@ class MainTestVC: UIViewController {
         karaokeView.scoringView.viewHeight = 100
         karaokeView.scoringView.topSpaces = 80
         karaokeView.lyricsView.showDebugView = false
-        KaraokeView.setLog(printToConsole: true, writeToFile: true)
+        karaokeView.lyricsView.draggable = true
+        KaraokeView.setLog(printToConsole: false, writeToFile: true)
         
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)
@@ -179,15 +180,15 @@ class MainTestVC: UIViewController {
                                          countDown: 1000000,
                                          milliseconds: 20,
                                          queue: .main) { [weak self](_, time) in
-            
+
             guard let self = self else { return }
-            
+
             var current = self.last
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
                 current = self.mpk.getPosition()
             }
             current += 20
-            
+
             self.last = current
             var time = current
             if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
@@ -227,7 +228,7 @@ class MainTestVC: UIViewController {
             incentiveView.reset()
             gradeView.reset()
             karaokeView.reset()
-            mccPreload()
+//            mccPreload()
             return
         case quickButton:
             agoraKit.disableAudio()
@@ -314,8 +315,26 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
     func onLyricResult(_ requestId: String, lyricUrl: String) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
-        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
-        DispatchQueue.main.async {
+//        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
+//        DispatchQueue.main.async {
+//            let url = URL(fileURLWithPath: filePath)
+//            let data = try! Data(contentsOf: url)
+//            let model = KaraokeView.parseLyricData(data: data)!
+//            self.lyricModel = model
+//            if !self.noLyric {
+//                self.karaokeView.setLyricData(data: model)
+//                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+//                self.gradeView.isHidden = false
+//            }
+//            else {
+//                self.karaokeView.setLyricData(data: nil)
+//                self.gradeView.isHidden = true
+//            }
+//            self.mccPlay()
+//        }
+        FileCache.fect(urlString: lyricUrl) { progress in
+
+        } completion: { filePath in
             let url = URL(fileURLWithPath: filePath)
             let data = try! Data(contentsOf: url)
             let model = KaraokeView.parseLyricData(data: data)!
@@ -330,14 +349,9 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
                 self.gradeView.isHidden = true
             }
             self.mccPlay()
+        } fail: { error in
+            print("fect fail")
         }
-//        FileCache.fect(urlString: lyricUrl) { progress in
-//
-//        } completion: { filePath in
-            
-//        } fail: { error in
-//            print("fect fail")
-//        }
     }
     
     func onPreLoadEvent(_ songCode: Int,
