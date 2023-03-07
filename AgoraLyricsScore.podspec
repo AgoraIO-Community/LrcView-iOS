@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
   spec.swift_versions = "5.0"
   spec.requires_arc  = true
   spec.static_framework = true
-  spec.dependency "Zip"
+  spec.dependency "SSZipArchive"
   
 #  spec.test_spec 'Tests' do |test_spec|
 #    test_spec.source_files = 'AgoraKaraokeScore/Tests/**/*.{swift}'
