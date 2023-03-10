@@ -36,15 +36,26 @@ public class KaraokeView: UIView {
     fileprivate var isStart = false
     fileprivate let logTag = "KaraokeView"
     
-    @objc public override init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         Log.debug(text: "version \(versionName)", tag: logTag)
         setupUI()
         commonInit()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    /// init
+    /// - Note: 可以使用内部默认日志:
+    /// Objective-C: ``
+    /// Swift: `KaraokeView()`
+    /// - Parameters:
+    ///   - logger: 自定义logger。
+    @objc public convenience init(frame: CGRect, loggers: [ILogger] = [FileLogger(), ConsoleLogger()]) {
+        self.init(frame: frame)
     }
     
     deinit {
@@ -171,14 +182,6 @@ extension KaraokeView {
             return
         }
         scoringView.scoreCompensationOffset = offset
-    }
-    
-    /// 设置Log偏好
-    /// - Parameters:
-    ///   - printToConsole: 是否打印到控制台 默认：false
-    ///   - writeToFile: 是否记录在文件 默认：true
-    @objc static public func setLog(printToConsole: Bool, writeToFile: Bool) {
-        Log.setup(printToConsole: printToConsole, writeToFile: writeToFile)
     }
 }
 

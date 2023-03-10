@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class Log {
-    fileprivate static let provider = LogProvider(domainName: "AgoraLyricsScore")
+    static let provider = LogManager.share
     
     static func errorText(text: String,
                           tag: String? = nil) {
@@ -35,22 +35,12 @@ class Log {
                         tag: String? = nil) {
         provider.warning(text: text, tag: tag)
     }
-    
-    static func setup(printToConsole: Bool, writeToFile: Bool) {
-        provider.printToConsole = printToConsole
-        provider.writeToFile = writeToFile
-    }
 }
 
-class LogProvider {
-    private let logger = Logger()
-    private let queue = DispatchQueue(label: "LogProvider")
-    fileprivate var printToConsole = false
-    fileprivate var writeToFile = true
-    
-    fileprivate init(domainName: String) {
-        logger.name = domainName
-    }
+class LogManager {
+    static let share = LogManager()
+    var loggers = [ILogger]()
+    private let queue = DispatchQueue(label: "LogManager")
     
     fileprivate func error(error: Error?,
                            tag: String?,
@@ -100,50 +90,18 @@ class LogProvider {
             tag: tag)
     }
     
-    fileprivate func log(type: AgoraLogType,
+    fileprivate func log(type: LoggerLevel,
                          text: String,
                          tag: String?) {
-        guard printToConsole || writeToFile else {
-            return
-        }
-        
         queue.async { [weak self] in
-            guard let self = self else { return }
-            let levelName = type.name
-            let string = self.getString(text: text,
-                                        tag: tag,
-                                        levelName: levelName)
-            self.logger.write(string,
-                              printToConsole: self.printToConsole,
-                              writeToFile: self.writeToFile)
+            guard let self = self, !self.loggers.isEmpty else { return }
+            self.log(content: text, tag: tag, level: type)
         }
     }
     
-    private func getString(text: String,
-                           tag: String?,
-                           levelName: String) -> String {
-        if let tag = tag {
-            return "[AgoraLyricsScore][\(levelName)][\(tag)]: " + text
-        }
-        return "[AgoraLyricsScore][\(levelName)]: " + text
-    }
-}
-
-extension LogProvider {
-    enum AgoraLogType {
-        case debug, info, warning, error
-        fileprivate var name: String {
-            switch self {
-            case .debug:
-                return "Debug"
-            case .info:
-                return "Info"
-            case .error:
-                return "Error"
-            case .warning:
-                return "Warning"
-            }
+    func log(content: String, tag: String?, level: LoggerLevel) {
+        for logger in loggers {
+            logger.onLog(content: content, tag: tag, time: "", level: level)
         }
     }
 }
-

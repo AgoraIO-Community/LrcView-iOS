@@ -29,7 +29,7 @@ class ScoringVM {
     fileprivate var currentHighlightInfos = [Info]()
     fileprivate var maxPitch: Double = 0
     fileprivate var minPitch: Double = 0
-
+    
     fileprivate var canvasViewSize: CGSize = .zero
     fileprivate var toneScores = [ToneScoreModel]()
     fileprivate var lineScores = [Int]()

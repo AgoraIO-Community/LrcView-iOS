@@ -23,7 +23,7 @@ public class ScoringView: UIView {
     /// 音准线匹配后的背景色
     @objc public var standardPitchStickViewHighlightColor: UIColor = .colorWithHex(hexStr: "#FF8AB4") { didSet { updateUI() } }
     /** 游标偏移量(X轴) 游标的中心到竖线中心的距离
-     - 等于0：游标中心点和竖线中线点重合
+     - 等于0：游标中心点和竖线中心点重合
      - 小于0: 游标向左偏移
      - 大于0：游标向向偏移 **/
     @objc public var localPitchCursorOffsetX: CGFloat = -3 { didSet { updateUI() } }

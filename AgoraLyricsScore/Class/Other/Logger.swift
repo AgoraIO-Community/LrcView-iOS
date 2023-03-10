@@ -7,15 +7,26 @@
 
 import Foundation
 
-class Logger {
-    ///The max size a log file can be in Kilobytes. Default is 1024 (1 MB)
+// MARK:- ConsoleLogger
+
+public class ConsoleLogger: NSObject, ILogger {
+    @objc public func onLog(content: String,
+                            tag: String?,
+                            time: String,
+                            level: LoggerLevel) {
+        
+        let text = tag == nil ? "[AgoraLyricsScore][\(level)]: " + content : "[AgoraLyricsScore][\(level)][\(tag!)]: " + content
+        print(text)
+    }
+}
+
+// MARK:- FileLogger
+
+public class FileLogger: NSObject, ILogger {
+    var name = "logfile"
     var maxFileSize: UInt64 = 1024 * 15
-    
-    ///The max number of log file that will be stored. Once this point is reached, the oldest file is deleted.
     var maxFileCount = 5
-    
-    ///The directory in which the log files will be written
-    var directory = Logger.defaultDirectory() {
+    var directory = FileLogger.defaultDirectory() {
         didSet {
             directory = NSString(string: directory).expandingTildeInPath
             
@@ -30,52 +41,33 @@ class Logger {
         }
     }
     
-    var currentPath: String {
-        return "\(directory)/\(logName(0))"
-    }
-    
-    var name = "logfile"
-    
-    ///logging singleton
-    class var logger: Logger {
-        struct Static {
-            static let instance: Logger = Logger()
-        }
-        return Static.instance
-    }
-    
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "MM-dd HH:mm:ss"
         return formatter
     }
     
-    func write(_ text: String, printToConsole: Bool = true, writeToFile: Bool = true) {
-        guard printToConsole || writeToFile else {
-            return
+    var currentPath: String {
+        return "\(directory)/\(logName(0))"
+    }
+    
+    func write(text: String) {
+        let writeText = text
+        let path = currentPath
+        let fileManager = FileManager.default
+        if !fileManager.fileExists(atPath: path) {
+            do {
+                try "".write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
+            } catch _ {}
         }
-        
-        let dateStr = dateFormatter.string(from: Date())
-        let writeText = "[\(dateStr)]\(text)\n"
-        if writeToFile {
-            let path = currentPath
-            let fileManager = FileManager.default
-            if !fileManager.fileExists(atPath: path) {
-                do {
-                    try "".write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
-                } catch _ {}
-            }
-            if let fileHandle = FileHandle(forWritingAtPath: path) {
-                fileHandle.seekToEndOfFile()
-                fileHandle.write(writeText.data(using: String.Encoding.utf8)!)
-                fileHandle.closeFile()
-                cleanup()
-            }
-        }
-        if printToConsole {
-            print(writeText, terminator: "")
+        if let fileHandle = FileHandle(forWritingAtPath: path) {
+            fileHandle.seekToEndOfFile()
+            fileHandle.write(writeText.data(using: String.Encoding.utf8)!)
+            fileHandle.closeFile()
+            cleanup()
         }
     }
+    
     ///do the checks and cleanup
     func cleanup() {
         let path = "\(directory)/\(logName(0))"
@@ -134,6 +126,11 @@ class Logger {
         return path
     }
     
+    @objc public func onLog(content: String,
+                            tag: String?,
+                            time: String,
+                            level: LoggerLevel) {
+        let text = tag == nil ? "[AgoraLyricsScore][\(level)]: " + content : "[AgoraLyricsScore][\(level)][\(tag!)]: " + content
+        write(text: text)
+    }
 }
-
-

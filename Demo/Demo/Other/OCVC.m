@@ -7,8 +7,9 @@
 
 #import "OCVC.h"
 @import AgoraLyricsScore;
+@import ScoreEffectUI;
 
-@interface OCVC ()<KaraokeDelegate>
+@interface OCVC ()<KaraokeDelegate, ILogger>
 
 @end
 
@@ -18,12 +19,10 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
     
-    [KaraokeView setLogWithPrintToConsole:true writeToFile:true];
-    KaraokeView *karaokeView = [KaraokeView new];
+    KaraokeView *karaokeView = [[KaraokeView alloc] initWithFrame:CGRectZero loggers:@[[ConsoleLogger new]]];
     karaokeView.backgroundImage = [UIImage imageNamed:@"ktv_top_bgIcon"];
     karaokeView.spacing = 5;
     karaokeView.scoringEnabled = YES;
-    
     karaokeView.frame = CGRectMake(0, 100, self.view.bounds.size.width, 380);
     [self.view addSubview:karaokeView];
     karaokeView.delegate = self;
@@ -76,5 +75,11 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (void)onLogWithContent:(NSString *)content tag:(NSString *)tag time:(NSString *)time level:(enum LoggerLevel)level {
+    
+}
+
+
 
 @end

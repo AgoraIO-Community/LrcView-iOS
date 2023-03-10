@@ -9,6 +9,7 @@ import UIKit
 import AgoraRtcKit
 import RTMTokenBuilder
 import AgoraLyricsScore
+import ScoreEffectUI
 
 class MainTestVC: UIViewController {
     let karaokeView = KaraokeView()
@@ -47,7 +48,6 @@ class MainTestVC: UIViewController {
         karaokeView.scoringView.topSpaces = 80
         karaokeView.lyricsView.showDebugView = false
         karaokeView.lyricsView.draggable = true
-        KaraokeView.setLog(printToConsole: false, writeToFile: true)
         
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)

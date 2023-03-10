@@ -40,3 +40,32 @@ import Foundation
     /// - Returns: 计算后的分数 [0, 100]
     @objc func getLineScore(with toneScores: [ToneScoreModel]) -> Int
 }
+
+/// 日志协议
+@objc public protocol ILogger {
+    /// 日志输出
+    /// - Note: 在子线程执行
+    /// - Parameters:
+    ///   - content: 内容
+    ///   - tag: 标签
+    ///   - time: 时间
+    ///   - level: 等级
+    @objc func onLog(content: String, tag: String?, time: String, level: LoggerLevel)
+}
+
+@objc public enum LoggerLevel: UInt8, CustomStringConvertible {
+    case debug, info, warning, error
+    
+    public var description: String {
+        switch self {
+        case .debug:
+            return "debug"
+        case .info:
+            return "info"
+        case .warning:
+            return "warning"
+        case .error:
+            return "error"
+        }
+    }
+}

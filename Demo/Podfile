@@ -4,9 +4,12 @@
 target 'Demo' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-
+  source 'https://github.com/CocoaPods/Specs.git'
+  
   pod "AgoraLyricsScore", :path => "../AgoraLyricsScore/AgoraLyricsScore.podspec", :testspecs => ['Tests']
   pod 'RTMTokenBuilder', "1.0.0"
   pod 'AgoraRtcEngine_iOS', :path => '/Volumes/T5/PodSpec/Audio50ms/AgoraRtcEngine_iOS.podspec'
   pod "Zip"
+#  pod "ScoreEffectUI", :path => "/Users/zyp/Agora/各种做小尝试的demo/ScoringEffectUI/ScoreEffectUI.podspec"
+  pod 'ScoreEffectUI'
 end

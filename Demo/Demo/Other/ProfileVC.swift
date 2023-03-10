@@ -21,7 +21,6 @@ class ProfileVC: UIViewController {
         karaokeView.scoringView.viewHeight = 100
         karaokeView.scoringView.topSpaces = 80
         karaokeView.lyricsView.showDebugView = false
-        KaraokeView.setLog(printToConsole: false, writeToFile: false)
         view.addSubview(karaokeView)
         
         karaokeView.translatesAutoresizingMaskIntoConstraints = false

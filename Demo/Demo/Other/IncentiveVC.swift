@@ -7,7 +7,7 @@
 
 import UIKit
 
-
+import ScoreEffectUI
 import AgoraLyricsScore
 
 class IncentiveVC: UIViewController {
@@ -23,10 +23,6 @@ class IncentiveVC: UIViewController {
         view.backgroundColor = .black
         view.addSubview(incentiveView)
         incentiveView.frame = .init(x: 100, y: 100, width: 200, height: 200)
-        
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         timer.scheduledMillisecondsTimer(withName: "EmitterVC", countDown: 1000000, milliseconds: 1000, queue: .main) { [weak self](_, time) in
             guard let self = self else { return }
             self.index += 1
@@ -36,5 +32,10 @@ class IncentiveVC: UIViewController {
             let score = self.list[self.index]
             self.incentiveView.show(score: score)
         }
+        
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
     }
 }

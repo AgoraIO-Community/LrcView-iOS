@@ -9,6 +9,7 @@ import UIKit
 import AgoraRtcKit
 import RTMTokenBuilder
 import AgoraLyricsScore
+import ScoreEffectUI
 
 class LyricsTestVC: UIViewController {
     let karaokeView = KaraokeView()
