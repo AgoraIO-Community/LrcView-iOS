@@ -13,6 +13,7 @@ import ScoreEffectUI
 
 class MainTestVC: UIViewController {
     let karaokeView = KaraokeView(frame: .zero, loggers: [FileLogger()])
+    let lineScoreView = LineScoreView()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()
     let skipButton = UIButton()
@@ -66,6 +67,7 @@ class MainTestVC: UIViewController {
         view.addSubview(setButton)
         view.addSubview(changeButton)
         view.addSubview(quickButton)
+        view.addSubview(lineScoreView)
         
         karaokeView.translatesAutoresizingMaskIntoConstraints = false
         gradeView.translatesAutoresizingMaskIntoConstraints = false
@@ -74,6 +76,7 @@ class MainTestVC: UIViewController {
         setButton.translatesAutoresizingMaskIntoConstraints = false
         changeButton.translatesAutoresizingMaskIntoConstraints = false
         quickButton.translatesAutoresizingMaskIntoConstraints = false
+        lineScoreView.translatesAutoresizingMaskIntoConstraints = false
         
         karaokeView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         karaokeView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
@@ -87,6 +90,11 @@ class MainTestVC: UIViewController {
         
         incentiveView.centerYAnchor.constraint(equalTo: karaokeView.scoringView.centerYAnchor).isActive = true
         incentiveView.centerXAnchor.constraint(equalTo: karaokeView.centerXAnchor, constant: -10).isActive = true
+        
+        lineScoreView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: karaokeView.scoringView.defaultPitchCursorX).isActive = true
+        lineScoreView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: karaokeView.scoringView.topSpaces).isActive = true
+        lineScoreView.heightAnchor.constraint(equalToConstant: karaokeView.scoringView.viewHeight).isActive = true
+        lineScoreView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
         skipButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100).isActive = true
         skipButton.topAnchor.constraint(equalTo: karaokeView.bottomAnchor, constant: 30).isActive = true
@@ -397,6 +405,7 @@ extension MainTestVC: KaraokeDelegate {
                        cumulativeScore: Int,
                        lineIndex: Int,
                        lineCount: Int) {
+        lineScoreView.showScoreView(score: score)
         self.cumulativeScore = cumulativeScore
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lineCount * 100)
         incentiveView.show(score: score)

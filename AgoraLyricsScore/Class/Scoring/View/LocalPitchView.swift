@@ -12,9 +12,6 @@ class LocalPitchView: UIView {
     private let bgView = UIImageView()
     private let verticalLineView = UIImageView()
     private let indicatedView = UIImageView()
-    private var labels: [UILabel] = [.init(), .init(), .init(), .init(), .init()]
-    private var labelCenterYConstraints = [NSLayoutConstraint]()
-    private var currentLabelIndex = 0
     private var indicatedCenterYConstant: CGFloat = 0.0
     static let scoreAnimateWidth: CGFloat = 30
     /// 游标的起始位置
@@ -54,12 +51,7 @@ class LocalPitchView: UIView {
         addSubview(bgView)
         addSubview(verticalLineView)
         addSubview(indicatedView)
-        for label in labels {
-            label.font = .systemFont(ofSize: 11)
-            label.textColor = .white
-            addSubview(label)
-            label.translatesAutoresizingMaskIntoConstraints = false
-        }
+        
         layer.addSublayer(emitter.layer)
         
         bgView.translatesAutoresizingMaskIntoConstraints = false
@@ -74,13 +66,6 @@ class LocalPitchView: UIView {
         verticalLineView.rightAnchor.constraint(equalTo: rightAnchor, constant: -1 * (LocalPitchView.scoreAnimateWidth - 0.5)).isActive = true
         verticalLineView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         verticalLineView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
-        for label in labels {
-            label.leftAnchor.constraint(equalTo: verticalLineView.rightAnchor, constant: 5).isActive = true
-            let labelCenterYConstraint = label.centerYAnchor.constraint(equalTo: bottomAnchor)
-            labelCenterYConstraint.isActive = true
-            labelCenterYConstraints.append(labelCenterYConstraint)
-        }
         
         indicatedViewCenterXConstraint = indicatedView.centerXAnchor.constraint(equalTo: verticalLineView.centerXAnchor, constant: localPitchCursorOffsetX)
         indicatedViewCenterYConstraint = indicatedView.centerYAnchor.constraint(equalTo: bottomAnchor, constant: 0)
@@ -119,34 +104,6 @@ class LocalPitchView: UIView {
         setIndicatedViewY(y: bounds.height)
         stopEmitter()
         emitter.reset()
-    }
-    
-    func showScoreView(score: Int) {
-        let viewHeight = bounds.height
-        let index = findIndexOfLabel()
-        let label = labels[index]
-        label.text = "+\(score)"
-        let constraint = labelCenterYConstraints[index]
-        let startConstant: CGFloat = indicatedViewCenterYConstraint.constant
-        let endConstant: CGFloat = (viewHeight - 10) * -1
-        constraint.constant = startConstant
-        label.alpha = 1
-        label.isHidden = false
-        layoutIfNeeded()
-        constraint.constant = endConstant
-        UIView.animate(withDuration: 0.4, delay: 0.2, options: []) {
-            label.alpha = 0
-            self.layoutIfNeeded()
-        } completion: { completed in
-            
-        }
-    }
-    
-    private func findIndexOfLabel() -> Int {
-        var index = currentLabelIndex + 1
-        index = index < labels.count ? index : 0
-        currentLabelIndex = index
-        return index
     }
 }
 

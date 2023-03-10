@@ -105,7 +105,7 @@ public class ScoringView: UIView {
         localPitchView.translatesAutoresizingMaskIntoConstraints = false
         
         canvasView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        canvasView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
+        canvasView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         canvasView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         canvasViewHeightConstraint = canvasView.heightAnchor.constraint(equalToConstant: viewHeight)
         canvasViewHeightConstraint.isActive = true
@@ -190,7 +190,6 @@ extension ScoringView: ScoringVMDelegate {
                    cumulativeScore: Int,
                    lineIndex: Int,
                    lineCount: Int) {
-        localPitchView.showScoreView(score: score)
         delegate?.scoringView(self,
                               didFinishLineWith: model,
                               score: score,
