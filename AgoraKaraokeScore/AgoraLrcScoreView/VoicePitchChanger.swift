@@ -40,7 +40,20 @@ class VoicePitchChanger {
             return voicePitch
         }
         
-        return voicePitch + offset
+        switch n {
+        case 1:
+            return min(voicePitch + 0.5 * offset, wordMaxPitch)
+        case 2:
+            return min(voicePitch + 0.6 * offset, wordMaxPitch)
+        case 3:
+            return min(voicePitch + 0.7 * offset, wordMaxPitch)
+        case 4:
+            return min(voicePitch + 0.8 * offset, wordMaxPitch)
+        case 5:
+            return min(voicePitch + 0.9 * offset, wordMaxPitch)
+        default:
+            return min(voicePitch + offset, wordMaxPitch)
+        }
     }
     
     func reset() {
@@ -48,3 +61,4 @@ class VoicePitchChanger {
         n = 0.0
     }
 }
+

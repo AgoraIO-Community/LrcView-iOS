@@ -19,9 +19,9 @@ class AgoraDownLoadManager {
     private var completion: [String: Completion] = [:]
     private var success: [String: Sunccess] = [:]
     private var failure: [String: UnZipErrorClosure] = [:]
-
+    
     public weak var delegate: AgoraLrcDownloadDelegate?
-
+    
     func downloadLrcFile(urlString: String,
                          completion: @escaping Completion,
                          failure: @escaping UnZipErrorClosure)
@@ -56,7 +56,7 @@ class AgoraDownLoadManager {
             }
         }
     }
-
+    
     func downloadMP3(urlString: String, success: @escaping Sunccess) {
         self.urlString = urlString
         let cachePath = AgoraCacheFileHandle.cacheFileExists(with: urlString)
@@ -69,7 +69,7 @@ class AgoraDownLoadManager {
             success(cachePath)
         }
     }
-
+    
     private func unzip(path: String, completion: @escaping Completion, failure: @escaping UnZipErrorClosure) {
         delegate?.beginParseLrc?()
         DispatchQueue.global().async {
@@ -102,7 +102,7 @@ class AgoraDownLoadManager {
             }
         }
     }
-
+    
     private func parseXml(path: String, completion: @escaping (AgoraMiguSongLyric?) -> Void) {
         DispatchQueue.global().async {
             let lyric = AgoraMiguSongLyric(lrcFile: path)
@@ -112,7 +112,7 @@ class AgoraDownLoadManager {
             }
         }
     }
-
+    
     private func parseLrc(path: String, completion: @escaping ([AgoraLrcModel]?) -> Void) {
         DispatchQueue.global().async {
             let lyric = AgoraLrcParse()
@@ -130,7 +130,7 @@ extension AgoraDownLoadManager: AgoraLrcDownloadDelegate {
     func beginDownloadLrc(url: String) {
         delegate?.beginDownloadLrc?(url: url)
     }
-
+    
     func downloadLrcFinished(url: String) {
         let cacheFilePath = "\(String.cacheFolderPath())/\(url.fileName)"
         if url.fileName.hasSuffix(".mp3") {
@@ -149,24 +149,24 @@ extension AgoraDownLoadManager: AgoraLrcDownloadDelegate {
             }
         }
     }
-
+    
     func downloadLrcProgress(url: String, progress: Double) {
         delegate?.downloadLrcProgress?(url: url, progress: progress)
     }
-
+    
     func downloadLrcError(url: String, error: Error?) {
         Log.errorText(text: "\(error?.localizedDescription ?? "nil") url")
         delegate?.downloadLrcError?(url: url, error: error)
     }
-
+    
     func downloadLrcCanceld(url: String) {
         delegate?.downloadLrcCanceld?(url: url)
     }
-
+    
     func beginParseLrc() {
         delegate?.beginParseLrc?()
     }
-
+    
     func parseLrcFinished() {
         delegate?.parseLrcFinished?()
     }
