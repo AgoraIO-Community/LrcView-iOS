@@ -1,13 +1,13 @@
 Pod::Spec.new do |spec|
   spec.name         = "AgoraLyricsScore"
-  spec.version      = "1.0.8.13"
+  spec.version      = "1.0.8.14"
   spec.summary      = "AgoraLyricsScore"
   spec.description  = "AgoraLyricsScore"
 
   spec.homepage     = "https://github.com/AgoraIO-Community"
   spec.license      = "MIT"
   spec.author       = { "ZYQ" => "zhaoyongqiang@agora.io" }
-  spec.source       = { :git => "https://github.com/AgoraIO-Community/LrcView-iOS.git", :tag => '1.0.8.13' }
+  spec.source       = { :git => "https://github.com/AgoraIO-Community/LrcView-iOS.git", :tag => '1.0.8.14' }
   spec.source_files  = "AgoraKaraokeScore/AgoraLrcScoreView/**/*.swift"
   spec.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
   spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
   spec.swift_versions = "5.0"
   spec.requires_arc  = true
   spec.static_framework = true
-  spec.dependency "SSZipArchive"
+  spec.dependency "Zip"
   
 #  spec.test_spec 'Tests' do |test_spec|
 #    test_spec.source_files = 'AgoraKaraokeScore/Tests/**/*.{swift}'

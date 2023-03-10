@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SSZipArchive
+import Zip
 
 class AgoraDownLoadManager {
     static let manager = AgoraDownLoadManager()
@@ -73,35 +73,32 @@ class AgoraDownLoadManager {
     private func unzip(path: String, completion: @escaping Completion, failure: @escaping UnZipErrorClosure) {
         delegate?.beginParseLrc?()
         DispatchQueue.global().async {
-            let zipFilePath = path
+            let zipFile = URL(fileURLWithPath: path)
             let unZipPath = String.cacheFolderPath()
-            SSZipArchive.unzipFile(atPath: zipFilePath,
-                                   toDestination: unZipPath,
-                                   progressHandler: nil) { xmlPath, success, error in
-                if success {
-                    self.parseXml(path: xmlPath, completion: completion)
+            do {
+                try Zip.unzipFile(zipFile, destination: URL(fileURLWithPath: unZipPath), overwrite: true, password: nil, fileOutputHandler: { url in
+                    self.parseXml(path: url.path, completion: completion)
                     try? FileManager.default.removeItem(atPath: path)
-                }
-                else {
-                    Log.error(error: "unzip error == \(error?.localizedDescription ?? "none")", tag: "AgoraDownLoadManager")
-                    guard self.retryCount < 3 else {
-                        self.retryCount = 0
-                        DispatchQueue.main.async {
-                            Log.info(text: "invoke downloadLrcError", tag: "AgoraDownLoadManager")
-                            self.delegate?.downloadLrcError?(url: self.urlString,
-                                                             error: error)
-                            failure()
-                        }
-                        return
-                    }
-                    try? FileManager.default.removeItem(atPath: path)
+                })
+            } catch {
+                Log.error(error: "unzip error == \(error.localizedDescription)", tag: "AgoraDownLoadManager")
+                guard self.retryCount < 3 else {
+                    self.retryCount = 0
                     DispatchQueue.main.async {
-                        self.downloadLrcFile(urlString: self.urlString,
-                                             completion: completion,
-                                             failure: failure)
+                        Log.info(text: "invoke downloadLrcError", tag: "AgoraDownLoadManager")
+                        self.delegate?.downloadLrcError?(url: self.urlString,
+                                                         error: error)
+                        failure()
                     }
-                    self.retryCount += 1
+                    return
                 }
+                try? FileManager.default.removeItem(atPath: path)
+                DispatchQueue.main.async {
+                    self.downloadLrcFile(urlString: self.urlString,
+                                         completion: completion,
+                                         failure: failure)
+                }
+                self.retryCount += 1
             }
         }
     }
