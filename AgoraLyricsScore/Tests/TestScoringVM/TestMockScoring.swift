@@ -20,8 +20,6 @@ class TestMockScoring: XCTestCase, ScoringVMDelegate {
 
     var cumulativeScore = 0
     func testAll() {
-        KaraokeView.setLog(printToConsole: true, writeToFile: true)
-
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
         guard let model = KaraokeView.parseLyricData(data: data) else {

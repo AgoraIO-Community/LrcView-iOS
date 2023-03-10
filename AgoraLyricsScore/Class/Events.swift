@@ -59,13 +59,13 @@ import Foundation
     public var description: String {
         switch self {
         case .debug:
-            return "debug"
+            return "D"
         case .info:
-            return "info"
+            return "I"
         case .warning:
-            return "warning"
+            return "W"
         case .error:
-            return "error"
+            return "E"
         }
     }
 }

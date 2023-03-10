@@ -12,7 +12,7 @@ import AgoraLyricsScore
 import ScoreEffectUI
 
 class MainTestVC: UIViewController {
-    let karaokeView = KaraokeView()
+    let karaokeView = KaraokeView(frame: .zero, loggers: [FileLogger()])
     let gradeView = GradeView()
     let incentiveView = IncentiveView()
     let skipButton = UIButton()
@@ -23,9 +23,9 @@ class MainTestVC: UIViewController {
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
-    var songCode = 6599298157850480
+    var songCode = 6625526605291650
     /// 0：十年， 1: 王菲 2:晴天
-    var songCodes = [6599298157850480, 6599297819205290, 6625526603296890]
+    var songCodes = [6625526605291650, 6599297819205290, 6625526603296890]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0

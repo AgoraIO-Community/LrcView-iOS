@@ -55,6 +55,7 @@ public class KaraokeView: UIView {
     /// - Parameters:
     ///   - logger: 自定义logger。
     @objc public convenience init(frame: CGRect, loggers: [ILogger] = [FileLogger(), ConsoleLogger()]) {
+        Log.setLoggers(loggers: loggers)
         self.init(frame: frame)
     }
     

@@ -15,7 +15,7 @@ public class ConsoleLogger: NSObject, ILogger {
                             time: String,
                             level: LoggerLevel) {
         
-        let text = tag == nil ? "[AgoraLyricsScore][\(level)]: " + content : "[AgoraLyricsScore][\(level)][\(tag!)]: " + content
+        let text = tag == nil ? "[\(time)][ALS][\(level)]: " + content : "[\(time)][ALS][\(level)][\(tag!)]: " + content
         print(text)
     }
 }
@@ -23,9 +23,9 @@ public class ConsoleLogger: NSObject, ILogger {
 // MARK:- FileLogger
 
 public class FileLogger: NSObject, ILogger {
-    var name = "logfile"
+    var name = "AgoraLyricsScore"
     var maxFileSize: UInt64 = 1024 * 15
-    var maxFileCount = 5
+    var maxFileCount = 10
     var directory = FileLogger.defaultDirectory() {
         didSet {
             directory = NSString(string: directory).expandingTildeInPath
@@ -52,7 +52,7 @@ public class FileLogger: NSObject, ILogger {
     }
     
     func write(text: String) {
-        let writeText = text
+        let writeText = text + "\n"
         let path = currentPath
         let fileManager = FileManager.default
         if !fileManager.fileExists(atPath: path) {
@@ -130,7 +130,7 @@ public class FileLogger: NSObject, ILogger {
                             tag: String?,
                             time: String,
                             level: LoggerLevel) {
-        let text = tag == nil ? "[AgoraLyricsScore][\(level)]: " + content : "[AgoraLyricsScore][\(level)][\(tag!)]: " + content
+        let text = tag == nil ? "[\(time)][ALS][\(level)]: " + content : "[\(time)][ALS][\(level)][\(tag!)]: " + content
         write(text: text)
     }
 }

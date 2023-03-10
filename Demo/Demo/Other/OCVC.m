@@ -19,7 +19,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
     
-    KaraokeView *karaokeView = [[KaraokeView alloc] initWithFrame:CGRectZero loggers:@[[ConsoleLogger new]]];
+    KaraokeView *karaokeView = [[KaraokeView alloc] initWithFrame:CGRectZero loggers:@[[ConsoleLogger new], [FileLogger new]]];
     karaokeView.backgroundImage = [UIImage imageNamed:@"ktv_top_bgIcon"];
     karaokeView.spacing = 5;
     karaokeView.scoringEnabled = YES;

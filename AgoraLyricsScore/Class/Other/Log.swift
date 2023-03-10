@@ -35,12 +35,22 @@ class Log {
                         tag: String? = nil) {
         provider.warning(text: text, tag: tag)
     }
+    
+    static func setLoggers(loggers: [ILogger]) {
+        provider.loggers = loggers
+    }
 }
 
 class LogManager {
     static let share = LogManager()
     var loggers = [ILogger]()
     private let queue = DispatchQueue(label: "LogManager")
+    let dateFormatter: DateFormatter
+    
+    init() {
+        dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/YY HH:mm:ss:SSS"
+    }
     
     fileprivate func error(error: Error?,
                            tag: String?,
@@ -95,13 +105,14 @@ class LogManager {
                          tag: String?) {
         queue.async { [weak self] in
             guard let self = self, !self.loggers.isEmpty else { return }
-            self.log(content: text, tag: tag, level: type)
+            let time = self.dateFormatter.string(from: .init())
+            self.log(content: text, tag: tag, time: time, level: type)
         }
     }
     
-    func log(content: String, tag: String?, level: LoggerLevel) {
+    func log(content: String, tag: String?, time: String, level: LoggerLevel) {
         for logger in loggers {
-            logger.onLog(content: content, tag: tag, time: "", level: level)
+            logger.onLog(content: content, tag: tag, time: time, level: level)
         }
     }
 }
