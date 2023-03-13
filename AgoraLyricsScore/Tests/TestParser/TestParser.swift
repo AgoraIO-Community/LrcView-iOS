@@ -77,9 +77,9 @@ class TestParser: XCTestCase {
         let model = parser.parseLyricData(data: data)
         XCTAssertNotNil(model)
         
-        let infos = ScoringVM.createData(data: model!)
+        let infos = ScoringMachine.createData(data: model!)
         
-        var pre:ScoringVM.Info?
+        var pre:ScoringMachine.Info?
         
         for info in infos.1 {
             if let pre = pre, info.beginTime < pre.endTime {

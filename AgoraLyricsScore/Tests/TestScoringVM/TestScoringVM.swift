@@ -19,7 +19,7 @@ class TestScoringVM: XCTestCase {
     }
 
     func testCurrentIndexOfLine() throws {
-        let vm = ScoringVM()
+        let vm = ScoringMachine()
         let lineEndTimes = [1000, 2000, 3000]
         XCTAssertEqual(vm.findCurrentIndexOfLine(progress: 0, lineEndTimes: lineEndTimes), 0)
         XCTAssertEqual(vm.findCurrentIndexOfLine(progress: 999, lineEndTimes: lineEndTimes), 0)
@@ -34,7 +34,7 @@ class TestScoringVM: XCTestCase {
     }
     
     func testCalculatedCumulativeScore() throws {
-        let vm = ScoringVM()
+        let vm = ScoringMachine()
         let lineScores = [10, 20, 5]
         XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: -1, lineScores: lineScores), 0)
         XCTAssertEqual(vm.calculatedCumulativeScore(indexOfLine: 0, lineScores: lineScores), 10)
@@ -44,7 +44,7 @@ class TestScoringVM: XCTestCase {
     }
     
     func testGetCenterY() {
-        let vm = ScoringVM()
+        let vm = ScoringMachine()
         let standardPitchStickViewHeight: CGFloat = 3
         let extend: CGFloat = standardPitchStickViewHeight
         
@@ -117,8 +117,8 @@ class TestScoringVM: XCTestCase {
             XCTFail()
             return
         }
-        let vm = ScoringVM()
-        let (_, infos) = ScoringVM.createData(data: model)
+        let vm = ScoringMachine()
+        let (_, infos) = ScoringMachine.createData(data: model)
         XCTAssertNil(vm.getHitedInfo(progress: 0, currentVisiableInfos: infos))
         XCTAssertNil(vm.getHitedInfo(progress: 28813, currentVisiableInfos: infos))
         XCTAssertEqual(vm.getHitedInfo(progress: 28814, currentVisiableInfos: infos)!.pitch, 172)
@@ -134,8 +134,8 @@ class TestScoringVM: XCTestCase {
             XCTFail()
             return
         }
-        let vm = ScoringVM()
-        let (_, infos) = ScoringVM.createData(data: model)
+        let vm = ScoringMachine()
+        let (_, infos) = ScoringMachine.createData(data: model)
         self.measure {
             let _ = vm.getHitedInfo(progress: 242000, currentVisiableInfos: infos)
         }

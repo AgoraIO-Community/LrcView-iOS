@@ -100,5 +100,5 @@ extension ScoringCanvasView {
 }
 
 extension ScoringCanvasView {
-    typealias DrawInfo = ScoringVM.DrawInfo
+    typealias DrawInfo = ScoringMachine.DrawInfo
 }

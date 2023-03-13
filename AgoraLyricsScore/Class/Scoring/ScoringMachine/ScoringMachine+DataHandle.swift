@@ -1,5 +1,5 @@
 //
-//  ScoringVM+DataHandle.swift
+//  ScoringMachine+DataHandle.swift
 //  AgoraLyricsScore
 //
 //  Created by ZYP on 2023/2/2.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension ScoringVM {
+extension ScoringMachine {
     /// 创建Scoring内部数据
     ///   - shouldFixTime: 是否要修复时间异常问题
     ///   - return: (行结束时间, 字模型)
@@ -209,7 +209,7 @@ extension ScoringVM {
     }
 }
 
-extension ScoringVM { /** ui 位置 **/
+extension ScoringMachine { /** ui 位置 **/
     /// 计算音准线的位置
     func calculateDrawRect(progress: Int,
                            info: Info,

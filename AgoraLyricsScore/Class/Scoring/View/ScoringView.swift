@@ -48,14 +48,14 @@ public class ScoringView: UIView {
     fileprivate let consoleView = ConsoleView()
     private var canvasViewHeightConstraint, localPitchViewWidthConstraint: NSLayoutConstraint!
     
-    fileprivate let vm = ScoringVM()
+    fileprivate let scoringMachine = ScoringMachine()
     weak var delegate: ScoringViewDelegate?
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
         updateUI()
-        vm.delegate = self
+        scoringMachine.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -64,37 +64,37 @@ public class ScoringView: UIView {
     
     /// 获取当前累计分数
     @objc public func getCumulativeScore() -> Int {
-        vm.getCumulativeScore()
+        scoringMachine.getCumulativeScore()
     }
     
     func setLyricData(data: LyricModel?) {
-        vm.setLyricData(data: data)
+        scoringMachine.setLyricData(data: data)
     }
     
     func setPitch(pitch: Double) {
-        vm.setPitch(pitch: pitch)
+        scoringMachine.setPitch(pitch: pitch)
     }
     
     func setScoreAlgorithm(algorithm: IScoreAlgorithm) {
-        vm.scoreAlgorithm = algorithm
+        scoringMachine.scoreAlgorithm = algorithm
     }
     
     func dragBegain() {
-        vm.dragBegain()
+        scoringMachine.dragBegain()
     }
     
     func dragDidEnd(position: Int) {
-        vm.dragDidEnd(position: position)
+        scoringMachine.dragDidEnd(position: position)
     }
     
     func reset() {
-        vm.reset()
+        scoringMachine.reset()
         localPitchView.reset()
         canvasView.reset()
     }
     
     private func updateProgress() {
-        vm.setProgress(progress: progress)
+        scoringMachine.setProgress(progress: progress)
     }
     
     private func setupUI() {
@@ -135,12 +135,12 @@ public class ScoringView: UIView {
         localPitchViewWidthConstraint.constant = width
         canvasViewHeightConstraint.constant = viewHeight
         
-        vm.defaultPitchCursorX = defaultPitchCursorX
-        vm.standardPitchStickViewHeight = standardPitchStickViewHeight
-        vm.movingSpeedFactor = movingSpeedFactor
-        vm.hitScoreThreshold = hitScoreThreshold
-        vm.scoreLevel = scoreLevel
-        vm.scoreCompensationOffset = scoreCompensationOffset
+        scoringMachine.defaultPitchCursorX = defaultPitchCursorX
+        scoringMachine.standardPitchStickViewHeight = standardPitchStickViewHeight
+        scoringMachine.movingSpeedFactor = movingSpeedFactor
+        scoringMachine.hitScoreThreshold = hitScoreThreshold
+        scoringMachine.scoreLevel = scoreLevel
+        scoringMachine.scoreCompensationOffset = scoreCompensationOffset
         
         delegate?.scoringViewShouldUpdateViewLayout(view: self)
         
@@ -160,22 +160,22 @@ public class ScoringView: UIView {
     }
 }
 
-extension ScoringView: ScoringVMDelegate {
-    func sizeOfCanvasView(_ vm: ScoringVM) -> CGSize {
+extension ScoringView: ScoringMachineDelegate {
+    func sizeOfCanvasView(_ vm: ScoringMachine) -> CGSize {
         return canvasView.bounds.size
     }
     
-    func scoringVM(_ vm: ScoringVM,
-                   didUpdateDraw standardInfos: [ScoringVM.DrawInfo],
-                   highlightInfos: [ScoringVM.DrawInfo]) {
+    func scoringMachine(_ vm: ScoringMachine,
+                   didUpdateDraw standardInfos: [ScoringMachine.DrawInfo],
+                   highlightInfos: [ScoringMachine.DrawInfo]) {
         canvasView.draw(standardInfos: standardInfos,
                         highlightInfos: highlightInfos)
     }
     
-    func scoringVM(_ vm: ScoringVM,
+    func scoringMachine(_ vm: ScoringMachine,
                    didUpdateCursor centerY: CGFloat,
                    showAnimation: Bool,
-                   debugInfo: ScoringVM.DebugInfo) {
+                   debugInfo: ScoringMachine.DebugInfo) {
         localPitchView.setIndicatedViewY(y: centerY)
         showAnimation ? localPitchView.startEmitter() : localPitchView.stopEmitter()
         if showDebugView {
@@ -184,7 +184,7 @@ extension ScoringView: ScoringVMDelegate {
         }
     }
     
-    func scoringVM(_ vm: ScoringVM,
+    func scoringMachine(_ vm: ScoringMachine,
                    didFinishLineWith model: LyricLineModel,
                    score: Int,
                    cumulativeScore: Int,

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ScoringVM {
+class ScoringMachine {
     /// 游标的起始位置
     var defaultPitchCursorX: CGFloat = 100
     /// 音准线的高度
@@ -19,7 +19,7 @@ class ScoringVM {
     var scoreLevel = 10
     var scoreCompensationOffset = 0
     var scoreAlgorithm: IScoreAlgorithm = ScoreAlgorithm()
-    weak var delegate: ScoringVMDelegate?
+    weak var delegate: ScoringMachineDelegate?
     
     fileprivate var progress: Int = 0
     fileprivate var widthPreMs: CGFloat { movingSpeedFactor / 1000 }
@@ -45,7 +45,7 @@ class ScoringVM {
         guard let size = delegate?.sizeOfCanvasView(self) else { fatalError("sizeOfCanvasView has not been implemented") }
         canvasViewSize = size
         self.lyricData = lyricData
-        let (lineEnds, infos) = ScoringVM.createData(data: lyricData)
+        let (lineEnds, infos) = ScoringMachine.createData(data: lyricData)
         dataList = infos
         lineEndTimes = lineEnds
         let (min, max) = makeMinMaxPitch(dataList: dataList)
@@ -101,7 +101,7 @@ class ScoringVM {
                                                                                                maxPitch: maxPitch)
         currentVisiableInfos = visiableInfos
         currentHighlightInfos = highlightInfos
-        invokeScoringVM(didUpdateDraw: visiableDrawInfos, highlightInfos: highlightDrawInfos)
+        invokeScoringMachine(didUpdateDraw: visiableDrawInfos, highlightInfos: highlightDrawInfos)
         
         guard let index = findCurrentIndexOfLine(progress: progress, lineEndTimes: lineEndTimes)  else {
             return
@@ -125,7 +125,7 @@ class ScoringVM {
                                       pitch: pitch,
                                       hitedInfo: nil,
                                       progress: progress)
-            invokeScoringVM(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
+            invokeScoringMachine(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
             return
         }
         
@@ -175,7 +175,7 @@ class ScoringVM {
                                   pitch: voicePitch,
                                   hitedInfo: hitedInfo,
                                   progress: progress)
-        invokeScoringVM(didUpdateCursor: y, showAnimation: showAnimation, debugInfo: debugInfo)
+        invokeScoringMachine(didUpdateCursor: y, showAnimation: showAnimation, debugInfo: debugInfo)
     }
     
     func dragBegain() {
@@ -214,7 +214,7 @@ class ScoringVM {
         cumulativeScore = calculatedCumulativeScore(indexOfLine: indexOfLineEnd,
                                                     lineScores: lineScores)
         Log.debug(text: "didLineEnd indexOfLineEnd: \(indexOfLineEnd) \(lineScore) \(lineScores) cumulativeScore:\(cumulativeScore)", tag: "drag")
-        invokeScoringVM(didFinishLineWith: data.lines[indexOfLineEnd],
+        invokeScoringMachine(didFinishLineWith: data.lines[indexOfLineEnd],
                         score: lineScore,
                         cumulativeScore: cumulativeScore,
                         lineIndex: indexOfLineEnd,

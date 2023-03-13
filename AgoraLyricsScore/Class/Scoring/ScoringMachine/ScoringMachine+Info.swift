@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension ScoringVM {
+extension ScoringMachine {
     class Info {
         /// 标准开始时间 （来源自歌词文件）
         let beginTime: Int
@@ -65,7 +65,7 @@ extension ScoringVM {
         let originalPitch: Double
         /// 男女音调算法改变后的pitch
         let pitch: Double
-        let hitedInfo: ScoringVM.Info?
+        let hitedInfo: ScoringMachine.Info?
         let progress: Int
     }
 }

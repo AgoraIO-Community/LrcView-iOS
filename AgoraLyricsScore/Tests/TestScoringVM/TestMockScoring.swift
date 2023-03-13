@@ -8,7 +8,7 @@
 import XCTest
 @testable import AgoraLyricsScore
 
-class TestMockScoring: XCTestCase, ScoringVMDelegate {
+class TestMockScoring: XCTestCase, ScoringMachineDelegate {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -26,7 +26,7 @@ class TestMockScoring: XCTestCase, ScoringVMDelegate {
             XCTFail()
             return
         }
-        let vm = ScoringVM()
+        let vm = ScoringMachine()
         vm.delegate = self
         vm.setLyricData(data: model)
         for index in 0...5 {
@@ -41,18 +41,18 @@ class TestMockScoring: XCTestCase, ScoringVMDelegate {
         XCTAssertEqual(cumulativeScore, 493)
     }
 
-    func scoringVM(_ vm: ScoringVM, didFinishLineWith model: LyricLineModel, score: Int, cumulativeScore: Int, lineIndex: Int, lineCount: Int) {
+    func scoringMachine(_ vm: ScoringMachine, didFinishLineWith model: LyricLineModel, score: Int, cumulativeScore: Int, lineIndex: Int, lineCount: Int) {
         self.cumulativeScore = cumulativeScore
         print("didFinishLineWith score: \(score)")
     }
 
-    func sizeOfCanvasView(_ vm: ScoringVM) -> CGSize {
+    func sizeOfCanvasView(_ vm: ScoringMachine) -> CGSize {
         return .init(width: 380, height: 100)
     }
 
-    func scoringVM(_ vm: ScoringVM, didUpdateDraw standardInfos: [ScoringVM.DrawInfo], highlightInfos: [ScoringVM.DrawInfo]) {}
+    func scoringMachine(_ vm: ScoringMachine, didUpdateDraw standardInfos: [ScoringMachine.DrawInfo], highlightInfos: [ScoringMachine.DrawInfo]) {}
 
-    func scoringVM(_ vm: ScoringVM, didUpdateCursor centerY: CGFloat, showAnimation: Bool, debugInfo: ScoringVM.DebugInfo) {}
+    func scoringMachine(_ vm: ScoringMachine, didUpdateCursor centerY: CGFloat, showAnimation: Bool, debugInfo: ScoringMachine.DebugInfo) {}
 
 }
 
