@@ -9,7 +9,6 @@ import XCTest
 @testable import AgoraLyricsScore
 
 class TestMockScoring: XCTestCase, ScoringMachineDelegate {
-
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -19,14 +18,17 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
     }
 
     var cumulativeScore = 0
-    func testAll() {
+    let vm = ScoringMachine()
+    let exp = XCTestExpectation(description: "test score")
+    
+    func testAll() { /** test score **/
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
         guard let model = KaraokeView.parseLyricData(data: data) else {
             XCTFail()
             return
         }
-        let vm = ScoringMachine()
+        
         vm.delegate = self
         vm.setLyricData(data: model)
         for index in 0...5 {
@@ -37,23 +39,33 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
                 vm.setPitch(pitch: tone.pitch - 1)
             }
         }
-
-        XCTAssertEqual(cumulativeScore, 493)
+        wait(for: [exp], timeout: 3)
     }
 
-    func scoringMachine(_ vm: ScoringMachine, didFinishLineWith model: LyricLineModel, score: Int, cumulativeScore: Int, lineIndex: Int, lineCount: Int) {
-        self.cumulativeScore = cumulativeScore
-        print("didFinishLineWith score: \(score)")
-    }
-
-    func sizeOfCanvasView(_ vm: ScoringMachine) -> CGSize {
+    func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {
         return .init(width: 380, height: 100)
     }
-
-    func scoringMachine(_ vm: ScoringMachine, didUpdateDraw standardInfos: [ScoringMachine.DrawInfo], highlightInfos: [ScoringMachine.DrawInfo]) {}
-
-    func scoringMachine(_ vm: ScoringMachine, didUpdateCursor centerY: CGFloat, showAnimation: Bool, debugInfo: ScoringMachine.DebugInfo) {}
-
+    
+    func scoringMachine(_ scoringMachine: ScoringMachine, didUpdateDraw standardInfos: [ScoringMachine.DrawInfo], highlightInfos: [ScoringMachine.DrawInfo]) {
+        
+    }
+    
+    func scoringMachine(_ scoringMachine: ScoringMachine, didUpdateCursor centerY: CGFloat, showAnimation: Bool, debugInfo: ScoringMachine.DebugInfo) {
+        
+    }
+   
+    func scoringMachine(_ scoringMachine: ScoringMachine,
+                        didFinishLineWith model: LyricLineModel,
+                        score: Int,
+                        cumulativeScore: Int,
+                        lineIndex: Int,
+                        lineCount: Int) {
+        self.cumulativeScore = cumulativeScore
+        print("didFinishLineWith score: \(cumulativeScore)")
+        if cumulativeScore == 499 {
+            exp.fulfill()
+        }
+    }
 }
 
 //class TestMockScoring: XCTestCase, ScoringVMDelegate {

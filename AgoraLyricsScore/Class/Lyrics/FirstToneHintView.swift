@@ -7,6 +7,19 @@
 
 import UIKit
 
+public class FirstToneHintViewStyle: NSObject {
+    /// 背景色
+    @objc public var backgroundColor: UIColor = .gray { didSet { didUpdate?() } }
+    /// 大小
+    @objc public var size: CGFloat = 10 { didSet { didUpdate?() } }
+    /// 底部间距
+    @objc public var bottomMargin: CGFloat = 0 { didSet { didUpdate?() } }
+    
+    typealias VoidBlock = () -> Void
+    
+    var didUpdate: VoidBlock?
+}
+
 class FirstToneHintView: UIView {
     var style = FirstToneHintViewStyle() { didSet { updateUI() } }
     var mustHidden = false

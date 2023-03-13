@@ -76,7 +76,6 @@ extension ScoringMachine {
         return temp
     }
     
-    
     /// 生成DrawInfo
     /// - Returns: (visiableDrawInfos, highlightDrawInfos, currentVisiableInfos, currentHighlightInfos)
     func makeInfos(progress: Int,

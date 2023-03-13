@@ -49,9 +49,9 @@ class TestLyricsView: XCTestCase {
                                                         tones: $0.tones) })
         let line = dataList[3]
         
-        XCTAssertNotNil(LyricsView.calculateProgressRate(progress: 43285, model: line))
-        XCTAssertNil(LyricsView.calculateProgressRate(progress: 43295, model: line))
-        XCTAssertNotNil(LyricsView.calculateProgressRate(progress: 43795, model: line))
+        XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: 43285, model: line))
+        XCTAssertNil(LyricMachine.calculateProgressRate(progress: 43295, model: line))
+        XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: 43795, model: line))
     }
 
 }

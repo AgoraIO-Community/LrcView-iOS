@@ -38,11 +38,24 @@ class VoicePitchChanger {
             offset = min(offset, stdMaxPitch * 0.4)
         }
         
-        if abs(ToneCalculator.pitchToTone(pitch: voicePitch) - ToneCalculator.pitchToTone(pitch: stdPitch)) < 0.5 { /** tone差距过小，直接返回 **/
+        if abs(voicePitch - stdPitch) < 1 { /** 差距过小，直接返回 **/
             return voicePitch
         }
         
-        return min(voicePitch + offset, stdMaxPitch)
+        switch n {
+        case 1:
+            return min(voicePitch + 0.5 * offset, stdMaxPitch)
+        case 2:
+            return min(voicePitch + 0.6 * offset, stdMaxPitch)
+        case 3:
+            return min(voicePitch + 0.7 * offset, stdMaxPitch)
+        case 4:
+            return min(voicePitch + 0.8 * offset, stdMaxPitch)
+        case 5:
+            return min(voicePitch + 0.9 * offset, stdMaxPitch)
+        default:
+            return min(voicePitch + offset, stdMaxPitch)
+        }
     }
     
     func reset() {
