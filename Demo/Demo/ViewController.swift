@@ -37,18 +37,20 @@ class ViewController: UIViewController {
     }
 
     func createData() {
-        list = [Section(title: "UI", rows: [.init(title: "View配置")]),
-                Section(title: "体验", rows: [.init(title: "FirstToneHintView"),
-                                            .init(title: "纯音乐"),
-                                            .init(title: "歌词显示 mcc"),
-                                            .init(title: "用AVPlayer测试"),
-                                            .init(title: "Emitter测试"),
-                                            .init(title: "得分动画测试"),
-                                            .init(title: "激励动画测试"),
-                                            .init(title: "LyricLabel测试"),
-                                            .init(title: "OC"),
-                                            .init(title: "profile")])]
+//        list = [Section(title: "UI", rows: [.init(title: "View配置")]),
+//                Section(title: "体验", rows: [.init(title: "FirstToneHintView"),
+//                                            .init(title: "纯音乐"),
+//                                            .init(title: "歌词显示 mcc"),
+//                                            .init(title: "用AVPlayer测试"),
+//                                            .init(title: "Emitter测试"),
+//                                            .init(title: "得分动画测试"),
+//                                            .init(title: "激励动画测试"),
+//                                            .init(title: "LyricLabel测试"),
+//                                            .init(title: "OC"),
+//                                            .init(title: "profile")])]
+        list = [Section(title: "LRC打分", rows: [.init(title: "LRC打分100ms")])]
 //        list = [Section(title: "UI", rows: [.init(title: "View配置")])]
+        
     }
 }
 
@@ -75,7 +77,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
+        
         if indexPath.section == 0 { /** UI配置测试 **/
             let vc = MainTestVC()
             navigationController?.pushViewController(vc, animated: true)

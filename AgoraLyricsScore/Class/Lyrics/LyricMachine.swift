@@ -89,7 +89,7 @@ class LyricMachine {
                     current.update(status: .selectedOrHighlighted)
                     var progressRate: Double = 0
                     if progress > item.element.beginTime, progress <= item.element.endTime { /** 计算比例 **/
-                        progressRate = LyricMachine.calculateProgressRate(progress: progress, model: item.element) ?? current.progressRate
+                        progressRate = LyricMachine.calculateProgressRate(progress: progress, model: item.element, isTimeAccurateToWord: data.isTimeAccurateToWord) ?? current.progressRate
                     }
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
@@ -101,20 +101,21 @@ class LyricMachine {
                     invokeLyricMachine(didUpdateConsloe: text)
                     return
                 }
-                
-                if newCurrentIndex == currentIndex,
-                   progress > item.element.beginTime,
-                   progress <= item.element.endTime { /** 还在原来的句子 **/
-                    
-                    let current = dataList[currentIndex]
-                    let progressRate: Double = LyricMachine.calculateProgressRate(progress: progress, model: item.element) ?? current.progressRate
-                    current.update(progressRate: progressRate)
-                    let indexPath = IndexPath(row: currentIndex, section: 0)
-                    invokeLyricMachine(didUpdateLineAt: indexPath)
-                    
-                    let text = "append \(currentIndex) progressRate: \(progressRate) progress:\(progress)"
-                    Log.debug(text: text, tag: logTag)
-                    invokeLyricMachine(didUpdateConsloe: text)
+                if data.isTimeAccurateToWord {
+                    if newCurrentIndex == currentIndex,
+                       progress > item.element.beginTime,
+                       progress <= item.element.endTime { /** 还在原来的句子 **/
+                        
+                        let current = dataList[currentIndex]
+                        let progressRate: Double = LyricMachine.calculateProgressRate(progress: progress, model: item.element, isTimeAccurateToWord: true) ?? current.progressRate
+                        current.update(progressRate: progressRate)
+                        let indexPath = IndexPath(row: currentIndex, section: 0)
+                        invokeLyricMachine(didUpdateLineAt: indexPath)
+                        
+                        let text = "append \(currentIndex) progressRate: \(progressRate) progress:\(progress)"
+                        Log.debug(text: text, tag: logTag)
+                        invokeLyricMachine(didUpdateConsloe: text)
+                    }
                 }
             }
         }
@@ -140,7 +141,11 @@ extension LyricMachine {
     /// 计算句子的进度
     /// - Parameters:
     /// - Returns: `nil` 表示无法计算, 其他： [0, 1]
-    static func calculateProgressRate(progress: Int, model: LyricCell.Model) -> Double? {
+    static func calculateProgressRate(progress: Int, model: LyricCell.Model, isTimeAccurateToWord: Bool) -> Double? {
+        guard isTimeAccurateToWord else {
+            return 0.0
+        }
+        
         let toneCount = model.tones.filter({ $0.word.isEmpty == false }).count
         for (index, tone) in model.tones.enumerated() {
             if progress >= tone.beginTime, progress <= tone.beginTime + tone.duration {
@@ -149,6 +154,6 @@ extension LyricMachine {
                 return total
             }
         }
-        return nil
+        return 0.0
     }
 }

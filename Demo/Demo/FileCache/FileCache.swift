@@ -4,7 +4,6 @@
 //
 //  Created by ZYP on 2023/2/7.
 //
-
 import Foundation
 import Zip
 class FileCache {
@@ -23,6 +22,13 @@ class FileCache {
         DownloaderManager.shared.download(url: url,
                                           progress: progress,
                                           completion: { path in
+            if path.split(separator: ".").last == "lrc" {
+                DispatchQueue.main.async {
+                    completion(path)
+                }
+                return
+            }
+            
             FileCache.unzip(filePath: path,
                             completion: completion,
                             fail: fail)

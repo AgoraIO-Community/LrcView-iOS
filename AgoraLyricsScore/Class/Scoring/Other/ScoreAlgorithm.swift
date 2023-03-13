@@ -11,6 +11,7 @@ class ScoreAlgorithm: IScoreAlgorithm {
     func getLineScore(with toneScores: [ToneScoreModel]) -> Int {
         if toneScores.isEmpty { return 0 }
         let ret = toneScores.map({ $0.score }).reduce(0.0, +) / Float(toneScores.count)
+        Log.debug(text: "\(toneScores.map({$0.score})) ret: \(ret)", tag: "ScoreAlgorithm")
         return Int(ret)
     }
 }

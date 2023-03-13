@@ -12,7 +12,7 @@ import AgoraLyricsScore
 import ScoreEffectUI
 
 class MainTestVC: UIViewController {
-    let karaokeView = KaraokeView(frame: .zero, loggers: [FileLogger()])
+    let karaokeView = KaraokeView(frame: .zero, loggers: [FileLogger(), ConsoleLogger()])
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()
@@ -24,7 +24,9 @@ class MainTestVC: UIViewController {
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
-    var songCode = 6625526605291650
+//    var songCode = 6246262727283870
+    var songCode = 6818720743746890
+//    var songCode = 6625526605291650
     /// 0：十年， 1: 王菲 2:晴天
     var songCodes = [6625526605291650, 6599297819205290, 6625526603296890]
     var currentSongIndex = 0
@@ -32,6 +34,7 @@ class MainTestVC: UIViewController {
     var cumulativeScore = 0
     var lyricModel: LyricModel!
     var noLyric = false
+    var lastTime: Double = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +52,7 @@ class MainTestVC: UIViewController {
         karaokeView.scoringView.topSpaces = 80
         karaokeView.lyricsView.showDebugView = false
         karaokeView.lyricsView.draggable = true
+        karaokeView.lyricsView.textSelectedColor = .red
         
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)
@@ -202,7 +206,7 @@ class MainTestVC: UIViewController {
             if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
                 time -= 250
             }
-            self.karaokeView.setProgress(progress: current )
+            self.karaokeView.setProgress(progress: time)
         }
     }
     
@@ -215,7 +219,7 @@ class MainTestVC: UIViewController {
         switch sender {
         case skipButton:
             if let data = lyricModel {
-                mpk.seek(toPosition: data.preludeEndPosition - 2000)
+                mpk.seek(toPosition: data.lines.first!.beginTime - 2000)
             }
             return
         case setButton:
@@ -323,11 +327,18 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
     func onLyricResult(_ requestId: String, lyricUrl: String) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
-//        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
 //        DispatchQueue.main.async {
+////            let filePath = Bundle.main.path(forResource: "十年", ofType: "lrc")!
+//            let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
 //            let url = URL(fileURLWithPath: filePath)
 //            let data = try! Data(contentsOf: url)
-//            let model = KaraokeView.parseLyricData(data: data)!
+//
+////            let path = Bundle.main.path(forResource: "song_tmp", ofType: "txt")!
+//            let path = Bundle.main.path(forResource: "pitch", ofType: "bin")!
+//            let fileUrl = URL(fileURLWithPath: path)
+//            let fileData = try! Data(contentsOf: fileUrl)
+//
+//            let model = KaraokeView.parseLyricData(data: data, pitchFileData: fileData)!
 //            self.lyricModel = model
 //            if !self.noLyric {
 //                self.karaokeView.setLyricData(data: model)
@@ -343,10 +354,22 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         FileCache.fect(urlString: lyricUrl) { progress in
 
         } completion: { filePath in
+            let path = Bundle.main.path(forResource: "pitch", ofType: "bin")!
+            let fileUrl = URL(fileURLWithPath: path)
+            let fileData = try! Data(contentsOf: fileUrl)
+
             let url = URL(fileURLWithPath: filePath)
             let data = try! Data(contentsOf: url)
-            let model = KaraokeView.parseLyricData(data: data)!
+            let model = KaraokeView.parseLyricData(data: data, pitchFileData: fileData)!
+            for line in model.lines {
+                let m = line.beginTime / (60 * 1000)
+                let s = line.beginTime % (60 * 1000)
+                let tex = "[\(m):\(Double(s)/1000.0)]\(line.content)"
+                print(tex)
+            }
+
             self.lyricModel = model
+
             if !self.noLyric {
                 self.karaokeView.setLyricData(data: model)
                 self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
@@ -425,3 +448,6 @@ extension MainTestVC: ParamSetVCDelegate {
         mccPreload()
     }
 }
+
+
+

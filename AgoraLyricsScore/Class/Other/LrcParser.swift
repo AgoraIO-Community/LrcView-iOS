@@ -21,12 +21,11 @@ class LrcParser {
             Log.errorText(text: "convert to string fail", tag: logTag)
             return nil
         }
-        
         return parse(lrcString: string)
     }
     
     private func parse(lrcString: String) -> LyricModel? {
-        let lrcConnectArray = lrcString.components(separatedBy: "\n")
+        let lrcConnectArray = lrcString.components(separatedBy: "\r")
         
         let pattern = "\\[[0-9][0-9]:[0-9][0-9].[0-9]{1,}\\]"
         guard let regular = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else {
@@ -60,7 +59,8 @@ class LrcParser {
                                           content: lrc,
                                           tones: [])
                 if let lastLine = lines.last { /** 把上一句的时间补齐 **/
-                    lastLine.duration = line.beginTime - lastLine.beginTime
+                    let gap = 1 /** 句间的空隙默认为1ms **/
+                    lastLine.duration = line.beginTime - lastLine.beginTime - gap
                 }
                 lines.append(line)
             }
@@ -72,11 +72,12 @@ class LrcParser {
         
         let result = LyricModel(name: "unknow",
                                 singer: "unknow",
-                                type: .fast,
+                                type: .unknow,
                                 lines: lines,
                                 preludeEndPosition: preludeEndPosition,
                                 duration: 0,
-                                hasPitch: false)
+                                hasPitch: false,
+                                isTimeAccurateToWord: false)
         return result
     }
 }

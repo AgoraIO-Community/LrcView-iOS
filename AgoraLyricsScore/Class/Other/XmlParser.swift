@@ -34,7 +34,8 @@ class XmlParser: NSObject {
             return nil
         }
         
-        return process()
+        let model = process()
+        return model
     }
     
     private func process() -> LyricModel? {
@@ -129,7 +130,14 @@ extension XmlParser: XMLParserDelegate {
                 attributes attributeDict: [String: String] = [:]) {
         switch elementName {
         case "song":
-            song = LyricModel()
+            song = LyricModel(name: "",
+                              singer: "",
+                              type: .slow,
+                              lines: [],
+                              preludeEndPosition: 0,
+                              duration: 0,
+                              hasPitch: false,
+                              isTimeAccurateToWord: true)
         case "general":
             push(.general)
         case "name":
@@ -204,7 +212,7 @@ extension XmlParser: XMLParserDelegate {
             case .word, .overlap:
                 if let tone = song.lines.last?.tones.last {
                     tone.word = tone.word + string
-                    if tone.lang == .unknown { /** 补偿语言 **/
+                    if tone.lang == .unknow { /** 补偿语言 **/
                         do {
                             let regular = try NSRegularExpression(pattern: "[a-zA-Z]", options: .caseInsensitive)
                             let count = regular.numberOfMatches(in: tone.word, options: .anchored, range: NSRange(location: 0, length: tone.word.count))

@@ -9,7 +9,14 @@ import Foundation
 
 class Parser {
     private let logTag = "Parser"
-    func parseLyricData(data: Data) -> LyricModel? {
+    
+    /// parseLyricData
+    /// - Parameters:
+    ///   - data: binary data of xml/lrc file
+    ///   - pitchFileData: binary data of pitch file
+    /// - Returns: `LyricModel`
+    func parseLyricData(data: Data,
+                        pitchFileData: Data?) -> LyricModel? {
         guard data.count > 0 else {
             Log.errorText(text: "data.count == 0", tag: logTag)
             return nil
@@ -20,16 +27,28 @@ class Parser {
             return nil
         }
         
-        if string.first == "<" { /** XML格式 **/
+        var pitchModel: PitchModel?
+        if let pitchFileData = pitchFileData {
+            let pitchParser = PitchParser()
+            pitchModel = pitchParser.parse(data: pitchFileData)
+        }
+        
+        var model: LyricModel?
+        if string.first == "<" { /** XML **/
             let parser = XmlParser()
-            return parser.parseLyricData(data: data)
+            model = parser.parseLyricData(data: data)
         }
         
-        if string.first == "[" { /** LRC格式 **/
+        if string.first == "[" { /** LRC **/
             let parser = LrcParser()
-            return parser.parseLyricData(data: data)
+            model = parser.parseLyricData(data: data)
         }
         
-        fatalError("unknow file type")
+        if var model = model, let pitchModel = pitchModel { /** merge **/
+            let merge = PitchMerge()
+            model = merge.merge(model: model, pitchModel: pitchModel)
+        }
+        
+        return model
     }
 }

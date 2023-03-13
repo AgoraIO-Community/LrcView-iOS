@@ -25,7 +25,6 @@ class VoicePitchChanger {
         if voicePitch <= 0 {
             return 0
         }
-        
         n += 1.0
         let gap = stdPitch - voicePitch
         

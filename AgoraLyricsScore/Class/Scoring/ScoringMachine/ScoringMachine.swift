@@ -130,53 +130,58 @@ class ScoringMachine {
             return
         }
         
-        /** 1.get hitedInfo **/
-        guard let hitedInfo = getHitedInfo(progress: progress,
-                                           currentVisiableInfos: currentVisiableInfos) else {
-            return
+        let times = [progress]
+        for time in times {
+            /** 1.get hitedInfo **/
+            guard let hitedInfo = getHitedInfo(progress: time,
+                                               currentVisiableInfos: currentVisiableInfos),
+                  hitedInfo.pitch > 0 else {
+                continue
+            }
+            
+            /** 2.voice change **/
+            let voicePitch = voiceChanger.handlePitch(stdPitch: hitedInfo.pitch,
+                                                      voicePitch: pitch,
+                                                      stdMaxPitch: maxPitch)
+            Log.debug(text: "pitch: \(pitch) after: \(voicePitch) stdPitch:\(hitedInfo.pitch)", tag: logTag)
+            
+            /** 3.calculted score **/
+            let score = ToneCalculator.calculedScore(voicePitch: voicePitch,
+                                                     stdPitch: hitedInfo.pitch,
+                                                     scoreLevel: scoreLevel,
+                                                     scoreCompensationOffset: scoreCompensationOffset)
+            
+            /** 4.save tone score  **/
+            if let hitToneScore = toneScores.first(where: { $0.tone.beginTime == hitedInfo.beginTime }) {
+                hitToneScore.addScore(score: score)
+            }
+            else {
+                Log.error(error: "ignore score \(score) progress: \(progress), beginTime: \(hitedInfo.beginTime), endTime: \(hitedInfo.endTime) \(toneScores.map({ "\($0.tone.beginTime)-" }).reduce("", +))", tag: logTag)
+            }
+            
+            /** 5.update HighlightInfos **/
+            if score >= hitScoreThreshold * 100 {
+                currentHighlightInfos = makeHighlightInfos(progress: time,
+                                                           hitedInfo: hitedInfo,
+                                                           currentVisiableInfos: currentVisiableInfos,
+                                                           currentHighlightInfos: currentHighlightInfos)
+            }
+            Log.debug(text: "score: \(score)", tag: logTag)
+            
+            /** 6.calculated ui info **/
+            let showAnimation = score >= hitScoreThreshold * 100
+            let y = calculatedY(pitch: showAnimation ? hitedInfo.pitch : voicePitch,
+                                viewHeight: canvasViewSize.height,
+                                minPitch: minPitch,
+                                maxPitch: maxPitch,
+                                standardPitchStickViewHeight: standardPitchStickViewHeight)
+            
+            let debugInfo = DebugInfo(originalPitch: pitch,
+                                      pitch: voicePitch,
+                                      hitedInfo: hitedInfo,
+                                      progress: time)
+            invokeScoringMachine(didUpdateCursor: y, showAnimation: showAnimation, debugInfo: debugInfo)
         }
-        
-        /** 2.voice change **/
-        let voicePitch = voiceChanger.handlePitch(stdPitch: hitedInfo.pitch,
-                                                  voicePitch: pitch,
-                                                  stdMaxPitch: maxPitch)
-        Log.debug(text: "pitch: \(pitch) after: \(voicePitch) stdPitch:\(hitedInfo.pitch)", tag: logTag)
-        
-        /** 3.calculted score **/
-        let score = ToneCalculator.calculedScore(voicePitch: voicePitch,
-                                                 stdPitch: hitedInfo.pitch,
-                                                 scoreLevel: scoreLevel,
-                                                 scoreCompensationOffset: scoreCompensationOffset)
-        
-        /** 4.save tone score  **/
-        if let hitToneScore = toneScores.first(where: { $0.tone.beginTime == hitedInfo.beginTime }) {
-            hitToneScore.addScore(score: score)
-        }
-        else {
-            Log.error(error: "ignore score \(score) progress: \(progress), beginTime: \(hitedInfo.beginTime), endTime: \(hitedInfo.endTime) \(toneScores.map({ "\($0.tone.beginTime)-" }).reduce("", +))", tag: logTag)
-        }
-        
-        /** 5.update HighlightInfos **/
-        if score >= hitScoreThreshold * 100 {
-            currentHighlightInfos = makeHighlightInfos(progress: progress,
-                                                       hitedInfo: hitedInfo,
-                                                       currentVisiableInfos: currentVisiableInfos,
-                                                       currentHighlightInfos: currentHighlightInfos)
-        }
-        Log.debug(text: "score: \(score)", tag: logTag)
-        /** 6.calculated ui info **/
-        let showAnimation = score >= hitScoreThreshold * 100
-        let y = calculatedY(pitch: voicePitch,
-                            viewHeight: canvasViewSize.height,
-                            minPitch: minPitch,
-                            maxPitch: maxPitch,
-                            standardPitchStickViewHeight: standardPitchStickViewHeight)
-        
-        let debugInfo = DebugInfo(originalPitch: pitch,
-                                  pitch: voicePitch,
-                                  hitedInfo: hitedInfo,
-                                  progress: progress)
-        invokeScoringMachine(didUpdateCursor: y, showAnimation: showAnimation, debugInfo: debugInfo)
     }
     
     private func _dragBegain() {
@@ -211,7 +216,6 @@ class ScoringMachine {
         currentHighlightInfos = []
         dataList = []
         lineEndTimes = []
-        cumulativeScore = 0
         currentIndexOfLine = 0
         lineScores = []
         toneScores = []
