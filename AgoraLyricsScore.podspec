@@ -18,9 +18,9 @@ Pod::Spec.new do |spec|
     'AgoraLyricsScoreBundle' => ['AgoraLyricsScore/Resources/*.xcassets']
   }
   
-#  spec.test_spec 'Tests' do |test_spec|
-#    test_spec.source_files = "Tests/**/*.{swift}"
-#    test_spec.resource = "Tests/Resource/*"
-#    test_spec.frameworks = 'UIKit','Foundation'
-#  end
+spec.test_spec 'Tests' do |test_spec|
+    test_spec.source_files = "AgoraLyricsScore/Tests/**/*.{swift}"
+    test_spec.resource = "AgoraLyricsScore/Tests/Resource/*"
+    test_spec.frameworks = 'UIKit','Foundation'
+end
 end
