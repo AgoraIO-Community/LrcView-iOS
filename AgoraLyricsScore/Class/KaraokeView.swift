@@ -14,7 +14,6 @@ public class KaraokeView: UIView {
     }
     
     /// 是否使用评分功能
-    /// - Note: 当`LyricModel.hasPitch = false`，强制不使用
     /// - Note: 当为 `false`, 会隐藏评分视图
     @objc public var scoringEnabled: Bool = true {
         didSet { updateUI() }
