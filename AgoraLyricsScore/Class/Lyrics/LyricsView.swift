@@ -99,8 +99,15 @@ public class LyricsView: UIView {
         let point = CGPoint(x: 0, y: scrollView.contentOffset.y + scrollView.bounds.height * 0.5)
         var indexPath = tableView.indexPathForRow(at: point)
         if indexPath == nil { /** 顶部和底部空隙 **/
-            indexPath = scrollView.contentOffset.y < 0 ? IndexPath(row: 0, section: 0) : IndexPath(row: dataList.count - 1, section: 0)
+            if scrollView.contentOffset.y < 0 {
+                indexPath = IndexPath(row: 0, section: 0)
+            }
+            else {
+                Log.debug(text: "selecte last at \(point.y)", tag: logTag)
+                indexPath = IndexPath(row: dataList.count - 1, section: 0)
+            }
         }
+        Log.debug(text:"dragCellHandler \(indexPath!.row) \(point.y) = \(scrollView.contentOffset.y) + \(scrollView.bounds.height * 0.5)", tag: logTag)
         let model = dataList[indexPath!.row]
         delegate?.onLyricsView(view: self, didDragTo: model.beginTime)
     }
@@ -172,13 +179,12 @@ extension LyricsView {
         let constant = firstToneHintViewStyle.size + firstToneHintViewStyle.bottomMargin
         tableViewTopConstraint.constant = constant
         firstToneHintViewHeightConstraint.constant = firstToneHintViewStyle.size
-        
         if tableView.bounds.width > 0 {
             let viewFrame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: tableView.bounds.height/2)
             tableView.tableHeaderView = .init(frame: viewFrame)
             tableView.tableFooterView = .init(frame: viewFrame)
+            Log.debug(text: "viewFrame:\(viewFrame.height)", tag: logTag)
         }
-        
         if showDebugView {
             if !subviews.contains(consoleView) {
                 addSubview(consoleView)
@@ -217,11 +223,13 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
     }
     
     public func scrollViewWillBeginDragging(_: UIScrollView) {
+        Log.info(text: "scrollViewWillBeginDragging", tag: logTag)
         isDragging = true
         delegate?.onLyricsViewBegainDrag(view: self)
     }
     
-    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate _: Bool) {
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        Log.info(text: "scrollViewDidEndDragging decelerate \(decelerate)", tag: logTag)
         if isDragging {
             dragCellHandler(scrollView: scrollView)
             lyricMachine.setDragEnd()
@@ -230,6 +238,7 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
     }
     
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        Log.info(text: "scrollViewDidEndDecelerating", tag: logTag)
         if isDragging {
             dragCellHandler(scrollView: scrollView)
             lyricMachine.setDragEnd()

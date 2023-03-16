@@ -89,7 +89,9 @@ class LyricMachine {
                     current.update(status: .selectedOrHighlighted)
                     var progressRate: Double = 0
                     if progress > item.element.beginTime, progress <= item.element.endTime { /** 计算比例 **/
-                        progressRate = LyricMachine.calculateProgressRate(progress: progress, model: item.element) ?? current.progressRate
+                        progressRate = LyricMachine.calculateProgressRate(progress: progress,
+                                                                          model: item.element,
+                                                                          canScoring: data.hasPitch) ?? current.progressRate
                     }
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
@@ -107,7 +109,9 @@ class LyricMachine {
                    progress <= item.element.endTime { /** 还在原来的句子 **/
                     
                     let current = dataList[currentIndex]
-                    let progressRate: Double = LyricMachine.calculateProgressRate(progress: progress, model: item.element) ?? current.progressRate
+                    let progressRate: Double = LyricMachine.calculateProgressRate(progress: progress,
+                                                                                  model: item.element,
+                                                                                  canScoring: data.hasPitch) ?? current.progressRate
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
                     invokeLyricMachine(didUpdateLineAt: indexPath)
@@ -139,16 +143,25 @@ class LyricMachine {
 extension LyricMachine {
     /// 计算句子的进度
     /// - Parameters:
+    ///   - canScoring: 是否可以打分（数据源是lrc格式不可打分）
     /// - Returns: `nil` 表示无法计算, 其他： [0, 1]
-    static func calculateProgressRate(progress: Int, model: LyricCell.Model) -> Double? {
-        let toneCount = model.tones.filter({ $0.word.isEmpty == false }).count
-        for (index, tone) in model.tones.enumerated() {
-            if progress >= tone.beginTime, progress <= tone.beginTime + tone.duration {
-                let progressRate = Double((progress - tone.beginTime)) / Double(tone.duration)
-                let total = (Double(index) + progressRate) / Double(toneCount)
-                return total
+    static func calculateProgressRate(progress: Int,
+                                      model: LyricCell.Model,
+                                      canScoring: Bool) -> Double? {
+        if canScoring {
+            let toneCount = model.tones.filter({ $0.word.isEmpty == false }).count
+            for (index, tone) in model.tones.enumerated() {
+                if progress >= tone.beginTime, progress <= tone.beginTime + tone.duration {
+                    let progressRate = Double((progress - tone.beginTime)) / Double(tone.duration)
+                    let total = (Double(index) + progressRate) / Double(toneCount)
+                    return total
+                }
             }
+            return nil
         }
-        return nil
+        else {
+            let progressRate = Double(progress - model.beginTime) / Double(model.duration)
+            return progressRate
+        }
     }
 }

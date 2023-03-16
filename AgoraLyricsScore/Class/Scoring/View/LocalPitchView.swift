@@ -82,7 +82,7 @@ class LocalPitchView: UIView {
     /// - Parameter y: 从top到bottom方向上的距离
     func setIndicatedViewY(y: CGFloat) {
         let constant = (bounds.height - y) * -1
-        let duration: TimeInterval = indicatedCenterYConstant < constant ? 0.05 : 0.15
+        let duration: TimeInterval = indicatedCenterYConstant < constant ? 0.15 : 0.05
         indicatedCenterYConstant = constant
         indicatedViewCenterYConstraint.constant = constant
         UIView.animate(withDuration: duration, delay: 0, options: []) { [weak self] in

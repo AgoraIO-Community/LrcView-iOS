@@ -8,8 +8,8 @@ target 'Demo' do
   
   pod "AgoraLyricsScore", :path => "../AgoraLyricsScore.podspec", :testspecs => ['Tests']
   pod 'RTMTokenBuilder', "1.0.0"
-#  pod 'AgoraRtcEngine_iOS', :path => '/Volumes/T5/PodSpec/Audio50ms/AgoraRtcEngine_iOS.podspec'
-  pod "AgoraRtcEngine_iOS", "4.1.1"
+  pod 'AgoraRtcEngine_iOS', :path => '/Volumes/T5/PodSpec/Audio50ms/AgoraRtcEngine_iOS.podspec'
+#  pod "AgoraRtcEngine_iOS", "4.1.1"
   pod "Zip"
   pod "ScoreEffectUI", :path => "../../ScoringEffectUI/ScoreEffectUI/ScoreEffectUI.podspec", :testspecs => ['Tests']
 #  pod 'ScoreEffectUI'

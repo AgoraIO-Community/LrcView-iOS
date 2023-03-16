@@ -26,14 +26,16 @@ class LrcParser {
     }
     
     private func parse(lrcString: String) -> LyricModel? {
-        let lrcConnectArray = lrcString.components(separatedBy: "\n")
+        let lrcConnectArray = lrcString.components(separatedBy: "\r\n")
         
         let pattern = "\\[[0-9][0-9]:[0-9][0-9].[0-9]{1,}\\]"
         guard let regular = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else {
             return nil
         }
         for line in lrcConnectArray {
-            let matchesArray = regular.matches(in: line, options: .reportProgress, range: NSRange(location: 0, length: line.count))
+            let matchesArray = regular.matches(in: line,
+                                               options: .reportProgress,
+                                               range: NSRange(location: 0, length: line.count))
             guard let lrc = line.components(separatedBy: "]").last else {
                 continue
             }

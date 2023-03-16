@@ -26,7 +26,7 @@ class TestParser: XCTestCase {
             return
         }
         XCTAssert(model.lines.count > 0)
-        XCTAssert(model.lines.first!.content.contains("什么是幸福 "))
+        XCTAssert(model.lines.first!.content.contains("什么是幸福"))
     }
     
     func testXMLFile() throws { /** xml normal **/

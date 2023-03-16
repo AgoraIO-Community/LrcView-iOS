@@ -161,18 +161,18 @@ public class ScoringView: UIView {
 }
 
 extension ScoringView: ScoringMachineDelegate {
-    func sizeOfCanvasView(_ vm: ScoringMachine) -> CGSize {
+    func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {
         return canvasView.bounds.size
     }
     
-    func scoringMachine(_ vm: ScoringMachine,
+    func scoringMachine(_ scoringMachine: ScoringMachine,
                    didUpdateDraw standardInfos: [ScoringMachine.DrawInfo],
                    highlightInfos: [ScoringMachine.DrawInfo]) {
         canvasView.draw(standardInfos: standardInfos,
                         highlightInfos: highlightInfos)
     }
     
-    func scoringMachine(_ vm: ScoringMachine,
+    func scoringMachine(_ scoringMachine: ScoringMachine,
                    didUpdateCursor centerY: CGFloat,
                    showAnimation: Bool,
                    debugInfo: ScoringMachine.DebugInfo) {
@@ -184,7 +184,7 @@ extension ScoringView: ScoringMachineDelegate {
         }
     }
     
-    func scoringMachine(_ vm: ScoringMachine,
+    func scoringMachine(_ scoringMachine: ScoringMachine,
                    didFinishLineWith model: LyricLineModel,
                    score: Int,
                    cumulativeScore: Int,

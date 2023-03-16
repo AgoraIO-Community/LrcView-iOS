@@ -81,11 +81,17 @@ extension KaraokeView {
         if !Thread.isMainThread {
             Log.error(error: "invoke setLyricData not isMainThread ", tag: logTag)
         }
+        
+        /** Fix incorrect value of tableView.Height in lyricsView, after update scoringView.height/topSpace **/
+        layoutIfNeeded()
+        
         lyricData = data
+        
         /** 无歌词状态下强制关闭 **/
         if data == nil {
             scoringEnabled = false
         }
+        
         lyricsView.setLyricData(data: data)
         scoringView.setLyricData(data: data)
         isStart = true
@@ -260,7 +266,7 @@ extension KaraokeView: ScoringViewDelegate {
         updateUI()
     }
     
-    func scoringView(_ vm: ScoringView,
+    func scoringView(_ view: ScoringView,
                      didFinishLineWith model: LyricLineModel,
                      score: Int,
                      cumulativeScore: Int,

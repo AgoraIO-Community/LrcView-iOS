@@ -23,6 +23,13 @@ class FileCache {
         DownloaderManager.shared.download(url: url,
                                           progress: progress,
                                           completion: { path in
+            if path.split(separator: ".").last == "lrc" {
+                DispatchQueue.main.async {
+                    completion(path)
+                }
+                return
+            }
+            
             FileCache.unzip(filePath: path,
                             completion: completion,
                             fail: fail)

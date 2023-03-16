@@ -133,6 +133,16 @@ class ScoringMachine {
         /** 1.get hitedInfo **/
         guard let hitedInfo = getHitedInfo(progress: progress,
                                            currentVisiableInfos: currentVisiableInfos) else {
+            let y = calculatedY(pitch: pitch,
+                                viewHeight: canvasViewSize.height,
+                                minPitch: minPitch,
+                                maxPitch: maxPitch,
+                                standardPitchStickViewHeight: standardPitchStickViewHeight)
+            let debugInfo = DebugInfo(originalPitch: pitch,
+                                      pitch: pitch,
+                                      hitedInfo: nil,
+                                      progress: progress)
+            invokeScoringMachine(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
             return
         }
         
