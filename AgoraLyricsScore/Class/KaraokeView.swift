@@ -34,28 +34,34 @@ public class KaraokeView: UIView {
     fileprivate var pitchIsZeroCount = 0
     fileprivate var isStart = false
     fileprivate let logTag = "KaraokeView"
+    /// use for debug
+    fileprivate var lastProgress = 0
+    fileprivate var progressPrintCount = 0
+    fileprivate var progressPrintCountMax = 80
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        Log.debug(text: "version \(versionName)", tag: logTag)
-        setupUI()
-        commonInit()
+    /// init
+    /// - !!! Only one init method
+    /// - Note: can set custom logger
+    /// - Note: use for Objective-C. `[[KaraokeView alloc] initWithFrame:frame loggers:@[[ConsoleLogger new], [FileLogger new]]]`
+    /// - Note: use for Swift. `KaraokeView(frame: frame)`
+    /// - Parameters:
+    ///   - logger: custom logger
+    @objc public convenience init(frame: CGRect, loggers: [ILogger] = [FileLogger(), ConsoleLogger()]) {
+        Log.setLoggers(loggers: loggers)
+        self.init(frame: frame)
     }
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    /// init
-    /// - Note: 可以使用内部默认日志:
-    /// Objective-C: ``
-    /// Swift: `KaraokeView()`
-    /// - Parameters:
-    ///   - logger: 自定义logger。
-    @objc public convenience init(frame: CGRect, loggers: [ILogger] = [FileLogger(), ConsoleLogger()]) {
-        Log.setLoggers(loggers: loggers)
-        self.init(frame: frame)
+    
+    /// Not Public, Please use `init(frame, loggers)`
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        Log.debug(text: "version \(versionName)", tag: logTag)
+        setupUI()
+        commonInit()
     }
     
     deinit {
@@ -104,6 +110,8 @@ extension KaraokeView {
         }
         isStart = false
         pitchIsZeroCount = 0
+        lastProgress = 0
+        progressPrintCount = 0
         lyricsView.reset()
         scoringView.reset()
     }
@@ -115,6 +123,7 @@ extension KaraokeView {
         if !Thread.isMainThread {
             Log.error(error: "invoke setPitch not isMainThread ", tag: logTag)
         }
+        if pitch < 0 { return }
         guard isStart else { return }
         if pitch == 0 {
             pitchIsZeroCount += 1
@@ -136,6 +145,7 @@ extension KaraokeView {
             Log.error(error: "invoke setProgress not isMainThread ", tag: logTag)
         }
         guard isStart else { return }
+        logProgressIfNeed(progress: progress)
         lyricsView.setProgress(progress: progress)
         scoringView.progress = progress
     }
@@ -278,5 +288,18 @@ extension KaraokeView: ScoringViewDelegate {
                                  cumulativeScore: cumulativeScore,
                                  lineIndex: lineIndex,
                                  lineCount: lineCount)
+    }
+}
+
+// MARK: -- Log
+extension KaraokeView {
+    func logProgressIfNeed(progress: Int) {
+        let gap = progress - lastProgress
+        if progressPrintCount < progressPrintCountMax, gap > 20 {
+            let text = "setProgress:\(progress) last:\(lastProgress) gap:\(progress-lastProgress)"
+            Log.warning(text: text, tag: logTag)
+            progressPrintCount += 1
+        }
+        lastProgress = progress
     }
 }

@@ -31,8 +31,8 @@ class MainTestVC: UIViewController {
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
-    var song = Item(code: 6246262727283870, isXML: false)
-//    var song = Item(code: 6625526605291650, isXML: true)
+//    var song = Item(code: 6246262727283870, isXML: false)
+    var song = Item(code: 6625526605291650, isXML: true)
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
