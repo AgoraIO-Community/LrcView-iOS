@@ -13,5 +13,5 @@ target 'Demo' do
   pod "Zip"
   pod "ScoreEffectUI", :path => "../../ScoringEffectUI/ScoreEffectUI/ScoreEffectUI.podspec", :testspecs => ['Tests']
 #  pod 'ScoreEffectUI'
-#  pod 'AgoraLyricsScore', '1.1.1-beta-1'
+#  pod 'AgoraLyricsScore', '1.1.1-beta-2'
 end
