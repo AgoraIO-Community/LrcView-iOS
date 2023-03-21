@@ -27,6 +27,7 @@ class MainTestVC: UIViewController {
     let setButton = UIButton()
     let quickButton = UIButton()
     let changeButton = UIButton()
+    let pauseButton = UIButton()
     var agoraKit: AgoraRtcEngineKit!
     var token: String!
     var mcc: AgoraMusicContentCenter!
@@ -46,6 +47,7 @@ class MainTestVC: UIViewController {
     var cumulativeScore = 0
     var lyricModel: LyricModel!
     var noLyric = false
+    var isPause = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,10 +70,13 @@ class MainTestVC: UIViewController {
         setButton.setTitle("设置参数", for: .normal)
         changeButton.setTitle("切歌", for: .normal)
         quickButton.setTitle("退出", for: .normal)
+        pauseButton.setTitle("暂停", for: .normal)
+        pauseButton.setTitle("继续", for: .selected)
         skipButton.backgroundColor = .red
         setButton.backgroundColor = .red
         changeButton.backgroundColor = .red
         quickButton.backgroundColor = .red
+        pauseButton.backgroundColor = .red
         
         view.backgroundColor = .black
         view.addSubview(karaokeView)
@@ -81,6 +86,7 @@ class MainTestVC: UIViewController {
         view.addSubview(setButton)
         view.addSubview(changeButton)
         view.addSubview(quickButton)
+        view.addSubview(pauseButton)
         view.addSubview(lineScoreView)
         
         karaokeView.translatesAutoresizingMaskIntoConstraints = false
@@ -90,6 +96,7 @@ class MainTestVC: UIViewController {
         setButton.translatesAutoresizingMaskIntoConstraints = false
         changeButton.translatesAutoresizingMaskIntoConstraints = false
         quickButton.translatesAutoresizingMaskIntoConstraints = false
+        pauseButton.translatesAutoresizingMaskIntoConstraints = false
         lineScoreView.translatesAutoresizingMaskIntoConstraints = false
         
         karaokeView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -121,6 +128,9 @@ class MainTestVC: UIViewController {
         
         quickButton.leftAnchor.constraint(equalTo: setButton.leftAnchor).isActive = true
         quickButton.topAnchor.constraint(equalTo: setButton.bottomAnchor, constant: 30).isActive = true
+        
+        pauseButton.leftAnchor.constraint(equalTo: skipButton.leftAnchor).isActive = true
+        pauseButton.topAnchor.constraint(equalTo: changeButton.bottomAnchor, constant: 30).isActive = true
     }
     
     func commonInit() {
@@ -128,6 +138,7 @@ class MainTestVC: UIViewController {
         setButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         changeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         quickButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
+        pauseButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         cumulativeScore = 0
         token = TokenBuilder.buildToken(Config.mccAppId,
                                         appCertificate: Config.mccCertificate,
@@ -204,7 +215,10 @@ class MainTestVC: UIViewController {
                                          queue: .main) { [weak self](_, time) in
 
             guard let self = self else { return }
-
+            if self.isPause {
+                return
+            }
+            
             var current = self.last
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
                 current = self.mpk.getPosition()
@@ -275,6 +289,18 @@ class MainTestVC: UIViewController {
             incentiveView.reset()
             navigationController?.popViewController(animated: true)
             return
+        case pauseButton:
+            if !pauseButton.isSelected {
+                isPause = true
+                mpk.pause()
+                pauseButton.isSelected = true
+            }
+            else {
+                isPause = false
+                mpk.resume()
+                pauseButton.isSelected = false
+            }
+            return
         default:
             break
         }
@@ -332,6 +358,9 @@ extension MainTestVC: AgoraRtcEngineDelegate {
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
+        if isPause {
+            return
+        }
         if let pitch = speakers.last?.voicePitch {
             karaokeView.setPitch(pitch: pitch)
         }

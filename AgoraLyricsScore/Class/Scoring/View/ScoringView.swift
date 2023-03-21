@@ -87,6 +87,10 @@ public class ScoringView: UIView {
         scoringMachine.dragDidEnd(position: position)
     }
     
+    func resetLocalPitchView() {
+        localPitchView.reset()
+    }
+    
     func reset() {
         scoringMachine.reset()
         localPitchView.reset()
@@ -160,6 +164,7 @@ public class ScoringView: UIView {
     }
 }
 
+// MARK: - ScoringMachineDelegate
 extension ScoringView: ScoringMachineDelegate {
     func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {
         return canvasView.bounds.size

@@ -31,6 +31,7 @@ public class KaraokeView: UIView {
     fileprivate var lyricsViewTopConstraint: NSLayoutConstraint!
     fileprivate var scoringViewHeightConstraint, scoringViewTopConstraint: NSLayoutConstraint!
     fileprivate var lyricData: LyricModel?
+    fileprivate let progressChecker = ProgressChecker()
     fileprivate var pitchIsZeroCount = 0
     fileprivate var isStart = false
     fileprivate let logTag = "KaraokeView"
@@ -148,6 +149,7 @@ extension KaraokeView {
         logProgressIfNeed(progress: progress)
         lyricsView.setProgress(progress: progress)
         scoringView.progress = progress
+        progressChecker.set(progress: progress)
     }
     
     /// 同时设置进度和Pitch (建议观众端使用)
@@ -239,6 +241,7 @@ extension KaraokeView {
     fileprivate func commonInit() {
         lyricsView.delegate = self
         scoringView.delegate = self
+        progressChecker.delegate = self
     }
     
     fileprivate func updateUI() {
@@ -258,6 +261,7 @@ extension KaraokeView {
     }
 }
 
+// MARK: - ProgressCheckerDelegate
 extension KaraokeView: LyricsViewDelegate {
     func onLyricsViewBegainDrag(view: LyricsView) {
         scoringView.dragBegain()
@@ -270,6 +274,7 @@ extension KaraokeView: LyricsViewDelegate {
     }
 }
 
+// MARK: - ProgressCheckerDelegate
 extension KaraokeView: ScoringViewDelegate {
     func scoringViewShouldUpdateViewLayout(view: ScoringView) {
         updateUI()
@@ -288,6 +293,13 @@ extension KaraokeView: ScoringViewDelegate {
                                  cumulativeScore: cumulativeScore,
                                  lineIndex: lineIndex,
                                  lineCount: lineCount)
+    }
+}
+
+extension KaraokeView: ProgressCheckerDelegate {
+    func progressCheckerDidProgressPause() {
+        Log.debug(text: "progressCheckerDidProgressPause", tag: logTag)
+        scoringView.resetLocalPitchView()
     }
 }
 
