@@ -254,6 +254,8 @@ class MainTestVC: UIViewController {
             present(vc, animated: true)
             return
         case changeButton:
+            isPause = false
+            pauseButton.isSelected = false
             currentSongIndex += 1
             if currentSongIndex >= songs.count {
                 currentSongIndex = 0
@@ -291,6 +293,7 @@ class MainTestVC: UIViewController {
             return
         case pauseButton:
             if !pauseButton.isSelected {
+                karaokeView.scoringView.forceStopIndicatorAnimationWhenReachingContinuousZeros()
                 isPause = true
                 mpk.pause()
                 pauseButton.isSelected = true
@@ -396,7 +399,7 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
 //            self.mccPlay()
 //        }
         
-        if lyricUrl.isEmpty { /** 网路偶问题导致的为空 **/
+        if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
             DispatchQueue.main.async { [weak self] in
                 self?.title = "无歌词地址"
             }

@@ -67,6 +67,11 @@ public class ScoringView: UIView {
         scoringMachine.getCumulativeScore()
     }
     
+    /// stop Animation and reset position of Cursor
+    @objc public func forceStopIndicatorAnimationWhenReachingContinuousZeros() {
+        localPitchView.reset()
+    }
+    
     func setLyricData(data: LyricModel?) {
         scoringMachine.setLyricData(data: data)
     }
@@ -85,10 +90,6 @@ public class ScoringView: UIView {
     
     func dragDidEnd(position: Int) {
         scoringMachine.dragDidEnd(position: position)
-    }
-    
-    func resetLocalPitchView() {
-        localPitchView.reset()
     }
     
     func reset() {

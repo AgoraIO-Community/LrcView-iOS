@@ -109,6 +109,7 @@ extension KaraokeView {
         if !Thread.isMainThread {
             Log.error(error: "invoke reset not isMainThread ", tag: logTag)
         }
+        progressChecker.reset()
         isStart = false
         pitchIsZeroCount = 0
         lastProgress = 0
@@ -299,7 +300,7 @@ extension KaraokeView: ScoringViewDelegate {
 extension KaraokeView: ProgressCheckerDelegate {
     func progressCheckerDidProgressPause() {
         Log.debug(text: "progressCheckerDidProgressPause", tag: logTag)
-        scoringView.resetLocalPitchView()
+        scoringView.forceStopIndicatorAnimationWhenReachingContinuousZeros()
     }
 }
 
