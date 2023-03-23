@@ -108,12 +108,6 @@ karaokeView.reset()
 /// - Note: 在计算分值的时候作为补偿
 /// - Parameter offset: 分值补偿 [-100, 100], 如不设置默认为0
 @objc public func setScoreCompensationOffset(offset: Int)
-
-/// 设置Log偏好
-/// - Parameters:
-///   - printToConsole: 是否打印到控制台 默认：false
-///   - writeToFile: 是否记录在文件 默认：true
-@objc static public func setLog(printToConsole: Bool, writeToFile: Bool)
 ```
 
 ### 歌词：**LyricsView**
