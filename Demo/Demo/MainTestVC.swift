@@ -37,6 +37,7 @@ class MainTestVC: UIViewController {
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
+    /// 6768817613736320
     var songs = [Item(code: 6246262727283870, isXML: false),
                  Item(code: 6625526605291650, isXML: true),
                  Item(code: 6775664001035810, isXML: true),
@@ -171,6 +172,15 @@ class MainTestVC: UIViewController {
         print("joinChannel ret \(ret)")
     }
     
+    var streamId: Int = 0
+    func createDataStream() {
+        let config = AgoraDataStreamConfig()
+        config.syncWithAudio = false
+        config.ordered = false
+        let ret = agoraKit.createDataStream(&streamId, config: config)
+        print("createDataStream ret \(ret)")
+    }
+    
     func initMCC() {
         let config = AgoraMusicContentCenterConfig()
         config.rtcEngine = agoraKit
@@ -222,6 +232,8 @@ class MainTestVC: UIViewController {
             var current = self.last
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
                 current = self.mpk.getPosition()
+                let data = self.createData(time: current + 20)
+                self.sendData(data: data)
             }
             current += 20
 
@@ -309,6 +321,26 @@ class MainTestVC: UIViewController {
         }
     }
     
+    func sendData(data: Data) {
+        if streamId > 0 {
+            agoraKit.sendStreamMessage(streamId, data: data)
+        }
+    }
+    
+    func createData(time: Int) -> Data {
+        /// 把time包装json格式
+        let dic = ["time": time]
+        let data = try! JSONSerialization.data(withJSONObject: dic, options: [])
+        return data
+    }
+    
+    func createData(pitch: Double) -> Data {
+        /// 把pitch包装json格式
+        let dic = ["pitch": pitch]
+        let data = try! JSONSerialization.data(withJSONObject: dic, options: [])
+        return data
+    }
+    
     func updateView(param: Param) {
         karaokeView.backgroundImage = param.karaoke.backgroundImage
         karaokeView.scoringEnabled = param.karaoke.scoringEnabled
@@ -353,7 +385,7 @@ extension MainTestVC: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
         print("didJoinedOfUid \(uid)")
-        
+        createDataStream()
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinChannel channel: String, withUid uid: UInt, elapsed: Int) {
@@ -501,3 +533,16 @@ extension MainTestVC: ParamSetVCDelegate {
         mccPreload()
     }
 }
+
+
+
+/// 1. 解析数据，xml -》 模型（设计好的）
+/// 2. 渲染音高线
+/// 3. 根据歌曲滚动起来（player\20ms滚动\progress = Int）demo调用 karaokeView.setProgress()
+/// 4. 匹配（根据时间去找到数组里面的数据项，然后进行tone的分数计算，save tone）
+/// 5. 一句回调
+/// 6. 外层UI
+/// 7. demo逻辑
+///
+///
+/// 阶段一：
