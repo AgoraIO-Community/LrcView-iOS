@@ -21,16 +21,16 @@ public class LyricsView: UIView {
     @objc public var noLyricTipsFont: UIFont = .systemFont(ofSize: 17) { didSet { updateUI() } }
     /// 是否隐藏等待开始圆点
     @objc public var waitingViewHidden: Bool = false { didSet { updateUI() } }
-    /// 正常歌词颜色
-    @objc public var textNormalColor: UIColor = .white
-    /// 选中的歌词颜色
-    @objc public var textSelectedColor: UIColor = .white
-    /// 高亮的歌词颜色 （命中）
-    @objc public var textHighlightedColor: UIColor = .colorWithHex(hexStr: "#FF8AB4")
-    /// 正常歌词文字大小
-    @objc public var textNormalFontSize = UIFont(name: "PingFangSC-Semibold", size: 15)!
-    /// 高亮歌词文字大小
-    @objc public var textHighlightFontSize = UIFont(name: "PingFangSC-Semibold", size: 18)!
+    /// 非活跃歌词颜色（未唱、已唱）
+    @objc public var inactiveLineTextColor: UIColor = .white
+    /// 活跃的歌词颜色 （即将唱）
+    @objc public var activeLineUpcomingTextColor: UIColor = .white
+    /// 活跃的歌词颜色 （正在唱）
+    @objc public var activeLinePlayedTextColor: UIColor = .colorWithHex(hexStr: "#FF8AB4")
+    /// 非活跃歌词文字大小（未唱、已唱）
+    @objc public var inactiveLineFontSize = UIFont(name: "PingFangSC-Semibold", size: 15)!
+    /// 活跃歌词文字大小 （即将唱、正在唱）
+    @objc public var activeLineUpcomingFontSize = UIFont(name: "PingFangSC-Semibold", size: 18)!
     /// 歌词最大宽度
     @objc public var maxWidth: CGFloat = UIScreen.main.bounds.width - 30
     /// 歌词上下间距
@@ -209,11 +209,11 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "LyricsCell", for: indexPath) as! LyricCell
-        cell.textNormalColor = textNormalColor
-        cell.textSelectedColor = textSelectedColor
-        cell.textHighlightedColor = textHighlightedColor
-        cell.textNormalFontSize = textNormalFontSize
-        cell.textHighlightFontSize = textHighlightFontSize
+        cell.textNormalColor = inactiveLineTextColor
+        cell.textSelectedColor = activeLineUpcomingTextColor
+        cell.textHighlightedColor = activeLinePlayedTextColor
+        cell.textNormalFontSize = inactiveLineFontSize
+        cell.textHighlightFontSize = activeLineUpcomingFontSize
         cell.maxWidth = maxWidth
         cell.lyricLineSpacing = lyricLineSpacing
         
