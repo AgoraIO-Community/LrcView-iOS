@@ -51,15 +51,15 @@ class LyricViewParam {
     /// 是否隐藏等待开始圆点
     var waitingViewHidden: Bool = false
     /// 正常歌词颜色
-    var textNormalColor: UIColor = .white
+    var inactiveLineTextColor: UIColor = .white
     /// 选中的歌词颜色
-    var textSelectedColor: UIColor = .white
+    var activeLineUpcomingTextColor: UIColor = .white
     /// 高亮的歌词颜色 （命中）
-    var textHighlightedColor: UIColor = .colorWithHex(hexStr: "#FF8AB4")
+    var activeLinePlayedTextColor: UIColor = .colorWithHex(hexStr: "#FF8AB4")
     /// 正常歌词文字大小
-    var textNormalFontSize = UIFont(name: "PingFangSC-Semibold", size: 15)!
+    var inactiveLineFontSize = UIFont(name: "PingFangSC-Semibold", size: 15)!
     /// 高亮歌词文字大小
-    var textHighlightFontSize = UIFont(name: "PingFangSC-Semibold", size: 18)!
+    var activeLineUpcomingFontSize = UIFont(name: "PingFangSC-Semibold", size: 18)!
     /// 歌词最大宽度
     var maxWidth: CGFloat = UIScreen.main.bounds.width - 30
     /// 歌词上下间距

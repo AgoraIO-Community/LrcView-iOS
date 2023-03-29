@@ -352,12 +352,12 @@ class MainTestVC: UIViewController {
         karaokeView.lyricsView.noLyricTipsColor = param.lyric.noLyricTipsColor
         karaokeView.lyricsView.noLyricTipsText = param.lyric.noLyricTipsText
         karaokeView.lyricsView.noLyricTipsFont = param.lyric.noLyricTipsFont
-        karaokeView.lyricsView.textHighlightFontSize = param.lyric.textHighlightFontSize
-        karaokeView.lyricsView.textNormalColor = param.lyric.textNormalColor
-        karaokeView.lyricsView.textSelectedColor = param.lyric.textSelectedColor
-        karaokeView.lyricsView.textHighlightedColor = param.lyric.textHighlightedColor
+        karaokeView.lyricsView.activeLineUpcomingFontSize = param.lyric.activeLineUpcomingFontSize
+        karaokeView.lyricsView.inactiveLineTextColor = param.lyric.inactiveLineTextColor
+        karaokeView.lyricsView.activeLineUpcomingTextColor = param.lyric.activeLineUpcomingTextColor
+        karaokeView.lyricsView.activeLinePlayedTextColor = param.lyric.activeLinePlayedTextColor
         karaokeView.lyricsView.waitingViewHidden = param.lyric.waitingViewHidden
-        karaokeView.lyricsView.textNormalFontSize = param.lyric.textNormalFontSize
+        karaokeView.lyricsView.inactiveLineFontSize = param.lyric.inactiveLineFontSize
         karaokeView.lyricsView.firstToneHintViewStyle.backgroundColor = param.lyric.firstToneHintViewStyle.backgroundColor
         karaokeView.lyricsView.firstToneHintViewStyle.size = param.lyric.firstToneHintViewStyle.size
         karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = param.lyric.firstToneHintViewStyle.bottomMargin

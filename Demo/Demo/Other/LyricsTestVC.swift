@@ -30,11 +30,11 @@ class LyricsTestVC: UIViewController {
     }
     
     func setupUI() {
-        karaokeView.lyricsView.textNormalColor = .yellow
-        karaokeView.lyricsView.textSelectedColor = .blue
-        karaokeView.lyricsView.textHighlightedColor = .cyan
-        karaokeView.lyricsView.textNormalFontSize = .systemFont(ofSize: 16)
-        karaokeView.lyricsView.textHighlightFontSize = .systemFont(ofSize: 23)
+        karaokeView.lyricsView.inactiveLineTextColor = .yellow
+        karaokeView.lyricsView.activeLineUpcomingTextColor = .blue
+        karaokeView.lyricsView.activeLinePlayedTextColor = .cyan
+        karaokeView.lyricsView.inactiveLineFontSize = .systemFont(ofSize: 16)
+        karaokeView.lyricsView.activeLineUpcomingFontSize = .systemFont(ofSize: 23)
         karaokeView.lyricsView.draggable = true
         karaokeView.scoringView.viewHeight = 130
         karaokeView.scoringView.topSpaces = 50

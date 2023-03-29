@@ -132,27 +132,27 @@ extension ViewTestVC: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             if indexPath.row == 1 { /** lyrcis.textNormalColor **/
-                karaokeView.lyricsView.textNormalColor = .green
+                karaokeView.lyricsView.inactiveLineTextColor = .green
                 reset()
                 return
             }
             if indexPath.row == 2 { /** lyrcis.textHighlightColor **/
-                karaokeView.lyricsView.textSelectedColor = .red
+                karaokeView.lyricsView.activeLineUpcomingTextColor = .red
                 reset()
                 return
             }
             if indexPath.row == 3 { /** lyrcis.textHighlightFillColor **/
-                karaokeView.lyricsView.textHighlightedColor = .yellow
+                karaokeView.lyricsView.activeLinePlayedTextColor = .yellow
                 reset()
                 return
             }
             if indexPath.row == 4 { /** lyricsView.textNormalFontSize **/
-                karaokeView.lyricsView.textNormalFontSize = .systemFont(ofSize: 20)
+                karaokeView.lyricsView.inactiveLineFontSize = .systemFont(ofSize: 20)
                 reset()
                 return
             }
             if indexPath.row == 5 { /** lyricsView.textHighlightFontSize **/
-                karaokeView.lyricsView.textHighlightFontSize = .systemFont(ofSize: 23)
+                karaokeView.lyricsView.activeLineUpcomingFontSize = .systemFont(ofSize: 23)
                 reset()
                 return
             }

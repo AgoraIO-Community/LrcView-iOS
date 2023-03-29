@@ -145,21 +145,21 @@ class ParamSetVC: UIViewController {
                 cell.detailTextLabel?.text = "\(param.lyric.firstToneHintViewStyle.bottomMargin)"
             }
             if indexPath.row == 4 { /** lyrcis.textNormalColor **/
-                cell.backgroundColor = param.lyric.textNormalColor
+                cell.backgroundColor = param.lyric.inactiveLineTextColor
             }
             if indexPath.row == 5 { /** lyrcis.textSelectedColor **/
-                cell.backgroundColor = param.lyric.textSelectedColor
+                cell.backgroundColor = param.lyric.activeLineUpcomingTextColor
             }
             if indexPath.row == 6 { /** lyrcis.textHighlightedColor **/
-                cell.backgroundColor = param.lyric.textHighlightedColor
+                cell.backgroundColor = param.lyric.activeLinePlayedTextColor
             }
             if indexPath.row == 7 { /** lyricsView.textNormalFontSize **/
                 cell.detailTextLabel?.text = "字体"
-                cell.detailTextLabel?.font = param.lyric.textNormalFontSize
+                cell.detailTextLabel?.font = param.lyric.inactiveLineFontSize
             }
             if indexPath.row == 8 { /** lyricsView.textHighlightFontSize **/
                 cell.detailTextLabel?.text = "字体"
-                cell.detailTextLabel?.font = param.lyric.textHighlightFontSize
+                cell.detailTextLabel?.font = param.lyric.activeLineUpcomingFontSize
             }
             if indexPath.row == 9 { /** lyricsView.lyricLineSpacing **/
                 cell.detailTextLabel?.text = "\(param.lyric.lyricLineSpacing)"
@@ -274,19 +274,19 @@ class ParamSetVC: UIViewController {
                 
             }
             if indexPath.row == 4 { /** lyrcis.textNormalColor **/
-                param.lyric.textNormalColor = .random
+                param.lyric.inactiveLineTextColor = .random
             }
             if indexPath.row == 5 { /** lyrcis.textSelectedColor **/
-                param.lyric.textSelectedColor = .random
+                param.lyric.activeLineUpcomingTextColor = .random
             }
             if indexPath.row == 6 { /** lyrcis.textHighlightedColor **/
-                param.lyric.textHighlightedColor = .random
+                param.lyric.activeLinePlayedTextColor = .random
             }
             if indexPath.row == 7 { /** lyricsView.textNormalFontSize **/
-                param.lyric.textNormalFontSize = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
+                param.lyric.inactiveLineFontSize = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
             }
             if indexPath.row == 8 { /** lyricsView.textHighlightFontSize **/
-                param.lyric.textHighlightFontSize = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
+                param.lyric.activeLineUpcomingFontSize = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
             }
             if indexPath.row == 9 { /** lyricsView.lyricLineSpacing **/
                 param.lyric.lyricLineSpacing = genValue(current: param.lyric.lyricLineSpacing, ops: [0, 5, 10, 15, 20])
