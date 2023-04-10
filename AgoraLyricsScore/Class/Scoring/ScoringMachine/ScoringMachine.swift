@@ -52,7 +52,9 @@ class ScoringMachine {
     }
     
     func setProgress(progress: Int) {
+        Log.debug(text: "progress: \(progress)", tag: "progress")
         queue.async { [weak self] in
+            Log.debug(text: "==progress: \(progress)", tag: "progress")
             self?._setProgress(progress: progress)
         }
     }
@@ -245,7 +247,6 @@ class ScoringMachine {
         currentVisiableInfos = visiableInfos
         currentHighlightInfos = highlightInfos
         invokeScoringMachine(didUpdateDraw: visiableDrawInfos, highlightInfos: highlightDrawInfos)
-        
         guard let index = findCurrentIndexOfLine(progress: progress, lineEndTimes: lineEndTimes)  else {
             return
         }
