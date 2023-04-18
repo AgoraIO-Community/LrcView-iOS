@@ -49,7 +49,8 @@ class ViewController: UIViewController {
                                             .init(title: "OC"),
                                             .init(title: "profile"),
                                             .init(title: "观众端"),
-                                            .init(title: "主播端")])]
+                                            .init(title: "主播端"),
+                                            .init(title: "抢唱")])]
 
 //        list = [Section(title: "UI", rows: [.init(title: "View配置")])]
     }
@@ -154,6 +155,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             
             if indexPath.row == 11 { /** 主播端 **/
                 let vc = HostVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 12 { /** 抢唱 **/
+                let vc = QiangChangVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }
