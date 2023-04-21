@@ -1,0 +1,978 @@
+<?xml version='1.0' encoding='utf-8'?>
+<song>
+	<general>
+		<name>十年 </name>
+		<singer>陈奕迅</singer>
+		<type>1</type>
+	</general>
+	<midi_lrc>
+		<paragraph>
+			<sentence>
+				<tone begin="18.487" end="18.659" lang="1" pitch="169" pronounce="">
+					<word>如</word>
+				</tone>
+				<tone begin="18.659" end="18.853" lang="1" pitch="225" pronounce="">
+					<word>果</word>
+				</tone>
+				<tone begin="18.853" end="19.226" lang="1" pitch="248" pronounce="">
+					<word>那</word>
+				</tone>
+				<tone begin="19.226" end="19.671" lang="1" pitch="260" pronounce="">
+					<word>两</word>
+				</tone>
+				<tone begin="19.671" end="20.175" lang="1" pitch="233" pronounce="">
+					<word>个</word>
+				</tone>
+				<tone begin="20.175" end="20.74" lang="1" pitch="251" pronounce="">
+					<word>字</word>
+				</tone>
+				<tone begin="20.74" end="20.927" lang="1" pitch="231" pronounce="">
+					<word>没</word>
+				</tone>
+				<tone begin="20.927" end="21.293" lang="1" pitch="204" pronounce="">
+					<word>有</word>
+				</tone>
+				<tone begin="21.293" end="21.475" lang="1" pitch="195" pronounce="">
+					<word>颤</word>
+				</tone>
+				<tone begin="21.475" end="22.074" lang="1" pitch="177" pronounce="">
+					<word>抖</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="22.304" end="22.478" lang="1" pitch="122" pronounce="">
+					<word>我</word>
+				</tone>
+				<tone begin="22.478" end="22.682" lang="1" pitch="169" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="22.682" end="23.427" lang="1" pitch="156" pronounce="">
+					<word>会</word>
+				</tone>
+				<tone begin="23.427" end="23.693" lang="1" pitch="172" pronounce="">
+					<word>发</word>
+				</tone>
+				<tone begin="23.693" end="24.146" lang="1" pitch="185" pronounce="">
+					<word>现 </word>
+				</tone>
+				<tone begin="24.146" end="24.444" lang="1" pitch="161" pronounce="">
+					<word>我</word>
+				</tone>
+				<tone begin="24.444" end="24.639" lang="1" pitch="159" pronounce="">
+					<word>难</word>
+				</tone>
+				<tone begin="24.639" end="25.351" lang="1" pitch="176" pronounce="">
+					<word>受</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="25.745" end="25.916" lang="1" pitch="194" pronounce="">
+					<word>怎</word>
+				</tone>
+				<tone begin="25.916" end="26.228" lang="1" pitch="180" pronounce="">
+					<word>么</word>
+				</tone>
+				<tone begin="26.228" end="26.403" lang="1" pitch="186" pronounce="">
+					<word>说</word>
+				</tone>
+				<tone begin="26.403" end="26.616" lang="1" pitch="195" pronounce="">
+					<word>出</word>
+				</tone>
+				<tone begin="26.616" end="28.078" lang="1" pitch="173" pronounce="">
+					<word>口</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="29.284" end="29.476" lang="1" pitch="124" pronounce="">
+					<word>也</word>
+				</tone>
+				<tone begin="29.476" end="29.674" lang="1" pitch="181" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="29.674" end="29.909" lang="1" pitch="192" pronounce="">
+					<word>过</word>
+				</tone>
+				<tone begin="29.909" end="30.124" lang="1" pitch="174" pronounce="">
+					<word>是</word>
+				</tone>
+				<tone begin="30.124" end="30.561" lang="1" pitch="187" pronounce="">
+					<word>分</word>
+				</tone>
+				<tone begin="30.561" end="31.188" lang="1" pitch="173" pronounce="">
+					<word>手</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="33.866" end="34.033" lang="1" pitch="188" pronounce="">
+					<word>如</word>
+				</tone>
+				<tone begin="34.033" end="34.225" lang="1" pitch="229" pronounce="">
+					<word>果</word>
+				</tone>
+				<tone begin="34.225" end="34.674" lang="1" pitch="247" pronounce="">
+					<word>对</word>
+				</tone>
+				<tone begin="34.674" end="35.146" lang="1" pitch="258" pronounce="">
+					<word>于</word>
+				</tone>
+				<tone begin="35.146" end="35.596" lang="1" pitch="235" pronounce="">
+					<word>明</word>
+				</tone>
+				<tone begin="35.596" end="36.214" lang="1" pitch="249" pronounce="">
+					<word>天</word>
+				</tone>
+				<tone begin="36.214" end="36.414" lang="1" pitch="231" pronounce="">
+					<word>没</word>
+				</tone>
+				<tone begin="36.414" end="36.734" lang="1" pitch="258" pronounce="">
+					<word>有</word>
+				</tone>
+				<tone begin="36.734" end="36.938" lang="1" pitch="307" pronounce="">
+					<word>要</word>
+				</tone>
+				<tone begin="36.938" end="37.648" lang="1" pitch="103" pronounce="">
+					<word>求</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="37.945" end="38.125" lang="1" pitch="257" pronounce="">
+					<word>牵</word>
+				</tone>
+				<tone begin="38.125" end="38.581" lang="1" pitch="232" pronounce="">
+					<word>牵</word>
+				</tone>
+				<tone begin="38.581" end="39.098" lang="1" pitch="233" pronounce="">
+					<word>手</word>
+				</tone>
+				<tone begin="39.098" end="39.319" lang="1" pitch="232" pronounce="">
+					<word>就</word>
+				</tone>
+				<tone begin="39.319" end="39.626" lang="1" pitch="208" pronounce="">
+					<word>像</word>
+				</tone>
+				<tone begin="39.626" end="39.829" lang="1" pitch="195" pronounce="">
+					<word>旅</word>
+				</tone>
+				<tone begin="39.829" end="40.336" lang="1" pitch="198" pronounce="">
+					<word>游</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="40.92" end="41.105" lang="1" pitch="202" pronounce="">
+					<word>成</word>
+				</tone>
+				<tone begin="41.105" end="41.33" lang="1" pitch="203" pronounce="">
+					<word>千</word>
+				</tone>
+				<tone begin="41.33" end="41.58" lang="1" pitch="194" pronounce="">
+					<word>上</word>
+				</tone>
+				<tone begin="41.58" end="41.805" lang="1" pitch="172" pronounce="">
+					<word>万</word>
+				</tone>
+				<tone begin="41.805" end="42.112" lang="1" pitch="193" pronounce="">
+					<word>个</word>
+				</tone>
+				<tone begin="42.112" end="42.368" lang="1" pitch="199" pronounce="">
+					<word>门</word>
+				</tone>
+				<tone begin="42.368" end="43.216" lang="1" pitch="128" pronounce="">
+					<word>口</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="44.76" end="44.967" lang="1" pitch="89" pronounce="">
+					<word>总</word>
+				</tone>
+				<tone begin="44.967" end="45.171" lang="1" pitch="171" pronounce="">
+					<word>有</word>
+				</tone>
+				<tone begin="45.171" end="45.402" lang="1" pitch="190" pronounce="">
+					<word>一</word>
+				</tone>
+				<tone begin="45.402" end="45.604" lang="1" pitch="175" pronounce="">
+					<word>个</word>
+				</tone>
+				<tone begin="45.604" end="45.863" lang="1" pitch="156" pronounce="">
+					<word>人</word>
+				</tone>
+				<tone begin="45.863" end="46.413" lang="1" pitch="173" pronounce="">
+					<word>要</word>
+				</tone>
+				<tone begin="46.413" end="46.823" lang="1" pitch="193" pronounce="">
+					<word>先</word>
+				</tone>
+				<tone begin="46.823" end="47.425" lang="1" pitch="174" pronounce="">
+					<word>走</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="50.513" end="50.747" lang="1" pitch="158" pronounce="">
+					<word>怀</word>
+				</tone>
+				<tone begin="50.747" end="51.227" lang="1" pitch="247" pronounce="">
+					<word>抱</word>
+				</tone>
+				<tone begin="51.227" end="51.422" lang="1" pitch="226" pronounce="">
+					<word>既</word>
+				</tone>
+				<tone begin="51.422" end="51.688" lang="1" pitch="208" pronounce="">
+					<word>然</word>
+				</tone>
+				<tone begin="51.688" end="52.213" lang="1" pitch="225" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="52.213" end="52.424" lang="1" pitch="259" pronounce="">
+					<word>能</word>
+				</tone>
+				<tone begin="52.424" end="52.89" lang="1" pitch="230" pronounce="">
+					<word>逗</word>
+				</tone>
+				<tone begin="52.89" end="53.66" lang="1" pitch="155" pronounce="">
+					<word>留</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="53.966" end="54.164" lang="1" pitch="195" pronounce="">
+					<word>何</word>
+				</tone>
+				<tone begin="54.164" end="54.378" lang="1" pitch="177" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="54.378" end="54.68" lang="1" pitch="197" pronounce="">
+					<word>在</word>
+				</tone>
+				<tone begin="54.68" end="54.847" lang="1" pitch="207" pronounce="">
+					<word>离</word>
+				</tone>
+				<tone begin="54.847" end="55.162" lang="1" pitch="325" pronounce="">
+					<word>开</word>
+				</tone>
+				<tone begin="55.162" end="55.346" lang="1" pitch="307" pronounce="">
+					<word>的</word>
+				</tone>
+				<tone begin="55.346" end="55.625" lang="1" pitch="195" pronounce="">
+					<word>时</word>
+				</tone>
+				<tone begin="55.625" end="56.536" lang="1" pitch="256" pronounce="">
+					<word>候</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="56.883" end="57.079" lang="1" pitch="254" pronounce="">
+					<word>一</word>
+				</tone>
+				<tone begin="57.079" end="57.266" lang="1" pitch="231" pronounce="">
+					<word>边</word>
+				</tone>
+				<tone begin="57.266" end="57.508" lang="1" pitch="260" pronounce="">
+					<word>享</word>
+				</tone>
+				<tone begin="57.508" end="59.476" lang="1" pitch="241" pronounce="">
+					<word>受 </word>
+				</tone>
+				<tone begin="59.476" end="60.144" lang="1" pitch="232" pronounce="">
+					<word>一</word>
+				</tone>
+				<tone begin="60.144" end="60.899" lang="1" pitch="260" pronounce="">
+					<word>边</word>
+				</tone>
+				<tone begin="60.899" end="61.42" lang="1" pitch="265" pronounce="">
+					<word>泪</word>
+				</tone>
+				<tone begin="61.42" end="63.245" lang="1" pitch="257" pronounce="">
+					<word>流</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="64.031" end="64.282" lang="1" pitch="212" pronounce="">
+					<word>十</word>
+				</tone>
+				<tone begin="64.282" end="64.496" lang="1" pitch="234" pronounce="">
+					<word>年</word>
+				</tone>
+				<tone begin="64.496" end="65.209" lang="1" pitch="282" pronounce="">
+					<word>之</word>
+				</tone>
+				<tone begin="65.209" end="65.73" lang="1" pitch="260" pronounce="">
+					<word>前</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="66.017" end="66.477" lang="1" pitch="261" pronounce="">
+					<word>我</word>
+				</tone>
+				<tone begin="66.477" end="66.701" lang="1" pitch="278" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="66.701" end="66.899" lang="1" pitch="308" pronounce="">
+					<word>认</word>
+				</tone>
+				<tone begin="66.899" end="67.162" lang="1" pitch="334" pronounce="">
+					<word>识</word>
+				</tone>
+				<tone begin="67.162" end="67.632" lang="1" pitch="242" pronounce="">
+					<word>你</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="67.915" end="68.387" lang="1" pitch="234" pronounce="">
+					<word>你</word>
+				</tone>
+				<tone begin="68.387" end="68.627" lang="1" pitch="270" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="68.627" end="68.848" lang="1" pitch="243" pronounce="">
+					<word>属</word>
+				</tone>
+				<tone begin="68.848" end="69.106" lang="1" pitch="232" pronounce="">
+					<word>于</word>
+				</tone>
+				<tone begin="69.106" end="69.508" lang="1" pitch="207" pronounce="">
+					<word>我</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="69.828" end="70.295" lang="1" pitch="126" pronounce="">
+					<word>我</word>
+				</tone>
+				<tone begin="70.295" end="70.554" lang="1" pitch="201" pronounce="">
+					<word>们</word>
+				</tone>
+				<tone begin="70.554" end="70.777" lang="1" pitch="206" pronounce="">
+					<word>还</word>
+				</tone>
+				<tone begin="70.777" end="71.04" lang="1" pitch="196" pronounce="">
+					<word>是</word>
+				</tone>
+				<tone begin="71.04" end="71.51" lang="1" pitch="182" pronounce="">
+					<word>一</word>
+				</tone>
+				<tone begin="71.51" end="71.905" lang="1" pitch="174" pronounce="">
+					<word>样</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="72.279" end="72.509" lang="1" pitch="194" pronounce="">
+					<word>陪</word>
+				</tone>
+				<tone begin="72.509" end="72.706" lang="1" pitch="197" pronounce="">
+					<word>在</word>
+				</tone>
+				<tone begin="72.706" end="72.948" lang="1" pitch="174" pronounce="">
+					<word>一</word>
+				</tone>
+				<tone begin="72.948" end="73.446" lang="1" pitch="194" pronounce="">
+					<word>个</word>
+				</tone>
+				<tone begin="73.446" end="73.681" lang="1" pitch="262" pronounce="">
+					<word>陌</word>
+				</tone>
+				<tone begin="73.681" end="73.955" lang="1" pitch="257" pronounce="">
+					<word>生</word>
+				</tone>
+				<tone begin="73.955" end="74.446" lang="1" pitch="228" pronounce="">
+					<word>人</word>
+				</tone>
+				<tone begin="74.446" end="74.67" lang="1" pitch="194" pronounce="">
+					<word>左</word>
+				</tone>
+				<tone begin="74.67" end="75.471" lang="1" pitch="205" pronounce="">
+					<word>右</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="76.122" end="76.336" lang="1" pitch="206" pronounce="">
+					<word>走</word>
+				</tone>
+				<tone begin="76.336" end="76.553" lang="1" pitch="226" pronounce="">
+					<word>过</word>
+				</tone>
+				<tone begin="76.553" end="76.831" lang="1" pitch="251" pronounce="">
+					<word>渐</word>
+				</tone>
+				<tone begin="76.831" end="77.574" lang="1" pitch="333" pronounce="">
+					<word>渐</word>
+				</tone>
+				<tone begin="77.574" end="77.776" lang="1" pitch="260" pronounce="">
+					<word>熟</word>
+				</tone>
+				<tone begin="77.776" end="78.264" lang="1" pitch="270" pronounce="">
+					<word>悉</word>
+				</tone>
+				<tone begin="78.264" end="78.514" lang="1" pitch="308" pronounce="">
+					<word>的</word>
+				</tone>
+				<tone begin="78.514" end="78.964" lang="1" pitch="257" pronounce="">
+					<word>街</word>
+				</tone>
+				<tone begin="78.964" end="79.252" lang="1" pitch="232" pronounce="">
+					<word>头</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="79.536" end="79.734" lang="1" pitch="204" pronounce="">
+					<word>十</word>
+				</tone>
+				<tone begin="79.734" end="79.939" lang="1" pitch="225" pronounce="">
+					<word>年</word>
+				</tone>
+				<tone begin="79.939" end="80.696" lang="1" pitch="269" pronounce="">
+					<word>之</word>
+				</tone>
+				<tone begin="80.696" end="81.205" lang="1" pitch="257" pronounce="">
+					<word>后</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="81.437" end="81.92" lang="1" pitch="260" pronounce="">
+					<word>我</word>
+				</tone>
+				<tone begin="81.92" end="82.148" lang="1" pitch="272" pronounce="">
+					<word>们</word>
+				</tone>
+				<tone begin="82.148" end="82.386" lang="1" pitch="298" pronounce="">
+					<word>是</word>
+				</tone>
+				<tone begin="82.386" end="82.601" lang="1" pitch="320" pronounce="">
+					<word>朋</word>
+				</tone>
+				<tone begin="82.601" end="83.024" lang="1" pitch="239" pronounce="">
+					<word>友</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="83.337" end="83.851" lang="1" pitch="227" pronounce="">
+					<word>还</word>
+				</tone>
+				<tone begin="83.851" end="84.068" lang="1" pitch="249" pronounce="">
+					<word>可</word>
+				</tone>
+				<tone begin="84.068" end="84.278" lang="1" pitch="262" pronounce="">
+					<word>以</word>
+				</tone>
+				<tone begin="84.278" end="84.531" lang="1" pitch="236" pronounce="">
+					<word>问</word>
+				</tone>
+				<tone begin="84.531" end="84.979" lang="1" pitch="210" pronounce="">
+					<word>候</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="85.284" end="85.796" lang="1" pitch="127" pronounce="">
+					<word>只</word>
+				</tone>
+				<tone begin="85.796" end="86.014" lang="1" pitch="207" pronounce="">
+					<word>是</word>
+				</tone>
+				<tone begin="86.014" end="86.24" lang="1" pitch="208" pronounce="">
+					<word>那</word>
+				</tone>
+				<tone begin="86.24" end="86.486" lang="1" pitch="199" pronounce="">
+					<word>种</word>
+				</tone>
+				<tone begin="86.486" end="86.958" lang="1" pitch="187" pronounce="">
+					<word>温</word>
+				</tone>
+				<tone begin="86.958" end="87.547" lang="1" pitch="173" pronounce="">
+					<word>柔</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="87.772" end="87.959" lang="1" pitch="201" pronounce="">
+					<word>再</word>
+				</tone>
+				<tone begin="87.959" end="88.155" lang="1" pitch="196" pronounce="">
+					<word>也</word>
+				</tone>
+				<tone begin="88.155" end="88.387" lang="1" pitch="181" pronounce="">
+					<word>找</word>
+				</tone>
+				<tone begin="88.387" end="88.936" lang="1" pitch="198" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="88.936" end="89.158" lang="1" pitch="274" pronounce="">
+					<word>到</word>
+				</tone>
+				<tone begin="89.158" end="89.411" lang="1" pitch="263" pronounce="">
+					<word>拥</word>
+				</tone>
+				<tone begin="89.411" end="89.927" lang="1" pitch="235" pronounce="">
+					<word>抱</word>
+				</tone>
+				<tone begin="89.927" end="90.15" lang="1" pitch="246" pronounce="">
+					<word>的</word>
+				</tone>
+				<tone begin="90.15" end="90.613" lang="1" pitch="221" pronounce="">
+					<word>理</word>
+				</tone>
+				<tone begin="90.613" end="91.25" lang="1" pitch="205" pronounce="">
+					<word>由</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="91.602" end="91.819" lang="1" pitch="205" pronounce="">
+					<word>情</word>
+				</tone>
+				<tone begin="91.819" end="92.038" lang="1" pitch="225" pronounce="">
+					<word>人</word>
+				</tone>
+				<tone begin="92.038" end="92.301" lang="1" pitch="254" pronounce="">
+					<word>最</word>
+				</tone>
+				<tone begin="92.301" end="92.982" lang="1" pitch="327" pronounce="">
+					<word>后</word>
+				</tone>
+				<tone begin="92.982" end="93.266" lang="1" pitch="314" pronounce="">
+					<word>难</word>
+				</tone>
+				<tone begin="93.266" end="93.774" lang="1" pitch="254" pronounce="">
+					<word>免</word>
+				</tone>
+				<tone begin="93.774" end="94.038" lang="1" pitch="208" pronounce="">
+					<word>沦</word>
+				</tone>
+				<tone begin="94.038" end="95.673" lang="1" pitch="228" pronounce="">
+					<word>为</word>
+				</tone>
+				<tone begin="95.673" end="96.179" lang="1" pitch="205" pronounce="">
+					<word>朋</word>
+				</tone>
+				<tone begin="96.179" end="98.088" lang="1" pitch="205" pronounce="">
+					<word>友</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="120.236" end="120.421" lang="1" pitch="159" pronounce="">
+					<word>怀</word>
+				</tone>
+				<tone begin="120.421" end="120.886" lang="1" pitch="244" pronounce="">
+					<word>抱</word>
+				</tone>
+				<tone begin="120.886" end="121.102" lang="1" pitch="225" pronounce="">
+					<word>既</word>
+				</tone>
+				<tone begin="121.102" end="121.354" lang="1" pitch="204" pronounce="">
+					<word>然</word>
+				</tone>
+				<tone begin="121.354" end="121.825" lang="1" pitch="217" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="121.825" end="122.061" lang="1" pitch="252" pronounce="">
+					<word>能</word>
+				</tone>
+				<tone begin="122.061" end="122.545" lang="1" pitch="233" pronounce="">
+					<word>逗</word>
+				</tone>
+				<tone begin="122.545" end="123.283" lang="1" pitch="166" pronounce="">
+					<word>留</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="123.57" end="123.741" lang="1" pitch="197" pronounce="">
+					<word>何</word>
+				</tone>
+				<tone begin="123.741" end="123.977" lang="1" pitch="177" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="123.977" end="124.199" lang="1" pitch="190" pronounce="">
+					<word>在</word>
+				</tone>
+				<tone begin="124.199" end="124.424" lang="1" pitch="203" pronounce="">
+					<word>离</word>
+				</tone>
+				<tone begin="124.424" end="124.693" lang="1" pitch="311" pronounce="">
+					<word>开</word>
+				</tone>
+				<tone begin="124.693" end="124.898" lang="1" pitch="321" pronounce="">
+					<word>的</word>
+				</tone>
+				<tone begin="124.898" end="125.179" lang="1" pitch="226" pronounce="">
+					<word>时</word>
+				</tone>
+				<tone begin="125.179" end="126.11" lang="1" pitch="251" pronounce="">
+					<word>候</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="126.458" end="126.669" lang="1" pitch="258" pronounce="">
+					<word>一</word>
+				</tone>
+				<tone begin="126.669" end="126.912" lang="1" pitch="236" pronounce="">
+					<word>边</word>
+				</tone>
+				<tone begin="126.912" end="127.433" lang="1" pitch="264" pronounce="">
+					<word>享</word>
+				</tone>
+				<tone begin="127.433" end="129.066" lang="1" pitch="273" pronounce="">
+					<word>受 </word>
+				</tone>
+				<tone begin="129.066" end="129.762" lang="1" pitch="231" pronounce="">
+					<word>一</word>
+				</tone>
+				<tone begin="129.762" end="130.476" lang="1" pitch="258" pronounce="">
+					<word>边</word>
+				</tone>
+				<tone begin="130.476" end="130.975" lang="1" pitch="268" pronounce="">
+					<word>泪</word>
+				</tone>
+				<tone begin="130.975" end="132.951" lang="1" pitch="259" pronounce="">
+					<word>流</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="133.668" end="133.9" lang="1" pitch="202" pronounce="">
+					<word>十</word>
+				</tone>
+				<tone begin="133.9" end="134.143" lang="1" pitch="222" pronounce="">
+					<word>年</word>
+				</tone>
+				<tone begin="134.143" end="134.879" lang="1" pitch="275" pronounce="">
+					<word>之</word>
+				</tone>
+				<tone begin="134.879" end="135.413" lang="1" pitch="260" pronounce="">
+					<word>前</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="135.664" end="136.159" lang="1" pitch="259" pronounce="">
+					<word>我</word>
+				</tone>
+				<tone begin="136.159" end="136.364" lang="1" pitch="276" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="136.364" end="136.598" lang="1" pitch="302" pronounce="">
+					<word>认</word>
+				</tone>
+				<tone begin="136.598" end="136.838" lang="1" pitch="344" pronounce="">
+					<word>识</word>
+				</tone>
+				<tone begin="136.838" end="137.444" lang="1" pitch="237" pronounce="">
+					<word>你</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="137.66" end="138.069" lang="1" pitch="237" pronounce="">
+					<word>你</word>
+				</tone>
+				<tone begin="138.069" end="138.287" lang="1" pitch="276" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="138.287" end="138.52" lang="1" pitch="251" pronounce="">
+					<word>属</word>
+				</tone>
+				<tone begin="138.52" end="138.765" lang="1" pitch="232" pronounce="">
+					<word>于</word>
+				</tone>
+				<tone begin="138.765" end="139.246" lang="1" pitch="207" pronounce="">
+					<word>我</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="139.524" end="139.995" lang="1" pitch="134" pronounce="">
+					<word>我</word>
+				</tone>
+				<tone begin="139.995" end="140.219" lang="1" pitch="206" pronounce="">
+					<word>们</word>
+				</tone>
+				<tone begin="140.219" end="140.443" lang="1" pitch="211" pronounce="">
+					<word>还</word>
+				</tone>
+				<tone begin="140.443" end="140.711" lang="1" pitch="197" pronounce="">
+					<word>是</word>
+				</tone>
+				<tone begin="140.711" end="141.187" lang="1" pitch="185" pronounce="">
+					<word>一</word>
+				</tone>
+				<tone begin="141.187" end="141.584" lang="1" pitch="176" pronounce="">
+					<word>样</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="141.945" end="142.16" lang="1" pitch="194" pronounce="">
+					<word>陪</word>
+				</tone>
+				<tone begin="142.16" end="142.375" lang="1" pitch="191" pronounce="">
+					<word>在</word>
+				</tone>
+				<tone begin="142.375" end="142.616" lang="1" pitch="177" pronounce="">
+					<word>一</word>
+				</tone>
+				<tone begin="142.616" end="143.102" lang="1" pitch="195" pronounce="">
+					<word>个</word>
+				</tone>
+				<tone begin="143.102" end="143.322" lang="1" pitch="258" pronounce="">
+					<word>陌</word>
+				</tone>
+				<tone begin="143.322" end="143.584" lang="1" pitch="259" pronounce="">
+					<word>生</word>
+				</tone>
+				<tone begin="143.584" end="144.099" lang="1" pitch="234" pronounce="">
+					<word>人</word>
+				</tone>
+				<tone begin="144.099" end="144.34" lang="1" pitch="194" pronounce="">
+					<word>左</word>
+				</tone>
+				<tone begin="144.34" end="145.577" lang="1" pitch="205" pronounce="">
+					<word>右</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="145.844" end="146.039" lang="1" pitch="206" pronounce="">
+					<word>走</word>
+				</tone>
+				<tone begin="146.039" end="146.26" lang="1" pitch="233" pronounce="">
+					<word>过</word>
+				</tone>
+				<tone begin="146.26" end="146.502" lang="1" pitch="252" pronounce="">
+					<word>渐</word>
+				</tone>
+				<tone begin="146.502" end="147.281" lang="1" pitch="330" pronounce="">
+					<word>渐</word>
+				</tone>
+				<tone begin="147.281" end="147.49" lang="1" pitch="255" pronounce="">
+					<word>熟</word>
+				</tone>
+				<tone begin="147.49" end="147.969" lang="1" pitch="271" pronounce="">
+					<word>悉</word>
+				</tone>
+				<tone begin="147.969" end="148.206" lang="1" pitch="310" pronounce="">
+					<word>的</word>
+				</tone>
+				<tone begin="148.206" end="148.656" lang="1" pitch="261" pronounce="">
+					<word>街</word>
+				</tone>
+				<tone begin="148.656" end="148.94" lang="1" pitch="232" pronounce="">
+					<word>头</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="149.218" end="149.398" lang="1" pitch="206" pronounce="">
+					<word>十</word>
+				</tone>
+				<tone begin="149.398" end="149.621" lang="1" pitch="228" pronounce="">
+					<word>年</word>
+				</tone>
+				<tone begin="149.621" end="150.353" lang="1" pitch="272" pronounce="">
+					<word>之</word>
+				</tone>
+				<tone begin="150.353" end="150.763" lang="1" pitch="255" pronounce="">
+					<word>后</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="151.096" end="151.566" lang="1" pitch="258" pronounce="">
+					<word>我</word>
+				</tone>
+				<tone begin="151.566" end="151.817" lang="1" pitch="268" pronounce="">
+					<word>们</word>
+				</tone>
+				<tone begin="151.817" end="152.028" lang="1" pitch="300" pronounce="">
+					<word>是</word>
+				</tone>
+				<tone begin="152.028" end="152.281" lang="1" pitch="314" pronounce="">
+					<word>朋</word>
+				</tone>
+				<tone begin="152.281" end="152.71" lang="1" pitch="238" pronounce="">
+					<word>友</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="153.028" end="153.521" lang="1" pitch="231" pronounce="">
+					<word>还</word>
+				</tone>
+				<tone begin="153.521" end="153.776" lang="1" pitch="250" pronounce="">
+					<word>可</word>
+				</tone>
+				<tone begin="153.776" end="153.978" lang="1" pitch="260" pronounce="">
+					<word>以</word>
+				</tone>
+				<tone begin="153.978" end="154.231" lang="1" pitch="236" pronounce="">
+					<word>问</word>
+				</tone>
+				<tone begin="154.231" end="154.665" lang="1" pitch="211" pronounce="">
+					<word>候</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="154.961" end="155.41" lang="1" pitch="163" pronounce="">
+					<word>只</word>
+				</tone>
+				<tone begin="155.41" end="155.672" lang="1" pitch="217" pronounce="">
+					<word>是</word>
+				</tone>
+				<tone begin="155.672" end="155.913" lang="1" pitch="211" pronounce="">
+					<word>那</word>
+				</tone>
+				<tone begin="155.913" end="156.159" lang="1" pitch="196" pronounce="">
+					<word>种</word>
+				</tone>
+				<tone begin="156.159" end="156.647" lang="1" pitch="187" pronounce="">
+					<word>温</word>
+				</tone>
+				<tone begin="156.647" end="157.122" lang="1" pitch="176" pronounce="">
+					<word>柔</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="157.435" end="157.647" lang="1" pitch="188" pronounce="">
+					<word>再</word>
+				</tone>
+				<tone begin="157.647" end="157.859" lang="1" pitch="194" pronounce="">
+					<word>也</word>
+				</tone>
+				<tone begin="157.859" end="158.133" lang="1" pitch="179" pronounce="">
+					<word>找</word>
+				</tone>
+				<tone begin="158.133" end="158.618" lang="1" pitch="196" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="158.618" end="158.851" lang="1" pitch="272" pronounce="">
+					<word>到</word>
+				</tone>
+				<tone begin="158.851" end="159.094" lang="1" pitch="262" pronounce="">
+					<word>拥</word>
+				</tone>
+				<tone begin="159.094" end="159.582" lang="1" pitch="236" pronounce="">
+					<word>抱</word>
+				</tone>
+				<tone begin="159.582" end="159.817" lang="1" pitch="244" pronounce="">
+					<word>的</word>
+				</tone>
+				<tone begin="159.817" end="160.304" lang="1" pitch="224" pronounce="">
+					<word>理</word>
+				</tone>
+				<tone begin="160.304" end="161.005" lang="1" pitch="206" pronounce="">
+					<word>由</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="161.306" end="161.529" lang="1" pitch="208" pronounce="">
+					<word>情</word>
+				</tone>
+				<tone begin="161.529" end="161.748" lang="1" pitch="231" pronounce="">
+					<word>人</word>
+				</tone>
+				<tone begin="161.748" end="161.982" lang="1" pitch="247" pronounce="">
+					<word>最</word>
+				</tone>
+				<tone begin="161.982" end="162.742" lang="1" pitch="325" pronounce="">
+					<word>后</word>
+				</tone>
+				<tone begin="162.742" end="162.943" lang="1" pitch="310" pronounce="">
+					<word>难</word>
+				</tone>
+				<tone begin="162.943" end="163.545" lang="1" pitch="243" pronounce="">
+					<word>免</word>
+				</tone>
+				<tone begin="163.545" end="163.73" lang="1" pitch="209" pronounce="">
+					<word>沦</word>
+				</tone>
+				<tone begin="163.73" end="165.418" lang="1" pitch="227" pronounce="">
+					<word>为</word>
+				</tone>
+				<tone begin="165.418" end="165.88" lang="1" pitch="198" pronounce="">
+					<word>朋</word>
+				</tone>
+				<tone begin="165.88" end="167.793" lang="1" pitch="205" pronounce="">
+					<word>友</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="171.474" end="171.669" lang="1" pitch="227" pronounce="">
+					<word>直</word>
+				</tone>
+				<tone begin="171.669" end="171.894" lang="1" pitch="227" pronounce="">
+					<word>到</word>
+				</tone>
+				<tone begin="171.894" end="172.244" lang="1" pitch="258" pronounce="">
+					<word>和</word>
+				</tone>
+				<tone begin="172.244" end="172.69" lang="1" pitch="258" pronounce="">
+					<word>你</word>
+				</tone>
+				<tone begin="172.69" end="173.186" lang="1" pitch="234" pronounce="">
+					<word>做</word>
+				</tone>
+				<tone begin="173.186" end="173.722" lang="1" pitch="252" pronounce="">
+					<word>了</word>
+				</tone>
+				<tone begin="173.722" end="173.943" lang="1" pitch="241" pronounce="">
+					<word>多</word>
+				</tone>
+				<tone begin="173.943" end="174.232" lang="1" pitch="256" pronounce="">
+					<word>年</word>
+				</tone>
+				<tone begin="174.232" end="174.482" lang="1" pitch="282" pronounce="">
+					<word>朋</word>
+				</tone>
+				<tone begin="174.482" end="175.03" lang="1" pitch="205" pronounce="">
+					<word>友</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="175.416" end="175.612" lang="1" pitch="246" pronounce="">
+					<word>才</word>
+				</tone>
+				<tone begin="175.612" end="176.066" lang="1" pitch="230" pronounce="">
+					<word>明</word>
+				</tone>
+				<tone begin="176.066" end="176.599" lang="1" pitch="230" pronounce="">
+					<word>白</word>
+				</tone>
+				<tone begin="176.599" end="176.804" lang="1" pitch="230" pronounce="">
+					<word>我</word>
+				</tone>
+				<tone begin="176.804" end="177.096" lang="1" pitch="203" pronounce="">
+					<word>的</word>
+				</tone>
+				<tone begin="177.096" end="177.357" lang="1" pitch="197" pronounce="">
+					<word>眼</word>
+				</tone>
+				<tone begin="177.357" end="177.842" lang="1" pitch="203" pronounce="">
+					<word>泪</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="178.33" end="178.594" lang="1" pitch="200" pronounce="">
+					<word>不</word>
+				</tone>
+				<tone begin="178.594" end="178.796" lang="1" pitch="203" pronounce="">
+					<word>是</word>
+				</tone>
+				<tone begin="178.796" end="179.059" lang="1" pitch="188" pronounce="">
+					<word>为</word>
+				</tone>
+				<tone begin="179.059" end="179.285" lang="1" pitch="156" pronounce="">
+					<word>你</word>
+				</tone>
+				<tone begin="179.285" end="179.559" lang="1" pitch="191" pronounce="">
+					<word>而</word>
+				</tone>
+				<tone begin="179.559" end="180.836" lang="1" pitch="171" pronounce="">
+					<word>流</word>
+				</tone>
+			</sentence>
+			<sentence>
+				<tone begin="182.23" end="182.45" lang="1" pitch="138" pronounce="">
+					<word>也</word>
+				</tone>
+				<tone begin="182.45" end="182.743" lang="1" pitch="237" pronounce="">
+					<word>为</word>
+				</tone>
+				<tone begin="182.743" end="182.937" lang="1" pitch="212" pronounce="">
+					<word>别</word>
+				</tone>
+				<tone begin="182.937" end="183.178" lang="1" pitch="200" pronounce="">
+					<word>人</word>
+				</tone>
+				<tone begin="183.178" end="183.429" lang="1" pitch="216" pronounce="">
+					<word>而</word>
+				</tone>
+				<tone begin="183.429" end="186.022" lang="1" pitch="207" pronounce="">
+					<word>流</word>
+				</tone>
+			</sentence>
+		</paragraph>
+	</midi_lrc>
+</song>

@@ -1,0 +1,17 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'Demo' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+  source 'https://github.com/CocoaPods/Specs.git'
+  
+  pod "AgoraLyricsScore", :path => "../AgoraLyricsScore.podspec", :testspecs => ['Tests']
+  pod 'RTMTokenBuilder', "1.0.0"
+  
+  # some issue in 4.1.1, please update
+  pod "AgoraRtcEngine_iOS", "4.1.1"
+  pod "Zip"
+  pod "ScoreEffectUI", :path => "../../ScoringEffectUI/ScoreEffectUI/ScoreEffectUI.podspec", :testspecs => ['Tests']
+#  pod 'ScoreEffectUI'
+end
