@@ -8,38 +8,54 @@
 import XCTest
 @testable import AgoraLyricsScore
 
+/// 测试分数估计
 class TestEstimateScore: XCTestCase, ScoringMachineDelegate {
     var vm: ScoringMachine!
     var fileName = ""
     
-    func testBad1() {
+    func testBad1_A() {
         fileName = "qilixiang_bad1_50ms_pitch"
-        goTest(fileName: fileName)
+        goTest(fileName: fileName, xmlFileName: "660250")
     }
     
-    func testGood1() {
+    func testGood1_A() {
         fileName = "qilixiang_good1_50ms_pitch"
-        goTest(fileName: fileName)
+        goTest(fileName: fileName, xmlFileName: "660250")
     }
     
-    func testGood2() {
+    func testGood2_A() {
         fileName = "qilixiang_good2_50ms_pitch"
-        goTest(fileName: fileName)
+        goTest(fileName: fileName, xmlFileName: "660250")
     }
     
-    func testGood3() {
+    func testGood3_A() {
         fileName = "qilixiang_good3_50ms_pitch"
-        goTest(fileName: fileName)
+        goTest(fileName: fileName, xmlFileName: "660250")
     }
     
-    func testGood4() {
+    func testGood4_A() {
         fileName = "qilixiang_good4_50ms_pitch"
-        goTest(fileName: fileName)
+        goTest(fileName: fileName, xmlFileName: "660250")
     }
     
-    func goTest(fileName: String) {
+    func testBad1_B() {
+        fileName = "houlai_bad1_50ms_pitch"
+        goTest(fileName: fileName, xmlFileName: "900318")
+    }
+    
+    func testGood1_B() {
+        fileName = "houlai_good1_50ms_pitch"
+        goTest(fileName: fileName, xmlFileName: "900318")
+    }
+    
+    func testGood2_B() {
+        fileName = "houlai_good2_50ms_pitch"
+        goTest(fileName: fileName, xmlFileName: "900318")
+    }
+    
+    func goTest(fileName: String, xmlFileName: String) {
         vm = ScoringMachine()
-        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "660250", ofType: "xml")!)
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: xmlFileName, ofType: "xml")!)
         let data = try! Data(contentsOf: url)
         guard let model = KaraokeView.parseLyricData(data: data) else {
             XCTFail()
@@ -69,8 +85,14 @@ class TestEstimateScore: XCTestCase, ScoringMachineDelegate {
     }
     
     private func parse(pitchFileString: String) -> [Double] {
-        let array = pitchFileString.split(separator: "\n").map({ Double($0)! })
-        return array
+        if pitchFileString.contains("\r\n") {
+            let array = pitchFileString.split(separator: "\r\n").map({ Double($0)! })
+            return array
+        }
+        else {
+            let array = pitchFileString.split(separator: "\n").map({ Double($0)! })
+            return array
+        }
     }
 
     func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {

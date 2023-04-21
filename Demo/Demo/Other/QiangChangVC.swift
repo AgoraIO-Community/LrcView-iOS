@@ -73,7 +73,7 @@ class QiangChangVC: UIViewController {
         karaokeView.lyricsView.draggable = true
         
         skipButton.setTitle("跳过前奏", for: .normal)
-        setButton.setTitle("设置参数", for: .normal)
+        setButton.setTitle("点歌", for: .normal)
         changeButton.setTitle("切歌", for: .normal)
         quickButton.setTitle("退出", for: .normal)
         pauseButton.setTitle("暂停", for: .normal)
@@ -198,6 +198,7 @@ class QiangChangVC: UIViewController {
     }
     
     func mccPreload() {
+        mcc.getMusicCharts()
         let ret = mcc.preload(songCode: song.code, jsonOption: nil)
         if ret != 0 {
             print("preload error \(ret)")
@@ -265,10 +266,7 @@ class QiangChangVC: UIViewController {
             }
             return
         case setButton:
-            let vc = ParamSetVC()
-            vc.delegate = self
-            vc.modalPresentationStyle = .pageSheet
-            present(vc, animated: true)
+            mcc.getMusicCollection(musicChartId: 1, page: 0, pageSize: 10, jsonOption: nil)
             return
         case changeButton:
             isPause = false
@@ -409,10 +407,17 @@ extension QiangChangVC: AgoraRtcEngineDelegate {
 
 extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
     func onMusicChartsResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: [AgoraMusicChartInfo]) {
-        
     }
     
     func onMusicCollectionResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: AgoraMusicCollection) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return}
+            let songs = result.musicList.map({ SongListVC.Song(name: $0.name, singer: $0.singer, code: $0.songCode, highStartTime: 0, highEndTime: 0) })
+            let vc = SongListVC()
+            vc.songs = songs
+            vc.delegate = self
+            self.present(vc, animated: true)
+        }
     }
     
     func onLyricResult(_ requestId: String, lyricUrl: String) {
@@ -536,5 +541,11 @@ extension QiangChangVC: ParamSetVCDelegate {
         gradeView.reset()
         updateView(param: param)
         mccPreload()
+    }
+}
+
+extension QiangChangVC: SongListVCDelegate {
+    func songListVCDidSelectedSong(song: SongListVC.Song) {
+        
     }
 }

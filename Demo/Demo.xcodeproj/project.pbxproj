@@ -29,6 +29,7 @@
 		2689ED462988EA540012BC4D /* ParamSetVC+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */; };
 		2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED472988FDE10012BC4D /* LyricLabelVC.swift */; };
 		26AC90A829ECE9D500AB6EC5 /* QiangChangVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AC90A729ECE9D500AB6EC5 /* QiangChangVC.swift */; };
+		26AC90AD29EE72A900AB6EC5 /* SongListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AC90AC29EE72A900AB6EC5 /* SongListVC.swift */; };
 		26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */; };
 		26C5452429557D25009E0F37 /* LyricsTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452329557D25009E0F37 /* LyricsTestVC.swift */; };
 		26C5452C2955B2FE009E0F37 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452B2955B2FE009E0F37 /* Config.swift */; };
@@ -72,6 +73,7 @@
 		2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParamSetVC+Info.swift"; sourceTree = "<group>"; };
 		2689ED472988FDE10012BC4D /* LyricLabelVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricLabelVC.swift; sourceTree = "<group>"; };
 		26AC90A729ECE9D500AB6EC5 /* QiangChangVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiangChangVC.swift; sourceTree = "<group>"; };
+		26AC90AC29EE72A900AB6EC5 /* SongListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongListVC.swift; sourceTree = "<group>"; };
 		26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoLyricsTestVC.swift; sourceTree = "<group>"; };
 		26C5452329557D25009E0F37 /* LyricsTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsTestVC.swift; sourceTree = "<group>"; };
 		26C5452729559918009E0F37 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -197,6 +199,7 @@
 				2602311A29C9D9E70036F74A /* AudienceVC.swift */,
 				2602311F29CAD3630036F74A /* HostVC.swift */,
 				26AC90A729ECE9D500AB6EC5 /* QiangChangVC.swift */,
+				26AC90AC29EE72A900AB6EC5 /* SongListVC.swift */,
 				26E8030D298BAF1B00DBF23F /* OCVC.h */,
 				26E8030E298BAF1B00DBF23F /* OCVC.m */,
 			);
@@ -358,6 +361,7 @@
 				26E5BF7F299245E10051AF67 /* SearchVC.swift in Sources */,
 				26E5BF9529924A2A0051AF67 /* Downloader.swift in Sources */,
 				26E5BFA729924B970051AF67 /* AgoraStringExtention.swift in Sources */,
+				26AC90AD29EE72A900AB6EC5 /* SongListVC.swift in Sources */,
 				2602311E29C9DCDF0036F74A /* KTVView.swift in Sources */,
 				2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */,
 				26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */,
