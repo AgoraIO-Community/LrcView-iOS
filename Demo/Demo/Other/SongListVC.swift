@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraRtcKit
 
 protocol SongListVCDelegate: NSObjectProtocol {
     func songListVCDidSelectedSong(song: SongListVC.Song)
@@ -58,9 +59,10 @@ extension SongListVC {
     struct Song {
         let name: String
         let singer: String
-        let code: Int
-        let highStartTime: Int
-        let highEndTime: Int
+        var code: Int
+        var startTime: Int
+        var endTime: Int
+        let isXML = true
     }
 }
 

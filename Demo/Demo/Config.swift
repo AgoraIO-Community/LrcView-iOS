@@ -13,7 +13,7 @@ struct Config {
     static let audioUid: UInt = 2
     static let playerUid: Int = 100
     static let mccUid: Int = 333
-    static let rtcAppId = <#rtcAppId without Token#>
+    static let rtcAppId = <#rtcAppId#>
     static let mccAppId = <#mccAppId#>
     static let mccCertificate = <#mccCertificate#>
 }
