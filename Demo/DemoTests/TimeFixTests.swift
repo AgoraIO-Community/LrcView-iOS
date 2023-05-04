@@ -6,7 +6,6 @@
 //
 
 import XCTest
-import AgoraRtcKit
 import AgoraLyricsScore
 
 class TimeFixTests: XCTestCase {
