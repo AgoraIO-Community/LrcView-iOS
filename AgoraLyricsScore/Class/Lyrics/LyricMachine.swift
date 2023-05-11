@@ -144,18 +144,18 @@ extension LyricMachine {
     /// - Parameters:
     /// - Returns: `nil` 表示无法计算, 其他： [0, 1]
     static func calculateProgressRate(progress: Int, model: LyricCell.Model, isTimeAccurateToWord: Bool) -> Double? {
-        guard isTimeAccurateToWord else {
+            guard isTimeAccurateToWord else {
+                return 0.0
+            }
+            
+            let toneCount = model.tones.filter({ $0.word.isEmpty == false }).count
+            for (index, tone) in model.tones.enumerated() {
+                if progress >= tone.beginTime, progress <= tone.beginTime + tone.duration {
+                    let progressRate = Double((progress - tone.beginTime)) / Double(tone.duration)
+                    let total = (Double(index) + progressRate) / Double(toneCount)
+                    return total
+                }
+            }
             return 0.0
         }
-        
-        let toneCount = model.tones.filter({ $0.word.isEmpty == false }).count
-        for (index, tone) in model.tones.enumerated() {
-            if progress >= tone.beginTime, progress <= tone.beginTime + tone.duration {
-                let progressRate = Double((progress - tone.beginTime)) / Double(tone.duration)
-                let total = (Double(index) + progressRate) / Double(toneCount)
-                return total
-            }
-        }
-        return 0.0
-    }
 }
