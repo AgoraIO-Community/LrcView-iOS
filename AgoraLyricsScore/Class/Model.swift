@@ -7,7 +7,9 @@
 
 import Foundation
 
+// MARK: - Public
 @objc public enum MusicType: Int, CustomStringConvertible {
+    case unknow = 0
     /// 快歌
     case fast = 1
     /// 慢歌
@@ -17,8 +19,10 @@ import Foundation
         switch self {
         case .fast:
             return "fast"
-        default:
+        case .slow:
             return "slow"
+        default:
+            return "unknow"
         }
     }
 }
@@ -39,13 +43,17 @@ public class LyricModel: NSObject {
     /// 是否有pitch值
     @objc public var hasPitch: Bool
     
+    /// 歌曲时间是否准确到歌词的每一个字
+    @objc public let isTimeAccurateToWord: Bool
+    
     @objc public init(name: String,
                       singer: String,
                       type: MusicType,
                       lines: [LyricLineModel],
                       preludeEndPosition: Int,
                       duration: Int,
-                      hasPitch: Bool) {
+                      hasPitch: Bool,
+                      isTimeAccurateToWord: Bool) {
         self.name = name
         self.singer = singer
         self.type = type
@@ -53,19 +61,7 @@ public class LyricModel: NSObject {
         self.preludeEndPosition = preludeEndPosition
         self.duration = duration
         self.hasPitch = hasPitch
-    }
-    
-    /// 解析歌词文件xml数据
-    /// - Parameter data: xml二进制数据
-    /// - Returns: 歌词信息
-    @objc public init(data: Data) throws {
-        self.name = "name"
-        self.singer = "singer"
-        self.type = .fast
-        self.lines = []
-        self.preludeEndPosition = 0
-        self.duration = 0
-        self.hasPitch = true
+        self.isTimeAccurateToWord = isTimeAccurateToWord
     }
     
     @objc public override init() {
@@ -76,6 +72,7 @@ public class LyricModel: NSObject {
         self.preludeEndPosition = 0
         self.duration = 0
         self.hasPitch = false
+        self.isTimeAccurateToWord = false
         super.init()
     }
     
@@ -115,7 +112,7 @@ public class LyricToneModel: NSObject {
     @objc public let beginTime: Int
     @objc public let duration: Int
     @objc public var word: String
-    @objc public let pitch: Double
+    @objc public var pitch: Double
     @objc public var lang: Lang
     @objc public let pronounce: String
     
@@ -156,6 +153,22 @@ public class ToneScoreModel: NSObject {
 @objc public enum Lang: Int {
     case zh = 1
     case en = 2
-    case unknown = -1
+    case unknow = -1
 }
 
+// MARK: - Internal
+
+struct PitchModel {
+    let version: Int
+    let timeInterval: Int
+    let reserved: Int
+    let duration: Int
+    let items: [PitchItem]
+}
+
+struct PitchItem {
+    let value: Double
+    let beginTime: Int
+    let duration: Int
+    var endTime: Int { beginTime + duration }
+}

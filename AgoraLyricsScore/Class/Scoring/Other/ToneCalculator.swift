@@ -25,4 +25,5 @@ class ToneCalculator {
         let eps = 1e-6
         return (max(0, log(pitch / 55 + eps) / log(2))) * 12
     }
+    
 }

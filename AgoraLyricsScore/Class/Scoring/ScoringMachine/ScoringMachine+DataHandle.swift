@@ -13,7 +13,7 @@ extension ScoringMachine {
     ///   - return: (行结束时间, 字模型)
     static func createData(data: LyricModel, shouldFixTime: Bool = true) -> ([Int], [Info]) {
         var array = [Info]()
-        var lineEndTimes = [Int]()
+        let lineEndTimes = data.lines.map({ $0.endTime })
         var preEndTime = 0
         for line in data.lines {
             for tone in line.tones {
@@ -40,7 +40,6 @@ extension ScoringMachine {
                 
                 array.append(info)
             }
-            lineEndTimes.append(preEndTime)
         }
         return (lineEndTimes, array)
     }
@@ -98,10 +97,10 @@ extension ScoringMachine {
         
         let currentVisiableInfos = filterInfos(infos: dataList,
                                                beginTime: beginTime,
-                                               endTime: endTime)
+                                               endTime: endTime).filter({ $0.pitch > 0 })
         let highlightInfos = filterInfos(infos: currentHighlightInfos,
                                          beginTime: beginTime,
-                                         endTime: endTime)
+                                         endTime: endTime).filter({ $0.pitch > 0 })
         
         var visiableDrawInfos = [DrawInfo]()
         for info in currentVisiableInfos {

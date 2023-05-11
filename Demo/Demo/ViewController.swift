@@ -51,8 +51,6 @@ class ViewController: UIViewController {
                                             .init(title: "观众端"),
                                             .init(title: "主播端"),
                                             .init(title: "抢唱")])]
-
-//        list = [Section(title: "UI", rows: [.init(title: "View配置")])]
     }
 }
 
@@ -79,7 +77,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
+        
         if indexPath.section == 0 { /** UI配置测试 **/
             let vc = MainTestVC()
             navigationController?.pushViewController(vc, animated: true)

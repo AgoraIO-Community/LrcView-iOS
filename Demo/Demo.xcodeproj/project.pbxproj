@@ -22,6 +22,7 @@
 		26105FE52966787A00712EDA /* EmitterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26105FE42966787A00712EDA /* EmitterVC.swift */; };
 		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
+		267727EC2A0B864800DD8D28 /* pitch.bin in Resources */ = {isa = PBXBuildFile; fileRef = 267727EB2A0B864800DD8D28 /* pitch.bin */; };
 		2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */; };
 		2689ED3E298654C90012BC4D /* IncentiveVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED3D298654C90012BC4D /* IncentiveVC.swift */; };
 		2689ED422987C8890012BC4D /* ParamSetVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED412987C8890012BC4D /* ParamSetVC.swift */; };
@@ -30,6 +31,9 @@
 		2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED472988FDE10012BC4D /* LyricLabelVC.swift */; };
 		26AC90A829ECE9D500AB6EC5 /* QiangChangVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AC90A729ECE9D500AB6EC5 /* QiangChangVC.swift */; };
 		26AC90AD29EE72A900AB6EC5 /* SongListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AC90AC29EE72A900AB6EC5 /* SongListVC.swift */; };
+		269C151129E01533002A2535 /* song_tmp_new.txt in Resources */ = {isa = PBXBuildFile; fileRef = 269C151029E01533002A2535 /* song_tmp_new.txt */; };
+		26A683AC29C0253400B327A9 /* song_tmp.txt in Resources */ = {isa = PBXBuildFile; fileRef = 26A683AB29C0253400B327A9 /* song_tmp.txt */; };
+		26BCE0FF29C46DB600319F6D /* 十年.lrc in Resources */ = {isa = PBXBuildFile; fileRef = 26BCE0FE29C46DB600319F6D /* 十年.lrc */; };
 		26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */; };
 		26C5452429557D25009E0F37 /* LyricsTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452329557D25009E0F37 /* LyricsTestVC.swift */; };
 		26C5452C2955B2FE009E0F37 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452B2955B2FE009E0F37 /* Config.swift */; };
@@ -66,6 +70,7 @@
 		260A433F2985378B00C2DB5D /* 123602.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 123602.xml; sourceTree = "<group>"; };
 		26105FE42966787A00712EDA /* EmitterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitterVC.swift; sourceTree = "<group>"; };
 		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
+		267727EB2A0B864800DD8D28 /* pitch.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = pitch.bin; sourceTree = "<group>"; };
 		2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstToneHintViewTestVC.swift; sourceTree = "<group>"; };
 		2689ED3D298654C90012BC4D /* IncentiveVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncentiveVC.swift; sourceTree = "<group>"; };
 		2689ED412987C8890012BC4D /* ParamSetVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamSetVC.swift; sourceTree = "<group>"; };
@@ -74,6 +79,9 @@
 		2689ED472988FDE10012BC4D /* LyricLabelVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricLabelVC.swift; sourceTree = "<group>"; };
 		26AC90A729ECE9D500AB6EC5 /* QiangChangVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiangChangVC.swift; sourceTree = "<group>"; };
 		26AC90AC29EE72A900AB6EC5 /* SongListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongListVC.swift; sourceTree = "<group>"; };
+		269C151029E01533002A2535 /* song_tmp_new.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = song_tmp_new.txt; sourceTree = "<group>"; };
+		26A683AB29C0253400B327A9 /* song_tmp.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = song_tmp.txt; sourceTree = "<group>"; };
+		26BCE0FE29C46DB600319F6D /* 十年.lrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "十年.lrc"; sourceTree = "<group>"; };
 		26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoLyricsTestVC.swift; sourceTree = "<group>"; };
 		26C5452329557D25009E0F37 /* LyricsTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsTestVC.swift; sourceTree = "<group>"; };
 		26C5452729559918009E0F37 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -172,11 +180,15 @@
 		260942F92952FD410022A50D /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				267727EB2A0B864800DD8D28 /* pitch.bin */,
+				269C151029E01533002A2535 /* song_tmp_new.txt */,
+				26A683AB29C0253400B327A9 /* song_tmp.txt */,
 				26E5BF7C2990D6B30051AF67 /* 235653.xml */,
 				260A433F2985378B00C2DB5D /* 123602.xml */,
 				260942FC295302370022A50D /* 745012.xml */,
 				2609430029530FCC0022A50D /* lrc.lrc */,
 				26C545332955B6C2009E0F37 /* 105780.xml */,
+				26BCE0FE29C46DB600319F6D /* 十年.lrc */,
 				26C545312955B684009E0F37 /* music.mp3 */,
 			);
 			path = Resource;
@@ -291,12 +303,16 @@
 				260942FD295302370022A50D /* 745012.xml in Resources */,
 				2609430129530FCC0022A50D /* lrc.lrc in Resources */,
 				26C545322955B684009E0F37 /* music.mp3 in Resources */,
+				26BCE0FF29C46DB600319F6D /* 十年.lrc in Resources */,
 				260942E32952B5060022A50D /* LaunchScreen.storyboard in Resources */,
+				267727EC2A0B864800DD8D28 /* pitch.bin in Resources */,
 				26E5BF7D2990D6B30051AF67 /* 235653.xml in Resources */,
 				26C545342955B6C2009E0F37 /* 105780.xml in Resources */,
 				260942DE2952B5050022A50D /* Main.storyboard in Resources */,
 				26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */,
 				260A43402985378B00C2DB5D /* 123602.xml in Resources */,
+				26A683AC29C0253400B327A9 /* song_tmp.txt in Resources */,
+				269C151129E01533002A2535 /* song_tmp_new.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,6 +546,7 @@
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Demo/Info.plist;
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Arrow or not";
 				INFOPLIST_KEY_NSCameraUsageDescription = "声网需要您开启麦克风功能，用于视频通话";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "声网需要您开启相机功能，用于视频通话";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -566,6 +583,7 @@
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Demo/Info.plist;
+				INFOPLIST_KEY_NSAppleMusicUsageDescription = "Arrow or not";
 				INFOPLIST_KEY_NSCameraUsageDescription = "声网需要您开启麦克风功能，用于视频通话";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "声网需要您开启相机功能，用于视频通话";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

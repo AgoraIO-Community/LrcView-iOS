@@ -19,7 +19,7 @@ extension MainTestVC {
 }
 
 class MainTestVC: UIViewController {
-    let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger()])
+    let karaokeView = KaraokeView(frame: .zero, loggers: [FileLogger(), ConsoleLogger()])
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()
@@ -49,6 +49,7 @@ class MainTestVC: UIViewController {
     var lyricModel: LyricModel!
     var noLyric = false
     var isPause = false
+    var lastTime: Double = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -242,7 +243,7 @@ class MainTestVC: UIViewController {
             if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
                 time -= 250
             }
-            self.karaokeView.setProgress(progress: current )
+            self.karaokeView.setProgress(progress: time)
         }
     }
     
@@ -413,11 +414,18 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
     func onLyricResult(_ requestId: String, lyricUrl: String) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
-//        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
 //        DispatchQueue.main.async {
+////            let filePath = Bundle.main.path(forResource: "十年", ofType: "lrc")!
+//            let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
 //            let url = URL(fileURLWithPath: filePath)
 //            let data = try! Data(contentsOf: url)
-//            let model = KaraokeView.parseLyricData(data: data)!
+//
+////            let path = Bundle.main.path(forResource: "song_tmp", ofType: "txt")!
+//            let path = Bundle.main.path(forResource: "pitch", ofType: "bin")!
+//            let fileUrl = URL(fileURLWithPath: path)
+//            let fileData = try! Data(contentsOf: fileUrl)
+//
+//            let model = KaraokeView.parseLyricData(data: data, pitchFileData: fileData)!
 //            self.lyricModel = model
 //            if !self.noLyric {
 //                self.karaokeView.setLyricData(data: model)
@@ -446,10 +454,22 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         FileCache.fect(urlString: lyricUrl) { progress in
 
         } completion: { filePath in
+            let path = Bundle.main.path(forResource: "pitch", ofType: "bin")!
+            let fileUrl = URL(fileURLWithPath: path)
+            let fileData = try! Data(contentsOf: fileUrl)
+
             let url = URL(fileURLWithPath: filePath)
             let data = try! Data(contentsOf: url)
-            let model = KaraokeView.parseLyricData(data: data)!
+            let model = KaraokeView.parseLyricData(data: data, pitchFileData: nil)!
+            for line in model.lines {
+                let m = line.beginTime / (60 * 1000)
+                let s = line.beginTime % (60 * 1000)
+                let tex = "[\(m):\(Double(s)/1000.0)]\(line.content)"
+                print(tex)
+            }
+
             self.lyricModel = model
+
             if !self.noLyric {
                 let canScoring = model.hasPitch
                 if canScoring { /** xml **/

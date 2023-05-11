@@ -48,10 +48,9 @@ class TestLyricsView: XCTestCase {
                                                         status: .normal,
                                                         tones: $0.tones) })
         let line = dataList[3]
-        
-        XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: 43285, model: line, canScoring: true))
-        XCTAssertNil(LyricMachine.calculateProgressRate(progress: 43295, model: line, canScoring: true))
-        XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: 43795, model: line, canScoring: true))
+        XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: 43285, model: line, isTimeAccurateToWord: true))
+        XCTAssertNil(LyricMachine.calculateProgressRate(progress: 43295, model: line, isTimeAccurateToWord: true))
+        XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: 43795, model: line, isTimeAccurateToWord: true))
     }
 
 }

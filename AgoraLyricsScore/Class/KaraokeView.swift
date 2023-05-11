@@ -74,10 +74,13 @@ public class KaraokeView: UIView {
 extension KaraokeView {
     /// 解析歌词文件xml数据
     /// - Parameter data: xml二进制数据
+    /// - Parameter timeMerge: 是否使用时间合并（pitch时间由10ms变成50ms）
     /// - Returns: 歌词信息
-    @objc public static func parseLyricData(data: Data) -> LyricModel? {
+    @objc public static func parseLyricData(data: Data,
+                                            pitchFileData: Data? = nil) -> LyricModel? {
         let parser = Parser()
-        return parser.parseLyricData(data: data)
+        return parser.parseLyricData(data: data,
+                                     pitchFileData: pitchFileData)
     }
     
     /// 设置歌词数据信息
@@ -135,6 +138,7 @@ extension KaraokeView {
         }
         if pitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
             pitchIsZeroCount = 0
+            Log.info(text: "setPitch: \(pitch)", tag: logTag)
             scoringView.setPitch(pitch: pitch)
         }
     }
