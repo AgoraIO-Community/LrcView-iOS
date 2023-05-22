@@ -18,13 +18,33 @@ class FileCache {
             }
             return
         }
+        if let lrcPath = FileCache.cacheFileExists(with: fileName + ".lrc") {
+            DispatchQueue.main.async {
+                completion(lrcPath)
+            }
+            return
+        }
+        
         let url = URL(string: urlString)!
         DownloaderManager.shared.download(url: url,
                                           progress: progress,
                                           completion: { path in
             if path.split(separator: ".").last == "lrc" {
-                DispatchQueue.main.async {
-                    completion(path)
+                let destination = String.cacheFolderPath() + "/\(fileName)" + ".lrc"
+                do {
+                    
+                    let isFolderExist = FileManager.default.fileExists(atPath: String.cacheFolderPath())
+                    if !isFolderExist {
+                        try FileManager.default.createDirectory(at: URL(fileURLWithPath: .cacheFolderPath()), withIntermediateDirectories: true)
+                    }
+                    
+                    try FileManager.default.copyItem(atPath: path, toPath: destination)
+                    DispatchQueue.main.async {
+                        completion(destination)
+                    }
+                    
+                } catch let err {
+                    print("error: \(err.localizedDescription)")
                 }
                 return
             }

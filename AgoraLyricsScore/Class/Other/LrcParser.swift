@@ -25,7 +25,8 @@ class LrcParser {
     }
     
     private func parse(lrcString: String) -> LyricModel? {
-        let lrcConnectArray = lrcString.components(separatedBy: "\r")
+        let sep = lrcString.contains("\r\n") ? "\r\n" : "\n"
+        let lrcConnectArray = lrcString.components(separatedBy: sep).filter({ !$0.isEmpty })
         
         let pattern = "\\[[0-9][0-9]:[0-9][0-9].[0-9]{1,}\\]"
         guard let regular = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else {
@@ -63,6 +64,9 @@ class LrcParser {
                 if let lastLine = lines.last { /** 把上一句的时间补齐 **/
                     let gap = 1 /** 句间的空隙默认为1ms **/
                     lastLine.duration = line.beginTime - lastLine.beginTime - gap
+                    if lastLine.duration <= 0 {
+                        Log.warning(text: "lastLine.duration = \(lastLine.duration)", tag: logTag)
+                    }
                 }
                 lines.append(line)
             }

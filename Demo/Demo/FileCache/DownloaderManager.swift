@@ -37,8 +37,8 @@ class DownloaderManager: NSObject {
         self.downloadCache[url.path] = downloader
         weak var managerWeak = self
         downloader?.download(url: url, progress: progress, completion: { (filePath) in
-            managerWeak?.downloadCache.removeValue(forKey: url.path)
             completion(filePath)
+            managerWeak?.downloadCache.removeValue(forKey: url.path)
         }, fail: fail)
     }
     

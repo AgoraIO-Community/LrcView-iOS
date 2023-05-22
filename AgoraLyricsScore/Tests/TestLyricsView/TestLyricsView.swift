@@ -27,6 +27,7 @@ class TestLyricsView: XCTestCase {
         XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: 43285, model: line, isTimeAccurateToWord: true))
         XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: 43295, model: line, isTimeAccurateToWord: true))
         XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: 43795, model: line, isTimeAccurateToWord: true))
+        XCTAssertEqual(LyricMachine.calculateProgressRate(progress: 43500, model: line, isTimeAccurateToWord: true), 0.1111111111111111)
     }
 
 }

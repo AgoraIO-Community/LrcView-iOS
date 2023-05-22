@@ -32,17 +32,9 @@ class MainTestVC: UIViewController {
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
-//    var song = Item(code: 6246262727283870, isXML: false)
-    var song = Item(code: 6625526605291650, isXML: true)
-    /// 0：十年， 1: 王菲 2:晴天
-    /// lrc: 6246262727283870、
-    /// 6775664001035810 句子一开始为0
-    /// 6768817613736320
-    var songs = [Item(code: 6246262727283870, isXML: false),
-                 Item(code: 6625526605291650, isXML: true),
-                 Item(code: 6775664001035810, isXML: true),
-                 Item(code: 6625526610023560, isXML: true),
-                 Item(code: 6625526603296890, isXML: true)]
+    var song = Item(code: 6246262727282260, isXML: false)
+    var songs = [Item(code: 6246262727282260, isXML: false),
+                 Item(code: 6246262727283870, isXML: true)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
@@ -224,7 +216,6 @@ class MainTestVC: UIViewController {
                                          countDown: 1000000,
                                          milliseconds: 20,
                                          queue: .main) { [weak self](_, time) in
-
             guard let self = self else { return }
             if self.isPause {
                 return
@@ -237,7 +228,7 @@ class MainTestVC: UIViewController {
                 self.sendData(data: data)
             }
             current += 20
-
+            
             self.last = current
             var time = current
             if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
@@ -414,30 +405,30 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
     func onLyricResult(_ requestId: String, lyricUrl: String) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
-//        DispatchQueue.main.async {
-////            let filePath = Bundle.main.path(forResource: "十年", ofType: "lrc")!
-//            let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
-//            let url = URL(fileURLWithPath: filePath)
-//            let data = try! Data(contentsOf: url)
-//
-////            let path = Bundle.main.path(forResource: "song_tmp", ofType: "txt")!
-//            let path = Bundle.main.path(forResource: "pitch", ofType: "bin")!
-//            let fileUrl = URL(fileURLWithPath: path)
-//            let fileData = try! Data(contentsOf: fileUrl)
-//
-//            let model = KaraokeView.parseLyricData(data: data, pitchFileData: fileData)!
-//            self.lyricModel = model
-//            if !self.noLyric {
-//                self.karaokeView.setLyricData(data: model)
-//                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-//                self.gradeView.isHidden = false
-//            }
-//            else {
-//                self.karaokeView.setLyricData(data: nil)
-//                self.gradeView.isHidden = true
-//            }
-//            self.mccPlay()
-//        }
+        //        DispatchQueue.main.async {
+        ////            let filePath = Bundle.main.path(forResource: "十年", ofType: "lrc")!
+        //            let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
+        //            let url = URL(fileURLWithPath: filePath)
+        //            let data = try! Data(contentsOf: url)
+        //
+        ////            let path = Bundle.main.path(forResource: "song_tmp", ofType: "txt")!
+        //            let path = Bundle.main.path(forResource: "pitch", ofType: "bin")!
+        //            let fileUrl = URL(fileURLWithPath: path)
+        //            let fileData = try! Data(contentsOf: fileUrl)
+        //
+        //            let model = KaraokeView.parseLyricData(data: data, pitchFileData: fileData)!
+        //            self.lyricModel = model
+        //            if !self.noLyric {
+        //                self.karaokeView.setLyricData(data: model)
+        //                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+        //                self.gradeView.isHidden = false
+        //            }
+        //            else {
+        //                self.karaokeView.setLyricData(data: nil)
+        //                self.gradeView.isHidden = true
+        //            }
+        //            self.mccPlay()
+        //        }
         
         if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
             DispatchQueue.main.async { [weak self] in
@@ -451,25 +442,26 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
             }
         }
         
+        let songCode = song.code
         FileCache.fect(urlString: lyricUrl) { progress in
-
+            
         } completion: { filePath in
-            let path = Bundle.main.path(forResource: "pitch", ofType: "bin")!
+            let path = Bundle.main.path(forResource: "\(songCode)", ofType: "bin")!
             let fileUrl = URL(fileURLWithPath: path)
             let fileData = try! Data(contentsOf: fileUrl)
-
+            
             let url = URL(fileURLWithPath: filePath)
             let data = try! Data(contentsOf: url)
-            let model = KaraokeView.parseLyricData(data: data, pitchFileData: nil)!
+            let model = KaraokeView.parseLyricData(data: data, pitchFileData: fileData)!
             for line in model.lines {
                 let m = line.beginTime / (60 * 1000)
                 let s = line.beginTime % (60 * 1000)
                 let tex = "[\(m):\(Double(s)/1000.0)]\(line.content)"
                 print(tex)
             }
-
+            
             self.lyricModel = model
-
+            
             if !self.noLyric {
                 let canScoring = model.hasPitch
                 if canScoring { /** xml **/

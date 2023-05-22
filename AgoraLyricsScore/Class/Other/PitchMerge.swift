@@ -32,14 +32,16 @@ class PitchMerge {
         var hasPitch = false
         for line in model.lines {
             for tone in line.tones {
-                let values = findPitchs(beginTime: tone.beginTime,
-                                        duration: tone.duration,
-                                        pitchItems: pitchModel.items,
-                                        durationPerValue: pitchModel.timeInterval).map({ $0.value })
-                let pitch = calculateAverage(pitchs: values)
-                tone.pitch = pitch
-                if pitch > 0 {
-                    hasPitch = true
+                if let array = findPitchs(beginTime: tone.beginTime,
+                                          duration: tone.duration,
+                                          pitchItems: pitchModel.items,
+                                          durationPerValue: pitchModel.timeInterval) {
+                    let values = array.map({ $0.value })
+                    let pitch = calculateAverage(pitchs: values)
+                    tone.pitch = pitch
+                    if pitch > 0 {
+                        hasPitch = true
+                    }
                 }
             }
         }
@@ -60,27 +62,27 @@ class PitchMerge {
         
         let durationPerValue = pitchModel.timeInterval
         for line in model.lines {
-            let items = findPitchs(beginTime: line.beginTime,
-                                   duration: line.duration,
-                                   pitchItems: pitchModel.items,
-                                   durationPerValue: pitchModel.timeInterval)
-            
-            var mergedArray = [LyricToneModel]()
-            for i in stride(from: 0, to: items.count, by: mergeCount) {
-                let endIndex = min(i + mergeCount, items.count)
-                let subArray = items[i..<endIndex]
-                let beginTime = subArray.first!.beginTime
-                let duration = subArray.count * durationPerValue
-                let avgPicth = calculateAverage(pitchs: subArray.map({ $0.value }))
-                let tone = LyricToneModel(beginTime: beginTime,
-                                          duration: duration,
-                                          word: "",
-                                          pitch: avgPicth,
-                                          lang: .unknow,
-                                          pronounce: "")
-                mergedArray.append(tone)
+            if let items = findPitchs(beginTime: line.beginTime,
+                                      duration: line.duration,
+                                      pitchItems: pitchModel.items,
+                                      durationPerValue: pitchModel.timeInterval) {
+                var mergedArray = [LyricToneModel]()
+                for i in stride(from: 0, to: items.count, by: mergeCount) {
+                    let endIndex = min(i + mergeCount, items.count)
+                    let subArray = items[i..<endIndex]
+                    let beginTime = subArray.first!.beginTime
+                    let duration = subArray.count * durationPerValue
+                    let avgPicth = calculateAverage(pitchs: subArray.map({ $0.value }))
+                    let tone = LyricToneModel(beginTime: beginTime,
+                                              duration: duration,
+                                              word: "",
+                                              pitch: avgPicth,
+                                              lang: .unknow,
+                                              pronounce: "")
+                    mergedArray.append(tone)
+                }
+                line.tones = mergedArray
             }
-            line.tones = mergedArray
         }
         return model
     }
@@ -89,9 +91,15 @@ class PitchMerge {
     private func findPitchs(beginTime: Int,
                             duration: Int,
                             pitchItems: [PitchItem],
-                            durationPerValue: Int) -> [PitchItem] {
+                            durationPerValue: Int) -> [PitchItem]? {
         let startIndex = beginTime / durationPerValue
         let endIndex = (beginTime + duration) / durationPerValue
+        
+        if endIndex >= pitchItems.count { /// out bounds
+            Log.error(error: "findPitchs error: out bounds", tag: logTag)
+            return nil
+        }
+        
         let selectedPitchs = pitchItems[startIndex...endIndex]
         return Array(selectedPitchs)
     }
