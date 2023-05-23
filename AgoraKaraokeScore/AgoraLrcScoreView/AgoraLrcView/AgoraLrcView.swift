@@ -51,7 +51,6 @@ class AgoraLrcView: UIView {
             dataArray = lrcDatas
             Log.info(text: "=== lrcDatas.count = \(lrcDatas?.count ?? 0)", tag: logTag)
             guard let data = lrcDatas, !data.isEmpty else { return }
-            _lrcConfig.lrcHighlightColor = .clear
         }
     }
 
@@ -277,6 +276,7 @@ class AgoraLrcView: UIView {
         totalPitchCount = 0
         miguSongModel = nil
         lrcDatas?.removeAll()
+        lrcDatas = nil
         dataArray = []
         tipsLabel.isHidden = true
         tableView.reloadData()
