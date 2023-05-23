@@ -22,8 +22,8 @@
 		26105FE52966787A00712EDA /* EmitterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26105FE42966787A00712EDA /* EmitterVC.swift */; };
 		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
+		2673FCEC2A1B561300D4D1A0 /* 6843908387781240.bin in Resources */ = {isa = PBXBuildFile; fileRef = 2673FCEB2A1B561300D4D1A0 /* 6843908387781240.bin */; };
 		267727F62A11D03300DD8D28 /* 6246262727282260.bin in Resources */ = {isa = PBXBuildFile; fileRef = 267727F52A11D03300DD8D28 /* 6246262727282260.bin */; };
-		267727F82A11D0FC00DD8D28 /* 6246262727283870.bin in Resources */ = {isa = PBXBuildFile; fileRef = 267727F72A11D0FC00DD8D28 /* 6246262727283870.bin */; };
 		2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */; };
 		2689ED3E298654C90012BC4D /* IncentiveVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED3D298654C90012BC4D /* IncentiveVC.swift */; };
 		2689ED422987C8890012BC4D /* ParamSetVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED412987C8890012BC4D /* ParamSetVC.swift */; };
@@ -71,8 +71,8 @@
 		260A433F2985378B00C2DB5D /* 123602.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 123602.xml; sourceTree = "<group>"; };
 		26105FE42966787A00712EDA /* EmitterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitterVC.swift; sourceTree = "<group>"; };
 		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
+		2673FCEB2A1B561300D4D1A0 /* 6843908387781240.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6843908387781240.bin; sourceTree = "<group>"; };
 		267727F52A11D03300DD8D28 /* 6246262727282260.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6246262727282260.bin; sourceTree = "<group>"; };
-		267727F72A11D0FC00DD8D28 /* 6246262727283870.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6246262727283870.bin; sourceTree = "<group>"; };
 		2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstToneHintViewTestVC.swift; sourceTree = "<group>"; };
 		2689ED3D298654C90012BC4D /* IncentiveVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncentiveVC.swift; sourceTree = "<group>"; };
 		2689ED412987C8890012BC4D /* ParamSetVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamSetVC.swift; sourceTree = "<group>"; };
@@ -182,8 +182,8 @@
 		260942F92952FD410022A50D /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				2673FCEB2A1B561300D4D1A0 /* 6843908387781240.bin */,
 				267727F52A11D03300DD8D28 /* 6246262727282260.bin */,
-				267727F72A11D0FC00DD8D28 /* 6246262727283870.bin */,
 				269C151029E01533002A2535 /* song_tmp_new.txt */,
 				26A683AB29C0253400B327A9 /* song_tmp.txt */,
 				26E5BF7C2990D6B30051AF67 /* 235653.xml */,
@@ -306,7 +306,6 @@
 				267727F62A11D03300DD8D28 /* 6246262727282260.bin in Resources */,
 				260942FD295302370022A50D /* 745012.xml in Resources */,
 				2609430129530FCC0022A50D /* lrc.lrc in Resources */,
-				267727F82A11D0FC00DD8D28 /* 6246262727283870.bin in Resources */,
 				26C545322955B684009E0F37 /* music.mp3 in Resources */,
 				26BCE0FF29C46DB600319F6D /* 十年.lrc in Resources */,
 				260942E32952B5060022A50D /* LaunchScreen.storyboard in Resources */,
@@ -315,6 +314,7 @@
 				260942DE2952B5050022A50D /* Main.storyboard in Resources */,
 				26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */,
 				260A43402985378B00C2DB5D /* 123602.xml in Resources */,
+				2673FCEC2A1B561300D4D1A0 /* 6843908387781240.bin in Resources */,
 				26A683AC29C0253400B327A9 /* song_tmp.txt in Resources */,
 				269C151129E01533002A2535 /* song_tmp_new.txt in Resources */,
 			);
@@ -545,7 +545,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -563,7 +563,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.test.entfull;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -582,7 +582,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -600,7 +600,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.test.entfull;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

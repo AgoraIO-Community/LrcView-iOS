@@ -34,7 +34,7 @@ class MainTestVC: UIViewController {
     var mpk: AgoraMusicPlayerProtocol!
     var song = Item(code: 6246262727282260, isXML: false)
     var songs = [Item(code: 6246262727282260, isXML: false),
-                 Item(code: 6246262727283870, isXML: true)]
+                 Item(code: 6843908387781240, isXML: true)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
@@ -271,17 +271,9 @@ class MainTestVC: UIViewController {
             incentiveView.reset()
             gradeView.reset()
             karaokeView.reset()
-            if song.isXML {
-                self.gradeView.isHidden = false
-                self.karaokeView.scoringView.viewHeight = 100
-                self.karaokeView.scoringView.topSpaces = 80
-                self.karaokeView.scoringEnabled = true
-            }
-            else {
-                self.karaokeView.scoringView.topSpaces = 0
-                self.karaokeView.scoringEnabled = false
-                self.gradeView.isHidden = true
-            }
+            self.gradeView.isHidden = false
+            self.karaokeView.scoringView.viewHeight = 100
+            self.karaokeView.scoringView.topSpaces = 80
             mccPreload()
             return
         case quickButton:
@@ -463,16 +455,11 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
             self.lyricModel = model
             
             if !self.noLyric {
-                let canScoring = model.hasPitch
-                if canScoring { /** xml **/
-                    self.karaokeView.setLyricData(data: model)
-                    self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-                }
-                else {/** lrc **/
-                    self.karaokeView.setLyricData(data: model)
-                }
+                self.karaokeView.setLyricData(data: model)
+                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
             }
             else {
+                self.gradeView.setTitle(title: "no-lyric")
                 self.karaokeView.setLyricData(data: nil)
                 self.gradeView.isHidden = true
             }
