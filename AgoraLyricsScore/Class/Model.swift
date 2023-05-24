@@ -27,6 +27,20 @@ import Foundation
     }
 }
 
+@objc public enum SourceType: UInt8, CustomStringConvertible {
+    case lrc = 0
+    case xml = 1
+    
+    public var description: String {
+        switch self {
+        case .lrc:
+            return "lrc"
+        case .xml:
+            return "xml"
+        }
+    }
+}
+
 public class LyricModel: NSObject {
     /// 歌曲名称
     @objc public var name: String
@@ -43,8 +57,8 @@ public class LyricModel: NSObject {
     /// 是否有pitch值
     @objc public var hasPitch: Bool
     
-    /// 歌曲时间是否准确到歌词的每一个字
-    @objc public let isTimeAccurateToWord: Bool
+    /// 来源
+    @objc let sourceType: SourceType
     
     @objc public init(name: String,
                       singer: String,
@@ -53,7 +67,7 @@ public class LyricModel: NSObject {
                       preludeEndPosition: Int,
                       duration: Int,
                       hasPitch: Bool,
-                      isTimeAccurateToWord: Bool) {
+                      sourceType: SourceType) {
         self.name = name
         self.singer = singer
         self.type = type
@@ -61,7 +75,7 @@ public class LyricModel: NSObject {
         self.preludeEndPosition = preludeEndPosition
         self.duration = duration
         self.hasPitch = hasPitch
-        self.isTimeAccurateToWord = isTimeAccurateToWord
+        self.sourceType = sourceType
     }
     
     @objc public override init() {
@@ -72,7 +86,7 @@ public class LyricModel: NSObject {
         self.preludeEndPosition = 0
         self.duration = 0
         self.hasPitch = false
-        self.isTimeAccurateToWord = false
+        self.sourceType = .lrc
         super.init()
     }
     
@@ -82,7 +96,8 @@ public class LyricModel: NSObject {
                     "type" : type,
                     "preludeEndPosition" : preludeEndPosition,
                     "duration" : duration,
-                    "hasPitch" : hasPitch] as [String : Any]
+                    "hasPitch" : hasPitch,
+                    "sourceType" : sourceType.description] as [String : Any]
         return "\(dict)"
     }
 }

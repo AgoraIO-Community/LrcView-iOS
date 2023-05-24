@@ -137,7 +137,7 @@ extension XmlParser: XMLParserDelegate {
                               preludeEndPosition: 0,
                               duration: 0,
                               hasPitch: false,
-                              isTimeAccurateToWord: true)
+                              sourceType: .xml)
         case "general":
             push(.general)
         case "name":

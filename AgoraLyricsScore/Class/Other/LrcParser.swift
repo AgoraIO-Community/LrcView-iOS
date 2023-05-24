@@ -83,7 +83,7 @@ class LrcParser {
                                 preludeEndPosition: preludeEndPosition,
                                 duration: 0,
                                 hasPitch: false,
-                                isTimeAccurateToWord: false)
+                                sourceType: .lrc)
         return result
     }
 }

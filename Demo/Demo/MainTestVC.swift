@@ -47,6 +47,13 @@ class MainTestVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         commonInit()
+// 验证抢唱算法
+//        let filePath = Bundle.main.path(forResource: "900318", ofType: "xml")!
+//        let url = URL(fileURLWithPath: filePath)
+//        let data = try! Data(contentsOf: url)
+//        let m = KaraokeView.parseLyricData(data: data, pitchFileData: nil)!
+//        let v = getTotalTime(model: m, s: 213929, e: 291648)
+//        print("")
     }
     
     deinit {
@@ -272,8 +279,6 @@ class MainTestVC: UIViewController {
             gradeView.reset()
             karaokeView.reset()
             self.gradeView.isHidden = false
-            self.karaokeView.scoringView.viewHeight = 100
-            self.karaokeView.scoringView.topSpaces = 80
             mccPreload()
             return
         case quickButton:
@@ -532,3 +537,5 @@ extension MainTestVC: ParamSetVCDelegate {
         mccPreload()
     }
 }
+
+

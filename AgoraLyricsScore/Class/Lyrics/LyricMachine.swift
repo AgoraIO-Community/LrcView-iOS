@@ -91,7 +91,7 @@ class LyricMachine {
                     if progress > item.element.beginTime, progress <= item.element.endTime { /** 计算比例 **/
                         progressRate = LyricMachine.calculateProgressRate(progress: progress,
                                                                           model: item.element,
-                                                                          isTimeAccurateToWord: data.isTimeAccurateToWord) ?? current.progressRate
+                                                                          isTimeAccurateToWord: data.sourceType == .xml) ?? current.progressRate
                     }
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
@@ -103,7 +103,7 @@ class LyricMachine {
                     invokeLyricMachine(didUpdateConsloe: text)
                     return
                 }
-                if data.isTimeAccurateToWord {
+                if data.sourceType == .xml {
                     if newCurrentIndex == currentIndex,
                        progress > item.element.beginTime,
                        progress <= item.element.endTime { /** 还在原来的句子 **/

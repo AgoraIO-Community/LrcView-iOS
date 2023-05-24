@@ -15,7 +15,7 @@ class PitchMerge {
     ///   - mergeCountInLrc: How much data to merge, only in lrc file
     /// - Returns: `LyricModel`
     func merge(model: LyricModel, pitchModel: PitchModel, mergeCountInLrc: Int = 10) -> LyricModel {
-        let isXml = model.isTimeAccurateToWord
+        let isXml = model.sourceType == .xml
         if isXml {
             return mergeXML(model: model, pitchModel: pitchModel)
         }
