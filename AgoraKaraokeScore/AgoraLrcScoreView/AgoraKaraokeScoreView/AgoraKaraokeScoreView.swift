@@ -177,7 +177,7 @@ public class AgoraKaraokeScoreView: UIView {
         startPrintCount += 1
         if startPrintCount > 4 * 100 { /** 4 * 100 * 10ms = 4s打印一次 **/
             startPrintCount = 0
-            Log.info(text: "start pointX:\(pointX) rate: \(rate) currentTime: \(currentTime) totalTime: \(totalTime) contentWidth: \(contentWidth)", tag: logTag)
+//            Log.info(text: "start pointX:\(pointX) rate: \(rate) currentTime: \(currentTime) totalTime: \(totalTime) contentWidth: \(contentWidth)", tag: logTag)
         }
         
         collectionView.setContentOffset(CGPoint(x: pointX, y: 0),
@@ -241,10 +241,10 @@ public class AgoraKaraokeScoreView: UIView {
         let score = scoreArray.map({ $0.score }).filter({ $0 >= minCalcuScore }).reduce(0, +) / Double(scoreArray.count)
         currentScore += score
         let cumulativeScore = currentScore > totalScore ? totalScore : currentScore
-        Log.info(text: "====> agoraKaraokeScore: \(score) minCalcuScore:\(minCalcuScore)", tag: logTag)
-        for item in scoreArray.enumerated() {
-            Log.info(text: "====> agoraKaraokeScore \(item.offset):  \(item.element.description)", tag: logTag)
-        }
+//        Log.info(text: "====> agoraKaraokeScore: \(score) minCalcuScore:\(minCalcuScore)", tag: logTag)
+//        for item in scoreArray.enumerated() {
+//            Log.info(text: "====> agoraKaraokeScore \(item.offset):  \(item.element.description)", tag: logTag)
+//        }
         
         delegate?.agoraKaraokeScore?(score: score,
                                      cumulativeScore: cumulativeScore,

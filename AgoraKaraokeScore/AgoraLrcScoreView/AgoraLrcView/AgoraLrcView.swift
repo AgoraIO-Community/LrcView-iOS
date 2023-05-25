@@ -15,6 +15,8 @@ class AgoraLrcView: UIView {
     /// 当前歌词pitch回调
     var currentWordPitchClosure: ((Int, Int) -> Void)?
     let logTag = "AgoraLrcView"
+    var progressPrintCount = 0
+    var dataEmptyPrintCount = 0
 
     private var _lrcConfig: AgoraLrcConfigModel = .init() {
         didSet {
@@ -76,9 +78,11 @@ class AgoraLrcView: UIView {
     private var preRow: Int = -1
     private var scrollRow: Int = -1 {
         didSet {
-            Log.info(text: "=== didSet scrollRow \(scrollRow)", tag: logTag)
+            if scrollRow != oldValue {
+                Log.info(text: "=== didSet scrollRow \(scrollRow)", tag: logTag)
+            }
+            
             if scrollRow == oldValue || scrollRow < 0 {
-                Log.info(text: "scrollRow: \(scrollRow) oldValue:\(oldValue)", tag: logTag)
                 return
             }
             if preRow > -1 && (dataArray?.count ?? 0) > 0 {
@@ -236,7 +240,13 @@ class AgoraLrcView: UIView {
 
     func start(progress: TimeInterval) {
         guard !(dataArray?.isEmpty ?? false) else {
-            Log.info(text: "start return empty", tag: logTag)
+            if dataEmptyPrintCount > 100 * 10 {
+                dataEmptyPrintCount = 0
+                Log.info(text: "start return empty", tag: logTag)
+            }
+            else {
+                dataEmptyPrintCount += 1
+            }
             return
         }
         let scale: TimeInterval = lrcDatas == nil ? 1000 : 1
@@ -266,6 +276,7 @@ class AgoraLrcView: UIView {
 
     func reset() {
         Log.debug(text: "=== reset", tag: logTag)
+        progressPrintCount = 0
         currentTime = 0
         scrollRow = -1
         preRow = -1
@@ -336,7 +347,7 @@ class AgoraLrcView: UIView {
     {
         guard let lrcArray = miguSongModel?.sentences,
               !lrcArray.isEmpty else {
-            Log.debug(text: "getXmlLrc nil return", tag: logTag)
+//            Log.debug(text: "getXmlLrc nil return", tag: logTag)
             return nil
         }
         var i = 0
@@ -364,7 +375,6 @@ class AgoraLrcView: UIView {
                 i = index
                 let (wordProgress, pitch) = currentLrc.getProgress(with: currentTime)
                 progress = wordProgress
-                Log.info(text: "getXmlLrc progress:\(progress) \(lrcArray.count)", tag: logTag)
                 return (i, currentLrc.toSentence(), progress, pitch)
             }
             else {
@@ -373,11 +383,17 @@ class AgoraLrcView: UIView {
             }
         }
         
-        Log.error(error: "getXmlLrc nil start", tag: logTag)
-        for text in debugTexts {
-            Log.error(error: text, tag: logTag)
+        if progressPrintCount >= 100 * 5 { /* 5s **/
+            progressPrintCount = 0
+            Log.error(error: "getXmlLrc nil start", tag: logTag)
+            for text in debugTexts {
+                Log.error(error: text, tag: logTag)
+            }
+            Log.error(error: "getXmlLrc nil end", tag: logTag)
         }
-        Log.error(error: "getXmlLrc nil end", tag: logTag)
+        else {
+            progressPrintCount += 1
+        }
         return nil
     }
 

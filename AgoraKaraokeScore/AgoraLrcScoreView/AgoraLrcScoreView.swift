@@ -245,6 +245,7 @@ public class AgoraLrcScoreView: UIView {
 
     private var preTime: TimeInterval = 0
     private var isStop: Bool = false
+    private var timePrintCount = 0
     /// 开始滚动
     public func start() {
         Log.info(text: "=== start", tag: logTag)
@@ -253,7 +254,14 @@ public class AgoraLrcScoreView: UIView {
             guard let self = self else { return }
             if duration.truncatingRemainder(dividingBy: 1000) == 0 {
                 var time = self.delegate?.getPlayerCurrentTime() ?? 0
-                Log.info(text: "invoke getPlayerCurrentTime \(time)", tag: self.logTag)
+                if self.timePrintCount >= 10 {
+                    Log.info(text: "invoke getPlayerCurrentTime \(time)", tag: self.logTag)
+                    self.timePrintCount = 0
+                }
+                else {
+                    self.timePrintCount += 1
+                }
+                
                 if time > 250 {
                     time -= 250
                 }
@@ -284,6 +292,7 @@ public class AgoraLrcScoreView: UIView {
     }
 
     public func reset() {
+        timePrintCount = 0
         lastVoicePitch = nil
         Log.info(text: "=== reset", tag: logTag)
         resetTime()
