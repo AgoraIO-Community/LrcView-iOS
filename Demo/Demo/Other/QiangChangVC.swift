@@ -27,7 +27,7 @@ class QiangChangVC: UIViewController {
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
     //    var song = Item(code: 6246262727283870, isXML: false)
-    var song = Item(code: 6625526605291650, isXML: true)
+    var song = Item(code: 6625526605291650, isXML: true, name: "123", des: "234")
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
@@ -42,11 +42,11 @@ class QiangChangVC: UIViewController {
      6625526832790400
      */
     
-    var songs = [Item(code: 6246262727283870, isXML: false),
-                 Item(code: 6625526605291650, isXML: true),
-                 Item(code: 6775664001035810, isXML: true),
-                 Item(code: 6625526610023560, isXML: true),
-                 Item(code: 6625526603296890, isXML: true)]
+    var songs = [Item(code: 6246262727283870, isXML: false, name: "123", des: "234"),
+                 Item(code: 6625526605291650, isXML: true, name: "123", des: "234"),
+                 Item(code: 6775664001035810, isXML: true, name: "123", des: "234"),
+                 Item(code: 6625526610023560, isXML: true, name: "123", des: "234"),
+                 Item(code: 6625526603296890, isXML: true, name: "123", des: "234")]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0

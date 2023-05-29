@@ -13,7 +13,7 @@ import RTMTokenBuilder
 class HostVC: UIViewController {
     var agoraKit: AgoraRtcEngineKit!
     let ktvView = KTVView()
-    var song = MainTestVC.Item(code: 6625526605291650, isXML: true)
+    var song = MainTestVC.Item(code: 6625526605291650, isXML: true, name: "123", des: "234")
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
     private var timer = GCDTimer()

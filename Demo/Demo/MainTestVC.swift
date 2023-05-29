@@ -15,6 +15,9 @@ extension MainTestVC {
     struct Item {
         let code: Int
         let isXML: Bool
+        let name: String
+        let des: String
+        var usePitchFile = true
     }
 }
 
@@ -32,10 +35,14 @@ class MainTestVC: UIViewController {
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
-    var song = Item(code: 6246262727282260, isXML: false)
-    var songs = [Item(code: 6246262727282260, isXML: false),
-                 Item(code: 6843908387781240, isXML: true),
-                 Item(code: 6625526603631810, isXML: true)]
+    var song: Item!
+    var songs = [Item(code: 6246262727282260, isXML: false, name: "燕尾蝶", des: "", usePitchFile: true),
+                 Item(code: 6246262727282260, isXML: false, name: "燕尾蝶", des: "", usePitchFile: false),
+                 Item(code: 6843908387781240, isXML: true, name: "须尽欢", des: "", usePitchFile: true),
+                 Item(code: 6843908387781240, isXML: true, name: "须尽欢", des: "", usePitchFile: false),
+                 Item(code: 6625526603631810, isXML: true, name: "简单爱", des: "", usePitchFile: true),
+                 Item(code: 6625526603631810, isXML: true, name: "简单爱", des: "", usePitchFile: false),
+                 Item(code: 6315145508122860, isXML: true, name: "一天到晚游泳的鱼", des: "xml不支持打分", usePitchFile: false)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
@@ -46,6 +53,7 @@ class MainTestVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        song = songs.first!
         setupUI()
         commonInit()
 // 验证抢唱算法
@@ -441,28 +449,36 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         }
         
         let songCode = song.code
+        let usePitchFile = song.usePitchFile
         FileCache.fect(urlString: lyricUrl) { progress in
             
         } completion: { filePath in
-            let path = Bundle.main.path(forResource: "\(songCode)", ofType: "bin")!
-            let fileUrl = URL(fileURLWithPath: path)
-            let fileData = try! Data(contentsOf: fileUrl)
+            
+            var model: LyricModel?
             
             let url = URL(fileURLWithPath: filePath)
             let data = try! Data(contentsOf: url)
-            let model = KaraokeView.parseLyricData(data: data, pitchFileData: fileData)!
-            for line in model.lines {
-                let m = line.beginTime / (60 * 1000)
-                let s = line.beginTime % (60 * 1000)
-                let tex = "[\(m):\(Double(s)/1000.0)]\(line.content)"
-                print(tex)
+            
+            if usePitchFile {
+                let path = Bundle.main.path(forResource: "\(songCode)", ofType: "bin")!
+                let fileUrl = URL(fileURLWithPath: path)
+                let fileData = try! Data(contentsOf: fileUrl)
+                model = KaraokeView.parseLyricData(data: data, pitchFileData: fileData)!
+            }
+            else {
+                model = KaraokeView.parseLyricData(data: data, pitchFileData: nil)!
             }
             
             self.lyricModel = model
             
             if !self.noLyric {
                 self.karaokeView.setLyricData(data: model)
-                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+                if filePath.contains(".lrc") {
+                    self.gradeView.setTitle(title: "LRC歌词【\(usePitchFile ? "有pitchFile" : "无pitchFile")】")
+                }
+                else {
+                    self.gradeView.setTitle(title: "\(model!.name) - \(model!.singer)【\(usePitchFile ? "有pitchFile" : "无pitchFile")】")
+                }
             }
             else {
                 self.gradeView.setTitle(title: "no-lyric")
