@@ -42,7 +42,9 @@ class MainTestVC: UIViewController {
                  Item(code: 6625526605291650, isXML: true),
                  Item(code: 6775664001035810, isXML: true),
                  Item(code: 6625526610023560, isXML: true),
-                 Item(code: 6625526603296890, isXML: true)]
+                 Item(code: 6625526603296890, isXML: true),
+                 /** xml 不打分 **/
+                 Item(code: 6315145508122860, isXML: true)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
@@ -397,7 +399,9 @@ extension MainTestVC: AgoraRtcEngineDelegate {
             return
         }
         if let pitch = speakers.last?.voicePitch {
-            karaokeView.setPitch(pitch: pitch)
+            DispatchQueue.main.async { [weak self] in
+                self?.karaokeView.setPitch(pitch: pitch)
+            }
         }
     }
 }
