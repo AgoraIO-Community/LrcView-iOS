@@ -61,6 +61,7 @@ class PitchMerge {
         Log.debug(text: "last line duration: \(duration)", tag: logTag)
         
         let durationPerValue = pitchModel.timeInterval
+        var hasPitch = false
         for line in model.lines {
             if let items = findPitchs(beginTime: line.beginTime,
                                       duration: line.duration,
@@ -82,8 +83,10 @@ class PitchMerge {
                     mergedArray.append(tone)
                 }
                 line.tones = mergedArray
+                hasPitch = line.tones.contains(where: { $0.pitch > 0 })
             }
         }
+        model.hasPitch = hasPitch
         return model
     }
     
