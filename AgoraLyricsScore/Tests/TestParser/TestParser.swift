@@ -39,7 +39,7 @@ class TestParser: XCTestCase {
         XCTAssert(model.duration  == 186022)
         XCTAssert(model.preludeEndPosition  == 18487)
         XCTAssertTrue(model.hasPitch)
-        XCTAssertTrue(model.isTimeAccurateToWord)
+        XCTAssertTrue(model.sourceType == .xml)
         
         // MARK: - TODO has pitchfile
     }

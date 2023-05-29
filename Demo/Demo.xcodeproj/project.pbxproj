@@ -22,6 +22,7 @@
 		26105FE52966787A00712EDA /* EmitterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26105FE42966787A00712EDA /* EmitterVC.swift */; };
 		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
+		265976E42A2053940091C77E /* 6625526603631810.bin in Resources */ = {isa = PBXBuildFile; fileRef = 265976E32A2053940091C77E /* 6625526603631810.bin */; };
 		2673FCEC2A1B561300D4D1A0 /* 6843908387781240.bin in Resources */ = {isa = PBXBuildFile; fileRef = 2673FCEB2A1B561300D4D1A0 /* 6843908387781240.bin */; };
 		267727F62A11D03300DD8D28 /* 6246262727282260.bin in Resources */ = {isa = PBXBuildFile; fileRef = 267727F52A11D03300DD8D28 /* 6246262727282260.bin */; };
 		2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */; };
@@ -71,6 +72,7 @@
 		260A433F2985378B00C2DB5D /* 123602.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 123602.xml; sourceTree = "<group>"; };
 		26105FE42966787A00712EDA /* EmitterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitterVC.swift; sourceTree = "<group>"; };
 		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
+		265976E32A2053940091C77E /* 6625526603631810.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6625526603631810.bin; sourceTree = "<group>"; };
 		2673FCEB2A1B561300D4D1A0 /* 6843908387781240.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6843908387781240.bin; sourceTree = "<group>"; };
 		267727F52A11D03300DD8D28 /* 6246262727282260.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6246262727282260.bin; sourceTree = "<group>"; };
 		2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstToneHintViewTestVC.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 		260942F92952FD410022A50D /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				265976E32A2053940091C77E /* 6625526603631810.bin */,
 				2673FCEB2A1B561300D4D1A0 /* 6843908387781240.bin */,
 				267727F52A11D03300DD8D28 /* 6246262727282260.bin */,
 				269C151029E01533002A2535 /* song_tmp_new.txt */,
@@ -313,6 +316,7 @@
 				26C545342955B6C2009E0F37 /* 105780.xml in Resources */,
 				260942DE2952B5050022A50D /* Main.storyboard in Resources */,
 				26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */,
+				265976E42A2053940091C77E /* 6625526603631810.bin in Resources */,
 				260A43402985378B00C2DB5D /* 123602.xml in Resources */,
 				2673FCEC2A1B561300D4D1A0 /* 6843908387781240.bin in Resources */,
 				26A683AC29C0253400B327A9 /* song_tmp.txt in Resources */,

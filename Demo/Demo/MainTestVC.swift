@@ -19,7 +19,7 @@ extension MainTestVC {
 }
 
 class MainTestVC: UIViewController {
-    let karaokeView = KaraokeView(frame: .zero, loggers: [FileLogger(), ConsoleLogger()])
+    let karaokeView = KaraokeView()
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()
@@ -34,7 +34,8 @@ class MainTestVC: UIViewController {
     var mpk: AgoraMusicPlayerProtocol!
     var song = Item(code: 6246262727282260, isXML: false)
     var songs = [Item(code: 6246262727282260, isXML: false),
-                 Item(code: 6843908387781240, isXML: true)]
+                 Item(code: 6843908387781240, isXML: true),
+                 Item(code: 6625526603631810, isXML: true)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0

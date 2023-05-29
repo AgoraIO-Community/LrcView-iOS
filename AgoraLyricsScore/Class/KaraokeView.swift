@@ -84,7 +84,7 @@ extension KaraokeView {
     }
     
     /// 设置歌词数据信息
-    /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `.empty`.
+    /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果无歌词, 可给 `nil`;
     @objc public func setLyricData(data: LyricModel?) {
         Log.info(text: "setLyricData \(data?.name ?? "nil")", tag: logTag)
         if !Thread.isMainThread {
