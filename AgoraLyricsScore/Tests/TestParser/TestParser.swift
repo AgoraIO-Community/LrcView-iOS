@@ -19,9 +19,22 @@ class TestParser: XCTestCase {
         XCTAssert(model.lines.count > 0)
         XCTAssert(model.lines.first!.content.contains("什么是幸福 "))
         XCTAssertEqual(model.hasPitch, false)
-        
-        // MARK: - TODO has pitchfile
-        
+        XCTAssertTrue(model.sourceType == .lrc)
+    }
+    
+    func testLrcFileWithPitchFile() { /** lrc and pitchFile **/
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "6246262727282260", ofType: "lrc")!)
+        let data = try! Data(contentsOf: url)
+        let pitchFileUrl = URL(fileURLWithPath: Bundle.current.path(forResource: "6246262727282260", ofType: "bin")!)
+        let pitchFileData = try! Data(contentsOf: pitchFileUrl)
+        guard let model = KaraokeView.parseLyricData(data: data, pitchFileData: pitchFileData) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count > 0)
+        XCTAssert(model.lines.first!.tones.count > 0)
+        XCTAssertEqual(model.hasPitch, true)
+        XCTAssertTrue(model.sourceType == .lrc)
     }
     
     func testXMLFile() throws { /** xml normal **/
@@ -40,8 +53,6 @@ class TestParser: XCTestCase {
         XCTAssert(model.preludeEndPosition  == 18487)
         XCTAssertTrue(model.hasPitch)
         XCTAssertTrue(model.sourceType == .xml)
-        
-        // MARK: - TODO has pitchfile
     }
     
     func testEmptyData() { /** EmptyData **/
