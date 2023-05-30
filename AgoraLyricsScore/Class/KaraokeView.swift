@@ -74,7 +74,7 @@ public class KaraokeView: UIView {
 extension KaraokeView {
     /// 解析歌词文件xml数据
     /// - Parameter data: xml二进制数据
-    /// - Parameter timeMerge: 是否使用时间合并（pitch时间由10ms变成50ms）
+    /// - Parameter pitchFileData: pitch文件二进制数据,为空表示数据不使用pitch文件作为打分标准。pitchFileData为空时，如果data是lrc类型, LyricModel#hasPitch值为false.如果data是xml，内部根据xml内容进行读取决定LyricModel#hasPitch的值
     /// - Returns: 歌词信息
     @objc public static func parseLyricData(data: Data,
                                             pitchFileData: Data? = nil) -> LyricModel? {
