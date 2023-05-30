@@ -399,9 +399,7 @@ extension MainTestVC: AgoraRtcEngineDelegate {
             return
         }
         if let pitch = speakers.last?.voicePitch {
-            DispatchQueue.main.async { [weak self] in
-                self?.karaokeView.setPitch(pitch: pitch)
-            }
+            karaokeView.setPitch(pitch: pitch)
         }
     }
 }

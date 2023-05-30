@@ -10,7 +10,7 @@ target 'Demo' do
   pod 'RTMTokenBuilder', "1.0.0"
   
   # some issue in 4.1.1, please update
-  pod "AgoraRtcEngine_iOS", "4.1.1"
+  pod "AgoraRtcEngine_iOS", :path => "/Volumes/T5/PodSpec/Audio50ms/AgoraRtcEngine_iOS.podspec"
   pod "Zip"
   pod "ScoreEffectUI", :path => "../../ScoringEffectUI/ScoreEffectUI/ScoreEffectUI.podspec", :testspecs => ['Tests']
 #  pod 'ScoreEffectUI'
