@@ -406,10 +406,11 @@ extension QiangChangVC: AgoraRtcEngineDelegate {
 }
 
 extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
-    func onMusicChartsResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: [AgoraMusicChartInfo]) {
+    func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], errorCode: AgoraMusicContentCenterStatusCode) {
+        
     }
     
-    func onMusicCollectionResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: AgoraMusicCollection) {
+    func onMusicCollectionResult(_ requestId: String, result: AgoraMusicCollection, errorCode: AgoraMusicContentCenterStatusCode) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return}
             let songs = result.musicList.map({ SongListVC.Song(name: $0.name, singer: $0.singer, code: $0.songCode, highStartTime: 0, highEndTime: 0) })
@@ -420,7 +421,10 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
         }
     }
     
-    func onLyricResult(_ requestId: String, lyricUrl: String) {
+    func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
+        guard let lyricUrl = lyricUrl else {
+            return
+        }
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
         //        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
@@ -480,18 +484,22 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
         }
     }
     
-    func onPreLoadEvent(_ songCode: Int,
-                        percent: Int,
-                        status: AgoraMusicContentCenterPreloadStatus,
-                        msg: String, lyricUrl: String) {
-        print("== onPreLoadEvent \(status.rawValue) msg: \(msg)")
+    func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
+        
+    }
+    
+    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, status: AgoraMusicContentCenterPreloadStatus, errorCode: AgoraMusicContentCenterStatusCode) {
+        guard let lyricUrl = lyricUrl else {
+            return
+        }
+        print("== onPreLoadEvent \(status.rawValue) ")
         if status == .OK { /** preload 成功 **/
             print("== preload ok")
             mccOpen()
         }
         
         if status == .error {
-            print("onPreLoadEvent percent:\(percent) status:\(status.rawValue) msg:\(msg) lyricUrl:\(lyricUrl)")
+            print("onPreLoadEvent percent:\(percent) status:\(status.rawValue) lyricUrl:\(lyricUrl)")
         }
     }
 }
