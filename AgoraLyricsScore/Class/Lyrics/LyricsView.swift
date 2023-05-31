@@ -53,7 +53,7 @@ public class LyricsView: UIView {
     fileprivate var isNoLyric = false
     fileprivate let referenceLineView = UIView()
     fileprivate var isDragging = false { didSet { referenceLineView.isHidden = !isDragging } }
-    fileprivate var tableViewTopConstraint: NSLayoutConstraint!, firstToneHintViewHeightConstraint: NSLayoutConstraint!
+    fileprivate var tableViewTopConstraint: NSLayoutConstraint!, firstToneHintViewHeightConstraint: NSLayoutConstraint!, firstToneHintViewTopConstraint: NSLayoutConstraint!
     fileprivate let lyricMachine = LyricMachine()
     
     override init(frame: CGRect) {
@@ -136,14 +136,16 @@ extension LyricsView {
         noLyricTipsLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         noLyricTipsLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        let topSpace: CGFloat = 5
-        firstToneHintView.topAnchor.constraint(equalTo: topAnchor, constant: topSpace).isActive = true
+        
+        firstToneHintViewTopConstraint = firstToneHintView.topAnchor.constraint(equalTo: topAnchor, constant: firstToneHintViewStyle.topMargin)
+        firstToneHintViewTopConstraint.isActive = true
         firstToneHintView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         firstToneHintView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         firstToneHintViewHeightConstraint = firstToneHintView.heightAnchor.constraint(equalToConstant: firstToneHintViewStyle.size)
         firstToneHintViewHeightConstraint.isActive = true
         
-        let constant = firstToneHintViewStyle.size + firstToneHintViewStyle.bottomMargin + topSpace
+        let topSpace: CGFloat = 5
+        let constant = firstToneHintViewStyle.size + topSpace
         tableViewTopConstraint = tableView.topAnchor.constraint(equalTo: topAnchor, constant: constant)
         tableViewTopConstraint.isActive = true
         tableView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -176,9 +178,11 @@ extension LyricsView {
         tableView.isScrollEnabled = draggable
         firstToneHintView.isHidden = isNoLyric ? true : waitingViewHidden
         firstToneHintView.style = firstToneHintViewStyle
-        let constant = firstToneHintViewStyle.size + firstToneHintViewStyle.bottomMargin
-        tableViewTopConstraint.constant = constant
+        let topSpace: CGFloat = 5
+        let constant = firstToneHintViewStyle.size
+        tableViewTopConstraint.constant = constant + topSpace
         firstToneHintViewHeightConstraint.constant = firstToneHintViewStyle.size
+        firstToneHintViewTopConstraint.constant = firstToneHintViewStyle.topMargin
         if tableView.bounds.width > 0 {
             let viewFrame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: tableView.bounds.height/2)
             tableView.tableHeaderView = .init(frame: viewFrame)

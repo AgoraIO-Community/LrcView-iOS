@@ -142,7 +142,7 @@ class ParamSetVC: UIViewController {
                 cell.detailTextLabel?.text = "\(param.lyric.firstToneHintViewStyle.size)"
             }
             if indexPath.row == 3 { /** lyrcis.FirstToneHintViewStyle.bottomMargin **/
-                cell.detailTextLabel?.text = "\(param.lyric.firstToneHintViewStyle.bottomMargin)"
+                cell.detailTextLabel?.text = "\(param.lyric.firstToneHintViewStyle.topMargin)"
             }
             if indexPath.row == 4 { /** lyrcis.textNormalColor **/
                 cell.backgroundColor = param.lyric.inactiveLineTextColor
@@ -270,7 +270,7 @@ class ParamSetVC: UIViewController {
                 param.lyric.firstToneHintViewStyle.size = genValue(current: param.lyric.firstToneHintViewStyle.size, ops: [5, 10, 20, 30])
             }
             if indexPath.row == 3 { /** lyrcis.FirstToneHintViewStyle.bottomMargin **/
-                param.lyric.firstToneHintViewStyle.bottomMargin = genValue(current: param.lyric.firstToneHintViewStyle.bottomMargin, ops: [0, 15, 30, 45])
+                param.lyric.firstToneHintViewStyle.topMargin = genValue(current: param.lyric.firstToneHintViewStyle.topMargin, ops: [0, 5, 15, 30, 45])
                 
             }
             if indexPath.row == 4 { /** lyrcis.textNormalColor **/

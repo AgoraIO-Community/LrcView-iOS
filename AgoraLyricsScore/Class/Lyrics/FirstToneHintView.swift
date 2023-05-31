@@ -12,8 +12,8 @@ public class FirstToneHintViewStyle: NSObject {
     @objc public var backgroundColor: UIColor = .gray { didSet { didUpdate?() } }
     /// 大小
     @objc public var size: CGFloat = 10 { didSet { didUpdate?() } }
-    /// 底部间距
-    @objc public var bottomMargin: CGFloat = 0 { didSet { didUpdate?() } }
+    /// 顶部间距
+    @objc public var topMargin: CGFloat = 5 { didSet { didUpdate?() } }
     
     typealias VoidBlock = () -> Void
     

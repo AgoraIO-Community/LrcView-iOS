@@ -40,7 +40,7 @@
     [gview setScoreWithCumulativeScore:1110 totalScore:4000];
     
     karaokeView.lyricsView.firstToneHintViewStyle.size = 15;
-    karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = 25;
+    karaokeView.lyricsView.firstToneHintViewStyle.topMargin = 25;
     karaokeView.lyricsView.firstToneHintViewStyle.backgroundColor = [UIColor redColor];
     
     IncentiveView *incentiveView = [IncentiveView new];
