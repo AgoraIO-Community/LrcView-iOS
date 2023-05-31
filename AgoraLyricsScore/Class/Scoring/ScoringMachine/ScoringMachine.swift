@@ -54,7 +54,6 @@ class ScoringMachine {
     func setProgress(progress: Int) {
         Log.debug(text: "progress: \(progress)", tag: "progress")
         queue.async { [weak self] in
-            Log.debug(text: "==progress: \(progress)", tag: "progress")
             self?._setProgress(progress: progress)
         }
     }
@@ -114,13 +113,15 @@ class ScoringMachine {
     
     private func _setProgress(progress: Int) {
         guard !isDragging else { return }
+        guard let model = lyricData, model.hasPitch else { return }
+        Log.debug(text: "progress: \(progress)", tag: logTag)
         self.progress = progress
         handleProgress()
     }
     
     private func _setPitch(pitch: Double) {
         guard !isDragging else { return }
-        guard lyricData != nil else { return } /** setLyricData 后执行 **/
+        guard let model = lyricData, model.hasPitch else { return }
         
         if pitch <= 0 {
             let y = canvasViewSize.height
