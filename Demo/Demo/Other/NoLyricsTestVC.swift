@@ -15,9 +15,9 @@ class NoLyricsTestVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         
-        karaokeView.lyricsView.noLyricTipsFont = .systemFont(ofSize: 20)
-        karaokeView.lyricsView.noLyricTipsText = "哈哈asdasd"
-        karaokeView.lyricsView.noLyricTipsColor = .red
+        karaokeView.lyricsView.noLyricsTipFont = .systemFont(ofSize: 20)
+        karaokeView.lyricsView.noLyricsTipText = "哈哈asdasd"
+        karaokeView.lyricsView.noLyricsTipColor = .red
         karaokeView.setLyricData(data: nil)
     }
     

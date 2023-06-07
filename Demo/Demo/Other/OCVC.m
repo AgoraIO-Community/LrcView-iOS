@@ -30,7 +30,7 @@
     ScoringView *sView = karaokeView.scoringView;
     LyricsView *lView= karaokeView.lyricsView;
     sView.viewHeight = 160;
-    sView.topSpaces = 70;
+    sView.topMargin = 70;
     
     GradeView *gview = [[GradeView alloc] initWithFrame:CGRectMake(15, 110, UIScreen.mainScreen.bounds.size.width - 30, 50)];
     [gview setTitleWithTitle:@"123"];
@@ -50,9 +50,9 @@
     [incentiveView showWithScore:80];
     
     lView.draggable = YES;
-    lView.noLyricTipsFont = [UIFont systemFontOfSize:23];
-    lView.noLyricTipsText = @"没有歌词呢";
-    lView.noLyricTipsColor = [UIColor redColor];
+    lView.noLyricsTipFont = [UIFont systemFontOfSize:23];
+    lView.noLyricsTipText = @"没有歌词呢";
+    lView.noLyricsTipColor = [UIColor redColor];
 //    [karaokeView setLyricDataWithData:nil];
 }
 

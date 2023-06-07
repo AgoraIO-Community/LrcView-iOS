@@ -37,7 +37,8 @@ class ParamSetVC: UIViewController {
                 Section(title: "Lyrics", rows: [.init(title: "隐藏等待开始圆点"),
                                                 .init(title: "等待开始圆点颜色"),
                                                 .init(title: "等待开始圆点大小"),
-                                                .init(title: "等待开始圆点底部间距"),
+                                                .init(title: "等待开始圆点顶部间距"),
+                                                .init(title: "内容顶部间距"),
                                                 .init(title: "正常歌词背景色"),
                                                 .init(title: "高亮的歌词颜色（未命中）"),
                                                 .init(title: "高亮的歌词填充颜色 （命中）"),
@@ -59,6 +60,7 @@ class ParamSetVC: UIViewController {
                                                  .init(title: "是否隐藏粒子动画效果"),
                                                  .init(title: "使用图片创建粒子动画"),
                                                  .init(title: "打分容忍度 范围：0-1"),
+                                                 .init(title: "游标拟合"),
                                                  .init(title: "showDebugView"),
                 ]),
         ]
@@ -141,42 +143,45 @@ class ParamSetVC: UIViewController {
             if indexPath.row == 2 { /** lyrcis.FirstToneHintViewStyle.size **/
                 cell.detailTextLabel?.text = "\(param.lyric.firstToneHintViewStyle.size)"
             }
-            if indexPath.row == 3 { /** lyrcis.FirstToneHintViewStyle.bottomMargin **/
+            if indexPath.row == 3 { /** lyrcis.FirstToneHintViewStyle.topMargin **/
                 cell.detailTextLabel?.text = "\(param.lyric.firstToneHintViewStyle.topMargin)"
             }
-            if indexPath.row == 4 { /** lyrcis.textNormalColor **/
+            if indexPath.row == 4 { /** lyrcis.contentTopSpaces **/
+                cell.detailTextLabel?.text = "\(param.lyric.contentTopMargin)"
+            }
+            if indexPath.row == 5 { /** lyrcis.textNormalColor **/
                 cell.backgroundColor = param.lyric.inactiveLineTextColor
             }
-            if indexPath.row == 5 { /** lyrcis.textSelectedColor **/
+            if indexPath.row == 6 { /** lyrcis.textSelectedColor **/
                 cell.backgroundColor = param.lyric.activeLineUpcomingTextColor
             }
-            if indexPath.row == 6 { /** lyrcis.textHighlightedColor **/
+            if indexPath.row == 7 { /** lyrcis.textHighlightedColor **/
                 cell.backgroundColor = param.lyric.activeLinePlayedTextColor
             }
-            if indexPath.row == 7 { /** lyricsView.textNormalFontSize **/
+            if indexPath.row == 8 { /** lyricsView.textNormalFontSize **/
                 cell.detailTextLabel?.text = "字体"
                 cell.detailTextLabel?.font = param.lyric.inactiveLineFontSize
             }
-            if indexPath.row == 8 { /** lyricsView.textHighlightFontSize **/
+            if indexPath.row == 9 { /** lyricsView.textHighlightFontSize **/
                 cell.detailTextLabel?.text = "字体"
                 cell.detailTextLabel?.font = param.lyric.activeLineUpcomingFontSize
             }
-            if indexPath.row == 9 { /** lyricsView.lyricLineSpacing **/
+            if indexPath.row == 10 { /** lyricsView.lyricLineSpacing **/
                 cell.detailTextLabel?.text = "\(param.lyric.lyricLineSpacing)"
             }
-            if indexPath.row == 10 { /** lyricsView.maxWidth **/
+            if indexPath.row == 11 { /** lyricsView.maxWidth **/
                 cell.detailTextLabel?.text = "\(param.lyric.maxWidth)"
             }
-            if indexPath.row == 11 { /** param.lyric.draggable **/
+            if indexPath.row == 12 { /** param.lyric.draggable **/
                 cell.detailTextLabel?.text = param.lyric.draggable ? "true" : "false"
             }
-            if indexPath.row == 12 {
+            if indexPath.row == 13 {
                 cell.detailTextLabel?.text = param.lyric.noLyricTipsText
             }
-            if indexPath.row == 13 {
+            if indexPath.row == 14 {
                 cell.backgroundColor = param.lyric.noLyricTipsColor
             }
-            if indexPath.row == 14 {
+            if indexPath.row == 15 {
                 cell.detailTextLabel?.text = "字体"
                 cell.detailTextLabel?.font = param.lyric.noLyricTipsFont
             }
@@ -231,6 +236,11 @@ class ParamSetVC: UIViewController {
             
             /// showDebugView
             if indexPath.row == 10 {
+                cell.detailTextLabel?.text = "\(param.scoring.isLocalPitchCursorAlignedWithStandardPitchStick)"
+            }
+            
+            /// showDebugView
+            if indexPath.row == 11 {
                 cell.detailTextLabel?.text = "\(param.scoring.showDebugView)"
             }
         }
@@ -269,41 +279,43 @@ class ParamSetVC: UIViewController {
             if indexPath.row == 2 { /** lyrcis.FirstToneHintViewStyle.size **/
                 param.lyric.firstToneHintViewStyle.size = genValue(current: param.lyric.firstToneHintViewStyle.size, ops: [5, 10, 20, 30])
             }
-            if indexPath.row == 3 { /** lyrcis.FirstToneHintViewStyle.bottomMargin **/
+            if indexPath.row == 3 { /** lyrcis.FirstToneHintViewStyle.topMargin **/
                 param.lyric.firstToneHintViewStyle.topMargin = genValue(current: param.lyric.firstToneHintViewStyle.topMargin, ops: [0, 5, 15, 30, 45])
-                
             }
-            if indexPath.row == 4 { /** lyrcis.textNormalColor **/
+            if indexPath.row == 4 { /** lyrcis.contentTopSpaces **/
+                param.lyric.contentTopMargin = genValue(current: param.lyric.contentTopMargin, ops: [0, 5, 15, 30, 45])
+            }
+            if indexPath.row == 5 { /** lyrcis.textNormalColor **/
                 param.lyric.inactiveLineTextColor = .random
             }
-            if indexPath.row == 5 { /** lyrcis.textSelectedColor **/
+            if indexPath.row == 6 { /** lyrcis.textSelectedColor **/
                 param.lyric.activeLineUpcomingTextColor = .random
             }
-            if indexPath.row == 6 { /** lyrcis.textHighlightedColor **/
+            if indexPath.row == 7 { /** lyrcis.textHighlightedColor **/
                 param.lyric.activeLinePlayedTextColor = .random
             }
-            if indexPath.row == 7 { /** lyricsView.textNormalFontSize **/
+            if indexPath.row == 8 { /** lyricsView.textNormalFontSize **/
                 param.lyric.inactiveLineFontSize = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
             }
-            if indexPath.row == 8 { /** lyricsView.textHighlightFontSize **/
+            if indexPath.row == 9 { /** lyricsView.textHighlightFontSize **/
                 param.lyric.activeLineUpcomingFontSize = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
             }
-            if indexPath.row == 9 { /** lyricsView.lyricLineSpacing **/
+            if indexPath.row == 10 { /** lyricsView.lyricLineSpacing **/
                 param.lyric.lyricLineSpacing = genValue(current: param.lyric.lyricLineSpacing, ops: [0, 5, 10, 15, 20])
             }
-            if indexPath.row == 10 { /** lyricsView.maxWidth **/
+            if indexPath.row == 11 { /** lyricsView.maxWidth **/
                 param.lyric.maxWidth = genValue(current: param.lyric.maxWidth, ops: [30, 100, 220, UIScreen.main.bounds.width-30])
             }
-            if indexPath.row == 11 { /** param.lyric.draggable **/
+            if indexPath.row == 12 { /** param.lyric.draggable **/
                 param.lyric.draggable = !param.lyric.draggable
             }
-            if indexPath.row == 12 {
+            if indexPath.row == 13 {
                 param.lyric.noLyricTipsText = "\(Int.random(in: 0...100))"
             }
-            if indexPath.row == 13 {
+            if indexPath.row == 14 {
                 param.lyric.noLyricTipsColor = .random
             }
-            if indexPath.row == 14 {
+            if indexPath.row == 15 {
                 param.lyric.noLyricTipsFont = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
             }
         }
@@ -365,6 +377,11 @@ class ParamSetVC: UIViewController {
             
             /// showDebugView
             if indexPath.row == 10 {
+                param.scoring.isLocalPitchCursorAlignedWithStandardPitchStick = !param.scoring.isLocalPitchCursorAlignedWithStandardPitchStick
+            }
+            
+            /// showDebugView
+            if indexPath.row == 11 {
                 param.scoring.showDebugView = !param.scoring.showDebugView
             }
         }

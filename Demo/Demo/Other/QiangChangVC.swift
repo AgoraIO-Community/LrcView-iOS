@@ -68,7 +68,7 @@ class QiangChangVC: UIViewController {
     func setupUI() {
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         karaokeView.scoringView.viewHeight = 100
-        karaokeView.scoringView.topSpaces = 80
+        karaokeView.scoringView.topMargin = 80
         karaokeView.lyricsView.showDebugView = false
         karaokeView.lyricsView.draggable = true
         
@@ -119,7 +119,7 @@ class QiangChangVC: UIViewController {
         incentiveView.centerXAnchor.constraint(equalTo: karaokeView.centerXAnchor, constant: -10).isActive = true
         
         lineScoreView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: karaokeView.scoringView.defaultPitchCursorX).isActive = true
-        lineScoreView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: karaokeView.scoringView.topSpaces).isActive = true
+        lineScoreView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: karaokeView.scoringView.topMargin).isActive = true
         lineScoreView.heightAnchor.constraint(equalToConstant: karaokeView.scoringView.viewHeight).isActive = true
         lineScoreView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
@@ -285,11 +285,11 @@ class QiangChangVC: UIViewController {
             if song.isXML {
                 self.gradeView.isHidden = false
                 self.karaokeView.scoringView.viewHeight = 100
-                self.karaokeView.scoringView.topSpaces = 80
+                self.karaokeView.scoringView.topMargin = 80
                 self.karaokeView.scoringEnabled = true
             }
             else {
-                self.karaokeView.scoringView.topSpaces = 0
+                self.karaokeView.scoringView.topMargin = 0
                 self.karaokeView.scoringEnabled = false
                 self.gradeView.isHidden = true
             }
@@ -352,9 +352,9 @@ class QiangChangVC: UIViewController {
         karaokeView.setScoreCompensationOffset(offset: param.karaoke.scoreCompensationOffset)
         
         karaokeView.lyricsView.lyricLineSpacing = param.lyric.lyricLineSpacing
-        karaokeView.lyricsView.noLyricTipsColor = param.lyric.noLyricTipsColor
-        karaokeView.lyricsView.noLyricTipsText = param.lyric.noLyricTipsText
-        karaokeView.lyricsView.noLyricTipsFont = param.lyric.noLyricTipsFont
+        karaokeView.lyricsView.noLyricsTipColor = param.lyric.noLyricTipsColor
+        karaokeView.lyricsView.noLyricsTipText = param.lyric.noLyricTipsText
+        karaokeView.lyricsView.noLyricsTipFont = param.lyric.noLyricTipsFont
         karaokeView.lyricsView.activeLineUpcomingFontSize = param.lyric.activeLineUpcomingFontSize
         karaokeView.lyricsView.inactiveLineTextColor = param.lyric.inactiveLineTextColor
         karaokeView.lyricsView.activeLineUpcomingTextColor = param.lyric.activeLineUpcomingTextColor
@@ -373,7 +373,7 @@ class QiangChangVC: UIViewController {
         karaokeView.scoringView.standardPitchStickViewColor = param.scoring.standardPitchStickViewColor
         karaokeView.scoringView.standardPitchStickViewHeight = param.scoring.standardPitchStickViewHeight
         karaokeView.scoringView.defaultPitchCursorX = param.scoring.defaultPitchCursorX
-        karaokeView.scoringView.topSpaces = param.scoring.topSpaces
+        karaokeView.scoringView.topMargin = param.scoring.topSpaces
         karaokeView.scoringView.viewHeight = param.scoring.viewHeight
         karaokeView.scoringView.hitScoreThreshold = param.scoring.hitScoreThreshold
         karaokeView.scoringView.movingSpeedFactor = param.scoring.movingSpeedFactor

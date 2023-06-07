@@ -1,4 +1,4 @@
-    //
+//
 //  KaraokeView.swift
 //  NewApi
 //
@@ -128,18 +128,20 @@ extension KaraokeView {
         if !Thread.isMainThread {
             Log.error(error: "invoke setPitch not isMainThread ", tag: logTag)
         }
+        
         if pitch < 0 { return }
         guard isStart else { return }
         if pitch == 0 {
             pitchIsZeroCount += 1
+            Log.info(text: "setPitch ignore", tag: logTag)
         }
         else {
             pitchIsZeroCount = 0
         }
         if pitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
             pitchIsZeroCount = 0
-            Log.info(text: "setPitch: \(pitch)", tag: logTag)
             scoringView.setPitch(pitch: pitch)
+            Log.info(text: "setPitch: \(pitch)", tag: logTag)
         }
     }
     
@@ -228,7 +230,7 @@ extension KaraokeView {
         scoringView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         scoringViewHeightConstraint = scoringView.heightAnchor.constraint(equalToConstant: scoringView.viewHeight)
         scoringViewHeightConstraint.isActive = true
-        scoringViewTopConstraint = scoringView.topAnchor.constraint(equalTo: topAnchor, constant: scoringView.topSpaces)
+        scoringViewTopConstraint = scoringView.topAnchor.constraint(equalTo: topAnchor, constant: scoringView.topMargin)
         scoringViewTopConstraint.isActive = true
         
         lyricsView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -254,8 +256,9 @@ extension KaraokeView {
         backgroundImageView.isHidden = backgroundImage == nil
         lyricsViewTopConstraint.constant = scoringEnabled ? spacing : 0 - scoringView.viewHeight
         scoringViewHeightConstraint.constant = scoringView.viewHeight
+        scoringView.scoringEnabled = scoringEnabled
         scoringView.isHidden = !scoringEnabled
-        scoringViewTopConstraint.constant = scoringView.topSpaces
+        scoringViewTopConstraint.constant = scoringView.topMargin
     }
     
     fileprivate var versionName: String {

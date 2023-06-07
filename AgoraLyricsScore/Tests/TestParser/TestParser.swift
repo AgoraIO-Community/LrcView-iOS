@@ -72,7 +72,7 @@ class TestParser: XCTestCase {
     func testTimeIssue1() { /** xml 异常 时间严重异常 **/
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "CJ1420023417", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-
+        
         let parser = Parser()
         let model = parser.parseLyricData(data: data, pitchFileData: nil)
         XCTAssertNil(model)
@@ -81,7 +81,6 @@ class TestParser: XCTestCase {
     func testTimeIssue2() {
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "745012-timeissue2", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-
         let parser = Parser()
         let model = parser.parseLyricData(data: data, pitchFileData: nil)
         XCTAssertNotNil(model)
@@ -148,6 +147,26 @@ class TestParser: XCTestCase {
         
         for item in model!.items.enumerated() {
             XCTAssertEqual(model2!.items[item.offset].value, model!.items[item.offset].value.keep3)
+        }
+    }
+    
+    func testPerformancePitchParser() throws {
+        let path = Bundle.current.path(forResource: "pitch", ofType: "bin")!
+        let fileUrl = URL(fileURLWithPath: path)
+        let fileData = try! Data(contentsOf: fileUrl)
+        let parser = PitchParser()
+        self.measure {
+            let _ = parser.parse(data: fileData)
+        }
+    }
+    
+    func testPerfromanceParseLyricData() {
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "6246262727282260", ofType: "lrc")!)
+        let data = try! Data(contentsOf: url)
+        let pitchFileUrl = URL(fileURLWithPath: Bundle.current.path(forResource: "6246262727282260", ofType: "bin")!)
+        let pitchFileData = try! Data(contentsOf: pitchFileUrl)
+        self.measure {
+            let _ = KaraokeView.parseLyricData(data: data, pitchFileData: pitchFileData)
         }
     }
     

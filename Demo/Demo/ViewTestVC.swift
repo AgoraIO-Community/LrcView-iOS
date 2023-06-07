@@ -175,7 +175,7 @@ extension ViewTestVC: UITableViewDelegate, UITableViewDataSource {
             }
             /// 渲染视图到顶部的间距
             if indexPath.row == 1 {
-                karaokeView.scoringView.topSpaces = CGFloat.random(in: 0...UIScreen.main.bounds.size.height * 2/3)
+                karaokeView.scoringView.topMargin = CGFloat.random(in: 0...UIScreen.main.bounds.size.height * 2/3)
             }
             /// 游标的起始位置
             if indexPath.row == 2 {

@@ -18,6 +18,7 @@ class ScoringMachine {
     var hitScoreThreshold: Float = 0.7
     var scoreLevel = 10
     var scoreCompensationOffset = 0
+    var isLocalPitchCursorAlignedWithStandardPitchStick = true
     var scoreAlgorithm: IScoreAlgorithm = ScoreAlgorithm()
     weak var delegate: ScoringMachineDelegate?
     
@@ -52,7 +53,6 @@ class ScoringMachine {
     }
     
     func setProgress(progress: Int) {
-        Log.debug(text: "progress: \(progress)", tag: "progress")
         queue.async { [weak self] in
             self?._setProgress(progress: progress)
         }
@@ -114,6 +114,11 @@ class ScoringMachine {
     private func _setProgress(progress: Int) {
         guard !isDragging else { return }
         guard let model = lyricData, model.hasPitch else { return }
+        let gap = abs(progress - self.progress)
+        if self.progress > 0, gap >= 40 {
+            Log.warning(text: "prevalue: \(self.progress) current:\(progress)", tag: logTag)
+            Log.warning(text: "setProgress gap: \(gap)", tag: logTag)
+        }
         Log.debug(text: "progress: \(progress)", tag: logTag)
         self.progress = progress
         handleProgress()
@@ -173,7 +178,8 @@ class ScoringMachine {
             
             /** 6.calculated ui info **/
             let showAnimation = score >= hitScoreThreshold * 100
-            let y = calculatedY(pitch: showAnimation ? hitedInfo.pitch : voicePitch,
+            let calculatedPitch = (isLocalPitchCursorAlignedWithStandardPitchStick && showAnimation) ? hitedInfo.pitch : voicePitch
+            let y = calculatedY(pitch: calculatedPitch,
                                 viewHeight: canvasViewSize.height,
                                 minPitch: minPitch,
                                 maxPitch: maxPitch,

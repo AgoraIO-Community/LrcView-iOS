@@ -22,7 +22,7 @@ extension MainTestVC {
 }
 
 class MainTestVC: UIViewController {
-    let karaokeView = KaraokeView()
+    let karaokeView = KaraokeView(frame: .zero, loggers: [FileLogger(), ConsoleLogger()])
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()
@@ -42,7 +42,9 @@ class MainTestVC: UIViewController {
                  Item(code: 6843908387781240, isXML: true, name: "须尽欢", des: "", usePitchFile: false),
                  Item(code: 6625526603631810, isXML: true, name: "简单爱", des: "", usePitchFile: true),
                  Item(code: 6625526603631810, isXML: true, name: "简单爱", des: "", usePitchFile: false),
-                 Item(code: 6315145508122860, isXML: true, name: "一天到晚游泳的鱼", des: "xml不支持打分", usePitchFile: false)]
+                 Item(code: 6315145508122860, isXML: true, name: "一天到晚游泳的鱼", des: "xml不支持打分", usePitchFile: false),
+                 /** xml 不包含打分 **/
+                 Item(code: 6315145508122860, isXML: true, name: "纯音乐", des: "", usePitchFile: false)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
@@ -56,13 +58,13 @@ class MainTestVC: UIViewController {
         song = songs.first!
         setupUI()
         commonInit()
-// 验证抢唱算法
-//        let filePath = Bundle.main.path(forResource: "900318", ofType: "xml")!
-//        let url = URL(fileURLWithPath: filePath)
-//        let data = try! Data(contentsOf: url)
-//        let m = KaraokeView.parseLyricData(data: data, pitchFileData: nil)!
-//        let v = getTotalTime(model: m, s: 213929, e: 291648)
-//        print("")
+        // 验证抢唱算法
+        // let filePath = Bundle.main.path(forResource: "900318", ofType: "xml")!
+        // let url = URL(fileURLWithPath: filePath)
+        // let data = try! Data(contentsOf: url)
+        // let m = KaraokeView.parseLyricData(data: data, pitchFileData: nil)!
+        // let v = getTotalTime(model: m, s: 213929, e: 291648)
+        // print("")
     }
     
     deinit {
@@ -72,7 +74,7 @@ class MainTestVC: UIViewController {
     func setupUI() {
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         karaokeView.scoringView.viewHeight = 100
-        karaokeView.scoringView.topSpaces = 80
+        karaokeView.scoringView.topMargin = 80
         karaokeView.lyricsView.showDebugView = false
         karaokeView.lyricsView.draggable = true
         
@@ -123,7 +125,7 @@ class MainTestVC: UIViewController {
         incentiveView.centerXAnchor.constraint(equalTo: karaokeView.centerXAnchor, constant: -10).isActive = true
         
         lineScoreView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: karaokeView.scoringView.defaultPitchCursorX).isActive = true
-        lineScoreView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: karaokeView.scoringView.topSpaces).isActive = true
+        lineScoreView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: karaokeView.scoringView.topMargin).isActive = true
         lineScoreView.heightAnchor.constraint(equalToConstant: karaokeView.scoringView.viewHeight).isActive = true
         lineScoreView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
@@ -347,9 +349,9 @@ class MainTestVC: UIViewController {
         karaokeView.setScoreCompensationOffset(offset: param.karaoke.scoreCompensationOffset)
         
         karaokeView.lyricsView.lyricLineSpacing = param.lyric.lyricLineSpacing
-        karaokeView.lyricsView.noLyricTipsColor = param.lyric.noLyricTipsColor
-        karaokeView.lyricsView.noLyricTipsText = param.lyric.noLyricTipsText
-        karaokeView.lyricsView.noLyricTipsFont = param.lyric.noLyricTipsFont
+        karaokeView.lyricsView.noLyricsTipColor = param.lyric.noLyricTipsColor
+        karaokeView.lyricsView.noLyricsTipText = param.lyric.noLyricTipsText
+        karaokeView.lyricsView.noLyricsTipFont = param.lyric.noLyricTipsFont
         karaokeView.lyricsView.activeLineUpcomingFontSize = param.lyric.activeLineUpcomingFontSize
         karaokeView.lyricsView.inactiveLineTextColor = param.lyric.inactiveLineTextColor
         karaokeView.lyricsView.activeLineUpcomingTextColor = param.lyric.activeLineUpcomingTextColor
@@ -358,6 +360,7 @@ class MainTestVC: UIViewController {
         karaokeView.lyricsView.inactiveLineFontSize = param.lyric.inactiveLineFontSize
         karaokeView.lyricsView.firstToneHintViewStyle.backgroundColor = param.lyric.firstToneHintViewStyle.backgroundColor
         karaokeView.lyricsView.firstToneHintViewStyle.size = param.lyric.firstToneHintViewStyle.size
+        karaokeView.lyricsView.contentTopMargin = param.lyric.contentTopMargin
         karaokeView.lyricsView.firstToneHintViewStyle.topMargin = param.lyric.firstToneHintViewStyle.topMargin
         karaokeView.lyricsView.maxWidth = param.lyric.maxWidth
         karaokeView.lyricsView.draggable = param.lyric.draggable
@@ -368,10 +371,11 @@ class MainTestVC: UIViewController {
         karaokeView.scoringView.standardPitchStickViewColor = param.scoring.standardPitchStickViewColor
         karaokeView.scoringView.standardPitchStickViewHeight = param.scoring.standardPitchStickViewHeight
         karaokeView.scoringView.defaultPitchCursorX = param.scoring.defaultPitchCursorX
-        karaokeView.scoringView.topSpaces = param.scoring.topSpaces
+        karaokeView.scoringView.topMargin = param.scoring.topSpaces
         karaokeView.scoringView.viewHeight = param.scoring.viewHeight
         karaokeView.scoringView.hitScoreThreshold = param.scoring.hitScoreThreshold
         karaokeView.scoringView.movingSpeedFactor = param.scoring.movingSpeedFactor
+        karaokeView.scoringView.isLocalPitchCursorAlignedWithStandardPitchStick = param.scoring.isLocalPitchCursorAlignedWithStandardPitchStick
         karaokeView.scoringView.showDebugView = param.scoring.showDebugView
     }
 }

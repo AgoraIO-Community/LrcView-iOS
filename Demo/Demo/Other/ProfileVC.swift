@@ -19,7 +19,7 @@ class ProfileVC: UIViewController {
         view.backgroundColor = .white
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         karaokeView.scoringView.viewHeight = 100
-        karaokeView.scoringView.topSpaces = 80
+        karaokeView.scoringView.topMargin = 80
         karaokeView.lyricsView.showDebugView = false
         view.addSubview(karaokeView)
         

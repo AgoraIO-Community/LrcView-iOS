@@ -66,6 +66,7 @@ class LyricViewParam {
     var lyricLineSpacing: CGFloat = 10
     /// 等待开始圆点风格
     var firstToneHintViewStyle: FirstToneHintViewStyle = .init()
+    var contentTopMargin: CGFloat = 5
     /// 是否开启拖拽
     var draggable: Bool = false
 }
@@ -91,6 +92,8 @@ class ScoringViewParam {
     var emitterImages: [UIImage]?
     /// 打分容忍度 范围：0-1
     var hitScoreThreshold: Float = 0.7
+    /// 游标拟合
+    var isLocalPitchCursorAlignedWithStandardPitchStick = true
     /// use for debug only
     var showDebugView = false
 }

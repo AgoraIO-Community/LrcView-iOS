@@ -14,11 +14,11 @@ protocol LyricsViewDelegate: NSObjectProtocol {
 
 public class LyricsView: UIView {
     /// 无歌词提示文案
-    @objc public var noLyricTipsText: String = "无歌词" { didSet { updateUI() } }
+    @objc public var noLyricsTipText: String = "无歌词" { didSet { updateUI() } }
     /// 无歌词提示文字颜色
-    @objc public var noLyricTipsColor: UIColor = .orange { didSet { updateUI() } }
+    @objc public var noLyricsTipColor: UIColor = .orange { didSet { updateUI() } }
     /// 无歌词提示文字大小
-    @objc public var noLyricTipsFont: UIFont = .systemFont(ofSize: 17) { didSet { updateUI() } }
+    @objc public var noLyricsTipFont: UIFont = .systemFont(ofSize: 17) { didSet { updateUI() } }
     /// 是否隐藏等待开始圆点
     @objc public var waitingViewHidden: Bool = false { didSet { updateUI() } }
     /// 非活跃歌词颜色（未唱、已唱）
@@ -39,6 +39,8 @@ public class LyricsView: UIView {
     @objc public let firstToneHintViewStyle: FirstToneHintViewStyle = .init()
     /// 是否开启拖拽
     @objc public var draggable: Bool = false
+    /// 歌词内容的顶部间距
+    @objc public var contentTopMargin: CGFloat = 5 { didSet { updateUI() } }
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
     
@@ -61,6 +63,7 @@ public class LyricsView: UIView {
         setupUI()
         updateUI()
         commonInit()
+        tableView.contentInset
     }
     
     required init?(coder: NSCoder) {
@@ -144,9 +147,8 @@ extension LyricsView {
         firstToneHintViewHeightConstraint = firstToneHintView.heightAnchor.constraint(equalToConstant: firstToneHintViewStyle.size)
         firstToneHintViewHeightConstraint.isActive = true
         
-        let topSpace: CGFloat = 5
-        let constant = firstToneHintViewStyle.size + topSpace
-        tableViewTopConstraint = tableView.topAnchor.constraint(equalTo: topAnchor, constant: constant)
+        
+        tableViewTopConstraint = tableView.topAnchor.constraint(equalTo: topAnchor, constant: contentTopMargin)
         tableViewTopConstraint.isActive = true
         tableView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         tableView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -170,17 +172,15 @@ extension LyricsView {
     }
     
     fileprivate func updateUI() {
-        noLyricTipsLabel.textColor = noLyricTipsColor
-        noLyricTipsLabel.text = noLyricTipsText
-        noLyricTipsLabel.font = noLyricTipsFont
+        noLyricTipsLabel.textColor = noLyricsTipColor
+        noLyricTipsLabel.text = noLyricsTipText
+        noLyricTipsLabel.font = noLyricsTipFont
         noLyricTipsLabel.isHidden = !isNoLyric
         tableView.isHidden = isNoLyric
         tableView.isScrollEnabled = draggable
         firstToneHintView.isHidden = isNoLyric ? true : waitingViewHidden
         firstToneHintView.style = firstToneHintViewStyle
-        let topSpace: CGFloat = 5
-        let constant = firstToneHintViewStyle.size
-        tableViewTopConstraint.constant = constant + topSpace
+        tableViewTopConstraint.constant = contentTopMargin
         firstToneHintViewHeightConstraint.constant = firstToneHintViewStyle.size
         firstToneHintViewTopConstraint.constant = firstToneHintViewStyle.topMargin
         if tableView.bounds.width > 0 {

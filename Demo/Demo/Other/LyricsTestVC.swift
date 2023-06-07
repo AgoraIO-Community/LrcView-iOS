@@ -37,7 +37,7 @@ class LyricsTestVC: UIViewController {
         karaokeView.lyricsView.activeLineUpcomingFontSize = .systemFont(ofSize: 23)
         karaokeView.lyricsView.draggable = true
         karaokeView.scoringView.viewHeight = 130
-        karaokeView.scoringView.topSpaces = 50
+        karaokeView.scoringView.topMargin = 50
         karaokeView.scoringView.localPitchCursorOffsetX = 5
         karaokeView.scoringView.localPitchCursorImage = UIImage(named: "t1")
 //        karaokeView.scoringView.showDebugView = true

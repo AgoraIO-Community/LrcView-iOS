@@ -11,7 +11,7 @@ public class ScoringView: UIView {
     /// 评分视图高度
     @objc public var viewHeight: CGFloat = 120 { didSet { updateUI() } }
     /// 渲染视图到顶部的间距
-    @objc public var topSpaces: CGFloat = 0 { didSet { updateUI() } }
+    @objc public var topMargin: CGFloat = 0 { didSet { updateUI() } }
     /// 游标的起始位置
     @objc public var defaultPitchCursorX: CGFloat = 100 { didSet { updateUI() } }
     /// 音准线的高度
@@ -35,13 +35,19 @@ public class ScoringView: UIView {
     @objc public var emitterImages: [UIImage]? { didSet { updateUI() } }
     /// 打分容忍度 范围：0-1
     @objc public var hitScoreThreshold: Float = 0.7 { didSet { updateUI() } }
+    /** 是否游标拟合标准音高线.
+     当Tone得分 >= hitScoreThreshold*100 时，如为`true`，游标会拟合标准音高线。即使 Tone得分 < 100，"游标的垂直中心点" 会和 "标准音高线的垂直中心点" 重合。
+     当Tone得分 >= hitScoreThreshold*100 时，如为`false`，游标不会拟合标准音高线。
+     */
+    @objc public var isLocalPitchCursorAlignedWithStandardPitchStick: Bool = true { didSet { updateUI() } }
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
     
     var scoreLevel = 10 { didSet { updateUI() } }
     var scoreCompensationOffset = 0 { didSet { updateUI() } }
-    
     var progress: Int = 0 { didSet { updateProgress() } }
+    var scoringEnabled = true
+    
     fileprivate let localPitchView = LocalPitchView()
     fileprivate let canvasView = ScoringCanvasView()
     /// use for debug only
@@ -73,10 +79,12 @@ public class ScoringView: UIView {
     }
     
     func setLyricData(data: LyricModel?) {
+        guard scoringEnabled else { return }
         scoringMachine.setLyricData(data: data)
     }
     
     func setPitch(pitch: Double) {
+        guard scoringEnabled else { return }
         scoringMachine.setPitch(pitch: pitch)
     }
     
@@ -85,10 +93,12 @@ public class ScoringView: UIView {
     }
     
     func dragBegain() {
+        guard scoringEnabled else { return }
         scoringMachine.dragBegain()
     }
     
     func dragDidEnd(position: Int) {
+        guard scoringEnabled else { return }
         scoringMachine.dragDidEnd(position: position)
     }
     
@@ -99,6 +109,7 @@ public class ScoringView: UIView {
     }
     
     private func updateProgress() {
+        guard scoringEnabled else { return }
         scoringMachine.setProgress(progress: progress)
     }
     
@@ -146,6 +157,7 @@ public class ScoringView: UIView {
         scoringMachine.hitScoreThreshold = hitScoreThreshold
         scoringMachine.scoreLevel = scoreLevel
         scoringMachine.scoreCompensationOffset = scoreCompensationOffset
+        scoringMachine.isLocalPitchCursorAlignedWithStandardPitchStick = isLocalPitchCursorAlignedWithStandardPitchStick
         
         delegate?.scoringViewShouldUpdateViewLayout(view: self)
         
