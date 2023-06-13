@@ -322,4 +322,8 @@ extension KaraokeView {
         }
         lastProgress = progress
     }
+    
+    public func log(str: String) {
+        Log.warning(text: "[demo] \(str)", tag: logTag)
+    }
 }

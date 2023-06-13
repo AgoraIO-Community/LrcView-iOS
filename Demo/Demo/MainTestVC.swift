@@ -242,17 +242,20 @@ class MainTestVC: UIViewController {
             var current = self.last
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
                 current = self.mpk.getPosition()
+                let gap = abs(current - self.last)
+                karaokeView.log(str: "[demo][count:\(time)] getPosition  prevalue: \(last) current:\(current) gap: \(gap)")
                 let data = self.createData(time: current + 20)
                 self.sendData(data: data)
             }
             current += 20
             
             self.last = current
-            var time = current
-            if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
-                time -= 250
+            var progress = current
+            if progress > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
+                progress -= 250
             }
-            self.karaokeView.setProgress(progress: time)
+            karaokeView.log(str: "[demo][count:\(time)] progress: \(progress) ")
+            self.karaokeView.setProgress(progress: progress)
         }
     }
     
@@ -407,18 +410,15 @@ extension MainTestVC: AgoraRtcEngineDelegate {
 }
 
 extension MainTestVC: AgoraMusicContentCenterEventDelegate {
-    func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], errorCode: AgoraMusicContentCenterStatusCode) {
+    func onMusicChartsResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: [AgoraMusicChartInfo]) {
         
     }
     
-    func onMusicCollectionResult(_ requestId: String, result: AgoraMusicCollection, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onMusicCollectionResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: AgoraMusicCollection) {
         
     }
     
-    func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
-        guard let lyricUrl = lyricUrl else {
-            return
-        }
+    func onLyricResult(_ requestId: String, lyricUrl: String) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
         //        DispatchQueue.main.async {
@@ -501,11 +501,7 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         }
     }
     
-    func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
-        
-    }
-    
-    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, status: AgoraMusicContentCenterPreloadStatus, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onPreLoadEvent(_ songCode: Int, percent: Int, status: AgoraMusicContentCenterPreloadStatus, msg: String, lyricUrl: String) {
         print("== onPreLoadEvent \(status.rawValue) ")
         if status == .OK { /** preload 成功 **/
             print("== preload ok")

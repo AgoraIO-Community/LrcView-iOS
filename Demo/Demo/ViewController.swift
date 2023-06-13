@@ -37,21 +37,21 @@ class ViewController: UIViewController {
     }
 
     func createData() {
-        list = [Section(title: "UI", rows: [.init(title: "View配置")])]
-//        list = [Section(title: "UI", rows: [.init(title: "View配置")]),
-//                Section(title: "体验", rows: [.init(title: "FirstToneHintView"),
-//                                            .init(title: "纯音乐"),
-//                                            .init(title: "歌词显示 mcc"),
-//                                            .init(title: "用AVPlayer测试"),
-//                                            .init(title: "Emitter测试"),
-//                                            .init(title: "得分动画测试"),
-//                                            .init(title: "激励动画测试"),
-//                                            .init(title: "LyricLabel测试"),
-//                                            .init(title: "OC"),
-//                                            .init(title: "profile"),
-//                                            .init(title: "观众端"),
-//                                            .init(title: "主播端"),
-//                                            .init(title: "抢唱")])]
+//        list = [Section(title: "UI", rows: [.init(title: "View配置")])]
+        list = [Section(title: "UI", rows: [.init(title: "View配置")]),
+                Section(title: "体验", rows: [.init(title: "FirstToneHintView"),
+                                            .init(title: "纯音乐"),
+                                            .init(title: "歌词显示 mcc"),
+                                            .init(title: "用AVPlayer测试"),
+                                            .init(title: "Emitter测试"),
+                                            .init(title: "得分动画测试"),
+                                            .init(title: "激励动画测试"),
+                                            .init(title: "LyricLabel测试"),
+                                            .init(title: "OC"),
+                                            .init(title: "profile"),
+                                            .init(title: "观众端"),
+                                            .init(title: "主播端"),
+                                            .init(title: "抢唱")])]
     }
 }
 

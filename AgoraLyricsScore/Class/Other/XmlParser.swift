@@ -132,7 +132,6 @@ extension XmlParser: XMLParserDelegate {
         case "song":
             song = LyricModel(name: "",
                               singer: "",
-                              type: .slow,
                               lines: [],
                               preludeEndPosition: 0,
                               duration: 0,
@@ -202,13 +201,6 @@ extension XmlParser: XMLParserDelegate {
                 song.name = string
             case .singer:
                 song.singer = string
-            case .type:
-                if let value = Int(string) {
-                    song.type = MusicType(rawValue: value) ?? .fast
-                }
-                else {
-                    song.type = .fast
-                }
             case .word, .overlap:
                 if let tone = song.lines.last?.tones.last {
                     tone.word = tone.word + string

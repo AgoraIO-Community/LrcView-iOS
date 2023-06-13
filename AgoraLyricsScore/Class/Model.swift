@@ -8,24 +8,6 @@
 import Foundation
 
 // MARK: - Public
-@objc public enum MusicType: Int, CustomStringConvertible {
-    case unknow = 0
-    /// 快歌
-    case fast = 1
-    /// 慢歌
-    case slow = 2
-    
-    public var description: String {
-        switch self {
-        case .fast:
-            return "fast"
-        case .slow:
-            return "slow"
-        default:
-            return "unknow"
-        }
-    }
-}
 
 @objc public enum SourceType: UInt8, CustomStringConvertible {
     case lrc = 0
@@ -46,8 +28,6 @@ public class LyricModel: NSObject {
     @objc public var name: String
     /// 歌星名称
     @objc public var singer: String
-    /// 歌曲类型
-    @objc public var type: MusicType
     /// 行信息
     @objc public var lines: [LyricLineModel]
     /// 前奏结束时间
@@ -62,7 +42,6 @@ public class LyricModel: NSObject {
     
     @objc public init(name: String,
                       singer: String,
-                      type: MusicType,
                       lines: [LyricLineModel],
                       preludeEndPosition: Int,
                       duration: Int,
@@ -70,7 +49,6 @@ public class LyricModel: NSObject {
                       sourceType: SourceType) {
         self.name = name
         self.singer = singer
-        self.type = type
         self.lines = lines
         self.preludeEndPosition = preludeEndPosition
         self.duration = duration
@@ -81,7 +59,6 @@ public class LyricModel: NSObject {
     @objc public override init() {
         self.name = ""
         self.singer = ""
-        self.type = .fast
         self.lines = []
         self.preludeEndPosition = 0
         self.duration = 0
@@ -93,7 +70,6 @@ public class LyricModel: NSObject {
     @objc public override var description: String {
         let dict = ["name" : name,
                     "singer" : singer,
-                    "type" : type,
                     "preludeEndPosition" : preludeEndPosition,
                     "duration" : duration,
                     "hasPitch" : hasPitch,

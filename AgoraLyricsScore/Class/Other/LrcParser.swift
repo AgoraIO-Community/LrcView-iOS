@@ -78,7 +78,6 @@ class LrcParser {
         
         let result = LyricModel(name: "unknow",
                                 singer: "unknow",
-                                type: .unknow,
                                 lines: lines,
                                 preludeEndPosition: preludeEndPosition,
                                 duration: 0,

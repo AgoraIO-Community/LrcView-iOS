@@ -200,18 +200,15 @@ extension HostVC: AgoraRtcEngineDelegate {
 }
 
 extension HostVC: AgoraMusicContentCenterEventDelegate {
-    func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], errorCode: AgoraMusicContentCenterStatusCode) {
+    func onMusicChartsResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: [AgoraMusicChartInfo]) {
         
     }
     
-    func onMusicCollectionResult(_ requestId: String, result: AgoraMusicCollection, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onMusicCollectionResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: AgoraMusicCollection) {
         
     }
     
-    func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
-        guard let lyricUrl = lyricUrl else {
-            return
-        }
+    func onLyricResult(_ requestId: String, lyricUrl: String) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         self.lyricUrl = lyricUrl
         if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
@@ -243,11 +240,7 @@ extension HostVC: AgoraMusicContentCenterEventDelegate {
         }
     }
     
-    func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
-        
-    }
-    
-    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, status: AgoraMusicContentCenterPreloadStatus, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onPreLoadEvent(_ songCode: Int, percent: Int, status: AgoraMusicContentCenterPreloadStatus, msg: String, lyricUrl: String) {
         print("== onPreLoadEvent \(status.rawValue) ")
         if status == .OK { /** preload 成功 **/
             print("== preload ok")
