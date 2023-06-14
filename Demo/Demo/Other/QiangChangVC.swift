@@ -408,11 +408,13 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
             self.lyricModel = model
             let lines = model.lines.map({ TimeFix.Line(beginTime: $0.beginTime, duration: $0.duration) })
             if let result = TimeFix.handleFixTime(startTime: self.song.startTime,
-                                                  endTime: self.song.startTime + 15000,
+                                                  endTime: self.song.endTime,
                                                   lines: lines) {
                 self.song.startTime = result.0
                 self.song.endTime = result.1
             }
+            
+            self.lyricModel = trans(model: model, start: self.song.startTime, end: self.song.endTime)
             if !self.noLyric {
                 let canScoring = model.hasPitch
                 if canScoring { /** xml **/
@@ -533,4 +535,27 @@ extension QiangChangVC: SongListVCDelegate {
         
         print("songListVCDidSelectedSong \(song.code) \(preTime)")
     }
+}
+
+func trans(model: LyricModel, start: Int, end: Int) -> LyricModel? {
+    var lines = [LyricLineModel]()
+    
+    var flag = false
+    for line in model.lines {
+        if line.beginTime == start {
+            flag = true
+        }
+        if line.beginTime + line.duration == end {
+            lines.append(line)
+            break
+        }
+        if flag {
+            lines.append(line)
+        }
+    }
+    
+    model.lines = lines
+    model.preludeEndPosition = 0
+    model.duration = lines.last!.beginTime + lines.last!.duration
+    return model
 }
