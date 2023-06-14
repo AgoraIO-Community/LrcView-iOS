@@ -52,9 +52,9 @@ class QiangChangVC: UIViewController {
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         karaokeView.scoringView.viewHeight = 100
         karaokeView.scoringView.topSpaces = 80
-        karaokeView.lyricsView.showDebugView = false
-        karaokeView.lyricsView.draggable = true
-        
+        karaokeView.scoringView.showDebugView = true
+        karaokeView.lyricsView.draggable = false
+
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("点歌", for: .normal)
         changeButton.setTitle("切歌", for: .normal)
@@ -180,14 +180,23 @@ class QiangChangVC: UIViewController {
     }
     
     func mccPreload() {
-        let songcode = mcc.makeInternalSongCode(songCode: song.code, jsonOption: "{\"format\":{\"highPart\":0}}")
+        let songcode = mcc.getInternalSongCode(songCode: song.code, jsonOption: "{\"format\":{\"highPart\":0}}")
         song.code = songcode
         let ret = mcc.preload(songCode: song.code)
-        if ret != 0 {
+        if ret.isEmpty {
             print("preload error \(ret)")
             return
         }
         print("== preload success")
+    }
+    
+    func mccGetSongSimpleInfo() {
+        let ret = mcc.getSongSimpleInfo(songCode: song.code)
+        if ret.isEmpty {
+            print("GetSongSimpleInfo error \(ret)")
+            return
+        }
+        print("== GetSongSimpleInfo success")
     }
     
     func mccOpen() {
@@ -219,12 +228,16 @@ class QiangChangVC: UIViewController {
             }
             
             var current = self.last
+            current += 20
+            
+            if self.last == 0 {
+                current = self.mpk.getPosition()
+            }
+            
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
                 current = self.mpk.getPosition()
-                let data = self.createData(time: current + 20)
-                self.sendData(data: data)
             }
-            current += 20
+            
             
             self.last = current
             var time = current
@@ -256,15 +269,15 @@ class QiangChangVC: UIViewController {
             return
         case setButton:
             //            mcc.getMusicCollection(musicChartId: 1, page: 0, pageSize: 10, jsonOption: nil)
-            let songs = [SongListVC.Song(name: "1", singer: "1", code: 6625526662555910, startTime: 16320, endTime: 31999),
-                         SongListVC.Song(name: "2", singer: "2", code: 6625526860841310, startTime: 148354, endTime: 168335),
-                         SongListVC.Song(name: "3", singer: "3", code: 6625526861458730, startTime: 28608, endTime: 48376),
-                         SongListVC.Song(name: "4", singer: "4", code: 6625526873986380, startTime: 159521, endTime: 179126),
-                         SongListVC.Song(name: "后来", singer: "刘若英", code: 6625526603247450, startTime: 212929, endTime: 291648),
-                         SongListVC.Song(name: "告白气球", singer: "周杰伦", code: 6625526603253110, startTime: 64564, endTime: 111447),
-                         SongListVC.Song(name: "追光者", singer: "岑宁儿", code: 6625526603270070, startTime: 185327, endTime: 215988),
-                         SongListVC.Song(name: "十年", singer: "陈奕迅", code: 6625526605291650, startTime: 126284, endTime: 175223),
-                         SongListVC.Song(name: "起风了", singer: "辣椒", code: 6625526603305730, startTime: 168101, endTime: 195166)]
+            let songs = [SongListVC.Song(name: "1", singer: "1", code: 6625526662555910, startTime: 0, endTime: 0),
+                         SongListVC.Song(name: "2", singer: "2", code: 6625526860841310, startTime: 0, endTime: 0),
+                         SongListVC.Song(name: "3", singer: "3", code: 6625526861458730, startTime: 0, endTime: 0),
+                         SongListVC.Song(name: "4", singer: "4", code: 6625526873986380, startTime: 0, endTime: 0),
+                         SongListVC.Song(name: "后来", singer: "刘若英", code: 6625526603247450, startTime: 0, endTime: 0),
+                         SongListVC.Song(name: "告白气球", singer: "周杰伦", code: 6625526603253110, startTime: 0, endTime: 0),
+                         SongListVC.Song(name: "追光者", singer: "岑宁儿", code: 6625526603270070, startTime: 0, endTime: 0),
+                         SongListVC.Song(name: "十年", singer: "陈奕迅", code: 6625526605291650, startTime: 0, endTime: 0),
+                         SongListVC.Song(name: "起风了", singer: "辣椒", code: 6625526603305730, startTime: 0, endTime: 0)]
             
             let vc = SongListVC()
             vc.songs = songs
@@ -407,9 +420,11 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
             let model = KaraokeView.parseLyricData(data: data)!
             self.lyricModel = model
             let lines = model.lines.map({ TimeFix.Line(beginTime: $0.beginTime, duration: $0.duration) })
-            if let result = TimeFix.handleFixTime(startTime: self.song.startTime,
+            if let result = TimeFix.handleFixTime2(startTime: self.song.startTime,
                                                   endTime: self.song.endTime,
                                                   lines: lines) {
+                
+                print("=== fix time \(result.0)")
                 self.song.startTime = result.0
                 self.song.endTime = result.1
             }
@@ -436,7 +451,25 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
     }
     
     func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
-        
+        if let jsonData = simpleInfo?.data(using: .utf8) {
+             do {
+                 let jsonMsg = try JSONSerialization.jsonObject(with: jsonData, options: []) as! [String: Any]
+                 let format = jsonMsg["format"] as! [String: Any]
+                 let highPart = format["highPart"] as! [[String: Any]]
+                 let highStartTime = highPart[0]["highStartTime"] as! Int
+                 let highEndTime = highPart[0]["highEndTime"] as! Int
+                 self.preTime = highStartTime
+                 self.song.startTime = highStartTime
+                 self.song.endTime = highEndTime
+                 print("== onSongSimpleInfoResult highStartTime:\(highStartTime)")
+                 self.mccGetLrc()
+             } catch {
+                 print("Error while parsing JSON: \(error.localizedDescription)")
+             }
+         }
+         if (errorCode == .errorGateway) {
+             print("")
+         }
     }
     
     func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, status: AgoraMusicContentCenterPreloadStatus, errorCode: AgoraMusicContentCenterStatusCode) {
@@ -470,7 +503,7 @@ extension QiangChangVC: AgoraRtcMediaPlayerDelegate {
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
         if state == .openCompleted {
             print("=== openCompleted")
-            mccGetLrc()
+            mccGetSongSimpleInfo()
         }
     }
     
@@ -516,7 +549,6 @@ extension QiangChangVC: ParamSetVCDelegate {
 extension QiangChangVC: SongListVCDelegate {
     func songListVCDidSelectedSong(song: SongListVC.Song) {
         self.song = song
-        self.preTime = song.startTime
         isPause = false
         pauseButton.isSelected = false
         mpk.stop()

@@ -91,4 +91,64 @@ public class TimeFix {
         }
         return (start, end)
     }
+    
+    /// 分析出合适的时间
+    public static func handleFixTime2(startTime: Int,
+                                     endTime: Int,
+                                     lines: [Line]) -> (Int, Int)? {
+        if lines.isEmpty {
+            return nil
+        }
+        
+        var start = startTime
+        var end = endTime
+        
+        if start < lines.first!.beginTime, end < lines.first!.beginTime {
+            return nil
+        }
+        
+        if start > lines.last!.beginTime + lines.last!.duration,
+           end > lines.last!.beginTime + lines.last!.duration {
+            return nil
+        }
+        
+        /// 跨过第一个
+        if start < lines.first!.beginTime, end < lines.first!.beginTime + lines.first!.duration {
+            start = lines.first!.beginTime
+            end = lines.first!.beginTime + lines.first!.duration
+            return (start, end)
+        }
+        
+        /// 跨过最后一个
+        if start > lines.last!.beginTime,
+           end > lines.last!.beginTime + lines.last!.duration {
+            start = lines.last!.beginTime
+            end = lines.last!.beginTime + lines.last!.duration
+            return (start, end)
+        }
+        
+        if start < lines.first!.beginTime {
+            start = lines.first!.beginTime
+        }
+        
+        if end > lines.last!.beginTime + lines.last!.duration {
+            end = lines.last!.beginTime + lines.last!.duration
+        }
+        
+        var startIndex = 0
+        var startGap = Int.max
+        var endIndex = 0
+        var endGap = Int.max
+        for (offset, line) in lines.enumerated() {
+            if abs(line.beginTime - start) < startGap {
+                startGap = abs(line.beginTime - start)
+                startIndex = offset
+            }
+            if abs(line.endTime - end) < endGap {
+                endGap = abs(line.endTime - end)
+                endIndex = offset
+            }
+        }
+        return (lines[startIndex].beginTime, lines[endIndex].endTime)
+    }
 }
