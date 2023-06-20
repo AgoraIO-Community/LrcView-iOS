@@ -17,6 +17,8 @@ class ViewController: UIViewController {
         createData()
         setupUI()
         commonInit()
+        
+        
     }
 
     func setupUI() {
@@ -53,6 +55,9 @@ class ViewController: UIViewController {
                                             .init(title: "主播端"),
                                             .init(title: "抢唱")])]
     }
+
+    
+
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {

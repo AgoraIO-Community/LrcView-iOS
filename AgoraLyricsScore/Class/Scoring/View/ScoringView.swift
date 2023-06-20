@@ -33,7 +33,9 @@ public class ScoringView: UIView {
     @objc public var particleEffectHidden: Bool = false { didSet { updateUI() } }
     /// 使用图片创建粒子动画
     @objc public var emitterImages: [UIImage]? { didSet { updateUI() } }
-    /// 打分容忍度 范围：0-1
+    /** 动效阈值 范围：0-1
+        如，当该值=0.7，一次打分超过70分（0.7*100），就会出现音高线着色和动画
+     */
     @objc public var hitScoreThreshold: Float = 0.7 { didSet { updateUI() } }
     /** 是否游标拟合标准音高线.
      当Tone得分 >= hitScoreThreshold*100 时，如为`true`，游标会拟合标准音高线。即使 Tone得分 < 100，"游标的垂直中心点" 会和 "标准音高线的垂直中心点" 重合。
@@ -165,7 +167,7 @@ public class ScoringView: UIView {
             if !subviews.contains(consoleView) {
                 addSubview(consoleView)
                 consoleView.translatesAutoresizingMaskIntoConstraints = false
-                consoleView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+                consoleView.widthAnchor.constraint(equalToConstant: 120).isActive = true
                 consoleView.heightAnchor.constraint(equalToConstant: 80).isActive = true
                 consoleView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
                 consoleView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -197,7 +199,7 @@ extension ScoringView: ScoringMachineDelegate {
         localPitchView.setIndicatedViewY(y: centerY)
         showAnimation ? localPitchView.startEmitter() : localPitchView.stopEmitter()
         if showDebugView {
-            let text = "y: \(Float(centerY)) \npitch: \(debugInfo.pitch.keep2) \nani: \(showAnimation) \nw:\(debugInfo.hitedInfo?.word ?? "") \nstd:\(debugInfo.hitedInfo?.pitch ?? 0) progress: \(debugInfo.progress)"
+            let text = "y: \(Float(centerY)) \npitch: \(debugInfo.pitch.keep2) \nani: \(showAnimation) \nw:\(debugInfo.hitedInfo?.word ?? "") \nstd:\(debugInfo.hitedInfo?.pitch ?? 0) \nprogress: \(debugInfo.progress) \nscore:\(debugInfo.score)"
             consoleView.set(text: text)
         }
     }

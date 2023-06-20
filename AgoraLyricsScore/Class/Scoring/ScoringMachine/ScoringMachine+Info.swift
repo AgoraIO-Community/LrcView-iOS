@@ -67,6 +67,7 @@ extension ScoringMachine {
         let pitch: Double
         let hitedInfo: ScoringMachine.Info?
         let progress: Int
+        let score: Float
     }
 }
 

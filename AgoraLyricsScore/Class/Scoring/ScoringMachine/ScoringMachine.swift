@@ -133,7 +133,8 @@ class ScoringMachine {
             let debugInfo = DebugInfo(originalPitch: pitch,
                                       pitch: pitch,
                                       hitedInfo: nil,
-                                      progress: progress)
+                                      progress: progress,
+                                      score: -1)
             invokeScoringMachine(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
             return
         }
@@ -151,7 +152,8 @@ class ScoringMachine {
             let debugInfo = DebugInfo(originalPitch: pitch,
                                       pitch: pitch,
                                       hitedInfo: nil,
-                                      progress: progress)
+                                      progress: progress,
+                                      score: -1)
             invokeScoringMachine(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
             return
         }
@@ -197,7 +199,8 @@ class ScoringMachine {
         let debugInfo = DebugInfo(originalPitch: pitch,
                                   pitch: voicePitch,
                                   hitedInfo: hitedInfo,
-                                  progress: time)
+                                  progress: time,
+                                  score: score)
         invokeScoringMachine(didUpdateCursor: y, showAnimation: showAnimation, debugInfo: debugInfo)
     }
     
