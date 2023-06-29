@@ -63,7 +63,6 @@ public class LyricsView: UIView {
         setupUI()
         updateUI()
         commonInit()
-        tableView.contentInset
     }
     
     required init?(coder: NSCoder) {
@@ -123,6 +122,7 @@ extension LyricsView {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+//        tableView.estimatedRowHeight = 35
         referenceLineView.backgroundColor = .red
         referenceLineView.isHidden = true
         firstToneHintView.style = firstToneHintViewStyle

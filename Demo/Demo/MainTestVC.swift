@@ -77,6 +77,7 @@ class MainTestVC: UIViewController {
         karaokeView.scoringView.topMargin = 80
         karaokeView.lyricsView.showDebugView = false
         karaokeView.lyricsView.draggable = true
+        karaokeView.lyricsView.lyricLineSpacing = 2
         
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)

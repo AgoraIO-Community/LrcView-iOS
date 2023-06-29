@@ -36,7 +36,6 @@ public class LyricModel: NSObject {
     @objc public var duration: Int
     /// 是否有pitch值
     @objc public var hasPitch: Bool
-    
     /// 来源
     @objc let sourceType: SourceType
     
