@@ -60,5 +60,43 @@ class KTVView: UIView {
         lineScoreView.heightAnchor.constraint(equalToConstant: karaokeView.scoringView.viewHeight).isActive = true
         lineScoreView.widthAnchor.constraint(equalToConstant: 50).isActive = true
     }
+    
+    func updateView(param: Param) {
+        karaokeView.backgroundImage = param.karaoke.backgroundImage
+        karaokeView.scoringEnabled = param.karaoke.scoringEnabled
+        karaokeView.spacing = param.karaoke.spacing
+        karaokeView.setScoreLevel(level: param.karaoke.scoreLevel)
+        karaokeView.setScoreCompensationOffset(offset: param.karaoke.scoreCompensationOffset)
+        
+        karaokeView.lyricsView.lyricLineSpacing = param.lyric.lyricLineSpacing
+        karaokeView.lyricsView.noLyricsTipColor = param.lyric.noLyricTipsColor
+        karaokeView.lyricsView.noLyricsTipText = param.lyric.noLyricTipsText
+        karaokeView.lyricsView.noLyricsTipFont = param.lyric.noLyricTipsFont
+        karaokeView.lyricsView.activeLineUpcomingFontSize = param.lyric.activeLineUpcomingFontSize
+        karaokeView.lyricsView.inactiveLineTextColor = param.lyric.inactiveLineTextColor
+        karaokeView.lyricsView.activeLineUpcomingTextColor = param.lyric.activeLineUpcomingTextColor
+        karaokeView.lyricsView.activeLinePlayedTextColor = param.lyric.activeLinePlayedTextColor
+        karaokeView.lyricsView.waitingViewHidden = param.lyric.waitingViewHidden
+        karaokeView.lyricsView.inactiveLineFontSize = param.lyric.inactiveLineFontSize
+        karaokeView.lyricsView.firstToneHintViewStyle.backgroundColor = param.lyric.firstToneHintViewStyle.backgroundColor
+        karaokeView.lyricsView.firstToneHintViewStyle.size = param.lyric.firstToneHintViewStyle.size
+        karaokeView.lyricsView.contentTopMargin = param.lyric.contentTopMargin
+        karaokeView.lyricsView.firstToneHintViewStyle.topMargin = param.lyric.firstToneHintViewStyle.topMargin
+        karaokeView.lyricsView.maxWidth = param.lyric.maxWidth
+        karaokeView.lyricsView.draggable = param.lyric.draggable
+        
+        karaokeView.scoringView.particleEffectHidden = param.scoring.particleEffectHidden
+        karaokeView.scoringView.emitterImages = param.scoring.emitterImages
+        karaokeView.scoringView.standardPitchStickViewHighlightColor = param.scoring.standardPitchStickViewHighlightColor
+        karaokeView.scoringView.standardPitchStickViewColor = param.scoring.standardPitchStickViewColor
+        karaokeView.scoringView.standardPitchStickViewHeight = param.scoring.standardPitchStickViewHeight
+        karaokeView.scoringView.defaultPitchCursorX = param.scoring.defaultPitchCursorX
+        karaokeView.scoringView.topMargin = param.scoring.topSpaces
+        karaokeView.scoringView.viewHeight = param.scoring.viewHeight
+        karaokeView.scoringView.hitScoreThreshold = param.scoring.hitScoreThreshold
+        karaokeView.scoringView.movingSpeedFactor = param.scoring.movingSpeedFactor
+        karaokeView.scoringView.isLocalPitchCursorAlignedWithStandardPitchStick = param.scoring.isLocalPitchCursorAlignedWithStandardPitchStick
+        karaokeView.scoringView.showDebugView = param.scoring.showDebugView
+    }
 
 }

@@ -22,6 +22,8 @@
 		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
 		265976E42A2053940091C77E /* 6625526603631810.bin in Resources */ = {isa = PBXBuildFile; fileRef = 265976E32A2053940091C77E /* 6625526603631810.bin */; };
+		2672FDB72A52B41000E3CB19 /* PanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672FDB62A52B41000E3CB19 /* PanelView.swift */; };
+		2672FDB92A52B6B000E3CB19 /* MainTestVC2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672FDB82A52B6B000E3CB19 /* MainTestVC2.swift */; };
 		2673FCEC2A1B561300D4D1A0 /* 6843908387781240.bin in Resources */ = {isa = PBXBuildFile; fileRef = 2673FCEB2A1B561300D4D1A0 /* 6843908387781240.bin */; };
 		267727F62A11D03300DD8D28 /* 6246262727282260.bin in Resources */ = {isa = PBXBuildFile; fileRef = 267727F52A11D03300DD8D28 /* 6246262727282260.bin */; };
 		2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */; };
@@ -30,6 +32,7 @@
 		2689ED442987CD2D0012BC4D /* MainTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED432987CD2D0012BC4D /* MainTestVC.swift */; };
 		2689ED462988EA540012BC4D /* ParamSetVC+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */; };
 		2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED472988FDE10012BC4D /* LyricLabelVC.swift */; };
+		269BFE5A2A52A0D600D03EEE /* RTCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269BFE592A52A0D600D03EEE /* RTCManager.swift */; };
 		269C151129E01533002A2535 /* song_tmp_new.txt in Resources */ = {isa = PBXBuildFile; fileRef = 269C151029E01533002A2535 /* song_tmp_new.txt */; };
 		26A683AC29C0253400B327A9 /* song_tmp.txt in Resources */ = {isa = PBXBuildFile; fileRef = 26A683AB29C0253400B327A9 /* song_tmp.txt */; };
 		26AC90A829ECE9D500AB6EC5 /* QiangChangVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AC90A729ECE9D500AB6EC5 /* QiangChangVC.swift */; };
@@ -49,6 +52,7 @@
 		26E5BF9829924AA60051AF67 /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BF9729924AA60051AF67 /* FileCache.swift */; };
 		26E5BFA729924B970051AF67 /* AgoraStringExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BF9F29924B970051AF67 /* AgoraStringExtention.swift */; };
 		26E5BFBC29926F2D0051AF67 /* GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */; };
+		26E687072A52B0BD00A7FB69 /* ProgressTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E687062A52B0BD00A7FB69 /* ProgressTimer.swift */; };
 		26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E8030E298BAF1B00DBF23F /* OCVC.m */; };
 		F88793560A341F9CBCF66020 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
@@ -71,6 +75,8 @@
 		26105FE42966787A00712EDA /* EmitterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitterVC.swift; sourceTree = "<group>"; };
 		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		265976E32A2053940091C77E /* 6625526603631810.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6625526603631810.bin; sourceTree = "<group>"; };
+		2672FDB62A52B41000E3CB19 /* PanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelView.swift; sourceTree = "<group>"; };
+		2672FDB82A52B6B000E3CB19 /* MainTestVC2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTestVC2.swift; sourceTree = "<group>"; };
 		2673FCEB2A1B561300D4D1A0 /* 6843908387781240.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6843908387781240.bin; sourceTree = "<group>"; };
 		267727F52A11D03300DD8D28 /* 6246262727282260.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6246262727282260.bin; sourceTree = "<group>"; };
 		2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstToneHintViewTestVC.swift; sourceTree = "<group>"; };
@@ -79,6 +85,7 @@
 		2689ED432987CD2D0012BC4D /* MainTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTestVC.swift; sourceTree = "<group>"; };
 		2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParamSetVC+Info.swift"; sourceTree = "<group>"; };
 		2689ED472988FDE10012BC4D /* LyricLabelVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricLabelVC.swift; sourceTree = "<group>"; };
+		269BFE592A52A0D600D03EEE /* RTCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCManager.swift; sourceTree = "<group>"; };
 		269C151029E01533002A2535 /* song_tmp_new.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = song_tmp_new.txt; sourceTree = "<group>"; };
 		26A683AB29C0253400B327A9 /* song_tmp.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = song_tmp.txt; sourceTree = "<group>"; };
 		26AC90A729ECE9D500AB6EC5 /* QiangChangVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiangChangVC.swift; sourceTree = "<group>"; };
@@ -100,6 +107,7 @@
 		26E5BF9729924AA60051AF67 /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
 		26E5BF9F29924B970051AF67 /* AgoraStringExtention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraStringExtention.swift; sourceTree = "<group>"; };
 		26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDTimer.swift; sourceTree = "<group>"; };
+		26E687062A52B0BD00A7FB69 /* ProgressTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTimer.swift; sourceTree = "<group>"; };
 		26E8030C298BAF1A00DBF23F /* Demo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Demo-Bridging-Header.h"; sourceTree = "<group>"; };
 		26E8030D298BAF1B00DBF23F /* OCVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCVC.h; sourceTree = "<group>"; };
 		26E8030E298BAF1B00DBF23F /* OCVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCVC.m; sourceTree = "<group>"; };
@@ -133,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				2602311D29C9DCDF0036F74A /* KTVView.swift */,
+				2672FDB62A52B41000E3CB19 /* PanelView.swift */,
 			);
 			path = KTVView;
 			sourceTree = "<group>";
@@ -167,6 +176,9 @@
 				2689ED412987C8890012BC4D /* ParamSetVC.swift */,
 				2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */,
 				2689ED432987CD2D0012BC4D /* MainTestVC.swift */,
+				2672FDB82A52B6B000E3CB19 /* MainTestVC2.swift */,
+				26E687062A52B0BD00A7FB69 /* ProgressTimer.swift */,
+				269BFE592A52A0D600D03EEE /* RTCManager.swift */,
 				26C5452B2955B2FE009E0F37 /* Config.swift */,
 				260942DC2952B5050022A50D /* Main.storyboard */,
 				260942DF2952B5060022A50D /* Assets.xcassets */,
@@ -370,6 +382,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26E687072A52B0BD00A7FB69 /* ProgressTimer.swift in Sources */,
 				260942DB2952B5050022A50D /* ViewController.swift in Sources */,
 				26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */,
 				2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */,
@@ -383,11 +396,13 @@
 				26E5BFA729924B970051AF67 /* AgoraStringExtention.swift in Sources */,
 				26AC90AD29EE72A900AB6EC5 /* SongListVC.swift in Sources */,
 				2602311E29C9DCDF0036F74A /* KTVView.swift in Sources */,
+				269BFE5A2A52A0D600D03EEE /* RTCManager.swift in Sources */,
 				2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */,
 				26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */,
 				26E5BF9829924AA60051AF67 /* FileCache.swift in Sources */,
 				2689ED442987CD2D0012BC4D /* MainTestVC.swift in Sources */,
 				2602311B29C9D9E70036F74A /* AudienceVC.swift in Sources */,
+				2672FDB72A52B41000E3CB19 /* PanelView.swift in Sources */,
 				26E5BFBC29926F2D0051AF67 /* GCDTimer.swift in Sources */,
 				26AC90A829ECE9D500AB6EC5 /* QiangChangVC.swift in Sources */,
 				2689ED422987C8890012BC4D /* ParamSetVC.swift in Sources */,
@@ -395,6 +410,7 @@
 				26105FE52966787A00712EDA /* EmitterVC.swift in Sources */,
 				26D01F9A2977D7F500B9D31A /* ScoreAniVC.swift in Sources */,
 				2602312029CAD3630036F74A /* HostVC.swift in Sources */,
+				2672FDB92A52B6B000E3CB19 /* MainTestVC2.swift in Sources */,
 				2689ED462988EA540012BC4D /* ParamSetVC+Info.swift in Sources */,
 				2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */,
 				260942ED2952BD4C0022A50D /* ViewTestVC.swift in Sources */,

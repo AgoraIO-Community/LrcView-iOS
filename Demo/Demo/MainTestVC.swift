@@ -14,10 +14,10 @@ import ScoreEffectUI
 extension MainTestVC {
     struct Item {
         let code: Int
-        let isXML: Bool
         let name: String
         let des: String
-        var usePitchFile = true
+        /// 0：XML，1: LRC，2：webvtt 3.支持打分的xml 4.支持打分的lrc
+        var lyricType: Int = 0
     }
 }
 
@@ -36,15 +36,15 @@ class MainTestVC: UIViewController {
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
     var song: Item!
-    var songs = [Item(code: 6246262727282260, isXML: false, name: "燕尾蝶", des: "", usePitchFile: true),
-                 Item(code: 6246262727282260, isXML: false, name: "燕尾蝶", des: "", usePitchFile: false),
-                 Item(code: 6843908387781240, isXML: true, name: "须尽欢", des: "", usePitchFile: true),
-                 Item(code: 6843908387781240, isXML: true, name: "须尽欢", des: "", usePitchFile: false),
-                 Item(code: 6625526603631810, isXML: true, name: "简单爱", des: "", usePitchFile: true),
-                 Item(code: 6625526603631810, isXML: true, name: "简单爱", des: "", usePitchFile: false),
-                 Item(code: 6315145508122860, isXML: true, name: "一天到晚游泳的鱼", des: "xml不支持打分", usePitchFile: false),
+    var songs = [Item(code: 6246262727282260, name: "燕尾蝶", des: "", lyricType: 4),
+                 Item(code: 6246262727282260, name: "燕尾蝶", des: "", lyricType: 1),
+                 Item(code: 6843908387781240, name: "须尽欢", des: "", lyricType: 4),
+                 Item(code: 6843908387781240, name: "须尽欢", des: "", lyricType: 0),
+                 Item(code: 6625526603631810, name: "简单爱", des: "", lyricType: 3),
+                 Item(code: 6625526603631810, name: "简单爱", des: "", lyricType: 0),
+                 Item(code: 6315145508122860, name: "一天到晚游泳的鱼", des: "xml不支持打分", lyricType: 0),
                  /** xml 不包含打分 **/
-                 Item(code: 6315145508122860, isXML: true, name: "纯音乐", des: "", usePitchFile: false)]
+                 Item(code: 6315145508122860, name: "纯音乐", des: "", lyricType: 0)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
@@ -58,13 +58,6 @@ class MainTestVC: UIViewController {
         song = songs.first!
         setupUI()
         commonInit()
-        // 验证抢唱算法
-        // let filePath = Bundle.main.path(forResource: "900318", ofType: "xml")!
-        // let url = URL(fileURLWithPath: filePath)
-        // let data = try! Data(contentsOf: url)
-        // let m = KaraokeView.parseLyricData(data: data, pitchFileData: nil)!
-        // let v = getTotalTime(model: m, s: 213929, e: 291648)
-        // print("")
     }
     
     deinit {
@@ -261,7 +254,7 @@ class MainTestVC: UIViewController {
     }
     
     func mccGetLrc() {
-        let requestId = mcc.getLyric(songCode: song.code, lyricType: song.isXML ? 0 : 1)
+        let requestId = mcc.getLyric(songCode: song.code, lyricType: song.lyricType)
         print("== mccGetLrc requestId:\(requestId)")
     }
     
@@ -411,15 +404,15 @@ extension MainTestVC: AgoraRtcEngineDelegate {
 }
 
 extension MainTestVC: AgoraMusicContentCenterEventDelegate {
-    func onMusicChartsResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: [AgoraMusicChartInfo]) {
+    func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], errorCode: AgoraMusicContentCenterStatusCode) {
         
     }
     
-    func onMusicCollectionResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: AgoraMusicCollection) {
+    func onMusicCollectionResult(_ requestId: String, result: AgoraMusicCollection, errorCode: AgoraMusicContentCenterStatusCode) {
         
     }
     
-    func onLyricResult(_ requestId: String, lyricUrl: String) {
+    func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
         //        DispatchQueue.main.async {
@@ -447,7 +440,7 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         //            self.mccPlay()
         //        }
         
-        if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
+        if lyricUrl!.isEmpty { /** 网络偶问题导致的为空 **/
             DispatchQueue.main.async { [weak self] in
                 self?.title = "无歌词地址"
             }
@@ -460,10 +453,10 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         }
         
         let songCode = song.code
-        let usePitchFile = song.usePitchFile
-        FileCache.fect(urlString: lyricUrl) { progress in
+        let usePitchFile = song.lyricType == 4
+        FileCache.fect(urlString: lyricUrl!, reqType: song.lyricType) { progress in
             
-        } completion: { filePath in
+        } completion: { (filePath, _) in
             
             var model: LyricModel?
             
@@ -502,7 +495,11 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         }
     }
     
-    func onPreLoadEvent(_ songCode: Int, percent: Int, status: AgoraMusicContentCenterPreloadStatus, msg: String, lyricUrl: String) {
+    func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
+        
+    }
+    
+    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, status: AgoraMusicContentCenterPreloadStatus, errorCode: AgoraMusicContentCenterStatusCode) {
         print("== onPreLoadEvent \(status.rawValue) ")
         if status == .OK { /** preload 成功 **/
             print("== preload ok")
@@ -513,6 +510,7 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
             print("onPreLoadEvent percent:\(percent) status:\(status.rawValue) lyricUrl:\(lyricUrl ?? "null")")
         }
     }
+    
 }
 
 

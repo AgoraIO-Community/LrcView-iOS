@@ -324,6 +324,6 @@ extension KaraokeView {
     }
     
     public func log(str: String) {
-        Log.warning(text: "[demo] \(str)", tag: logTag)
+        Log.info(text: str, tag: logTag)
     }
 }

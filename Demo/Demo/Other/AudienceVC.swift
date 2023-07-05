@@ -67,9 +67,9 @@ class AudienceVC: UIViewController {
     }
     
     func fetch() {
-        FileCache.fect(urlString: lyricUrl!) { progress in
+        FileCache.fect(urlString: lyricUrl!, reqType: 0) { progress in
 
-        } completion: { filePath in
+        } completion: { (filePath, _) in
             let url = URL(fileURLWithPath: filePath)
             let data = try! Data(contentsOf: url)
             let model = KaraokeView.parseLyricData(data: data)!

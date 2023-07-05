@@ -27,7 +27,7 @@ class QiangChangVC: UIViewController {
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
     //    var song = Item(code: 6246262727283870, isXML: false)
-    var song = Item(code: 6625526605291650, isXML: true, name: "123", des: "234")
+    var song = Item(code: 6625526605291650, name: "123", des: "234", lyricType: 0)
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
@@ -42,11 +42,11 @@ class QiangChangVC: UIViewController {
      6625526832790400
      */
     
-    var songs = [Item(code: 6246262727283870, isXML: false, name: "123", des: "234"),
-                 Item(code: 6625526605291650, isXML: true, name: "123", des: "234"),
-                 Item(code: 6775664001035810, isXML: true, name: "123", des: "234"),
-                 Item(code: 6625526610023560, isXML: true, name: "123", des: "234"),
-                 Item(code: 6625526603296890, isXML: true, name: "123", des: "234")]
+    var songs = [Item(code: 6246262727283870, name: "123", des: "234", lyricType: 1),
+                 Item(code: 6625526605291650, name: "123", des: "234", lyricType: 0),
+                 Item(code: 6775664001035810, name: "123", des: "234", lyricType: 0),
+                 Item(code: 6625526610023560, name: "123", des: "234", lyricType: 0),
+                 Item(code: 6625526603296890, name: "123", des: "234", lyricType: 0)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
@@ -253,7 +253,7 @@ class QiangChangVC: UIViewController {
     }
     
     func mccGetLrc() {
-        let requestId = mcc.getLyric(songCode: song.code, lyricType: song.isXML ? 0 : 1)
+        let requestId = mcc.getLyric(songCode: song.code, lyricType: song.lyricType)
         print("== mccGetLrc requestId:\(requestId)")
     }
     
@@ -282,7 +282,7 @@ class QiangChangVC: UIViewController {
             incentiveView.reset()
             gradeView.reset()
             karaokeView.reset()
-            if song.isXML {
+            if song.lyricType == 0 {
                 self.gradeView.isHidden = false
                 self.karaokeView.scoringView.viewHeight = 100
                 self.karaokeView.scoringView.topMargin = 80
@@ -406,11 +406,11 @@ extension QiangChangVC: AgoraRtcEngineDelegate {
 }
 
 extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
-    func onMusicChartsResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: [AgoraMusicChartInfo]) {
+    func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], errorCode: AgoraMusicContentCenterStatusCode) {
         
     }
     
-    func onMusicCollectionResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: AgoraMusicCollection) {
+    func onMusicCollectionResult(_ requestId: String, result: AgoraMusicCollection, errorCode: AgoraMusicContentCenterStatusCode) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return}
             let songs = result.musicList.map({ SongListVC.Song(name: $0.name, singer: $0.singer, code: $0.songCode, highStartTime: 0, highEndTime: 0) })
@@ -421,7 +421,7 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
         }
     }
     
-    func onLyricResult(_ requestId: String, lyricUrl: String) {
+    func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
         //        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
@@ -442,7 +442,7 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
         //            self.mccPlay()
         //        }
         
-        if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
+        if lyricUrl!.isEmpty { /** 网络偶问题导致的为空 **/
             DispatchQueue.main.async { [weak self] in
                 self?.title = "无歌词地址"
             }
@@ -454,9 +454,9 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
             }
         }
         
-        FileCache.fect(urlString: lyricUrl) { progress in
+        FileCache.fect(urlString: lyricUrl!, reqType: song.lyricType) { progress in
             
-        } completion: { filePath in
+        } completion: { (filePath, _) in
             let url = URL(fileURLWithPath: filePath)
             let data = try! Data(contentsOf: url)
             let model = KaraokeView.parseLyricData(data: data)!
@@ -481,7 +481,11 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
         }
     }
     
-    func onPreLoadEvent(_ songCode: Int, percent: Int, status: AgoraMusicContentCenterPreloadStatus, msg: String, lyricUrl: String) {
+    func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
+        
+    }
+    
+    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, status: AgoraMusicContentCenterPreloadStatus, errorCode: AgoraMusicContentCenterStatusCode) {
         print("== onPreLoadEvent \(status.rawValue) ")
         if status == .OK { /** preload 成功 **/
             print("== preload ok")
@@ -492,6 +496,8 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
             print("onPreLoadEvent percent:\(percent) status:\(status.rawValue) lyricUrl:\(lyricUrl)")
         }
     }
+    
+    
 }
 
 

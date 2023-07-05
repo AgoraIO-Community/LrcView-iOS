@@ -11,6 +11,7 @@ import UIKit
 
 typealias DownloadProgressClosure = ((_ progress:Float)->Void)
 typealias DownloadCompletionClosure = ((_ filePath: String)->Void)
+typealias DownloadCompletionClosure2 = ((_ lyricsFilePath: String, _ pitchFilePath: String?)->Void)
 typealias DownloadFailClosure = ((_ error: String)-> Void)
 
 class Downloader: NSObject {

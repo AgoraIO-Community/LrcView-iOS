@@ -34,7 +34,7 @@ extension String {
      *  缓存文件夹路径
      */
     static func cacheFolderPath() -> String {
-        return NSHomeDirectory().appending("/Library").appending("/MusicCaches")
+        return NSHomeDirectory().appending("/Library").appending("/Lyrics")
     }
 
     /**
