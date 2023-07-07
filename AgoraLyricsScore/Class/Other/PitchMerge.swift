@@ -15,12 +15,24 @@ class PitchMerge {
     ///   - mergeCountInLrc: How much data to merge, only in lrc file
     /// - Returns: `LyricModel`
     func merge(model: LyricModel, pitchModel: PitchModel, mergeCountInLrc: Int = 10) -> LyricModel {
-        let isXml = model.sourceType == .xml
-        if isXml {
+        guard PitchMerge.isValidMatchData(model: model, pitchModel: pitchModel) else {
+            let text = """
+            handle of merge was skip, is not Valid Match file between Lyric and Pitch pitchItems: \(pitchModel.items.count) songName: \(model.name) lines:\(model.lines.count) line.last.beginTime:\(model.lines.last?.beginTime ?? -999)
+            """
+            Log.errorText(text: text)
+            return model
+        }
+        
+        if model.sourceType == .xml {
             return mergeXML(model: model, pitchModel: pitchModel)
         }
         else {
-            return mergeLRC(model: model, pitchModel: pitchModel, mergeCount: mergeCountInLrc)
+            if PitchMerge.isEnhancedLrc(model: model) {
+                return mergeEnhancedLRC(model: model, pitchModel: pitchModel)
+            }
+            else {
+                return mergeLRC(model: model, pitchModel: pitchModel, mergeCount: mergeCountInLrc)
+            }
         }
     }
     
@@ -49,14 +61,41 @@ class PitchMerge {
         return model
     }
     
+    private func mergeEnhancedLRC(model: LyricModel, pitchModel: PitchModel) -> LyricModel {
+        guard !model.lines.isEmpty else {
+            return model
+        }
+        
+        /// fix duration of last line and last tone
+        guard let duration = findLastLineDuration(beginTime: model.lines.last!.beginTime,
+                                                  pitchItems: pitchModel.items,
+                                                  durationPerValue: pitchModel.timeInterval) else {
+            Log.errorText(text: "mergeEnhancedLRC handle of merge was skip, findLastLineDuration fail")
+            return model
+        }
+        
+        model.lines.last!.duration = duration
+        model.lines.last!.tones.last!.duration = model.lines.last!.endTime - model.lines.last!.tones.last!.beginTime
+        Log.debug(text: "last line duration: \(duration)", tag: logTag)
+        
+        /// use xml method to handle pitch
+        return mergeXML(model: model, pitchModel: pitchModel)
+    }
+    
     private func mergeLRC(model: LyricModel, pitchModel: PitchModel, mergeCount: Int) -> LyricModel {
         guard !model.lines.isEmpty else {
             return model
         }
         
-        let duration = findLastLineDuration(beginTime: model.lines.last!.beginTime,
-                                            pitchItems: pitchModel.items,
-                                            durationPerValue: pitchModel.timeInterval)
+        
+        guard let duration = findLastLineDuration(beginTime: model.lines.last!.beginTime,
+                                                  pitchItems: pitchModel.items,
+                                                  durationPerValue: pitchModel.timeInterval) else {
+            Log.errorText(text: "mergeLRC handle of merge was skip, findLastLineDuration fail")
+            return model
+        }
+        
+        
         model.lines.last!.duration = duration
         Log.debug(text: "last line duration: \(duration)", tag: logTag)
         
@@ -118,7 +157,7 @@ class PitchMerge {
     /// 计算最后一句的时长
     private func findLastLineDuration(beginTime: Int,
                                       pitchItems: [PitchItem],
-                                      durationPerValue: Int) -> Int {
+                                      durationPerValue: Int) -> Int? {
         let startIndex = beginTime / durationPerValue
         let count = pitchItems.count
         var index = count - 1
@@ -130,6 +169,42 @@ class PitchMerge {
         }
         
         let duration = (index - startIndex) * durationPerValue
+        if duration <= 0 {
+            return nil
+        }
         return duration
+    }
+    
+    static func isEnhancedLrc(model: LyricModel) -> Bool {
+        guard model.sourceType == .lrc else {
+            return false
+        }
+        // Define a variable num to record the number of lines with pitch information
+        var num = 0
+        for line in model.lines {
+            if !line.tones.isEmpty {
+                num += 1
+            }
+            // If num reaches or exceeds 3, it means that this is an enhanced LRC format
+            if num >= 3 {
+                return true
+            }
+        }
+        // If all lines are traversed without returning true, it means that this is not an enhanced LRC format
+        return false
+    }
+    
+    static func isValidMatchData(model: LyricModel, pitchModel: PitchModel) -> Bool {
+        guard let lastLineBeginTime = model.lines.last?.beginTime else {
+            return false
+        }
+        
+        /// size issue
+        let pitchNum = lastLineBeginTime / pitchModel.timeInterval
+        if pitchModel.items.count < pitchNum {
+            return false
+        }
+        
+        return true
     }
 }

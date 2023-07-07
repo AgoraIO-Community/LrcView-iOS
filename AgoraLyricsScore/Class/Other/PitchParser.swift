@@ -21,7 +21,7 @@ class PitchParser {
         let headData = data.subdata(in: 0..<headLen)
         let version = headData[0..<4].withUnsafeBytes { $0.load(as: Int32.self) }
         let timeInterval = headData[4..<8].withUnsafeBytes { $0.load(as: Int32.self) }
-        let reserved = headData[8..<12].withUnsafeBytes { $0.load(as: Int32.self) }
+        let reserved = headData[8..<headLen].withUnsafeBytes { $0.load(as: Int32.self) }
         
         /// content
         let contentData = data.subdata(in: headLen..<data.count)

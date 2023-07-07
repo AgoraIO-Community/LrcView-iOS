@@ -100,7 +100,7 @@ public class LyricLineModel: NSObject {
 
 public class LyricToneModel: NSObject {
     @objc public let beginTime: Int
-    @objc public let duration: Int
+    @objc public var duration: Int
     @objc public var word: String
     @objc public var pitch: Double
     @objc public var lang: Lang
