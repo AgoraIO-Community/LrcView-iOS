@@ -149,6 +149,41 @@ class TestParser: XCTestCase {
         }
     }
     
+    func testEnhancedLrcFile() {
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "EnhancedLRCformat", ofType: "lrc")!)
+        let data = try! Data(contentsOf: url)
+        guard let model = KaraokeView.parseLyricData(data: data) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count == 26)
+        XCTAssert(model.lines.first!.content == "又是九月九重阳夜难聚首")
+        XCTAssertTrue(model.lines[0].tones[0].beginTime == 23 * 1000 + 997)
+        XCTAssert(model.lines[0].tones[10].duration == (29 * 1000 + 326) - (28 * 1000 + 665) - 1) /** gap was 1 ms between lines **/
+        XCTAssertEqual(model.hasPitch, false)
+        XCTAssertTrue(model.sourceType == .lrc)
+    }
+    
+    func testEnhancedLrcFileWithPitchFile() { /** Enhanced lrc and pitchFile **/
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "EnhancedLRCformat", ofType: "lrc")!)
+        let data = try! Data(contentsOf: url)
+        let pitchFileUrl = URL(fileURLWithPath: Bundle.current.path(forResource: "EnhancedLRCformat", ofType: "pitch")!)
+        let pitchFileData = try! Data(contentsOf: pitchFileUrl)
+        guard let model = KaraokeView.parseLyricData(data: data, pitchFileData: pitchFileData) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count == 26)
+        XCTAssert(model.lines.first!.tones.count > 0)
+        XCTAssertEqual(model.hasPitch, true)
+        XCTAssertTrue(model.sourceType == .lrc)
+        XCTAssertTrue(model.lines[0].tones[0].beginTime == 23 * 1000 + 997)
+        XCTAssert(model.lines[0].tones[10].duration == (29 * 1000 + 326) - (28 * 1000 + 665) - 1) /** gap was 1 ms between lines **/
+        XCTAssertTrue(model.lines.last!.duration > 0)
+        XCTAssertTrue(model.lines.last!.tones.last!.duration > 0)
+        XCTAssertTrue(model.sourceType == .lrc)
+    }
+    
     func testPerformancePitchParser() throws {
         let path = Bundle.current.path(forResource: "pitch", ofType: "bin")!
         let fileUrl = URL(fileURLWithPath: path)
