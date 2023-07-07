@@ -251,6 +251,9 @@ extension RTCManager: AgoraRtcEngineDelegate, AgoraRtcMediaPlayerDelegate, Agora
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
+        guard openCompleted, getLrcCompleted else {
+            return
+        }
         if let pitch = speakers.last?.voicePitch {
             invokeRTCManagerDidUpdatePitch(pitch: pitch)
         }

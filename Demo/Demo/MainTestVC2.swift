@@ -20,15 +20,21 @@ class MainTestVC2: UIViewController {
     var noLyric = false
     var lyricModel: LyricModel?
     var song: Item!
-    var songs = [Item(code: 6246262727282260, name: "燕尾蝶", des: "", lyricType: 4),
-                 Item(code: 6246262727282260, name: "燕尾蝶", des: "", lyricType: 1),
-                 Item(code: 6843908387781240, name: "须尽欢", des: "", lyricType: 4),
-                 Item(code: 6843908387781240, name: "须尽欢", des: "", lyricType: 0),
-                 Item(code: 6625526603631810, name: "简单爱", des: "", lyricType: 3),
-                 Item(code: 6625526603631810, name: "简单爱", des: "", lyricType: 0),
-                 Item(code: 6315145508122860, name: "一天到晚游泳的鱼", des: "xml不支持打分", lyricType: 0),
-                 /** xml 不包含打分 **/
-                 Item(code: 6315145508122860, name: "纯音乐", des: "", lyricType: 0)]
+    var songs = [
+                 Item(code: 6246262727289101, name: "from玉成2", des: "", lyricType: 4),
+                 Item(code: 6246262727286610, name: "from玉成3", des: "", lyricType: 4),
+                 Item(code: 6246262727286510, name: "from玉成4", des: "", lyricType: 4),
+                 Item(code: 6246262727284460, name: "from玉成5", des: "", lyricType: 4),
+//                 Item(code: 6246262727282260, name: "燕尾蝶", des: "", lyricType: 4),
+//                 Item(code: 6246262727282260, name: "燕尾蝶", des: "", lyricType: 1),
+//                 Item(code: 6843908387781240, name: "须尽欢", des: "", lyricType: 4),
+//                 Item(code: 6843908387781240, name: "须尽欢", des: "", lyricType: 0),
+//                 Item(code: 6625526603631810, name: "简单爱", des: "", lyricType: 3),
+//                 Item(code: 6625526603631810, name: "简单爱", des: "", lyricType: 0),
+//                 Item(code: 6315145508122860, name: "一天到晚游泳的鱼", des: "xml不支持打分", lyricType: 0),
+//                 /** xml 不包含打分 **/
+//                 Item(code: 6315145508122860, name: "纯音乐", des: "", lyricType: 0)
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +44,7 @@ class MainTestVC2: UIViewController {
         rtcManager.initEngine()
         rtcManager.initMCC()
         rtcManager.joinChannel()
+        rtcManager.loadMusic(song: song, getLyrics: true)
     }
     
     func setupUI() {

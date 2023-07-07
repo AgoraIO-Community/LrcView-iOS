@@ -28,14 +28,14 @@ class FileCache {
             return
         }
         if reqType == 3, let xmlPath = FileCache.cacheFileExists(with: fileName + ".xml") {
-            let pitchPath = FileCache.cacheFileExists(with: fileName + ".bin")
+            let pitchPath = FileCache.cacheFileExists(with: fileName + ".pitch")
             DispatchQueue.main.async {
                 completion(xmlPath, pitchPath)
             }
             return
         }
         if reqType == 4, let lrcPath = FileCache.cacheFileExists(with: fileName + ".lrc") {
-            let pitchPath = FileCache.cacheFileExists(with: fileName + ".bin")
+            let pitchPath = FileCache.cacheFileExists(with: fileName + ".pitch")
             DispatchQueue.main.async {
                 completion(lrcPath, pitchPath)
             }
@@ -96,7 +96,7 @@ class FileCache {
                         if typeStr == "xml" || typeStr == "lrc" {
                             lyricPath = path
                         }
-                        if typeStr == "bin" {
+                        if typeStr == "pitch" {
                             pitchPath = path
                         }
                     }
