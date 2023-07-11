@@ -23,13 +23,12 @@
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
 		265976E42A2053940091C77E /* 6625526603631810.bin in Resources */ = {isa = PBXBuildFile; fileRef = 265976E32A2053940091C77E /* 6625526603631810.bin */; };
 		2672FDB72A52B41000E3CB19 /* PanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672FDB62A52B41000E3CB19 /* PanelView.swift */; };
-		2672FDB92A52B6B000E3CB19 /* MainTestVC2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672FDB82A52B6B000E3CB19 /* MainTestVC2.swift */; };
+		2672FDB92A52B6B000E3CB19 /* MainTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672FDB82A52B6B000E3CB19 /* MainTestVC.swift */; };
 		2673FCEC2A1B561300D4D1A0 /* 6843908387781240.bin in Resources */ = {isa = PBXBuildFile; fileRef = 2673FCEB2A1B561300D4D1A0 /* 6843908387781240.bin */; };
 		267727F62A11D03300DD8D28 /* 6246262727282260.bin in Resources */ = {isa = PBXBuildFile; fileRef = 267727F52A11D03300DD8D28 /* 6246262727282260.bin */; };
 		2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */; };
 		2689ED3E298654C90012BC4D /* IncentiveVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED3D298654C90012BC4D /* IncentiveVC.swift */; };
 		2689ED422987C8890012BC4D /* ParamSetVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED412987C8890012BC4D /* ParamSetVC.swift */; };
-		2689ED442987CD2D0012BC4D /* MainTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED432987CD2D0012BC4D /* MainTestVC.swift */; };
 		2689ED462988EA540012BC4D /* ParamSetVC+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */; };
 		2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED472988FDE10012BC4D /* LyricLabelVC.swift */; };
 		269BFE5A2A52A0D600D03EEE /* RTCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269BFE592A52A0D600D03EEE /* RTCManager.swift */; };
@@ -76,13 +75,12 @@
 		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		265976E32A2053940091C77E /* 6625526603631810.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6625526603631810.bin; sourceTree = "<group>"; };
 		2672FDB62A52B41000E3CB19 /* PanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelView.swift; sourceTree = "<group>"; };
-		2672FDB82A52B6B000E3CB19 /* MainTestVC2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTestVC2.swift; sourceTree = "<group>"; };
+		2672FDB82A52B6B000E3CB19 /* MainTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTestVC.swift; sourceTree = "<group>"; };
 		2673FCEB2A1B561300D4D1A0 /* 6843908387781240.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6843908387781240.bin; sourceTree = "<group>"; };
 		267727F52A11D03300DD8D28 /* 6246262727282260.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6246262727282260.bin; sourceTree = "<group>"; };
 		2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstToneHintViewTestVC.swift; sourceTree = "<group>"; };
 		2689ED3D298654C90012BC4D /* IncentiveVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncentiveVC.swift; sourceTree = "<group>"; };
 		2689ED412987C8890012BC4D /* ParamSetVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamSetVC.swift; sourceTree = "<group>"; };
-		2689ED432987CD2D0012BC4D /* MainTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTestVC.swift; sourceTree = "<group>"; };
 		2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParamSetVC+Info.swift"; sourceTree = "<group>"; };
 		2689ED472988FDE10012BC4D /* LyricLabelVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricLabelVC.swift; sourceTree = "<group>"; };
 		269BFE592A52A0D600D03EEE /* RTCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCManager.swift; sourceTree = "<group>"; };
@@ -175,8 +173,7 @@
 				260942EC2952BD4C0022A50D /* ViewTestVC.swift */,
 				2689ED412987C8890012BC4D /* ParamSetVC.swift */,
 				2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */,
-				2689ED432987CD2D0012BC4D /* MainTestVC.swift */,
-				2672FDB82A52B6B000E3CB19 /* MainTestVC2.swift */,
+				2672FDB82A52B6B000E3CB19 /* MainTestVC.swift */,
 				26E687062A52B0BD00A7FB69 /* ProgressTimer.swift */,
 				269BFE592A52A0D600D03EEE /* RTCManager.swift */,
 				26C5452B2955B2FE009E0F37 /* Config.swift */,
@@ -400,7 +397,6 @@
 				2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */,
 				26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */,
 				26E5BF9829924AA60051AF67 /* FileCache.swift in Sources */,
-				2689ED442987CD2D0012BC4D /* MainTestVC.swift in Sources */,
 				2602311B29C9D9E70036F74A /* AudienceVC.swift in Sources */,
 				2672FDB72A52B41000E3CB19 /* PanelView.swift in Sources */,
 				26E5BFBC29926F2D0051AF67 /* GCDTimer.swift in Sources */,
@@ -410,7 +406,7 @@
 				26105FE52966787A00712EDA /* EmitterVC.swift in Sources */,
 				26D01F9A2977D7F500B9D31A /* ScoreAniVC.swift in Sources */,
 				2602312029CAD3630036F74A /* HostVC.swift in Sources */,
-				2672FDB92A52B6B000E3CB19 /* MainTestVC2.swift in Sources */,
+				2672FDB92A52B6B000E3CB19 /* MainTestVC.swift in Sources */,
 				2689ED462988EA540012BC4D /* ParamSetVC+Info.swift in Sources */,
 				2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */,
 				260942ED2952BD4C0022A50D /* ViewTestVC.swift in Sources */,

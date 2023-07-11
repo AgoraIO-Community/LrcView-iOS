@@ -18,7 +18,7 @@ class ToneCalculator {
         var match = 1 - Float(scoreLevel)/100 * Float(abs(voiceTone - stdTone)) + Float(scoreCompensationOffset)/100
         match = max(0, match)
         match = min(1, match)
-        return match * 100
+        return match * 100 
     }
     
     static func pitchToTone(pitch: Double) -> Double {

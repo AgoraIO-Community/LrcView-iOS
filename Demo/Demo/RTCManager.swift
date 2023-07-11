@@ -12,7 +12,6 @@ protocol RTCManagerDelegate: NSObjectProtocol {
     func RTCManagerDidOccurEvent(event: String)
     func RTCManagerDidGetLyricUrl(lyricUrl: String)
     func RTCManagerDidOpenCompleted()
-//    func RTCManagerDidDownloadFile(lyricData: Data, pitchData: Data)
     func RTCManagerDidUpdatePitch(pitch: Double)
 }
 

@@ -17,8 +17,6 @@ class ViewController: UIViewController {
         createData()
         setupUI()
         commonInit()
-        
-        
     }
 
     func setupUI() {
@@ -85,7 +83,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if indexPath.section == 0 { /** UI配置测试 **/
-            let vc = MainTestVC2()
+            let vc = MainTestVC()
             navigationController?.pushViewController(vc, animated: true)
             return
         }
