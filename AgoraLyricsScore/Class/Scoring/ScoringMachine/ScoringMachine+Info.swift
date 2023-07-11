@@ -50,9 +50,7 @@ extension ScoringMachine {
             return LyricToneModel(beginTime: beginTime,
                                   duration: duration,
                                   word: word,
-                                  pitch: pitch,
-                                  lang: .zh,
-                                  pronounce: "")
+                                  pitch: pitch)
         }
     }
     

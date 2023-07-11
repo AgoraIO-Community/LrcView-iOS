@@ -80,11 +80,13 @@ class LrcParser {
                     if isEnhancedFormat {
                         if !lastLine.tones.isEmpty {
                             let duration = line.beginTime - lastLine.tones.last!.beginTime - gap
-                            assert(duration >= 0)
-                            lastLine.tones.last!.duration = duration
+                            if duration <= 0 {
+                                Log.errorText(text: " duration <= 0", tag: logTag)
+                            }
+                            lastLine.tones.last!.duration = max(0, duration)
                         }
                         else {
-                            Log.warning(text: "lastLine.tones isEmpty)", tag: logTag)
+                            Log.warning(text: "lastLine.tones isEmpty", tag: logTag)
                         }
                     }
                     if lastLine.duration <= 0 {
@@ -113,7 +115,7 @@ class LrcParser {
     func containsWordStartTime(_ string: String) -> Bool {
         let pattern = "\\<\\d{2}:\\d{2}\\.\\d{3}\\>"
         if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
-            if let match = regex.firstMatch(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count)) {
+            if (regex.firstMatch(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count)) != nil)  {
                 return true
             } else {
                 return false
@@ -122,7 +124,7 @@ class LrcParser {
             return false
         }
     }
-
+    
     func parseLineStringOfEnhancedFormat(_ string: String) -> [LyricToneModel] {
         let pattern = "\\<(\\d{2}):(\\d{2})\\.(\\d{3})\\>([^\\<]+)"
         var lyrics: [LyricToneModel] = []
@@ -166,14 +168,14 @@ class LrcParser {
                 let duration = endTime - beginTime
                 
                 if let word = word as String? {
-                    let lyric = LyricToneModel(beginTime: beginTime, duration: duration, word: word, pitch: 0, lang: .zh, pronounce: "")
+                    let lyric = LyricToneModel(beginTime: beginTime, duration: duration, word: word, pitch: 0)
                     lyrics.append(lyric)
                 }
             }
         }
         return lyrics
     }
-
+    
     func parseTime(_ string: String) -> Int {
         let scanner = Scanner(string: string)
         var hour = 0, minute = 0, second = 0
@@ -182,10 +184,9 @@ class LrcParser {
         scanner.scanInt(&minute)
         scanner.scanString(".", into: nil)
         scanner.scanInt(&second)
-        
         let time = (hour * 60 + minute) * 1000 + second
         return time
     }
-
+    
 }
 

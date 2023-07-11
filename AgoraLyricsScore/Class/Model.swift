@@ -103,21 +103,15 @@ public class LyricToneModel: NSObject {
     @objc public var duration: Int
     @objc public var word: String
     @objc public var pitch: Double
-    @objc public var lang: Lang
-    @objc public let pronounce: String
     
     @objc public init(beginTime: Int,
                       duration: Int,
                       word: String,
-                      pitch: Double,
-                      lang: Lang,
-                      pronounce: String) {
+                      pitch: Double) {
         self.beginTime = beginTime
         self.duration = duration
         self.word = word
         self.pitch = pitch
-        self.lang = lang
-        self.pronounce = pronounce
     }
 }
 
@@ -138,12 +132,6 @@ public class ToneScoreModel: NSObject {
         scores.append(score)
         self.score = scores.reduce(0, +) / Float(scores.count)
     }
-}
-
-@objc public enum Lang: Int {
-    case zh = 1
-    case en = 2
-    case unknow = -1
 }
 
 // MARK: - Internal

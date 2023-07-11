@@ -51,12 +51,6 @@ class XmlParser: NSObject {
             for item in line.tones.enumerated() {
                 let tone = item.element
                 let index = item.offset
-                if tone.lang == .en, tone.word != "" { /** 处理空白 **/
-                    let count = line.tones.count
-                    let lead = (index >= 1 && line.tones[index - 1].lang != .en && line.tones[index - 1].word != "") ? " " : ""
-                    let trail = index == count - 1 ? "" : " "
-                    tone.word = "\(lead)\(tone.word)\(trail)"
-                }
                 if tone.pitch > 0 {
                     hasPitch = true
                 }
@@ -158,15 +152,11 @@ extension XmlParser: XMLParserDelegate {
                 let begin = Int(beginValue * 1000)
                 let end = Int(endValue * 1000)
                 let pitch = Double(pitchValue)
-                let pronounce = attributeDict["pronounce"] ?? ""
                 let langValue = Int(attributeDict["lang"] ?? "") ?? -1
-                let lang = Lang(rawValue: langValue)!
                 let tone = LyricToneModel(beginTime: begin,
                                           duration: end - begin,
                                           word: "",
-                                          pitch: pitch,
-                                          lang: lang,
-                                          pronounce: pronounce)
+                                          pitch: pitch)
                 sentence.tones.append(tone)
             }
         case "word":
@@ -178,15 +168,10 @@ extension XmlParser: XMLParserDelegate {
             let begin = Int(beginValue * 1000)
             let end = Int(endValue * 1000)
             let pitch: Double = 0
-            let pronounce = ""
-            let langValue = Int(attributeDict["lang"] ?? "") ?? -1
-            let lang = Lang(rawValue: langValue)!
             let tone = LyricToneModel(beginTime: begin,
                                       duration: end - begin,
                                       word: "",
-                                      pitch: pitch,
-                                      lang: lang,
-                                      pronounce: pronounce)
+                                      pitch: pitch)
             let line = LyricLineModel(beginTime: 0, duration: 0, content: "", tones: [tone])
             song.lines.append(line)
         default:
@@ -204,19 +189,6 @@ extension XmlParser: XMLParserDelegate {
             case .word, .overlap:
                 if let tone = song.lines.last?.tones.last {
                     tone.word = tone.word + string
-                    if tone.lang == .unknow { /** 补偿语言 **/
-                        do {
-                            let regular = try NSRegularExpression(pattern: "[a-zA-Z]", options: .caseInsensitive)
-                            let count = regular.numberOfMatches(in: tone.word, options: .anchored, range: NSRange(location: 0, length: tone.word.count))
-                            if count > 0 {
-                                tone.lang = .en
-                            } else {
-                                tone.lang = .zh
-                            }
-                        } catch {
-                            tone.lang = .en
-                        }
-                    }
                 }
             default:
                 break

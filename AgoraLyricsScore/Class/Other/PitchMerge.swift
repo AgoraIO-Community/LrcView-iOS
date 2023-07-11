@@ -67,9 +67,10 @@ class PitchMerge {
         }
         
         /// fix duration of last line and last tone
-        guard let duration = findLastLineDuration(beginTime: model.lines.last!.beginTime,
-                                                  pitchItems: pitchModel.items,
-                                                  durationPerValue: pitchModel.timeInterval) else {
+        guard let duration = estimateLastToneDuration(lsatToneBeginTime: model.lines.last!.beginTime,
+                                                      nextLineBeginTime: (pitchModel.items.count - 1) * pitchModel.timeInterval,
+                                                      pitchItems: pitchModel.items,
+                                                      durationPerValue: pitchModel.timeInterval) else {
             Log.errorText(text: "mergeEnhancedLRC handle of merge was skip, findLastLineDuration fail")
             return model
         }
@@ -78,8 +79,50 @@ class PitchMerge {
         model.lines.last!.tones.last!.duration = model.lines.last!.endTime - model.lines.last!.tones.last!.beginTime
         Log.debug(text: "last line duration: \(duration)", tag: logTag)
         
-        /// use xml method to handle pitch
-        return mergeXML(model: model, pitchModel: pitchModel)
+        var hasPitch = false
+        var lastLine: LyricLineModel?
+        for line in model.lines {
+            
+            for tone in line.tones { /** calculate average pitch **/
+                if let array = findPitchs(beginTime: tone.beginTime,
+                                          duration: tone.duration,
+                                          pitchItems: pitchModel.items,
+                                          durationPerValue: pitchModel.timeInterval) {
+                    let values = array.map({ $0.value })
+                    let pitch = calculateAverage(pitchs: values)
+                    tone.pitch = pitch
+                    if pitch > 0 {
+                        hasPitch = true
+                    }
+                }
+            }
+            
+            if let lastLine = lastLine { /** estimate last Line Duration **/
+                if let time = estimateLastToneDuration(lsatToneBeginTime: lastLine.tones.last!.beginTime,
+                                                       nextLineBeginTime: line.beginTime,
+                                                       pitchItems: pitchModel.items,
+                                                       durationPerValue: pitchModel.timeInterval),
+                   let lastTone = lastLine.tones.last {
+                    lastTone.duration = time
+                    lastLine.duration = lastLine.tones.map({ $0.duration }).reduce(0, +)
+                    
+                    if let array = findPitchs(beginTime: lastTone.beginTime,
+                                              duration: lastTone.duration,
+                                              pitchItems: pitchModel.items,
+                                              durationPerValue: pitchModel.timeInterval) {
+                        let values = array.map({ $0.value })
+                        let pitch = calculateAverage(pitchs: values)
+                        lastTone.pitch = pitch
+                    }
+                }
+                else {
+                    Log.errorText(text: "estimateLineDuration fail")
+                }
+            }
+            lastLine = line
+        }
+        model.hasPitch = hasPitch
+        return model
     }
     
     private func mergeLRC(model: LyricModel, pitchModel: PitchModel, mergeCount: Int) -> LyricModel {
@@ -88,13 +131,13 @@ class PitchMerge {
         }
         
         
-        guard let duration = findLastLineDuration(beginTime: model.lines.last!.beginTime,
-                                                  pitchItems: pitchModel.items,
-                                                  durationPerValue: pitchModel.timeInterval) else {
+        guard let duration = estimateLastToneDuration(lsatToneBeginTime: model.lines.last!.beginTime,
+                                                      nextLineBeginTime: (pitchModel.items.count - 1) * pitchModel.timeInterval,
+                                                      pitchItems: pitchModel.items,
+                                                      durationPerValue: pitchModel.timeInterval) else {
             Log.errorText(text: "mergeLRC handle of merge was skip, findLastLineDuration fail")
             return model
         }
-        
         
         model.lines.last!.duration = duration
         Log.debug(text: "last line duration: \(duration)", tag: logTag)
@@ -116,9 +159,7 @@ class PitchMerge {
                     let tone = LyricToneModel(beginTime: beginTime,
                                               duration: duration,
                                               word: "",
-                                              pitch: avgPicth,
-                                              lang: .unknow,
-                                              pronounce: "")
+                                              pitch: avgPicth)
                     mergedArray.append(tone)
                 }
                 line.tones = mergedArray
@@ -154,13 +195,26 @@ class PitchMerge {
         return sum / Double(count)
     }
     
-    /// 计算最后一句的时长
-    private func findLastLineDuration(beginTime: Int,
+    /// estimate duration
+    private func estimateLastToneDuration(lsatToneBeginTime: Int,
+                                      nextLineBeginTime: Int,
                                       pitchItems: [PitchItem],
                                       durationPerValue: Int) -> Int? {
-        let startIndex = beginTime / durationPerValue
+        let startIndex = lsatToneBeginTime / durationPerValue
+        let endIndex = nextLineBeginTime / durationPerValue
+        guard startIndex < endIndex else {
+            return nil
+        }
+        
+        guard startIndex < pitchItems.count,
+              startIndex >= 0,
+              endIndex < pitchItems.count,
+              endIndex >= 0  else {
+            return nil
+        }
+        
         let count = pitchItems.count
-        var index = count - 1
+        var index = endIndex
         while index > startIndex {
             if pitchItems[index].value > 0 {
                 break

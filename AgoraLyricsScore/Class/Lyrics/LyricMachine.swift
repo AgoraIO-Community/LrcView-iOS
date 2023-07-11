@@ -103,7 +103,7 @@ class LyricMachine {
                     invokeLyricMachine(didUpdateConsloe: text)
                     return
                 }
-                if data.sourceType == .xml {
+                if data.canRenderableByTone {
                     if newCurrentIndex == currentIndex,
                        progress > item.element.beginTime,
                        progress <= item.element.endTime { /** 还在原来的句子 **/
@@ -166,5 +166,18 @@ extension LyricMachine {
             return total
         }
         return 0.0
+    }
+}
+
+extension LyricModel {
+    var canRenderableByTone: Bool { /** 是否可按字渲染 **/
+        if sourceType == .xml { return true }
+        
+        guard !lines.isEmpty else {
+            return false
+        }
+        return lines.first!.tones.contains(where: { tone in
+            return !tone.word.isEmpty
+        })
     }
 }
