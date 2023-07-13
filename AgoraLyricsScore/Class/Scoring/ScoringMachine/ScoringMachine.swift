@@ -40,13 +40,16 @@ class ScoringMachine {
     fileprivate var isDragging = false
     fileprivate var voiceChanger = VoicePitchChanger()
     fileprivate let queue = DispatchQueue(label: "ScoringMachine")
-    fileprivate let logTag = "ScoringMachine"
+    let logTag = "ScoringMachine"
     
     // MARK: - Internal
     
     func setLyricData(data: LyricModel?) {
         guard let lyricData = data else { return }
         guard let size = delegate?.sizeOfCanvasView(self) else { fatalError("sizeOfCanvasView has not been implemented") }
+        if size.width == 0 {
+            Log.errorText(text: "sizeOfCanvasView is zero", tag: logTag)
+        }
         queue.async { [weak self] in
             self?._setLyricData(lyricData: lyricData, size: size)
         }

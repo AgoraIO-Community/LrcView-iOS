@@ -90,6 +90,9 @@ extension ScoringMachine {
         let defaultPitchCursorXTime = Int(defaultPitchCursorX / widthPreMs)
         /// 游标到视图最右边对应的时长
         let remainTime = Int((canvasViewSize.width - defaultPitchCursorX) / widthPreMs)
+        if remainTime <= 0 {
+            Log.errorText(text: "remainTime error, remainTime:\(remainTime), canvasWidth:\(canvasViewSize.width), defaultPitchCursorX:\(defaultPitchCursorX)", tag: logTag)
+        }
         /// 需要显示音高的开始时间
         let beginTime = max(progress - defaultPitchCursorXTime, 0)
         /// 需要显示音高的结束时间
