@@ -157,6 +157,10 @@ extension KaraokeView {
             Log.error(error: "invoke setProgress not isMainThread ", tag: logTag)
         }
         guard isStart else { return }
+        guard progress >= 0 else {
+            Log.error(error: "progress must >= 0 ", tag: logTag)
+            return
+        }
         logProgressIfNeed(progress: progress)
         lyricsView.setProgress(progress: progress)
         scoringView.progress = progress
@@ -280,7 +284,7 @@ extension KaraokeView: LyricsViewDelegate {
     }
     
     func onLyricsView(view: LyricsView, didDragTo position: Int) {
-        Log.debug(text: "=== didDragTo \(position)", tag: "drag")
+        Log.debug(text: "didDragTo \(position)", tag: "drag")
         scoringView.dragDidEnd(position: position)
         delegate?.onKaraokeView?(view: self, didDragTo: position)
     }
