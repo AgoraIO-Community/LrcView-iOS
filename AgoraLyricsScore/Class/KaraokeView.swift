@@ -95,6 +95,11 @@ extension KaraokeView {
             Log.error(error: "invoke setLyricData not isMainThread ", tag: logTag)
         }
         
+        if isStart { /** reset if needed **/
+            Log.info(text: "internal set reset")
+            reset()
+        }
+        
         /** Fix incorrect value of tableView.Height in lyricsView, after update scoringView.height/topSpace **/
         layoutIfNeeded()
         

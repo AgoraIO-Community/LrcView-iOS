@@ -176,8 +176,15 @@ extension LyricModel {
         guard !lines.isEmpty else {
             return false
         }
-        return lines.first!.tones.contains(where: { tone in
+        
+        let isEnhancedLrc = lines.first!.tones.contains(where: { tone in
             return !tone.word.isEmpty
         })
+        
+        if isEnhancedLrc {
+            return hasPitch
+        }
+        
+        return false
     }
 }

@@ -67,7 +67,7 @@ class PitchMerge {
         }
         
         /// fix duration of last line and last tone
-        guard let duration = estimateLastToneDuration(lsatToneBeginTime: model.lines.last!.beginTime,
+        guard let duration = estimateLastToneDuration(lastToneBeginTime: model.lines.last!.beginTime,
                                                       nextLineBeginTime: (pitchModel.items.count - 1) * pitchModel.timeInterval,
                                                       pitchItems: pitchModel.items,
                                                       durationPerValue: pitchModel.timeInterval) else {
@@ -97,13 +97,14 @@ class PitchMerge {
                 }
             }
             
-            if let lastLine = lastLine { /** estimate last Line Duration **/
-                if let time = estimateLastToneDuration(lsatToneBeginTime: lastLine.tones.last!.beginTime,
+            if let lastLine = lastLine { /** estimate last tone Duration **/
+                if let time = estimateLastToneDuration(lastToneBeginTime: lastLine.tones.last!.beginTime,
                                                        nextLineBeginTime: line.beginTime,
                                                        pitchItems: pitchModel.items,
                                                        durationPerValue: pitchModel.timeInterval),
                    let lastTone = lastLine.tones.last {
                     lastTone.duration = time
+                    Log.debug(text: "old: \(line.beginTime - lastLine.tones.last!.beginTime), new:\(time)")
                     lastLine.duration = lastLine.tones.map({ $0.duration }).reduce(0, +)
                     
                     if let array = findPitchs(beginTime: lastTone.beginTime,
@@ -131,7 +132,7 @@ class PitchMerge {
         }
         
         
-        guard let duration = estimateLastToneDuration(lsatToneBeginTime: model.lines.last!.beginTime,
+        guard let duration = estimateLastToneDuration(lastToneBeginTime: model.lines.last!.beginTime,
                                                       nextLineBeginTime: (pitchModel.items.count - 1) * pitchModel.timeInterval,
                                                       pitchItems: pitchModel.items,
                                                       durationPerValue: pitchModel.timeInterval) else {
@@ -196,11 +197,11 @@ class PitchMerge {
     }
     
     /// estimate duration
-    private func estimateLastToneDuration(lsatToneBeginTime: Int,
+    private func estimateLastToneDuration(lastToneBeginTime: Int,
                                       nextLineBeginTime: Int,
                                       pitchItems: [PitchItem],
                                       durationPerValue: Int) -> Int? {
-        let startIndex = lsatToneBeginTime / durationPerValue
+        let startIndex = lastToneBeginTime / durationPerValue
         let endIndex = nextLineBeginTime / durationPerValue
         guard startIndex < endIndex else {
             return nil
