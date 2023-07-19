@@ -18,9 +18,10 @@ class MainTestVC: UIViewController {
     var cumulativeScore = 0
     var noLyric = false
     var lyricModel: LyricModel?
+    var isGuowai = false
     var song: Item!
     var songs = [
-        Item(code: 6246262727289260, name: "from玉成1", des: "", lyricType: 4),
+        Item(code: 6625526603631810, name: "简单爱", des: "自定义3，xml+pitch, custom, 使用本地pitch文件", lyricType: 0),
         Item(code: 6246262727289101, name: "from玉成2", des: "", lyricType: 4),
         Item(code: 6246262727286610, name: "from玉成3", des: "", lyricType: 4),
         Item(code: 6246262727286510, name: "from玉成4", des: "", lyricType: 4),
@@ -44,10 +45,12 @@ class MainTestVC: UIViewController {
         rtcManager.initEngine()
         rtcManager.initMCC()
         rtcManager.joinChannel()
-        //        rtcManager.loadMusic(song: song, getLyrics: true)
+        rtcManager.loadMusic(song: song, getLyrics: true)
     }
     
     func setupUI() {
+        title = isGuowai ? "国外" : "国内"
+        panelView.quickButton.isHidden = true
         view.addSubview(ktvView)
         view.addSubview(panelView)
         
@@ -73,6 +76,35 @@ class MainTestVC: UIViewController {
     }
     
     func download(lyricUrl: String) {
+        let isCustom = song.code == songs.first!.code
+        if isCustom {
+            let songCode = song.code
+            FileCache.fect(urlString: lyricUrl, reqType: song.lyricType) { progress in
+                
+            } completion: { (lyricPath, _) in
+                var model: LyricModel?
+                let lyricData = try! Data(contentsOf: URL(fileURLWithPath: lyricPath))
+                let pitchPath = Bundle.main.path(forResource: "\(songCode)", ofType: "bin")!
+                let pitchData = try! Data(contentsOf: URL(fileURLWithPath: pitchPath))
+                model = KaraokeView.parseLyricData(data: lyricData, pitchFileData: pitchData)!
+                self.lyricModel = model
+                self.progressTimer.reset()
+                self.ktvView.karaokeView.reset()
+                self.ktvView.karaokeView.setLyricData(data: model)
+                
+                self.ktvView.gradeView.setTitle(title: "xml \(model!.name) - \(model!.singer) [lyricType:xml+pitch]")
+                
+                self.downloadCompleted = true
+                print("downloadCompleted")
+                if !self.rtcManager.openCompleted { return }
+                self.rtcManager.play()
+                self.progressTimer.start()
+            } fail: { error in
+                print("fect fail")
+            }
+            return
+        }
+        
         FileCache.fect(urlString: lyricUrl, reqType: song.lyricType) { progress in
             
         } completion: { (lyricPath, pitchPath) in
@@ -99,6 +131,13 @@ class MainTestVC: UIViewController {
             print("fect fail")
         }
     }
+    
+    override func willMove(toParent parent: UIViewController?) {
+        if parent == nil {
+            progressTimer.reset()
+            rtcManager.destory()
+        }
+    }
 }
 
 extension MainTestVC: PanelViewDelegate, RTCManagerDelegate, ProgressTimerDelegate {
@@ -117,8 +156,8 @@ extension MainTestVC: PanelViewDelegate, RTCManagerDelegate, ProgressTimerDelega
             rtcManager.pause()
             break
         case .quick:
-            rtcManager.destory()
-            navigationController?.popViewController(animated: true)
+//            rtcManager.destory()
+//            navigationController?.popViewController(animated: true)
             break
         case .set:
             let vc = ParamSetVC()
@@ -177,6 +216,10 @@ extension MainTestVC: PanelViewDelegate, RTCManagerDelegate, ProgressTimerDelega
         ktvView.karaokeView.setPitch(pitch: pitch)
     }
     
+    func RTCManagerDidChangedTo(position: Int) {
+        progressTimer.setPlayerPosition(position: position)
+    }
+    
     // MARK: - ProgressTimerDelegate
     
     func progressTimerGetPlayerPosition() -> Int {
@@ -230,8 +273,8 @@ extension MainTestVC: ParamSetVCDelegate, SearchVCDelegate, KaraokeDelegate {
     }
     
     func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
-        /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
-        progressTimer.updateLastTime(time: position + 250)
+        /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入
+        progressTimer.updateOnDrag(position: position)
         rtcManager.seek(time: position)
         cumulativeScore = view.scoringView.getCumulativeScore()
         ktvView.gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lyricModel!.lines.count * 100)

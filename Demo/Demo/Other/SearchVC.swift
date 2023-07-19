@@ -18,7 +18,9 @@ class SearchVC: UIViewController {
     var list = [AgoraMusic]()
     weak var delegate: SearchVCDelegate?
     weak var rtcManager: RTCManager!
-    
+    var page = 1
+    var isLoading = false
+    var hasNoData = false
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -31,7 +33,7 @@ class SearchVC: UIViewController {
     }
     
     func update(musics: [AgoraMusic]) {
-        list = musics
+        list += musics
         tableview.reloadData()
     }
 
@@ -84,11 +86,20 @@ class SearchVC: UIViewController {
 
 extension SearchVC: UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, RTCManagerSongListDelegate {
     func RTCManagerDidRecvSearch(result: AgoraMusicCollection) {
+        isLoading = false
         update(musics: result.musicList)
+        if result.musicList.isEmpty {
+            hasNoData = true
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        rtcManager.search(keyWord: textField.text!, page: 1)
+        page = 1
+        hasNoData = false
+        list = []
+        tableview.reloadData()
+        rtcManager.search(keyWord: textField.text!, page: page)
+        isLoading = true
         return textField.resignFirstResponder()
     }
     
@@ -102,9 +113,15 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource, UITextFieldDeleg
         cell.textLabel?.text = item.name + "[\(item.singer)][\(item.songCode)]"
         cell.detailTextLabel?.text = item.lyricList.map ({ $0.stringValue }).joined(separator:"/")
         cell.accessoryType = .disclosureIndicator
+        
+        if !isLoading, !hasNoData, indexPath.row == list.count - 1 {
+            page += 1
+            rtcManager.search(keyWord: textFeild.text!, page: page)
+            isLoading = true
+        }
+        
         return cell
     }
-    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

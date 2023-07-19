@@ -70,7 +70,7 @@ class LyricMachine {
         guard let data = lyricData else { return }
         let remainingTime = data.preludeEndPosition - progress
         invokeLyricMachine(didUpdate: remainingTime)
-        
+        Log.debug(text: "_setProgress \(progress)", tag: logTag)
         if currentIndex < dataList.count {
             if let item = dataList.enumerated().first(where: { progress < $0.element.endTime }) { /** 找出第一个要高亮的 **/
                 let newCurrentIndex = item.offset

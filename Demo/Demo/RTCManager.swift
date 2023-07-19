@@ -13,6 +13,7 @@ protocol RTCManagerDelegate: NSObjectProtocol {
     func RTCManagerDidGetLyricUrl(lyricUrl: String)
     func RTCManagerDidOpenCompleted()
     func RTCManagerDidUpdatePitch(pitch: Double)
+    func RTCManagerDidChangedTo(position: Int)
 }
 
 protocol RTCManagerSongListDelegate: NSObjectProtocol {
@@ -81,6 +82,7 @@ class RTCManager: NSObject {
     }
     
     func search(keyWord: String, page: Int) {
+        print("search page:\(page)")
         mcc.searchMusic(keyWord: keyWord,
                         page: page,
                         pageSize: 50,
@@ -131,6 +133,7 @@ class RTCManager: NSObject {
         mpk.stop()
         mcc.register(nil)
         agoraKit.destroyMediaPlayer(mpk)
+        AgoraMusicContentCenter.destroy()
     }
     
     private func mccPreload() {
@@ -257,6 +260,12 @@ extension RTCManager: AgoraRtcEngineDelegate, AgoraRtcMediaPlayerDelegate, Agora
             invokeRTCManagerDidUpdatePitch(pitch: pitch)
         }
     }
+    
+    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol,
+                             didChangedTo positionMs: Int,
+                             atTimestamp timestampMs: TimeInterval) {
+        invokeRTCManagerDidChangedTo(position: positionMs)
+    }
 }
 
 extension RTCManager {
@@ -312,6 +321,17 @@ extension RTCManager {
         
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.RTCManagerDidOpenCompleted()
+        }
+    }
+    
+    func invokeRTCManagerDidChangedTo(position: Int) {
+        if Thread.isMainThread {
+            delegate?.RTCManagerDidChangedTo(position: position)
+            return
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.RTCManagerDidChangedTo(position: position)
         }
     }
 }

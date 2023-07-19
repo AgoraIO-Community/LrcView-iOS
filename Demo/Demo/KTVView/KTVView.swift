@@ -84,6 +84,7 @@ class KTVView: UIView {
         karaokeView.lyricsView.firstToneHintViewStyle.topMargin = param.lyric.firstToneHintViewStyle.topMargin
         karaokeView.lyricsView.maxWidth = param.lyric.maxWidth
         karaokeView.lyricsView.draggable = param.lyric.draggable
+        karaokeView.lyricsView.showDebugView = param.lyric.showDebugView
         
         karaokeView.scoringView.particleEffectHidden = param.scoring.particleEffectHidden
         karaokeView.scoringView.emitterImages = param.scoring.emitterImages
@@ -97,6 +98,8 @@ class KTVView: UIView {
         karaokeView.scoringView.movingSpeedFactor = param.scoring.movingSpeedFactor
         karaokeView.scoringView.isLocalPitchCursorAlignedWithStandardPitchStick = param.scoring.isLocalPitchCursorAlignedWithStandardPitchStick
         karaokeView.scoringView.showDebugView = param.scoring.showDebugView
+        karaokeView.scoringView.localPitchCursorOffsetX = param.scoring.localPitchCursorOffsetX
+        karaokeView.scoringView.localPitchCursorImage = param.scoring.localPitchCursorImage
     }
 
 }

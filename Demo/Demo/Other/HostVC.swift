@@ -79,6 +79,10 @@ class HostVC: UIViewController {
 }
 
 extension HostVC: RTCManagerDelegate, ProgressTimerDelegate {
+    func RTCManagerDidChangedTo(position: Int) {
+        
+    }
+    
     func RTCManagerDidOccurEvent(event: String) {
         print("[demo] \(event)")
     }

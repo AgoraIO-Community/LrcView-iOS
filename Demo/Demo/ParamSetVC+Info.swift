@@ -69,6 +69,7 @@ class LyricViewParam {
     var contentTopMargin: CGFloat = 5
     /// 是否开启拖拽
     var draggable: Bool = false
+    var showDebugView: Bool = false
 }
 
 class ScoringViewParam {
@@ -94,6 +95,13 @@ class ScoringViewParam {
     var hitScoreThreshold: Float = 0.7
     /// 游标拟合
     var isLocalPitchCursorAlignedWithStandardPitchStick = true
+    /** 游标偏移量(X轴) 游标的中心到竖线中心的距离
+     - 等于0：游标中心点和竖线中心点重合
+     - 小于0: 游标向左偏移
+     - 大于0：游标向向偏移 **/
+    var localPitchCursorOffsetX: CGFloat = -3
+    /// 游标的图片
+    var localPitchCursorImage: UIImage? = nil
     /// use for debug only
     var showDebugView = false
 }

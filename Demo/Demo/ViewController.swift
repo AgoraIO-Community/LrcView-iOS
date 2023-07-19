@@ -54,7 +54,34 @@ class ViewController: UIViewController {
                                             .init(title: "抢唱")])]
     }
 
-    
+    func showAlert() {
+        let vc = UIAlertController(title: "选择", message: nil, preferredStyle: .actionSheet)
+        let action1 = UIAlertAction(title: "国内", style: .default) { [weak self](_) in
+            Config.mccAppId = Config.mccAppId_in
+            Config.mccCertificate = Config.mccCertificate_in
+            let vc = MainTestVC()
+            vc.isGuowai = false
+            vc.modalPresentationStyle = .fullScreen
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
+        let action2 = UIAlertAction(title: "国外", style: .default) { [weak self](_) in
+            /// 海外资源
+            Config.mccAppId = Config.mccAppId_out
+            Config.mccCertificate = Config.mccCertificate_out
+            let vc = MainTestVC()
+            vc.isGuowai = true
+            vc.modalPresentationStyle = .fullScreen
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
+        let action3 = UIAlertAction(title: "取消", style: .cancel) { _ in
+            
+        }
+        vc.addAction(action1)
+        vc.addAction(action2)
+        vc.addAction(action3)
+        
+        present(vc, animated: true)
+    }
 
 }
 
@@ -83,8 +110,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if indexPath.section == 0 { /** UI配置测试 **/
-            let vc = MainTestVC()
-            navigationController?.pushViewController(vc, animated: true)
+            showAlert()
             return
         }
 

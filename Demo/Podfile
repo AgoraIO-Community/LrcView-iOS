@@ -11,4 +11,5 @@ target 'Demo' do
   pod "ScoreEffectUI", :path => "../../ScoringEffectUI/ScoreEffectUI/ScoreEffectUI.podspec", :testspecs => ['Tests']
   pod 'RTMTokenBuilder', "1.0.0"
   pod "Zip"
+  pod "SnapKit"
 end

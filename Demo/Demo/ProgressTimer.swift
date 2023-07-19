@@ -16,12 +16,14 @@ protocol ProgressTimerDelegate: NSObjectProtocol {
 class ProgressTimer: NSObject {
     private var timer = GCDTimer()
     var isPause = false
-    private var last = 0
+    var dragging = false
     weak var delegate: ProgressTimerDelegate?
-     
+    private var lastCallbackTsOfPlayerPostion: Double = 0.0
+    var playerPostion = 0
+    
     func start() {
         isPause = false
-        last = 0
+        lastCallbackTsOfPlayerPostion = CFAbsoluteTimeGetCurrent() * 1000
         timer.scheduledMillisecondsTimer(withName: "ProgressTimer",
                                          countDown: 1000000,
                                          milliseconds: 20,
@@ -31,14 +33,16 @@ class ProgressTimer: NSObject {
                 return
             }
             
-            var current = self.last
-            if time.truncatingRemainder(dividingBy: 1000) == 0 {
-                current = delegate!.progressTimerGetPlayerPosition()
+            if self.dragging {
+                return
             }
-            current += 20
             
-            self.last = current
-            var progress = current
+            let currentTs = CFAbsoluteTimeGetCurrent() * 1000
+            let offset = Int(currentTs - lastCallbackTsOfPlayerPostion)
+            if offset < 0 {
+                fatalError()
+            }
+            var progress = playerPostion + offset
             if progress > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
                 progress -= 250
             }
@@ -47,10 +51,32 @@ class ProgressTimer: NSObject {
     }
     
     func reset() {
+        playerPostion = 0
+        dragging = false
         timer.destoryAllTimer()
     }
     
-    func updateLastTime(time: Int) {
-        last = time
+    /// use while after drag
+    func updateOnDrag(position: Int) {
+        dragging = true
+//        print("=== updateOnDrag: \(position)")
+//        playerPostion = position + 250
+//        lastCallbackTsOfPlayerPostion = CFAbsoluteTimeGetCurrent() * 1000
+    }
+    
+    func setPlayerPosition(position: Int) {
+        print("=== setPlayerPosition: \(position)")
+        if dragging {
+            playerPostion = position + 250
+            lastCallbackTsOfPlayerPostion = CFAbsoluteTimeGetCurrent() * 1000
+            dragging = false
+        }
+        else {
+            if position > playerPostion {
+                playerPostion = position
+                lastCallbackTsOfPlayerPostion = CFAbsoluteTimeGetCurrent() * 1000
+            }
+        }
+        
     }
 }

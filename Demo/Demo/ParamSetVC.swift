@@ -49,7 +49,8 @@ class ParamSetVC: UIViewController {
                                                 .init(title: "拖拽"),
                                                 .init(title: "无歌词提示文案"),
                                                 .init(title: "无歌词提示文字颜色"),
-                                                .init(title: "无歌词提示文字大小")]),
+                                                .init(title: "无歌词提示文字大小"),
+                                                .init(title: "showDebugView"),]),
                 Section(title: "Scoring", rows: [.init(title: "评分视图高度"),
                                                  .init(title: "渲染视图到顶部的间距"),
                                                  .init(title: "游标的起始位置"),
@@ -61,6 +62,8 @@ class ParamSetVC: UIViewController {
                                                  .init(title: "使用图片创建粒子动画"),
                                                  .init(title: "打分容忍度 范围：0-1"),
                                                  .init(title: "游标拟合"),
+                                                 .init(title: "游标偏移量X"),
+                                                 .init(title: "游标的图片"),
                                                  .init(title: "showDebugView"),
                 ]),
         ]
@@ -185,6 +188,9 @@ class ParamSetVC: UIViewController {
                 cell.detailTextLabel?.text = "字体"
                 cell.detailTextLabel?.font = param.lyric.noLyricTipsFont
             }
+            if indexPath.row == 16 {
+                cell.detailTextLabel?.text = "\(param.lyric.showDebugView)"
+            }
         }
         
         if indexPath.section == 2 {
@@ -234,13 +240,23 @@ class ParamSetVC: UIViewController {
                 cell.detailTextLabel?.text = "\(param.scoring.hitScoreThreshold)"
             }
             
-            /// showDebugView
+            /// isLocalPitchCursorAlignedWithStandardPitchStick
             if indexPath.row == 10 {
                 cell.detailTextLabel?.text = "\(param.scoring.isLocalPitchCursorAlignedWithStandardPitchStick)"
             }
             
-            /// showDebugView
+            /// localPitchCursorOffsetX
             if indexPath.row == 11 {
+                cell.detailTextLabel?.text = "\(param.scoring.localPitchCursorOffsetX)"
+            }
+            
+            /// localPitchCursorImage
+            if indexPath.row == 12 {
+                cell.detailTextLabel?.text = "\((param.scoring.localPitchCursorImage != nil) ? "有" : "无")"
+            }
+            
+            /// showDebugView
+            if indexPath.row == 13 {
                 cell.detailTextLabel?.text = "\(param.scoring.showDebugView)"
             }
         }
@@ -318,6 +334,9 @@ class ParamSetVC: UIViewController {
             if indexPath.row == 15 {
                 param.lyric.noLyricTipsFont = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
             }
+            if indexPath.row == 16 {
+                param.lyric.showDebugView = !param.lyric.showDebugView
+            }
         }
         
         if indexPath.section == 2 {
@@ -380,8 +399,18 @@ class ParamSetVC: UIViewController {
                 param.scoring.isLocalPitchCursorAlignedWithStandardPitchStick = !param.scoring.isLocalPitchCursorAlignedWithStandardPitchStick
             }
             
-            /// showDebugView
+            /// localPitchCursorOffsetX
             if indexPath.row == 11 {
+                param.scoring.localPitchCursorOffsetX = genValue(current: param.scoring.localPitchCursorOffsetX, ops: [-6, -3, 0, 3, 6])
+            }
+            
+            /// localPitchCursorImage
+            if indexPath.row == 12 {
+                param.scoring.localPitchCursorImage = param.scoring.localPitchCursorImage != nil ? nil : UIImage(named: "t1")
+            }
+            
+            /// showDebugView
+            if indexPath.row == 13 {
                 param.scoring.showDebugView = !param.scoring.showDebugView
             }
         }
