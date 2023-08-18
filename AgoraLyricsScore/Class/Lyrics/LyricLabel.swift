@@ -20,13 +20,12 @@ class LyricLabel: UILabel {
     var textNormalFontSize: UIFont = .systemFont(ofSize: 15)
     /// 高亮歌词文字大小
     var textHighlightFontSize: UIFont = .systemFont(ofSize: 18)
-    var maxWidth: CGFloat = 0
     
     var status: Status = .normal { didSet { updateState() } }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        numberOfLines = 0
+        textAlignment = .center
     }
     
     required init?(coder: NSCoder) {
@@ -42,7 +41,6 @@ class LyricLabel: UILabel {
             textColor = textNormalColor
             font = textNormalFontSize
         }
-        preferredMaxLayoutWidth = maxWidth
     }
     
     override func draw(_ rect: CGRect) {
@@ -50,39 +48,16 @@ class LyricLabel: UILabel {
         if progressRate <= 0 {
             return
         }
-        let lines = Int(bounds.height / font.lineHeight)
-        let padingTop = (bounds.height - CGFloat(lines) * font.lineHeight) / CGFloat(lines)
-        let maxWidth = sizeThatFits(CGSize(width: CGFloat(MAXFLOAT),
-                                           height: font.lineHeight * CGFloat(lines))).width
-        let oneLineProgress = maxWidth <= bounds.width ? 1 : bounds.width / maxWidth
+        let textWidth = sizeThatFits(CGSize(width: CGFloat(MAXFLOAT),
+                                           height: font.lineHeight)).width
+        let leftRightSpace = (bounds.width - textWidth) / 2
         let path = CGMutablePath()
-        for index in 0 ..< lines {
-            let leftProgress = min(progressRate, 1) - CGFloat(index) * oneLineProgress
-            let fillRect: CGRect
-            if leftProgress >= oneLineProgress {
-                fillRect = CGRect(x: 0,
-                                  y: padingTop + CGFloat(index) * font.lineHeight,
-                                  width: bounds.width,
-                                  height: font.lineHeight)
-                path.addRect(fillRect)
-            } else if leftProgress > 0 {
-                if (index != lines - 1) || (maxWidth <= bounds.width) {
-                    fillRect = CGRect(x: 0,
-                                      y: padingTop + CGFloat(index) * font.lineHeight,
-                                      width: maxWidth * leftProgress,
-                                      height: font.lineHeight)
-                } else {
-                    let width = maxWidth.truncatingRemainder(dividingBy: bounds.width)
-                    let dw = (bounds.width - width) / CGFloat(lines) + maxWidth * leftProgress
-                    fillRect = CGRect(x: 0,
-                                      y: padingTop + CGFloat(index) * font.lineHeight,
-                                      width: dw,
-                                      height: font.lineHeight)
-                }
-                path.addRect(fillRect)
-                break
-            }
-        }
+        let fillRect = CGRect(x: leftRightSpace,
+                              y: 0,
+                              width: progressRate * textWidth,
+                              height: font.lineHeight)
+        path.addRect(fillRect)
+        
         if let context = UIGraphicsGetCurrentContext(), !path.isEmpty {
             context.setLineWidth(1.0)
             context.setLineCap(.butt)
