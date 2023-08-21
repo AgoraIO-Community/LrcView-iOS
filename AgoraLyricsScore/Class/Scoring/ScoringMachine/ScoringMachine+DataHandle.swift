@@ -228,7 +228,7 @@ extension ScoringMachine { /** ui 位置 **/
                             viewHeight: canvasViewSize.height,
                             minPitch: minPitch,
                             maxPitch: maxPitch,
-                            standardPitchStickViewHeight: standardPitchStickViewHeight) - (standardPitchStickViewHeight / 2)
+                            standardPitchStickViewHeight: standardPitchStickViewHeight) ?? 0 - (standardPitchStickViewHeight / 2)
         let w = widthPreMs * CGFloat(duration)
         let h = standardPitchStickViewHeight
         
@@ -240,7 +240,12 @@ extension ScoringMachine { /** ui 位置 **/
                      viewHeight: CGFloat,
                      minPitch: Double,
                      maxPitch: Double,
-                     standardPitchStickViewHeight: CGFloat) -> CGFloat {
+                     standardPitchStickViewHeight: CGFloat) -> CGFloat? {
+        if viewHeight <= 0 {
+            Log.errorText(text: "calculatedY viewHeight invalid \(viewHeight)", tag: logTag)
+            return nil
+        }
+        
         /** 计算扩展 **/
         let pitchPerPoint = (CGFloat(maxPitch) - CGFloat(minPitch)) / viewHeight
         let extends = pitchPerPoint * standardPitchStickViewHeight
@@ -261,6 +266,13 @@ extension ScoringMachine { /** ui 位置 **/
         let distance = extends/2 + (renderingHeight * rate)
         
         /** 计算y **/
-        return viewHeight - distance
+        let y = viewHeight - distance
+        
+        if y.isNaN {
+            Log.errorText(text: "calculatedY result invalid pitch:\(pitch) viewHeight:\(viewHeight) minPitch:\(minPitch) maxPitch:\(maxPitch) standardPitchStickViewHeight:\(standardPitchStickViewHeight)", tag: logTag)
+            return nil
+        }
+        
+        return y
     }
 }

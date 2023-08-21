@@ -39,6 +39,8 @@ public class LyricsView: UIView {
     @objc public let firstToneHintViewStyle: FirstToneHintViewStyle = .init()
     /// 是否开启拖拽
     @objc public var draggable: Bool = false
+    /// 活跃的歌词的位置
+    @objc public var activeLinePosition: UITableView.ScrollPosition = .middle
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
     
@@ -255,7 +257,7 @@ extension LyricsView: LyricMachineDelegate {
         
         if !datas.isEmpty { /** 默认高亮第一个 **/
             let indexPath = IndexPath(row: 0, section: 0)
-            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+            tableView.scrollToRow(at: indexPath, at: activeLinePosition, animated: true)
             UIView.performWithoutAnimation {
                 tableView.reloadRows(at: [indexPath], with: .fade)
             }
@@ -273,7 +275,7 @@ extension LyricsView: LyricMachineDelegate {
         UIView.performWithoutAnimation {
             tableView.reloadRows(at: [newIndexPath, oldIndexPath], with: .fade)
         }
-        tableView.scrollToRow(at: newIndexPath, at: .middle, animated: animated)
+        tableView.scrollToRow(at: newIndexPath, at: activeLinePosition, animated: animated)
     }
     
     func lyricMachine(_ lyricMachine: LyricMachine, didUpdateLineAt indexPath: IndexPath) {

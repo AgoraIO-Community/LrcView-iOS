@@ -102,7 +102,7 @@ extension UIColor {
 }
 
 
-fileprivate extension UIColor {
+extension UIColor {
     class func colorWithHex(hexStr:String) -> UIColor{
         return UIColor.colorWithHex(hexStr : hexStr, alpha:1)
     }
