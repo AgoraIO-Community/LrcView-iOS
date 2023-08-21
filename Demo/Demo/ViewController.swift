@@ -50,7 +50,8 @@ class ViewController: UIViewController {
                                             .init(title: "profile"),
                                             .init(title: "观众端"),
                                             .init(title: "主播端"),
-                                            .init(title: "抢唱")])]
+                                            .init(title: "抢唱"),
+                                            .init(title: "miniSize")])]
 
 //        list = [Section(title: "UI", rows: [.init(title: "View配置")])]
     }
@@ -161,6 +162,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             
             if indexPath.row == 12 { /** 抢唱 **/
                 let vc = QiangChangVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 13 { /** mini size 小视图 **/
+                let vc = MiniSizeVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }

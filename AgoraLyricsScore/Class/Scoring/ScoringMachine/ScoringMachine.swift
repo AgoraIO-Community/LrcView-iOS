@@ -39,7 +39,7 @@ class ScoringMachine {
     fileprivate var isDragging = false
     fileprivate var voiceChanger = VoicePitchChanger()
     fileprivate let queue = DispatchQueue(label: "ScoringMachine")
-    fileprivate let logTag = "ScoringMachine"
+    let logTag = "ScoringMachine"
     
     // MARK: - Internal
     
@@ -141,11 +141,16 @@ class ScoringMachine {
                                 minPitch: minPitch,
                                 maxPitch: maxPitch,
                                 standardPitchStickViewHeight: standardPitchStickViewHeight)
+            
+            if y == nil {
+                Log.errorText(text: "y is invalid, at getHitedInfo step", tag: logTag)
+            }
+            let yValue = (y != nil) ? y! : (canvasViewSize.height >= 0 ? canvasViewSize.height : 0)
             let debugInfo = DebugInfo(originalPitch: pitch,
                                       pitch: pitch,
                                       hitedInfo: nil,
                                       progress: progress)
-            invokeScoringMachine(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
+            invokeScoringMachine(didUpdateCursor: yValue, showAnimation: false, debugInfo: debugInfo)
             return
         }
         
@@ -184,12 +189,15 @@ class ScoringMachine {
                             minPitch: minPitch,
                             maxPitch: maxPitch,
                             standardPitchStickViewHeight: standardPitchStickViewHeight)
-        
+        if y == nil {
+            Log.errorText(text: "y is invalid, at calculated ui info step", tag: logTag)
+        }
+        let yValue = (y != nil) ? y! : (canvasViewSize.height >= 0 ? canvasViewSize.height : 0)
         let debugInfo = DebugInfo(originalPitch: pitch,
                                   pitch: voicePitch,
                                   hitedInfo: hitedInfo,
                                   progress: progress)
-        invokeScoringMachine(didUpdateCursor: y, showAnimation: showAnimation, debugInfo: debugInfo)
+        invokeScoringMachine(didUpdateCursor: yValue, showAnimation: showAnimation, debugInfo: debugInfo)
     }
     
     private func _dragBegain() {

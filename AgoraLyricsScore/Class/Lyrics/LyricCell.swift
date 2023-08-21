@@ -38,9 +38,8 @@ class LyricCell: UITableViewCell {
         didSet { updateUI() }
     }
     
-    private var widthConstraint: NSLayoutConstraint!
     private var hasSetupUI = false
-    private var bottomConstraint, topConstraint: NSLayoutConstraint!
+    private var leftConstraint, rightConstraint, bottomConstraint, topConstraint: NSLayoutConstraint!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -53,6 +52,16 @@ class LyricCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        label.text = ""
+        label.status = .normal
+        label.progressRate = 0
+        leftConstraint.constant = 0
+        label.alpha = 1
+        contentView.layoutIfNeeded()
+    }
+    
     private func setupUI() {
         guard !hasSetupUI else {
             return
@@ -63,11 +72,15 @@ class LyricCell: UITableViewCell {
         
         contentView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        
+        leftConstraint = label.leftAnchor.constraint(equalTo: contentView.leftAnchor)
+        rightConstraint = label.rightAnchor.constraint(greaterThanOrEqualTo: contentView.rightAnchor)
         topConstraint = label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
         bottomConstraint = label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         topConstraint!.isActive = true
         bottomConstraint!.isActive = true
+        leftConstraint.isActive = true
+        rightConstraint.isActive = true
         hasSetupUI = true
     }
     
@@ -76,7 +89,6 @@ class LyricCell: UITableViewCell {
             topConstraint!.constant = lyricLineSpacing
             bottomConstraint!.constant = -1 * lyricLineSpacing
         }
-        label.maxWidth = maxWidth
         label.textNormalColor = textNormalColor
         label.textSelectedColor = textSelectedColor
         label.textHighlightedColor = textHighlightedColor
@@ -85,16 +97,49 @@ class LyricCell: UITableViewCell {
     }
     
     func update(model: Model) {
+        if model.text.contains("我不会发现") {
+            print("contentView.bounds.width: \(contentView.bounds.width)")
+        }
+        
         label.text = model.text
         label.status = model.status
         label.progressRate = CGFloat(model.progressRate)
+        
+        rollLabelIfNeed(model: model)
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        label.text = ""
-        label.status = .normal
-        label.progressRate = 0
+    private func rollLabelIfNeed(model: Model) {
+        if model.status == .normal { /** 不需要滚动 **/
+            leftConstraint.constant = 0
+            return
+        }
+        
+        if model.status == .selectedOrHighlighted,
+           label.bounds.width <= contentView.bounds.width { /** 不需要滚动 **/
+            leftConstraint.constant = 0
+            return
+        }
+        
+        let progressRatio = model.progressRate
+        /** 需要滚动label **/
+        /// 当前显示文字占据该句的比率
+        let displayRatio = contentView.bounds.width / label.bounds.width
+        /// 开始滚动的比率位置
+        let startRollingPositionRatio = displayRatio/2
+        /// 结束滚动的比率位置
+        let stopRollingPositionRatio = 1 - startRollingPositionRatio
+        
+        if progressRatio > startRollingPositionRatio, progressRatio < stopRollingPositionRatio {
+            /// 计算比率差
+            let deltaRatio = progressRatio - startRollingPositionRatio
+            /// 计算视图的偏移距离
+            let constant = deltaRatio * label.bounds.width
+            /// 更新label的左边距
+            leftConstraint.constant = constant * -1
+            UIView.animate(withDuration: 0.2) { [weak self] in
+                self?.contentView.layoutIfNeeded()
+            }
+        }
     }
 }
 
