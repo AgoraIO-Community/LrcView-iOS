@@ -62,6 +62,13 @@ class TestScoringVM: XCTestCase {
         XCTAssertEqual(vm.calculatedY(pitch: 10, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 88.8)
         XCTAssertEqual(vm.calculatedY(pitch: 5, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 93.65)
         XCTAssertEqual(vm.calculatedY(pitch: 1, viewHeight: 100, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), 97.53)
+        
+        /// 异常情况
+        XCTAssertEqual(vm.calculatedY(pitch: 10, viewHeight: 0, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), nil)
+        XCTAssertEqual(vm.calculatedY(pitch: 10, viewHeight: -10, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: 3), nil)
+        XCTAssertEqual(vm.calculatedY(pitch: 10, viewHeight: -10, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: -3), nil)
+        XCTAssertEqual(vm.calculatedY(pitch: -10, viewHeight: -10, minPitch: 0, maxPitch: 100, standardPitchStickViewHeight: -3), nil)
+        XCTAssertEqual(vm.calculatedY(pitch: -10, viewHeight: -10, minPitch: -100, maxPitch: 100, standardPitchStickViewHeight: -3), nil)
     }
     
     func testVoiceChange() {
