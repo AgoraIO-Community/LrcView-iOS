@@ -104,8 +104,8 @@ class LyricsTestVC: UIViewController {
         config.token = token
         config.appId = Config.mccAppId
         mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
-        mcc.register(self)
-        mpk = mcc.createMusicPlayer(delegate: self)
+        mcc.register(nil)
+        mpk = mcc.createMusicPlayer(delegate: nil)
     }
     
     func mccPreload() {
@@ -187,7 +187,7 @@ extension LyricsTestVC: AgoraRtcEngineDelegate {
     }
 }
 
-extension LyricsTestVC: AgoraMusicContentCenterEventDelegate {
+extension LyricsTestVC {
     func onMusicChartsResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: [AgoraMusicChartInfo]) {
         
     }
