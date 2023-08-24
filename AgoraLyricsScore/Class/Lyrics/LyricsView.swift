@@ -270,6 +270,12 @@ extension LyricsView: LyricMachineDelegate {
                       didStartLineAt newIndexPath: IndexPath,
                       oldIndexPath: IndexPath,
                       animated: Bool) {
+        guard newIndexPath.row < dataList.count, oldIndexPath.row < dataList.count else {
+            let text = "igonre update, dataList.count:\(dataList.count) newIndexPath.row:\(newIndexPath.row) oldIndexPath.row:\(oldIndexPath.row)"
+            Log.warning(text: text, tag: logTag)
+            return
+        }
+        
         UIView.performWithoutAnimation {
             tableView.reloadRows(at: [newIndexPath, oldIndexPath], with: .fade)
         }
