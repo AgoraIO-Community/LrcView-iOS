@@ -16,6 +16,15 @@ protocol ScoringViewDelegate: NSObjectProtocol {
                      lineIndex: Int,
                      lineCount: Int)
     
+    
+    /// 更新tone分数
+    /// - Parameters:
+    ///   - models: 得分详细数据
+    ///   - cumulativeScore: 累计分数
+    func scoringView(_ view: ScoringView,
+                     didFinishToneWith models: [PitchScoreModel],
+                     cumulativeScore: Int)
+    
     /// 更新UI
     func scoringViewShouldUpdateViewLayout(view: ScoringView)
 }

@@ -31,23 +31,22 @@ class ScoringMachine {
     fileprivate var minPitch: Double = 0
     
     fileprivate var canvasViewSize: CGSize = .zero
-    fileprivate var toneScores = [ToneScoreModel]()
-    fileprivate var lineScores = [Int]()
+    fileprivate var pitchScores = [PitchScoreModel]()
     fileprivate var currentIndexOfLine = 0
     fileprivate var lyricData: LyricModel?
+    fileprivate var pitchData: PitchModel?
     fileprivate var cumulativeScore = 0
-    fileprivate var isDragging = false
     fileprivate var voiceChanger = VoicePitchChanger()
     fileprivate let queue = DispatchQueue(label: "ScoringMachine")
     fileprivate let logTag = "ScoringMachine"
     
     // MARK: - Internal
     
-    func setLyricData(data: LyricModel?) {
-        guard let lyricData = data else { return }
+    func setPitchData(data: PitchModel?) {
+        guard let pitchData = data else { return }
         guard let size = delegate?.sizeOfCanvasView(self) else { fatalError("sizeOfCanvasView has not been implemented") }
         queue.async { [weak self] in
-            self?._setLyricData(lyricData: lyricData, size: size)
+            self?._setPitchData(pitchData: pitchData, size: size)
         }
     }
     
@@ -66,15 +65,11 @@ class ScoringMachine {
     }
     
     func dragBegain() {
-        queue.async { [weak self] in
-            self?._dragBegain()
-        }
+        
     }
     
     func dragDidEnd(position: Int) {
-        queue.async { [weak self] in
-            self?._dragDidEnd(position: position)
-        }
+        
     }
     
     func getCumulativeScore() -> Int {
@@ -98,29 +93,25 @@ class ScoringMachine {
     
     // MARK: - Private
     
-    private func _setLyricData(lyricData: LyricModel, size: CGSize) {
+    private func _setPitchData(pitchData: PitchModel, size: CGSize) {
         canvasViewSize = size
-        self.lyricData = lyricData
-        let (lineEnds, infos) = ScoringMachine.createData(data: lyricData)
+        self.pitchData = pitchData
+        let infos = ScoringMachine.createData(data: pitchData)
         dataList = infos
-        lineEndTimes = lineEnds
         let (min, max) = makeMinMaxPitch(dataList: dataList)
         minPitch = min
         maxPitch = max
-        toneScores = lyricData.lines[0].tones.map({ ToneScoreModel(tone: $0, score: 0) })
-        lineScores = .init(repeating: 0, count: lyricData.lines.count)
+        pitchScores = pitchData.items.map({ .init(pitchItem: $0, score: 0) })
         handleProgress()
     }
     
     private func _setProgress(progress: Int) {
-        guard !isDragging else { return }
         self.progress = progress
         handleProgress()
     }
     
     private func _setPitch(pitch: Double) {
-        guard !isDragging else { return }
-        guard lyricData != nil else { return } /** setLyricData 后执行 **/
+        guard pitchData != nil else { return } /** setLyricData 后执行 **/
         
         if pitch <= 0 {
             let y = canvasViewSize.height
@@ -161,11 +152,11 @@ class ScoringMachine {
                                                  scoreCompensationOffset: scoreCompensationOffset)
         
         /** 4.save tone score  **/
-        if let hitToneScore = toneScores.first(where: { $0.tone.beginTime == hitedInfo.beginTime }) {
-            hitToneScore.addScore(score: score)
+        if let hitPitchScore = pitchScores.first(where: { $0.pitchItem.beginTime == hitedInfo.beginTime }) {
+            hitPitchScore.addScore(score: score)
         }
         else {
-            Log.error(error: "ignore score \(score) progress: \(progress), beginTime: \(hitedInfo.beginTime), endTime: \(hitedInfo.endTime) \(toneScores.map({ "\($0.tone.beginTime)-" }).reduce("", +))", tag: logTag)
+            Log.error(error: "ignore score \(score) progress: \(progress), beginTime: \(hitedInfo.beginTime), endTime: \(hitedInfo.endTime) \(pitchScores.map({ "\($0.pitchItem.beginTime)-" }).reduce("", +))", tag: logTag)
         }
         
         /** 5.update HighlightInfos **/
@@ -189,44 +180,21 @@ class ScoringMachine {
                                   hitedInfo: hitedInfo,
                                   progress: progress)
         invokeScoringMachine(didUpdateCursor: y, showAnimation: showAnimation, debugInfo: debugInfo)
-    }
-    
-    private func _dragBegain() {
-        isDragging = true
-    }
-    
-    private func _dragDidEnd(position: Int) {
-        guard let index = findCurrentIndexOfLine(progress: position, lineEndTimes: lineEndTimes) else {
-            return
-        }
-        
-        let indexOfLine = index-1
-        cumulativeScore = calculatedCumulativeScore(indexOfLine: indexOfLine, lineScores: lineScores)
-        Log.debug(text: "== dragDidEnd cumulativeScore:\(cumulativeScore)", tag: "drag")
-        
-        if index >= 0, index < lineEndTimes.count, let data = lyricData {
-            toneScores = data.lines[index].tones.map({ ToneScoreModel(tone: $0, score: 0) })
-            for offset in index..<lineEndTimes.count {
-                lineScores[offset] = 0
-            }
-        }
-        
-        progress = position
-        currentHighlightInfos = []
-        isDragging = false
+        cumulativeScore = Int(pitchScores.map({ $0.score }).reduce(0, +))
+        invokeScoringMachine(didFinishToneWith: pitchScores, cumulativeScore: cumulativeScore)
     }
     
     private func _reset() {
         cumulativeScore = 0
         lyricData = nil
+        pitchData = nil
         currentVisiableInfos = []
         currentHighlightInfos = []
         dataList = []
         lineEndTimes = []
         cumulativeScore = 0
         currentIndexOfLine = 0
-        lineScores = []
-        toneScores = []
+        pitchScores = []
         progress = 0
         minPitch = 0
         maxPitch = 0
@@ -247,37 +215,5 @@ class ScoringMachine {
         currentVisiableInfos = visiableInfos
         currentHighlightInfos = highlightInfos
         invokeScoringMachine(didUpdateDraw: visiableDrawInfos, highlightInfos: highlightDrawInfos)
-        guard let index = findCurrentIndexOfLine(progress: progress, lineEndTimes: lineEndTimes)  else {
-            return
-        }
-        if currentIndexOfLine != index {
-            if index - currentIndexOfLine == 1 { /** 过滤拖拽导致的进度变化,只有正常进度才回调 **/
-                didLineEnd(indexOfLineEnd: currentIndexOfLine)
-            }
-            Log.debug(text: "currentIndexOfLine: \(index) from old: \(currentIndexOfLine)", tag: "drag")
-            currentIndexOfLine = index
-        }
-    }
-    
-    private func didLineEnd(indexOfLineEnd: Int) {
-        guard let data = lyricData, indexOfLineEnd <= data.lines.count else {
-            return
-        }
-        
-        let lineScore = scoreAlgorithm.getLineScore(with: toneScores)
-        lineScores[indexOfLineEnd] = lineScore
-        
-        cumulativeScore = calculatedCumulativeScore(indexOfLine: indexOfLineEnd,
-                                                    lineScores: lineScores)
-        Log.debug(text: "didLineEnd indexOfLineEnd: \(indexOfLineEnd) \(lineScore) \(lineScores) cumulativeScore:\(cumulativeScore)", tag: "drag")
-        invokeScoringMachine(didFinishLineWith: data.lines[indexOfLineEnd],
-                             score: lineScore,
-                             cumulativeScore: cumulativeScore,
-                             lineIndex: indexOfLineEnd,
-                             lineCount: data.lines.count)
-        let nextIndex = indexOfLineEnd + 1
-        if nextIndex < data.lines.count {
-            toneScores = data.lines[nextIndex].tones.map({ ToneScoreModel(tone: $0, score: 0) })
-        }
     }
 }

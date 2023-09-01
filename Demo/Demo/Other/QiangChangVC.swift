@@ -33,10 +33,21 @@ class QiangChangVC: UIViewController {
     private var timer = GCDTimer()
     var cumulativeScore = 0
     var lyricModel: LyricModel!
+    var pitchModel: PitchModel!
     var noLyric = false
     var isPause = false
     var preTime = 0
     var endTime = 0
+    let songs = [SongListVC.Song(name: "1", singer: "1", code: 6625526662555910, startTime: 0, endTime: 0),
+                 SongListVC.Song(name: "2", singer: "2", code: 6625526860841310, startTime: 0, endTime: 0),
+                 SongListVC.Song(name: "3", singer: "3", code: 6625526861458730, startTime: 0, endTime: 0),
+                 SongListVC.Song(name: "4", singer: "4", code: 6625526873986380, startTime: 0, endTime: 0),
+                 SongListVC.Song(name: "后来", singer: "刘若英", code: 6625526603247450, startTime: 0, endTime: 0),
+                 SongListVC.Song(name: "告白气球", singer: "周杰伦", code: 6625526603253110, startTime: 0, endTime: 0),
+                 SongListVC.Song(name: "追光者", singer: "岑宁儿", code: 6625526603270070, startTime: 0, endTime: 0),
+                 SongListVC.Song(name: "十年", singer: "陈奕迅", code: 6625526605291650, startTime: 0, endTime: 0),
+                 SongListVC.Song(name: "起风了", singer: "辣椒", code: 6625526603305730, startTime: 0, endTime: 0),
+                 .init(name: "简单爱", singer: "周杰伦", code: 6625526603631810, startTime: 25639, endTime: 252783)]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -269,15 +280,7 @@ class QiangChangVC: UIViewController {
             return
         case setButton:
             //            mcc.getMusicCollection(musicChartId: 1, page: 0, pageSize: 10, jsonOption: nil)
-            let songs = [SongListVC.Song(name: "1", singer: "1", code: 6625526662555910, startTime: 0, endTime: 0),
-                         SongListVC.Song(name: "2", singer: "2", code: 6625526860841310, startTime: 0, endTime: 0),
-                         SongListVC.Song(name: "3", singer: "3", code: 6625526861458730, startTime: 0, endTime: 0),
-                         SongListVC.Song(name: "4", singer: "4", code: 6625526873986380, startTime: 0, endTime: 0),
-                         SongListVC.Song(name: "后来", singer: "刘若英", code: 6625526603247450, startTime: 0, endTime: 0),
-                         SongListVC.Song(name: "告白气球", singer: "周杰伦", code: 6625526603253110, startTime: 0, endTime: 0),
-                         SongListVC.Song(name: "追光者", singer: "岑宁儿", code: 6625526603270070, startTime: 0, endTime: 0),
-                         SongListVC.Song(name: "十年", singer: "陈奕迅", code: 6625526605291650, startTime: 0, endTime: 0),
-                         SongListVC.Song(name: "起风了", singer: "辣椒", code: 6625526603305730, startTime: 0, endTime: 0)]
+            
             
             let vc = SongListVC()
             vc.songs = songs
@@ -412,41 +415,21 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
             }
         }
         
-        FileCache.fect(urlString: lyricUrl!) { progress in
-            
-        } completion: { filePath in
-            let url = URL(fileURLWithPath: filePath)
-            let data = try! Data(contentsOf: url)
-            let model = KaraokeView.parseLyricData(data: data)!
-            self.lyricModel = model
-            let lines = model.lines.map({ TimeFix.Line(beginTime: $0.beginTime, duration: $0.duration) })
-            if let result = TimeFix.handleFixTime2(startTime: self.song.startTime,
-                                                  endTime: self.song.endTime,
-                                                  lines: lines) {
+        let isCustom = song.name == "简单爱"
+        if isCustom {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
                 
-                print("=== fix time \(result.0)")
-                self.song.startTime = result.0
-                self.song.endTime = result.1
+                let songCode = songs.last!.code
+                let pitchPath = Bundle.main.path(forResource: "\(songCode)", ofType: "bin")!
+                let pitchData = try! Data(contentsOf: URL(fileURLWithPath: pitchPath))
+                pitchModel = KaraokeView.parsePitchData(data: pitchData)
+                karaokeView.setPitchData(data: pitchModel)
+                gradeView.setTitle(title: "spc \(song.name) - \(song.singer) [only pitch]")
+                mccPlay()
             }
             
-            self.lyricModel = trans(model: model, start: self.song.startTime, end: self.song.endTime)
-            if !self.noLyric {
-                let canScoring = model.hasPitch
-                if canScoring { /** xml **/
-                    self.karaokeView.setLyricData(data: model)
-                    self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-                }
-                else {/** lrc **/
-                    self.karaokeView.setLyricData(data: model)
-                }
-            }
-            else {
-                self.karaokeView.setLyricData(data: nil)
-                self.gradeView.isHidden = true
-            }
-            self.mccPlay()
-        } fail: { error in
-            print("fect fail")
+            return
         }
     }
     
@@ -529,6 +512,13 @@ extension QiangChangVC: KaraokeDelegate {
         self.cumulativeScore = cumulativeScore
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lineCount * 100)
         incentiveView.show(score: score)
+    }
+    
+    func onKaraokeView(view: KaraokeView,
+                       didFinishToneWith models: [PitchScoreModel],
+                       cumulativeScore: Int) {
+        self.cumulativeScore = cumulativeScore
+        gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: models.count * 100)
     }
 }
 

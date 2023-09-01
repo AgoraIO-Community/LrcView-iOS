@@ -72,8 +72,8 @@ public class ScoringView: UIView {
         localPitchView.reset()
     }
     
-    func setLyricData(data: LyricModel?) {
-        scoringMachine.setLyricData(data: data)
+    func setPitchData(data: PitchModel?) {
+        scoringMachine.setPitchData(data: data)
     }
     
     func setPitch(pitch: Double) {
@@ -167,6 +167,12 @@ public class ScoringView: UIView {
 
 // MARK: - ScoringMachineDelegate
 extension ScoringView: ScoringMachineDelegate {
+    func scoringMachine(_ scoringMachine: ScoringMachine, didFinishToneWith models: [PitchScoreModel], cumulativeScore: Int) {
+        delegate?.scoringView(self,
+                              didFinishToneWith: models,
+                              cumulativeScore: cumulativeScore)
+    }
+    
     func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {
         return canvasView.bounds.size
     }

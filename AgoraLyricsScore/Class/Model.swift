@@ -153,9 +153,56 @@ public class ToneScoreModel: NSObject {
     }
 }
 
+/// 字得分
+public class PitchScoreModel: NSObject {
+    @objc public let pitchItem: PitchItem
+    /// 0-100
+    @objc public var score: Float
+    var scores = [Float]()
+    
+    @objc public init(pitchItem: PitchItem,
+                      score: Float) {
+        self.pitchItem = pitchItem
+        self.score = score
+    }
+    
+    func addScore(score: Float) {
+        scores.append(score)
+        self.score = scores.reduce(0, +) / Float(scores.count)
+    }
+}
+
 @objc public enum Lang: Int {
     case zh = 1
     case en = 2
     case unknown = -1
 }
 
+@objc public class PitchModel: NSObject {
+    let version: Int
+    let timeInterval: Int
+    let reserved: Int
+    let duration: Int
+    let items: [PitchItem]
+    
+    init(version: Int, timeInterval: Int, reserved: Int, duration: Int, items: [PitchItem]) {
+        self.version = version
+        self.timeInterval = timeInterval
+        self.reserved = reserved
+        self.duration = duration
+        self.items = items
+    }
+}
+
+@objc public class PitchItem: NSObject {
+    let value: Double
+    let beginTime: Int
+    let duration: Int
+    var endTime: Int { beginTime + duration }
+    
+    init(value: Double, beginTime: Int, duration: Int) {
+        self.value = value
+        self.beginTime = beginTime
+        self.duration = duration
+    }
+}

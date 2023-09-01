@@ -31,6 +31,7 @@ public class KaraokeView: UIView {
     fileprivate var lyricsViewTopConstraint: NSLayoutConstraint!
     fileprivate var scoringViewHeightConstraint, scoringViewTopConstraint: NSLayoutConstraint!
     fileprivate var lyricData: LyricModel?
+    fileprivate var pitchData: PitchModel?
     fileprivate let progressChecker = ProgressChecker()
     fileprivate var pitchIsZeroCount = 0
     fileprivate var isStart = false
@@ -72,34 +73,29 @@ public class KaraokeView: UIView {
 
 // MARK: - Public Method
 extension KaraokeView {
-    /// 解析歌词文件xml数据
-    /// - Parameter data: xml二进制数据
-    /// - Returns: 歌词信息
-    @objc public static func parseLyricData(data: Data) -> LyricModel? {
-        let parser = Parser()
-        return parser.parseLyricData(data: data)
+    @objc public static func parseLyricData(data: Data) -> LyricModel? { fatalError() }
+    @objc public func setLyricData(data: LyricModel?) { fatalError() }
+    
+    /// 解析pitch文件
+    /// - Parameter data: pitch数据
+    /// - Returns: pitch信息
+    @objc public static func parsePitchData(data: Data) -> PitchModel? {
+        let parser = PitchParser()
+        return parser.parse(data: data)
     }
     
     /// 设置歌词数据信息
-    /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `.empty`.
-    @objc public func setLyricData(data: LyricModel?) {
-        Log.info(text: "setLyricData \(data?.name ?? "nil")", tag: logTag)
+    /// - Parameter data: 歌词信息 由 `parsePitchData(data: Data)` 生成. 如果纯音乐, 给 `.empty`.
+    @objc public func setPitchData(data: PitchModel) {
+        Log.info(text: "setPitchData \(data.duration)", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setLyricData not isMainThread ", tag: logTag)
         }
         
         /** Fix incorrect value of tableView.Height in lyricsView, after update scoringView.height/topSpace **/
         layoutIfNeeded()
-        
-        lyricData = data
-        
-        /** 无歌词状态下强制关闭 **/
-        if data == nil {
-            scoringEnabled = false
-        }
-        
-        lyricsView.setLyricData(data: data)
-        scoringView.setLyricData(data: data)
+        pitchData = data
+        scoringView.setPitchData(data: data)
         isStart = true
     }
     
@@ -114,7 +110,7 @@ extension KaraokeView {
         pitchIsZeroCount = 0
         lastProgress = 0
         progressPrintCount = 0
-        lyricsView.reset()
+//        lyricsView.reset()
         scoringView.reset()
     }
     
@@ -148,7 +144,7 @@ extension KaraokeView {
         }
         guard isStart else { return }
         logProgressIfNeed(progress: progress)
-        lyricsView.setProgress(progress: progress)
+//        lyricsView.setProgress(progress: progress)
         scoringView.progress = progress
         progressChecker.set(progress: progress)
     }
@@ -277,6 +273,10 @@ extension KaraokeView: LyricsViewDelegate {
 
 // MARK: - ProgressCheckerDelegate
 extension KaraokeView: ScoringViewDelegate {
+    func scoringView(_ view: ScoringView, didFinishToneWith models: [PitchScoreModel], cumulativeScore: Int) {
+        delegate?.onKaraokeView?(view: self, didFinishToneWith: models, cumulativeScore: cumulativeScore)
+    }
+    
     func scoringViewShouldUpdateViewLayout(view: ScoringView) {
         updateUI()
     }

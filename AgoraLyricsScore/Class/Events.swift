@@ -28,6 +28,14 @@ import Foundation
                                       cumulativeScore: Int,
                                       lineIndex: Int,
                                       lineCount: Int)
+    
+    /// 更新tone分数
+    /// - Parameters:
+    ///   - models: 所有得分的数据
+    ///   - cumulativeScore: 累计分数
+    @objc optional func onKaraokeView(view: KaraokeView,
+                                      didFinishToneWith models: [PitchScoreModel],
+                                      cumulativeScore: Int)
 }
 
 /// 分数计算协议

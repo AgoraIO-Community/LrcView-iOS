@@ -6,15 +6,14 @@ target 'Demo' do
   use_frameworks!
   source 'https://github.com/CocoaPods/Specs.git'
   
-  pod "AgoraLyricsScore", "1.1.1"
+  pod "AgoraLyricsScore", :path => "../AgoraLyricsScore.podspec", :testspecs => ['Tests']
   pod 'RTMTokenBuilder', "1.0.0"
-#  pod "AgoraRtcEngine_iOS", :path => "/Volumes/T5/PodSpec/qiangchang2/AgoraRtcEngine_iOS.podspec"
   pod 'AgoraRtcEngine_Special_iOS', '4.1.1.8'
   pod "Zip"
   pod 'ScoreEffectUI'
 end
 
 target 'DemoTests' do
-  pod "AgoraLyricsScore", "1.1.1"
+  pod "AgoraLyricsScore", :path => "../AgoraLyricsScore.podspec", :testspecs => ['Tests']
 end
 

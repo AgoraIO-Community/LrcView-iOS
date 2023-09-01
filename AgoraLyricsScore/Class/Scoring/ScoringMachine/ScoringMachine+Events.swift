@@ -28,6 +28,11 @@ protocol ScoringMachineDelegate: NSObjectProtocol {
                         cumulativeScore: Int,
                         lineIndex: Int,
                         lineCount: Int)
+    
+    /// 更新句子分数2
+    func scoringMachine(_ scoringMachine: ScoringMachine,
+                        didFinishToneWith models: [PitchScoreModel],
+                        cumulativeScore: Int)
 }
 
 extension ScoringMachine { /** invoke **/
@@ -91,6 +96,18 @@ extension ScoringMachine { /** invoke **/
                                           cumulativeScore: cumulativeScore,
                                           lineIndex: lineIndex,
                                           lineCount: lineCount)
+        }
+    }
+    
+    func invokeScoringMachine(didFinishToneWith models: [PitchScoreModel], cumulativeScore: Int) {
+        if Thread.isMainThread {
+            delegate?.scoringMachine(self, didFinishToneWith: models, cumulativeScore: cumulativeScore)
+            return
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.scoringMachine(self, didFinishToneWith: models, cumulativeScore: cumulativeScore)
         }
     }
 }
