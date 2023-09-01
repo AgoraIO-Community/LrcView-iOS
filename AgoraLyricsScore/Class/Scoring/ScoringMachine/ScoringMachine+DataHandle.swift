@@ -45,7 +45,7 @@ extension ScoringMachine {
         return (lineEndTimes, array)
     }
     
-    static func createData(data: PitchModel, shouldFixTime: Bool = true) -> [Info] {
+    static func createData(data: PitchModel) -> [Info] {
         var array = [Info]()
         for item in data.items {
             let info = Info(beginTime: item.beginTime,

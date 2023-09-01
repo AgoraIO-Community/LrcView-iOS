@@ -42,6 +42,8 @@ class ScoringMachine {
     
     // MARK: - Internal
     
+    func setLyricData(data: LyricModel) {}
+    
     func setPitchData(data: PitchModel?) {
         guard let pitchData = data else { return }
         guard let size = delegate?.sizeOfCanvasView(self) else { fatalError("sizeOfCanvasView has not been implemented") }

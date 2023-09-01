@@ -122,4 +122,8 @@ class TestEstimateScore: XCTestCase, ScoringMachineDelegate {
             print("---------\(fileName)  end ----------\n")
         }
     }
+    
+    func scoringMachine(_ scoringMachine: ScoringMachine, didFinishToneWith models: [PitchScoreModel], cumulativeScore: Int) {
+        
+    }
 }

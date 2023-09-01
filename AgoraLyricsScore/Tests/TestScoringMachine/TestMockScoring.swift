@@ -22,22 +22,20 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
     let exp = XCTestExpectation(description: "test score")
     
     func testAll() { /** test score **/
-        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "6625526603631810", ofType: "bin")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parsePitchData(data: data) else {
             XCTFail()
             return
         }
         
         vm.delegate = self
-        vm.setLyricData(data: model)
+        vm.setPitchData(data: model)
         for index in 0...5 {
-            let line = model.lines[index]
-            for tone in line.tones {
-                let time = tone.beginTime + tone.duration/2
-                vm.setProgress(progress: time)
-                vm.setPitch(pitch: tone.pitch - 1)
-            }
+            let item = model.items[index]
+            let time = item.beginTime + item.duration/2
+            vm.setProgress(progress: time)
+            vm.setPitch(pitch: item.value - 1)
         }
         wait(for: [exp], timeout: 3)
     }
@@ -60,9 +58,13 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
                         cumulativeScore: Int,
                         lineIndex: Int,
                         lineCount: Int) {
+        
+    }
+    
+    func scoringMachine(_ scoringMachine: ScoringMachine, didFinishToneWith models: [PitchScoreModel], cumulativeScore: Int) {
         self.cumulativeScore = cumulativeScore
-        print("didFinishLineWith score: \(cumulativeScore)")
-        if cumulativeScore == 499 {
+        print("didFinishToneWith models: \(cumulativeScore)")
+        if cumulativeScore == 598 {
             exp.fulfill()
         }
     }

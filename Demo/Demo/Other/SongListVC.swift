@@ -63,6 +63,7 @@ extension SongListVC {
         var startTime: Int
         var endTime: Int
         let isXML = true
+        var exten: String? = nil
     }
 }
 

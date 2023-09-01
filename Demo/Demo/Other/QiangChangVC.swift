@@ -38,16 +38,16 @@ class QiangChangVC: UIViewController {
     var isPause = false
     var preTime = 0
     var endTime = 0
-    let songs = [SongListVC.Song(name: "1", singer: "1", code: 6625526662555910, startTime: 0, endTime: 0),
-                 SongListVC.Song(name: "2", singer: "2", code: 6625526860841310, startTime: 0, endTime: 0),
-                 SongListVC.Song(name: "3", singer: "3", code: 6625526861458730, startTime: 0, endTime: 0),
-                 SongListVC.Song(name: "4", singer: "4", code: 6625526873986380, startTime: 0, endTime: 0),
-                 SongListVC.Song(name: "后来", singer: "刘若英", code: 6625526603247450, startTime: 0, endTime: 0),
-                 SongListVC.Song(name: "告白气球", singer: "周杰伦", code: 6625526603253110, startTime: 0, endTime: 0),
-                 SongListVC.Song(name: "追光者", singer: "岑宁儿", code: 6625526603270070, startTime: 0, endTime: 0),
-                 SongListVC.Song(name: "十年", singer: "陈奕迅", code: 6625526605291650, startTime: 0, endTime: 0),
-                 SongListVC.Song(name: "起风了", singer: "辣椒", code: 6625526603305730, startTime: 0, endTime: 0),
-                 .init(name: "简单爱", singer: "周杰伦", code: 6625526603631810, startTime: 25639, endTime: 252783)]
+    let songs: [SongListVC.Song] = [
+        .init(name: "后来", singer: "刘若英", code: 0, startTime: 0, endTime: 341000, exten: "mp3"),
+        .init(name: "十年", singer: "陈奕迅", code: 0, startTime: 0, endTime: 204000, exten: "mp3"),
+        .init(name: "简单爱", singer: "周杰伦", code: 6625526603631810, startTime: 25639, endTime: 252783),
+        .init(name: "1_108852_h0_(Vocals)", singer: "--", code: 0, startTime: 0, endTime: 32400, exten: "wav"),
+        .init(name: "1_100949_h0_(Vocals)", singer: "--", code: 0, startTime: 0, endTime: 39000, exten: "wav"),
+        .init(name: "1_119583_h0_(Vocals)", singer: "--", code: 0, startTime: 0, endTime: 29000, exten: "wav"),
+        .init(name: "1_104085_h0_(Vocals)", singer: "--", code: 0, startTime: 0, endTime: 24000, exten: "wav"),
+        .init(name: "1_119764_h0_(Vocals)", singer: "--", code: 0, startTime: 0, endTime: 28000, exten: "wav")
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -191,8 +191,8 @@ class QiangChangVC: UIViewController {
     }
     
     func mccPreload() {
-        let songcode = mcc.getInternalSongCode(songCode: song.code, jsonOption: "{\"format\":{\"highPart\":0}}")
-        song.code = songcode
+//        let songcode = mcc.getInternalSongCode(songCode: song.code, jsonOption: "{\"format\":{\"highPart\":0}}")
+//        song.code = songcode
         let ret = mcc.preload(songCode: song.code)
         if ret.isEmpty {
             print("preload error \(ret)")
@@ -273,10 +273,8 @@ class QiangChangVC: UIViewController {
     @objc func buttonTap(_ sender: UIButton) {
         switch sender {
         case skipButton:
-            if let data = lyricModel {
-                let toPosition = max(data.preludeEndPosition - 2000, 0)
-                mpk.seek(toPosition: toPosition)
-            }
+            let toPosition = 25 * 1000
+            mpk.seek(toPosition: toPosition)
             return
         case setButton:
             //            mcc.getMusicCollection(musicChartId: 1, page: 0, pageSize: 10, jsonOption: nil)
@@ -415,22 +413,7 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
             }
         }
         
-        let isCustom = song.name == "简单爱"
-        if isCustom {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                
-                let songCode = songs.last!.code
-                let pitchPath = Bundle.main.path(forResource: "\(songCode)", ofType: "bin")!
-                let pitchData = try! Data(contentsOf: URL(fileURLWithPath: pitchPath))
-                pitchModel = KaraokeView.parsePitchData(data: pitchData)
-                karaokeView.setPitchData(data: pitchModel)
-                gradeView.setTitle(title: "spc \(song.name) - \(song.singer) [only pitch]")
-                mccPlay()
-            }
-            
-            return
-        }
+        
     }
     
     func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
@@ -459,7 +442,26 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
         print("== onPreLoadEvent \(status.rawValue) msg: \(errorCode)")
         if status == .OK { /** preload 成功 **/
             print("== preload ok")
-            mccOpen()
+            let isCustom = song.name == "简单爱"
+            if isCustom {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    
+                    let songCode = song.code
+                    let pitchPath = Bundle.main.path(forResource: "\(songCode)", ofType: "bin")!
+                    let pitchData = try! Data(contentsOf: URL(fileURLWithPath: pitchPath))
+                    let lyricPath = Bundle.main.path(forResource: "\(songCode)", ofType: "xml")!
+                    let lyricData = try! Data(contentsOf: URL(fileURLWithPath: lyricPath))
+                    pitchModel = KaraokeView.parsePitchData(data: pitchData)
+                    let lyricModel = KaraokeView.parseLyricData(data: lyricData)
+                    karaokeView.setPitchData(data: pitchModel)
+                    karaokeView.setLyricData(data: lyricModel)
+                    gradeView.setTitle(title: "spc \(song.name) - \(song.singer) [only pitch]")
+                    mccOpen()
+                }
+                
+                return
+            }
         }
         
         if status == .error {
@@ -486,7 +488,7 @@ extension QiangChangVC: AgoraRtcMediaPlayerDelegate {
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
         if state == .openCompleted {
             print("=== openCompleted")
-            mccGetSongSimpleInfo()
+            mccPlay()
         }
     }
     
@@ -553,7 +555,29 @@ extension QiangChangVC: SongListVCDelegate {
         self.karaokeView.scoringView.topSpaces = 80
         self.karaokeView.scoringEnabled = true
         
-        mccPreload()
+        if song.code != 0 {
+            mccPreload()
+        }
+        else {
+            
+            let pitchPath = Bundle.main.path(forResource: song.name, ofType: "pitch")!
+            let pitchData = try! Data(contentsOf: URL(fileURLWithPath: pitchPath))
+            pitchModel = KaraokeView.parsePitchData(data: pitchData)
+            karaokeView.setPitchData(data: pitchModel)
+            gradeView.setTitle(title: "spc \(song.name) - \(song.singer) [only pitch]")
+            
+            if let lyricPath = Bundle.main.path(forResource: song.name, ofType: "xml") {
+                let lyricData = try! Data(contentsOf: URL(fileURLWithPath: lyricPath))
+                let lyricModel = KaraokeView.parseLyricData(data: lyricData)
+                karaokeView.setLyricData(data: lyricModel)
+            }
+            
+            let musicPath = Bundle.main.path(forResource: song.name, ofType: song.exten)!
+            let ret = mpk.open(musicPath, startPos: 0)
+            if ret != 0 {
+                print("=== error: \(ret)")
+            }
+        }
         
         print("songListVCDidSelectedSong \(song.code) \(preTime)")
     }

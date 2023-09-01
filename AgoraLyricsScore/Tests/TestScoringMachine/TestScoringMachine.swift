@@ -111,33 +111,33 @@ class TestScoringVM: XCTestCase {
     }
     
     func testHit() {
-        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "6625526603631810", ofType: "bin")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parsePitchData(data: data) else {
             XCTFail()
             return
         }
         let vm = ScoringMachine()
-        let (_, infos) = ScoringMachine.createData(data: model)
+        let infos = ScoringMachine.createData(data: model)
         XCTAssertNil(vm.getHitedInfo(progress: 0, currentVisiableInfos: infos))
-        XCTAssertNil(vm.getHitedInfo(progress: 28813, currentVisiableInfos: infos))
-        XCTAssertEqual(vm.getHitedInfo(progress: 28814, currentVisiableInfos: infos)!.pitch, 172)
-        XCTAssertEqual(vm.getHitedInfo(progress: 29675, currentVisiableInfos: infos)!.pitch, 172)
-        XCTAssertEqual(vm.getHitedInfo(progress: 185160, currentVisiableInfos: infos)!.pitch, 130)
-        XCTAssertEqual(vm.getHitedInfo(progress: 185161, currentVisiableInfos: infos)!.pitch, 213)
+        XCTAssertNil(vm.getHitedInfo(progress: 25710-1, currentVisiableInfos: infos))
+        XCTAssertEqual(vm.getHitedInfo(progress: 28400, currentVisiableInfos: infos)!.pitch, 233.09821233699995)
+        XCTAssertEqual(vm.getHitedInfo(progress: 29675, currentVisiableInfos: infos)!.pitch, 259.0206784611228)
+        XCTAssertEqual(vm.getHitedInfo(progress: 185160, currentVisiableInfos: infos)!.pitch, 289.3004314114804)
+        XCTAssertEqual(vm.getHitedInfo(progress: 185161, currentVisiableInfos: infos)!.pitch, 289.3004314114804)
     }
     
     func testPerformanceExample() throws {
-        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "6625526603631810", ofType: "bin")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parsePitchData(data: data) else {
             XCTFail()
             return
         }
         let vm = ScoringMachine()
-        let (_, infos) = ScoringMachine.createData(data: model)
+        let infos = ScoringMachine.createData(data: model)
         self.measure {
-            let _ = vm.getHitedInfo(progress: 242000, currentVisiableInfos: infos)
+            let _ = vm.getHitedInfo(progress: 28400, currentVisiableInfos: infos)
         }
     }
 }

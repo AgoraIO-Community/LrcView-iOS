@@ -73,8 +73,22 @@ public class KaraokeView: UIView {
 
 // MARK: - Public Method
 extension KaraokeView {
-    @objc public static func parseLyricData(data: Data) -> LyricModel? { fatalError() }
-    @objc public func setLyricData(data: LyricModel?) { fatalError() }
+    @objc public static func parseLyricData(data: Data) -> LyricModel? {
+        let parser = Parser()
+        return parser.parseLyricData(data: data)
+    }
+    
+    @objc public func setLyricData(data: LyricModel?) {
+        Log.info(text: "setPitchData \(data?.name ?? "nil")", tag: logTag)
+        if !Thread.isMainThread {
+            Log.error(error: "invoke setLyricData not isMainThread ", tag: logTag)
+        }
+        
+        /** Fix incorrect value of tableView.Height in lyricsView, after update scoringView.height/topSpace **/
+        layoutIfNeeded()
+        
+        lyricsView.setLyricData(data: data)
+    }
     
     /// 解析pitch文件
     /// - Parameter data: pitch数据
@@ -110,7 +124,7 @@ extension KaraokeView {
         pitchIsZeroCount = 0
         lastProgress = 0
         progressPrintCount = 0
-//        lyricsView.reset()
+        lyricsView.reset()
         scoringView.reset()
     }
     
@@ -144,7 +158,7 @@ extension KaraokeView {
         }
         guard isStart else { return }
         logProgressIfNeed(progress: progress)
-//        lyricsView.setProgress(progress: progress)
+        lyricsView.setProgress(progress: progress)
         scoringView.progress = progress
         progressChecker.set(progress: progress)
     }
