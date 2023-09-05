@@ -180,10 +180,10 @@ public class PitchScoreModel: NSObject {
 
 @objc public class PitchModel: NSObject {
     let version: Int
-    let timeInterval: Int
+    public let timeInterval: Int
     let reserved: Int
     let duration: Int
-    let items: [PitchItem]
+    public let items: [PitchItem]
     
     init(version: Int, timeInterval: Int, reserved: Int, duration: Int, items: [PitchItem]) {
         self.version = version
@@ -195,7 +195,7 @@ public class PitchScoreModel: NSObject {
 }
 
 @objc public class PitchItem: NSObject {
-    let value: Double
+    public let value: Double
     let beginTime: Int
     let duration: Int
     var endTime: Int { beginTime + duration }

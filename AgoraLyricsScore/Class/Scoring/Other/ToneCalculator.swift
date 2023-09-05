@@ -7,9 +7,9 @@
 
 import Foundation
 
-class ToneCalculator {
+public class ToneCalculator {
     /// 计算tone分数
-    static func calculedScore(voicePitch: Double,
+    public static func calculedScore(voicePitch: Double,
                               stdPitch: Double,
                               scoreLevel: Int,
                               scoreCompensationOffset: Int) -> Float {

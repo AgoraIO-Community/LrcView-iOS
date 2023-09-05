@@ -212,6 +212,10 @@ extension KaraokeView {
         }
         scoringView.scoreCompensationOffset = offset
     }
+    
+    public static func log(text: String) {
+        Log.debug(text: "[pitchFile] \(text)")
+    }
 }
 
 // MARK: - UI

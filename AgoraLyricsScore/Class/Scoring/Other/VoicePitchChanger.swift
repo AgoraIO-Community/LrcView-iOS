@@ -7,11 +7,15 @@
 
 import Foundation
 
-class VoicePitchChanger {
+public class VoicePitchChanger {
     /// 累计的偏移值
-    var offset: Double = 0.0
+    public var offset: Double = 0.0
     /// 记录调用次数
-    var n: Double = 0
+    public var n: Double = 0
+    
+    public init() {
+        
+    }
     
     /// 处理Pitch
     /// - Parameters:
@@ -19,11 +23,20 @@ class VoicePitchChanger {
     ///   - voicePitch: 实际值 来自rtc回调
     ///   - stdMaxPitch: 最大值 来自标准值
     /// - Returns: 处理后的值
-    func handlePitch(stdPitch: Double,
-                     voicePitch: Double,
-                     stdMaxPitch: Double) -> Double {
+    public func handlePitch(stdPitch: Double,
+                            voicePitch: Double,
+                            stdMaxPitch: Double,
+                            newOffset: Double? = nil,
+                            newN: Double? = nil) -> Double {
         if voicePitch <= 0 {
             return 0
+        }
+        
+        if newOffset != nil {
+            offset = newOffset!
+        }
+        if newN != nil {
+            n = newN!
         }
         
         n += 1.0
@@ -58,7 +71,7 @@ class VoicePitchChanger {
         }
     }
     
-    func reset() {
+    public func reset() {
         offset = 0.0
         n = 0.0
     }

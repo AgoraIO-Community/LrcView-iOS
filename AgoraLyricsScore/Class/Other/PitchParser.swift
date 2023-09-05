@@ -34,42 +34,49 @@ class PitchParser {
         let duration = values.count * Int(timeInterval)
         let items = values.enumerated().map({ PitchItem(value: $0.1, beginTime: $0.0 * Int(timeInterval), duration: Int(timeInterval)) })
         
-        let maxMergeCount = 10
-        var result = [PitchItem]()
-        var notZeroItems = [PitchItem]()
-        for item in items {
-            if item.value <= 0 {
-                if notZeroItems.count > 0 {
-                    let newItem = merge(items: notZeroItems)
-                    result.append(newItem)
-                    notZeroItems.removeAll()
-                }
-                
-                result.append(item)
-            }
-            else {
-                notZeroItems.append(item)
-                if notZeroItems.count >= maxMergeCount {
-                    let newItem = merge(items: notZeroItems)
-                    result.append(newItem)
-                    notZeroItems.removeAll()
-                }
-            }
-        }
-        
-        if notZeroItems.count > 0 {
-            let newItem = merge(items: notZeroItems)
-            result.append(newItem)
-            notZeroItems.removeAll()
-        }
-        
-        result = result.filter({ $0.value > 0 })
         let model = PitchModel(version: Int(version),
                                timeInterval: Int(timeInterval),
                                reserved: Int(reserved),
                                duration: duration,
-                               items: result)
+                               items: items)
         return model
+        
+//        let maxMergeCount = 10
+//        var result = [PitchItem]()
+//        var notZeroItems = [PitchItem]()
+//        for item in items {
+//            if item.value <= 0 {
+//                if notZeroItems.count > 0 {
+//                    let newItem = merge(items: notZeroItems)
+//                    result.append(newItem)
+//                    notZeroItems.removeAll()
+//                }
+//
+//                result.append(item)
+//            }
+//            else {
+//                notZeroItems.append(item)
+//                if notZeroItems.count >= maxMergeCount {
+//                    let newItem = merge(items: notZeroItems)
+//                    result.append(newItem)
+//                    notZeroItems.removeAll()
+//                }
+//            }
+//        }
+//
+//        if notZeroItems.count > 0 {
+//            let newItem = merge(items: notZeroItems)
+//            result.append(newItem)
+//            notZeroItems.removeAll()
+//        }
+//
+//        result = result.filter({ $0.value > 0 })
+//        let model = PitchModel(version: Int(version),
+//                               timeInterval: Int(timeInterval),
+//                               reserved: Int(reserved),
+//                               duration: duration,
+//                               items: result)
+//        return model
     }
     
     /// 计算音高平均值

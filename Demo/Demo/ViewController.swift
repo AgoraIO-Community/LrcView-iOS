@@ -8,6 +8,15 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    struct Section {
+        let title: String
+        let rows: [Row]
+    }
+    
+    struct Row {
+        let title: String
+    }
 
     let tableview = UITableView(frame: .zero, style: .grouped)
     var list = [Section]()
@@ -37,7 +46,7 @@ class ViewController: UIViewController {
     }
 
     func createData() {
-        list = [Section(title: "体验", rows: [.init(title: "抢唱")])]
+        list = [Section(title: "打分体验", rows: [.init(title: "抢唱"), .init(title: "测试")])]
     }
 }
 
@@ -64,7 +73,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vc = QiangChangScoringVC()
-        navigationController?.pushViewController(vc, animated: true)
+        
+        if indexPath.row == 0 {
+            let vc = QiangChangScoringVC()
+            navigationController?.pushViewController(vc, animated: true)
+        }
+        else {
+            let vc = TestVC()
+            navigationController?.pushViewController(vc, animated: true)
+        }
+        
     }
 }
