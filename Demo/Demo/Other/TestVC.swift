@@ -78,18 +78,20 @@ class TestVC: UIViewController {
         // finaleScore:32.736267%
         // 总体：得分比较多，但是分不高。可能是跟音调补偿、agora_kge_score_finddelay、时间对不准有关
         let userPitchsName = "x.txt"
-        if let scoreRadio = calculatedScore(refPitchsName: "反方向的钟-原唱干声.pitch", userPitchsName: userPitchsName) {
-            print("[\(userPitchsName)] 得分比：\(scoreRadio)")
-        }
-        else {
-            print("[\(userPitchsName)] 得分比：-1")
+        for inter in 8...32 {
+            if let scoreRadio = calculatedScore(refPitchsName: "反方向的钟-原唱干声.pitch", userPitchsName: userPitchsName, userPitchInterval: Float(inter)) {
+                print("[\(userPitchsName)] [inter = \(inter)]得分比：\(scoreRadio)")
+            }
+            else {
+                print("[\(userPitchsName)] [inter = \(inter)]得分比：-1")
+            }
         }
     }
     
     func calculatedScore(refPitchsName: String,
                          userPitchsName: String,
                          refPitchInterval: Float = 10,
-                         userPitchInterval: Float = 16) -> Float? {
+                         userPitchInterval: Float = 32) -> Float? {
         let refPitchUrl = URL(fileURLWithPath: Bundle.main.path(forResource: refPitchsName, ofType: nil)!)
         let refPitchData = try! Data(contentsOf: refPitchUrl)
         let refModel = KaraokeView.parsePitchData(data: refPitchData)!

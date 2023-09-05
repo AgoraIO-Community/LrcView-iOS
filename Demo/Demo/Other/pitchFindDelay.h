@@ -39,6 +39,10 @@ typedef struct {
     size_t refPitchFirstIdx;   // the first index of refPitch array to be used for score calculation
     size_t userPitchFirstIdx;   // the first index of userPitch array to be used for score calculation
     // which means: refPitch[refPitchFirstIdx] and userPitch[userPitchFirstIdx] are aligned
+    int refPicthLeft;
+    int refPicthRight;
+    int userPicthLeft;
+    int userPicthRight;
 }KgeScoreFinddelayResult_t;
 
 #ifdef __cplusplus

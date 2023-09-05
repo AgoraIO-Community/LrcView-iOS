@@ -16,7 +16,11 @@ class ScoreClaculator {
                           userPitchs: [Float]) -> Float? {
         var result = KgeScoreFinddelayResult_t(usableFlag: 0,
                                                refPitchFirstIdx: 0,
-                                               userPitchFirstIdx: 0)
+                                               userPitchFirstIdx: 0,
+                                               refPicthLeft: 0,
+                                               refPicthRight: 0,
+                                               userPicthLeft: 0,
+                                               userPicthRight: 0)
 
         let ret = find(config: config,
                        refPitchs: refPitchs,
@@ -29,11 +33,12 @@ class ScoreClaculator {
         KaraokeView.log(text: "usableFlag: \(result.usableFlag)")
 
         if result.usableFlag == 1, result.refPitchFirstIdx >= 0, result.userPitchFirstIdx >= 0 {
-            let refPitchFirstIdx = result.refPitchFirstIdx
-            let userPitchFirstIdx = result.userPitchFirstIdx
-            KaraokeView.log(text: "refPitchFirstIdx:\(refPitchFirstIdx) userPitchFirstIdx:\(userPitchFirstIdx)")
-            let refPitchsNew = Array(refPitchs[refPitchFirstIdx..<refPitchs.count])
-            let userPitchsNew = Array(userPitchs[userPitchFirstIdx..<userPitchs.count])
+            let refPicthLeft = Int(result.refPicthLeft)
+            let refPicthRight = Int(result.refPicthRight)
+            let userPicthLeft = Int(result.userPicthLeft)
+            let userPicthRight = Int(result.userPicthRight)
+            let refPitchsNew = Array(refPitchs[refPicthLeft...refPicthRight])
+            let userPitchsNew = Array(userPitchs[userPicthLeft...userPicthRight])
 
             let (_, maxValue) = makeMinMaxPitch(pitchs: refPitchsNew)
             KaraokeView.log(text: "refPitchsNew:\(refPitchsNew.count) userPitchsNew:\(userPitchsNew.count) maxValue:\(maxValue)")
@@ -58,11 +63,23 @@ class ScoreClaculator {
             }
             
             /// 计算得分占比
-            let radio = Int(config.userPitchInterval / config.refPitchInterval)
-            let all = (refPitchs.filter({ $0 > 0 }).count * 100) / radio
-            let scoreRatio = (cumulativeScore / Float(all)) * 100
             
-            KaraokeView.log(text: "scoreRatio:\(scoreRatio) = cumulativeScore:\(cumulativeScore) / all: \(all) all count: \(all * radio / 100) userPotchsCount = \(userPitchs.count)")
+            // 新
+            // let refTime = refPitch[L..R].filter($0 > 0).count * 10
+            // let userTime = userPitch[L..R].count * 16
+            // let userPitchShouldHasCount = refTime / 16
+            // let cumulativeScore / userPitchShouldHasCount * 100
+            
+            // 新
+            let refTime = Float(refPitchsNew.filter({$0 > 0}).count) * config.refPitchInterval
+            let userTime = Float(userPitchsNew.count) * config.userPitchInterval
+            let userPitchShouldHasCount = refTime / config.userPitchInterval
+            let all = userPitchShouldHasCount * 100
+            /// [0-100]
+
+            let scoreRatio = cumulativeScore / all * 100
+            
+            KaraokeView.log(text: "scoreRatio:\(scoreRatio) = cumulativeScore:\(cumulativeScore) / all: \(all) all count: \(userPitchShouldHasCount) ")
             
             return scoreRatio
         }
@@ -78,7 +95,6 @@ class ScoreClaculator {
                                                 refPitchs: [Float],
                                                 maxValue: Float,
                                                 voiceChanger: VoicePitchChanger) -> Float {
-        
         
         let radio = config.userPitchInterval / config.refPitchInterval
         let centerIndex = Int(Float(index) * radio)
@@ -107,7 +123,7 @@ class ScoreClaculator {
             let currentScore = ToneCalculator.calculedScore(voicePitch: valueAfterVoiceChange,
                                                             stdPitch: Double(refPitch),
                                                             scoreLevel: 10,
-                                                            scoreCompensationOffset: 30)
+                                                            scoreCompensationOffset: 0)
             if currentScore >= score {
                 offset = voiceChanger.offset
                 n = voiceChanger.n
@@ -194,5 +210,21 @@ class ScoreClaculator {
         }
     }
 }
+
+// 旧
+//1.refPitch从refPitchFirstIdx截断后剩余：3387个点，总分满分将会是：3387 * 100 = 338700
+//2.打分累计分数是：52680.285 （userPitch.count = 1445, 最多打分是1445 * 100 = 144500）
+//
+// refPitch.count > 2 * userPitch.count
+//最后得分：52680.285/ 338700 = 15.553671
+/// refPitch.filter($0 > 0).[firstIndex....].count
+
+// 新
+// let refTime = refPitch[L..R].filter($0 > 0).count * 10
+// let userTime = userPitch[L..R].count * 16
+// let userPitchShouldHasCount = refTime / 16
+// let cumulativeScore / userPitchShouldHasCount * 100
+
+
 
 

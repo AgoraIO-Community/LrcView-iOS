@@ -140,6 +140,10 @@ int agora_kge_score_finddelay(const KgeScoreFinddelayCfg_t* cfg,
         printf("Internal Debug:  Ref: [L = %d, R = %d, Len = %d]\n", refLeftEdgeIdx, refRightEdgeIdx, refEffLen);
         printf("Internal Debug:  User: [L = %d, R = %d, Len = %d]\n", userLeftEdgeIdx, userRightEdgeIdx, userEffLen);
         printf("RefPitchLen = %f, UserPitchLen = %f, Ratio = %f\n", refPitchLen, userPitchLen, (userPitchLen / (refPitchLen + 1)));
+        result->refPicthLeft = refLeftEdgeIdx;
+        result->refPicthRight = refRightEdgeIdx;
+        result->userPicthLeft = userLeftEdgeIdx;
+        result->userPicthRight = userRightEdgeIdx;
     }
 
     if (refLeftEdgeIdx == -1 || refRightEdgeIdx == -1 || refEffLen <= 0) {
