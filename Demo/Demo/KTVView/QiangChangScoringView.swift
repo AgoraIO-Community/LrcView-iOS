@@ -17,6 +17,9 @@ class QiangChangScoringView: UIView {
     private let qiangBtn = UIButton()
     private let qieBtn = UIButton()
     private let okBtn = UIButton()
+    let voiceChangeSwitch = UISwitch()
+    let scoreLevelTextField = UITextField()
+    let scoreOffsetTextField = UITextField()
     
     weak var delegate: QiangChangScoringViewDelegate?
     
@@ -45,13 +48,21 @@ class QiangChangScoringView: UIView {
         okBtn.isHidden = true
         qieBtn.setTitle("切歌", for: .normal)
         qieBtn.backgroundColor = .red
-        qieBtn.isHidden = true
+        scoreLevelTextField.placeholder = "scoreLevel [0, 100] default: 30"
+        scoreLevelTextField.borderStyle = .roundedRect
+        scoreLevelTextField.clearButtonMode = .always
+        scoreOffsetTextField.placeholder = "scoreOffset [-100, 100] default:0"
+        scoreOffsetTextField.borderStyle = .roundedRect
+        scoreOffsetTextField.clearButtonMode = .always
         
         addSubview(lyricsLabel)
         addSubview(qiangBtn)
         addSubview(okBtn)
         addSubview(qieBtn)
         addSubview(scoreLabel)
+        addSubview(voiceChangeSwitch)
+        addSubview(scoreLevelTextField)
+        addSubview(scoreOffsetTextField)
         
         lyricsLabel.translatesAutoresizingMaskIntoConstraints = false
         lyricsLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -59,6 +70,9 @@ class QiangChangScoringView: UIView {
         okBtn.translatesAutoresizingMaskIntoConstraints = false
         qieBtn.translatesAutoresizingMaskIntoConstraints = false
         scoreLabel.translatesAutoresizingMaskIntoConstraints = false
+        voiceChangeSwitch.translatesAutoresizingMaskIntoConstraints = false
+        scoreLevelTextField.translatesAutoresizingMaskIntoConstraints = false
+        scoreOffsetTextField.translatesAutoresizingMaskIntoConstraints = false
         
         lyricsLabel.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         lyricsLabel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -82,12 +96,27 @@ class QiangChangScoringView: UIView {
         qieBtn.topAnchor.constraint(equalTo: topAnchor, constant: 200).isActive = true
         qieBtn.widthAnchor.constraint(equalToConstant: 80).isActive = true
         qieBtn.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        
+        voiceChangeSwitch.topAnchor.constraint(equalTo: qieBtn.bottomAnchor).isActive = true
+        voiceChangeSwitch.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        
+        scoreLevelTextField.leftAnchor.constraint(equalTo: qieBtn.rightAnchor).isActive = true
+        scoreLevelTextField.topAnchor.constraint(equalTo: qieBtn.topAnchor).isActive = true
+        scoreLevelTextField.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
+        scoreOffsetTextField.leftAnchor.constraint(equalTo: qieBtn.rightAnchor).isActive = true
+        scoreOffsetTextField.topAnchor.constraint(equalTo: scoreLevelTextField.bottomAnchor).isActive = true
+        scoreOffsetTextField.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     }
     
     private func commonInit() {
         qiangBtn.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         okBtn.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         qieBtn.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        endEditing(true)
     }
     
     @objc func buttonTap(_ sender: UIButton) {

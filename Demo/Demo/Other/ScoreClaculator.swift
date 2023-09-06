@@ -165,11 +165,13 @@ class ScoreClaculator {
                                                                  stdMaxPitch: Double(maxValue),
                                                                  newOffset: offset,
                                                                  newN: n)
-            
-            let currentScore = ToneCalculator.calculedScore(voicePitch: valueAfterVoiceChange,
+            var voicePitch = SettingData.share.setting.useVoiceChange ? valueAfterVoiceChange : Double(value)
+            let scoreLevel = SettingData.share.setting.scoreLevel
+            let scoreOffset = SettingData.share.setting.scoreOffset
+            let currentScore = ToneCalculator.calculedScore(voicePitch: voicePitch,
                                                             stdPitch: Double(refPitch),
-                                                            scoreLevel: 10,
-                                                            scoreCompensationOffset: 0)
+                                                            scoreLevel: scoreLevel,
+                                                            scoreCompensationOffset: scoreOffset)
             if currentScore >= score {
                 offset = voiceChanger.offset
                 n = voiceChanger.n
@@ -254,6 +256,19 @@ class ScoreClaculator {
             self.userPitchLen = userPitchLen
             self.userPitchInterval = userPitchInterval
         }
+    }
+    
+}
+
+class SettingData {
+    static let share = SettingData()
+    
+    var setting = Setting()
+    
+    struct Setting {
+        var useVoiceChange: Bool = false
+        var scoreLevel: Int = 30
+        var scoreOffset: Int = 0
     }
 }
 

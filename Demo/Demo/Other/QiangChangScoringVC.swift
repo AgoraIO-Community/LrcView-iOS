@@ -39,6 +39,16 @@ class QiangChangScoringVC: UIViewController {
         handleQie()
     }
     
+    override func didMove(toParent parent: UIViewController?) {
+        if parent == nil {
+            rtcManager.destory()
+        }
+    }
+    
+    deinit {
+        KaraokeView.log(text: "QiangChangScoringVC deinit")
+    }
+    
     private func setupUI() {
         view.addSubview(qiangChangScoringView)
         qiangChangScoringView.frame = view.bounds
@@ -50,8 +60,16 @@ class QiangChangScoringVC: UIViewController {
     }
     
     fileprivate func handleQiang() {
+        let useVoiceChange = qiangChangScoringView.voiceChangeSwitch.isOn
+        let scoreLevel = Int(qiangChangScoringView.scoreLevelTextField.text ?? "30") ?? 30
+        let scoreOffset = Int(qiangChangScoringView.scoreOffsetTextField.text ?? "0") ?? 0
+        SettingData.share.setting.scoreLevel = scoreLevel
+        SettingData.share.setting.scoreOffset = scoreOffset
+        SettingData.share.setting.useVoiceChange = useVoiceChange
+        
         isQiang = true
         rtcManager.stop()
+        rtcManager.enableMic(enable: true)
         timer.scheduledMillisecondsTimer(withName: "QiangChangScoringVC",
                                          countDown: 1000000,
                                          milliseconds: 1000,
@@ -73,7 +91,7 @@ class QiangChangScoringVC: UIViewController {
     
     fileprivate func handleOk() {
         isQiang = false
-        
+        rtcManager.enableMic(enable: false)
         if currentPitchs.count >= 40 {
             let userPitchs = currentPitchs
              
@@ -83,6 +101,7 @@ class QiangChangScoringVC: UIViewController {
             }
             KaraokeView.log(text:"============")
             calculatedScore(userPitchs: userPitchs)
+            currentPitchs = [Float]()
         }
     }
     
@@ -90,7 +109,10 @@ class QiangChangScoringVC: UIViewController {
         song = songs[currentIndex]
         title = song.refPitchName
         qiangChangScoringView.setLiric(text: song.lyrics)
+        qiangChangScoringView.setScore(score: 0)
         rtcManager.stop()
+        isQiang = false
+        rtcManager.enableMic(enable: false)
         currentPitchs = [Float]()
         let path = Bundle.main.path(forResource: song.refSongName, ofType: nil)!
         rtcManager.open(url: path)
@@ -167,10 +189,10 @@ extension QiangChangScoringVC: RTCManagerDelegate {
             return
         }
         
-        let current = CFAbsoluteTimeGetCurrent()
-        let gap = current - time
-        time = current
-        print("gap \(gap * 1000) pitch:\(pitch)")
+//        let current = CFAbsoluteTimeGetCurrent()
+//        let gap = current - time
+//        time = current
+//        print("gap \(gap * 1000) pitch:\(pitch)")
         
         let count = 20 * 2
         currentPitchs.append(Float(pitch))

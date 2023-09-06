@@ -49,11 +49,16 @@ class RTCManager: NSObject {
         mpk = mcc.createMusicPlayer(delegate: self)
     }
     
+    deinit {
+        print("RTCManager deinit")
+    }
+    
     func joinChannel() {
         agoraKit.enableAudioVolumeIndication(50, smooth: 3, reportVad: true)
         let option = AgoraRtcChannelMediaOptions()
         option.clientRoleType = .broadcaster
         agoraKit.enableAudio()
+        agoraKit.enableLocalAudio(false)
         agoraKit.setClientRole(.broadcaster)
         let ret = agoraKit.joinChannel(byToken: nil,
                                        channelId: Config.channelId,
@@ -62,17 +67,10 @@ class RTCManager: NSObject {
         print("joinChannel ret \(ret)")
     }
     
-    func getPosition() -> Int {
-        if openCompleted {
-            return mpk.getPosition()
-        }
-        return 0
-    }
-    
     func destory() {
         agoraKit.leaveChannel()
         agoraKit.disableAudio()
-        mpk.stop()
+        stop()
         mcc.register(nil)
         agoraKit.destroyMediaPlayer(mpk)
         AgoraMusicContentCenter.destroy()
@@ -107,6 +105,10 @@ class RTCManager: NSObject {
                 print("stop err \(ret)")
             }
         }
+    }
+    
+    public func enableMic(enable: Bool) {
+        agoraKit.enableLocalAudio(enable)
     }
 }
 
