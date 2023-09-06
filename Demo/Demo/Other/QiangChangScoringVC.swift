@@ -22,17 +22,13 @@ class QiangChangScoringVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        songs = [Song(refSongName: "反方向的钟-原唱干声.wav",
-                      refPitchName: "反方向的钟-原唱干声.pitch",
-                      lyrics: "穿梭时间的画面的钟\n从反方向 开始移动\n回到当初爱你的时空\n停格内容 不忠\n所有回忆对着我进攻\n我的伤口 被你拆封\n誓言太沉重泪被纵容\n脸上汹涌 失控"),
-//                 Song(refSongName: "反方向的钟-原唱干声.wav",
-//                      refPitchName: "反方向的钟-原唱干声.pitch",
-//                      lyrics: "穿梭时间的画面的钟\n从反方向 开始移动\n回到当初爱你的时空\n停格内容 不忠\n所有回忆对着我进攻\n我的伤口 被你拆封\n誓言太沉重泪被纵容\n脸上汹涌 失控"),
-//                 Song(refSongName: "桃花诺-原唱干声.wav",
-//                      refPitchName: "桃花诺-原唱干声.pitch",
-//                      lyrics: "一寸土 一年木 一花一树一贪图\n情是种 爱偏开在迷途\n忘前路 忘旧物 忘心忘你忘最初\n花斑斑 留在爱你的路"),
-//                 Song(refSongName: "桃花诺-原唱干声.wav", refPitchName: "桃花诺-原唱干声.pitch",
-//                      lyrics: "一寸土 一年木 一花一树一贪图\n情是种 爱偏开在迷途\n忘前路 忘旧物 忘心忘你忘最初\n花斑斑 留在爱你的路")
+        songs = [
+            Song(refSongName: "桃花诺-原唱干声.wav",
+                 refPitchName: "桃花诺-原唱干声.pitch",
+                 lyrics: "一寸土 一年木 一花一树一贪图\n情是种 爱偏开在迷途\n忘前路 忘旧物 忘心忘你忘最初\n花斑斑 留在爱你的路"),
+            Song(refSongName: "反方向的钟-原唱干声.wav",
+                 refPitchName: "反方向的钟-原唱干声.pitch",
+                 lyrics: "穿梭时间的画面的钟\n从反方向 开始移动\n回到当初爱你的时空\n停格内容 不忠\n所有回忆对着我进攻\n我的伤口 被你拆封\n誓言太沉重泪被纵容\n脸上汹涌 失控")
         ]
         
         setupUI()
@@ -113,18 +109,13 @@ class QiangChangScoringVC: UIViewController {
         let refModel = KaraokeView.parsePitchData(data: refPitchData)!
         let refPitchs = refModel.items.map({ Float($0.value) })
         
-        let refPitchLen = refPitchs.count
         let refPitchInterval = Float(refModel.timeInterval)
-        let userPitchLen: Int = userPitchs.count
         let userPitchInterval: Float = 50
         
-        let config = ScoreClaculator.Config(refPitchLen: refPitchLen,
-                                            refPitchInterval: refPitchInterval,
-                                            userPitchLen: userPitchLen,
-                                            userPitchInterval: userPitchInterval)
-        let scoreRatio = ScoreClaculator.calculate(config: config,
-                                              refPitchs: refPitchs,
-                                              userPitchs: userPitchs)
+        let scoreRatio = ScoreClaculator.calculateMuti(refPitchInterval: refPitchInterval,
+                                                       userPitchInterval: userPitchInterval,
+                                                       refPitchs: refPitchs,
+                                                       userPitchs: userPitchs)
         if let ratio = scoreRatio {
             KaraokeView.log(text: "ratio: \(ratio)")
             qiangChangScoringView.setScore(score: ratio)

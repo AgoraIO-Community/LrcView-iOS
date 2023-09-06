@@ -11,9 +11,59 @@ import AgoraLyricsScore
 class ScoreClaculator {
     typealias ResultType = UnsafeMutablePointer<KgeScoreFinddelayResult_t>
     
-    static func calculate(config: Config,
+    /// 计算分数，多次取最大值
+    static func calculateMuti(refPitchInterval: Float,
+                              userPitchInterval: Float,
+                              refPitchs: [Float],
+                              userPitchs: [Float]) -> Float? {
+        var maxScore: Float = 0
+        let start = max(Int(userPitchInterval) - 8, 0)
+        let end = Int(userPitchInterval) + 8
+        for inter in start...end {
+            if let score = calculate(refPitchInterval: refPitchInterval,
+                                     userPitchInterval: Float(inter),
+                                     realUserPitchInterval: userPitchInterval,
+                                     refPitchs: refPitchs,
+                                     userPitchs: userPitchs) {
+                maxScore = max(maxScore, score)
+                print("[inter = \(inter)]得分比：\(score)")
+            }
+            else {
+                print("[inter = \(inter)]得分比：-1")
+            }
+        }
+        
+        let finalScore = maxScore * maxScore / 100.0
+        return finalScore
+    }
+    
+    /// 计算分数
+    /// - Parameters:
+    ///   - refPitchInterval: 原唱pitch间隔
+    ///   - userPitchInterval: 用户pitch间隔（虚拟，用于放大缩小）
+    ///   - realUserPitchInterval: pitch文件真实pitch间隔
+    static func calculate(refPitchInterval: Float,
+                          userPitchInterval: Float,
+                          realUserPitchInterval: Float,
                           refPitchs: [Float],
                           userPitchs: [Float]) -> Float? {
+        let refPitchLen = refPitchs.count
+        let userPitchLen: Int = userPitchs.count
+        
+        let config = ScoreClaculator.Config(refPitchLen: refPitchLen,
+                                            refPitchInterval: refPitchInterval,
+                                            userPitchLen: userPitchLen,
+                                            userPitchInterval: userPitchInterval)
+        return ScoreClaculator.calculate(config: config,
+                                         refPitchs: refPitchs,
+                                         userPitchs: userPitchs,
+                                         realUserPitchInterval: realUserPitchInterval)
+    }
+    
+    static func calculate(config: Config,
+                          refPitchs: [Float],
+                          userPitchs: [Float],
+                          realUserPitchInterval: Float) -> Float? {
         var result = KgeScoreFinddelayResult_t(usableFlag: 0,
                                                refPitchFirstIdx: 0,
                                                userPitchFirstIdx: 0,
@@ -21,7 +71,7 @@ class ScoreClaculator {
                                                refPicthRight: 0,
                                                userPicthLeft: 0,
                                                userPicthRight: 0)
-
+        
         let ret = find(config: config,
                        refPitchs: refPitchs,
                        userPitchs: userPitchs,
@@ -29,9 +79,9 @@ class ScoreClaculator {
         if !ret {
             return nil
         }
-
+        
         KaraokeView.log(text: "usableFlag: \(result.usableFlag)")
-
+        
         if result.usableFlag == 1, result.refPitchFirstIdx >= 0, result.userPitchFirstIdx >= 0 {
             let refPicthLeft = Int(result.refPicthLeft)
             let refPicthRight = Int(result.refPicthRight)
@@ -39,47 +89,43 @@ class ScoreClaculator {
             let userPicthRight = Int(result.userPicthRight)
             let refPitchsNew = Array(refPitchs[refPicthLeft...refPicthRight])
             let userPitchsNew = Array(userPitchs[userPicthLeft...userPicthRight])
-
+            
             let (_, maxValue) = makeMinMaxPitch(pitchs: refPitchsNew)
             KaraokeView.log(text: "refPitchsNew:\(refPitchsNew.count) userPitchsNew:\(userPitchsNew.count) maxValue:\(maxValue)")
             var cumulativeScore: Float = 0.0
             let voiceChanger = VoicePitchChanger()
+            var hitCount = 0
+            
             for (index, value) in userPitchsNew.enumerated() {
                 if index >= refPitchsNew.count {
                     break
                 }
-
+                
                 if value <= 0 {
                     continue
                 }
-
-                let score = calculatedBestScore(index: index,
-                                                value: value,
-                                                config: config,
-                                                refPitchs: refPitchsNew,
-                                                maxValue: maxValue,
-                                                voiceChanger: voiceChanger)
+                
+                let score = calculatedBestScorePerTone(index: index,
+                                                       value: value,
+                                                       config: config,
+                                                       refPitchs: refPitchsNew,
+                                                       maxValue: maxValue,
+                                                       voiceChanger: voiceChanger)
+                if score > 0 {
+                    hitCount += 1
+                }
                 cumulativeScore += score
             }
             
-            /// 计算得分占比
+            let refTime = Float(refPitchsNew.filter({$0 > 0}).count) * 10
+            let userTime = Float(userPitchsNew.count) * realUserPitchInterval
             
-            // 新
-            // let refTime = refPitch[L..R].filter($0 > 0).count * 10
-            // let userTime = userPitch[L..R].count * 16
-            // let userPitchShouldHasCount = refTime / 16
-            // let cumulativeScore / userPitchShouldHasCount * 100
+            if userTime < refTime * 0.5 {
+                return 0.0
+            }
             
-            // 新
-            let refTime = Float(refPitchsNew.filter({$0 > 0}).count) * config.refPitchInterval
-            let userTime = Float(userPitchsNew.count) * config.userPitchInterval
-            let userPitchShouldHasCount = refTime / config.userPitchInterval
-            let all = userPitchShouldHasCount * 100
-            /// [0-100]
-
-            let scoreRatio = cumulativeScore / all * 100
-            
-            KaraokeView.log(text: "scoreRatio:\(scoreRatio) = cumulativeScore:\(cumulativeScore) / all: \(all) all count: \(userPitchShouldHasCount) ")
+            let scoreRatio = cumulativeScore / Float(hitCount)
+            KaraokeView.log(text: "scoreRatio:\(scoreRatio) = cumulativeScore:\(cumulativeScore) / hitCount: \(hitCount)")
             
             return scoreRatio
         }
@@ -89,17 +135,17 @@ class ScoreClaculator {
         return nil
     }
     
-    fileprivate static func calculatedBestScore(index: Int,
-                                                value: Float,
-                                                config: Config,
-                                                refPitchs: [Float],
-                                                maxValue: Float,
-                                                voiceChanger: VoicePitchChanger) -> Float {
-        
+    fileprivate static func calculatedBestScorePerTone(index: Int,
+                                                       value: Float,
+                                                       config: Config,
+                                                       refPitchs: [Float],
+                                                       maxValue: Float,
+                                                       voiceChanger: VoicePitchChanger) -> Float {
+        let scale: Float = 1.0
         let radio = config.userPitchInterval / config.refPitchInterval
         let centerIndex = Int(Float(index) * radio)
-        let start = max(Int(Float(centerIndex) - 2.0 * radio), 0)
-        let end = max(Int(Float(start) + 4.0 * radio), start)
+        let start = max(Int(Float(centerIndex) - scale * radio), 0)
+        let end = max(Int(Float(centerIndex) + scale * radio), start)
         
         var score: Float = 0
         var offset: Double = 0
@@ -210,21 +256,4 @@ class ScoreClaculator {
         }
     }
 }
-
-// 旧
-//1.refPitch从refPitchFirstIdx截断后剩余：3387个点，总分满分将会是：3387 * 100 = 338700
-//2.打分累计分数是：52680.285 （userPitch.count = 1445, 最多打分是1445 * 100 = 144500）
-//
-// refPitch.count > 2 * userPitch.count
-//最后得分：52680.285/ 338700 = 15.553671
-/// refPitch.filter($0 > 0).[firstIndex....].count
-
-// 新
-// let refTime = refPitch[L..R].filter($0 > 0).count * 10
-// let userTime = userPitch[L..R].count * 16
-// let userPitchShouldHasCount = refTime / 16
-// let cumulativeScore / userPitchShouldHasCount * 100
-
-
-
 
