@@ -120,7 +120,7 @@ class ScoreClaculator {
             let refTime = Float(refPitchsNew.filter({$0 > 0}).count) * 10
             let userTime = Float(userPitchsNew.count) * realUserPitchInterval
             
-            if userTime < refTime * 0.5 {
+            if userTime < refTime * 0.25 {
                 return 0.0
             }
             
@@ -165,7 +165,7 @@ class ScoreClaculator {
                                                                  stdMaxPitch: Double(maxValue),
                                                                  newOffset: offset,
                                                                  newN: n)
-            var voicePitch = SettingData.share.setting.useVoiceChange ? valueAfterVoiceChange : Double(value)
+            let voicePitch = SettingData.share.setting.useVoiceChange ? valueAfterVoiceChange : Double(value)
             let scoreLevel = SettingData.share.setting.scoreLevel
             let scoreOffset = SettingData.share.setting.scoreOffset
             let currentScore = ToneCalculator.calculedScore(voicePitch: voicePitch,
