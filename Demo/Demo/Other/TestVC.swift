@@ -12,8 +12,23 @@ class TestVC: UIViewController {
     let k = KaraokeView(frame: .zero)
     override func viewDidLoad() {
         super.viewDidLoad()
-        test1()
-        test2()
+        ScoreClaculator.recognize(byfile: "query0017.wav", title: "同桌的你") { (score, error) in
+            print("\(score)")
+        }
+//        let claculator = ScoreClaculator()
+//        let timeStamp = Date().timeIntervalSince1970
+//        let sign = claculator.sign(httpMethod: "POST",
+//                                   httpUri: claculator.path,
+//                                   accessKey: claculator.accessKey,
+//                                   access_secret: claculator.access_secret,
+//                                   dataType: claculator.dataType,
+//                                   signatureVersion: claculator.signatureVersion,
+//                                   timeStamp: timeStamp)
+//        print("timeStamp = \(timeStamp)")
+//        print("sign = \(sign)")
+//        print("")
+//        test1()
+//        test2()
         //        test3()
         //        test4()
 //        test5()
@@ -85,16 +100,16 @@ class TestVC: UIViewController {
         let refPitchData = try! Data(contentsOf: refPitchUrl)
         let refModel = KaraokeView.parsePitchData(data: refPitchData)!
         let refPitchs = refModel.items.map({ Float($0.value) })
-        let finalScore = ScoreClaculator.calculateMuti(refPitchInterval: 10,
-                                      userPitchInterval: 16,
-                                      refPitchs: refPitchs,
-                                      userPitchs: userPitchsInput)
-        if let score = finalScore {
-            print("finalScore:\(score)")
-        }
-        else {
-            print("no score")
-        }
+//        let finalScore = ScoreClaculator.calculateMuti(refPitchInterval: 10,
+//                                      userPitchInterval: 16,
+//                                      refPitchs: refPitchs,
+//                                      userPitchs: userPitchsInput)
+//        if let score = finalScore {
+//            print("finalScore:\(score)")
+//        }
+//        else {
+//            print("no score")
+//        }
     }
     
     func test6() { /** 乱唱 **/
@@ -124,16 +139,16 @@ class TestVC: UIViewController {
         let refPitchData = try! Data(contentsOf: refPitchUrl)
         let refModel = KaraokeView.parsePitchData(data: refPitchData)!
         let refPitchs = refModel.items.map({ Float($0.value) })
-        let finalScore = ScoreClaculator.calculateMuti(refPitchInterval: 10,
-                                      userPitchInterval: 16,
-                                      refPitchs: refPitchs,
-                                      userPitchs: userPitchsInput)
-        if let score = finalScore {
-            print("finalScore:\(score)")
-        }
-        else {
-            print("no score")
-        }
+//        let finalScore = ScoreClaculator.calculateMuti(refPitchInterval: 10,
+//                                      userPitchInterval: 16,
+//                                      refPitchs: refPitchs,
+//                                      userPitchs: userPitchsInput)
+//        if let score = finalScore {
+//            print("finalScore:\(score)")
+//        }
+//        else {
+//            print("no score")
+//        }
     }
     
     func calculatedScore(refPitchsName: String,
@@ -150,11 +165,11 @@ class TestVC: UIViewController {
         let fileData = try! Data(contentsOf: fileUrl)
         let pitchFileString = String(data: fileData, encoding: .utf8)!
         let userPitchs = parse(pitchFileString: pitchFileString).map({ Float($0) })
-        
-        return ScoreClaculator.calculateMuti(refPitchInterval: refPitchInterval,
-                                             userPitchInterval: userPitchInterval,
-                                             refPitchs: refPitchs,
-                                             userPitchs: userPitchs)
+        return nil
+//        return ScoreClaculator.calculateMuti(refPitchInterval: refPitchInterval,
+//                                             userPitchInterval: userPitchInterval,
+//                                             refPitchs: refPitchs,
+//                                             userPitchs: userPitchs)
         
     }
     

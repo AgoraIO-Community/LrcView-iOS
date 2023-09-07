@@ -6,269 +6,278 @@
 //
 
 import Foundation
-import AgoraLyricsScore
+import CommonCrypto
 
 class ScoreClaculator {
-    typealias ResultType = UnsafeMutablePointer<KgeScoreFinddelayResult_t>
     
-    /// 计算分数，多次取最大值
-    static func calculateMuti(refPitchInterval: Float,
-                              userPitchInterval: Float,
-                              refPitchs: [Float],
-                              userPitchs: [Float]) -> Float? {
-        var maxScore: Float = 0
-        let start = max(Int(userPitchInterval) - 8, 0)
-        let end = Int(userPitchInterval) + 8
-        for inter in start...end {
-            if let score = calculate(refPitchInterval: refPitchInterval,
-                                     userPitchInterval: Float(inter),
-                                     realUserPitchInterval: userPitchInterval,
-                                     refPitchs: refPitchs,
-                                     userPitchs: userPitchs) {
-                maxScore = max(maxScore, score)
-                print("[inter = \(inter)]得分比：\(score)")
-            }
-            else {
-                print("[inter = \(inter)]得分比：-1")
-            }
-        }
+    typealias CompleteBlock = (_ score: Float?, _ error: Error?) -> ()
+    
+    static func recognize(byfile name: String, title: String, completedHandler: @escaping CompleteBlock) {
+        let url = URL(fileURLWithPath: Bundle.main.path(forResource: name, ofType: nil)!)
+        let data = try! Data(contentsOf: url)
         
-        let finalScore = maxScore * maxScore / 100.0
-        return finalScore
+        recognize(byData: data, title: title, completedHandler: completedHandler)
     }
     
-    /// 计算分数
-    /// - Parameters:
-    ///   - refPitchInterval: 原唱pitch间隔
-    ///   - userPitchInterval: 用户pitch间隔（虚拟，用于放大缩小）
-    ///   - realUserPitchInterval: pitch文件真实pitch间隔
-    static func calculate(refPitchInterval: Float,
-                          userPitchInterval: Float,
-                          realUserPitchInterval: Float,
-                          refPitchs: [Float],
-                          userPitchs: [Float]) -> Float? {
-        let refPitchLen = refPitchs.count
-        let userPitchLen: Int = userPitchs.count
+    static func recognize(byData wavData: Data,
+                          title: String,
+                          completedHandler: @escaping CompleteBlock) {
+        let host = Config.host
+        let path = "/v1/identify"
         
-        let config = ScoreClaculator.Config(refPitchLen: refPitchLen,
-                                            refPitchInterval: refPitchInterval,
-                                            userPitchLen: userPitchLen,
-                                            userPitchInterval: userPitchInterval)
-        return ScoreClaculator.calculate(config: config,
-                                         refPitchs: refPitchs,
-                                         userPitchs: userPitchs,
-                                         realUserPitchInterval: realUserPitchInterval)
-    }
-    
-    static func calculate(config: Config,
-                          refPitchs: [Float],
-                          userPitchs: [Float],
-                          realUserPitchInterval: Float) -> Float? {
-        var result = KgeScoreFinddelayResult_t(usableFlag: 0,
-                                               refPitchFirstIdx: 0,
-                                               userPitchFirstIdx: 0,
-                                               refPicthLeft: 0,
-                                               refPicthRight: 0,
-                                               userPicthLeft: 0,
-                                               userPicthRight: 0)
+        let dataType = "audio"
+        let signatureVersion: UInt8 = 1
         
-        let ret = find(config: config,
-                       refPitchs: refPitchs,
-                       userPitchs: userPitchs,
-                       result: &result)
-        if !ret {
-            return nil
-        }
+        let httpMethod = "POST"
+        let timeStamp = Date().timeIntervalSince1970 * 1000
+        let sample_bytes = wavData.count
         
-        KaraokeView.log(text: "usableFlag: \(result.usableFlag)")
+        let signature = sign(httpMethod: httpMethod,
+                             httpUri: path,
+                             accessKey: Config.accessKey,
+                             access_secret: Config.access_secret,
+                             dataType: dataType,
+                             signatureVersion: signatureVersion,
+                             timeStamp: timeStamp)
         
-        if result.usableFlag == 1, result.refPitchFirstIdx >= 0, result.userPitchFirstIdx >= 0 {
-            let refPicthLeft = Int(result.refPicthLeft)
-            let refPicthRight = Int(result.refPicthRight)
-            let userPicthLeft = Int(result.userPicthLeft)
-            let userPicthRight = Int(result.userPicthRight)
-            let refPitchsNew = Array(refPitchs[refPicthLeft...refPicthRight])
-            let userPitchsNew = Array(userPitchs[userPicthLeft...userPicthRight])
-            
-            let (_, maxValue) = makeMinMaxPitch(pitchs: refPitchsNew)
-            KaraokeView.log(text: "refPitchsNew:\(refPitchsNew.count) userPitchsNew:\(userPitchsNew.count) maxValue:\(maxValue)")
-            var cumulativeScore: Float = 0.0
-            let voiceChanger = VoicePitchChanger()
-            var hitCount = 0
-            
-            for (index, value) in userPitchsNew.enumerated() {
-                if index >= refPitchsNew.count {
-                    break
+        let url = URL(string: "https://\(host)\(path)")!
+        var request = URLRequest(url: url)
+        request.httpMethod = httpMethod
+        
+        let parameters: [String: Any] = [
+            "access_key": Config.accessKey,
+            "sample_bytes": sample_bytes,
+            "timestamp": timeStamp,
+            "data_type": dataType,
+            "signature_version": signatureVersion,
+            "signature": signature,
+            "title": title
+        ]
+        
+        let boundary = "Boundary-\(UUID().uuidString)"
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        let httpBody = createBody(parameters: parameters, boundary: boundary, data: wavData, mimeType: "audio/mpeg", filename: "test.wav")
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { data, resp, error in
+            if let err = error {
+                completedHandler(nil, err)
+                return
+            }
+            if let resp = resp as? HTTPURLResponse,
+                resp.statusCode == 200,
+                let data = data {
+                let string = String(data: data, encoding: .utf8)!
+                print(string)
+                
+                let decoder = JSONDecoder()
+                let respone = try! decoder.decode(Respone.self, from: data)
+                
+                guard respone.status.code == 0 else {
+                    let e = ARCError(code: respone.status.code)
+                    completedHandler(nil, e)
+                    return
                 }
                 
-                if value <= 0 {
-                    continue
+                if !respone.metadata!.humming.isEmpty {
+                    completedHandler(respone.metadata!.humming.first!.score, nil)
                 }
-                
-                let score = calculatedBestScorePerTone(index: index,
-                                                       value: value,
-                                                       config: config,
-                                                       refPitchs: refPitchsNew,
-                                                       maxValue: maxValue,
-                                                       voiceChanger: voiceChanger)
-                if score > 0 {
-                    hitCount += 1
-                }
-                cumulativeScore += score
             }
             
-            let refTime = Float(refPitchsNew.filter({$0 > 0}).count) * 10
-            let userTime = Float(userPitchsNew.count) * realUserPitchInterval
+        }
+        task.resume()
+    }
+    
+    static func createBody(parameters: [String: Any],
+                           boundary: String,
+                           data: Data,
+                           mimeType: String,
+                           filename: String) -> Data {
+            var body = Data()
+            let boundaryPrefix = "--\(boundary)\r\n"
             
-            if userTime < refTime * 0.25 {
-                return 0.0
+            for (key, value) in parameters {
+                body.append(string: boundaryPrefix)
+                body.append(string: "Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
+                body.append(string: "\(value)\r\n")
             }
             
-            let scoreRatio = cumulativeScore / Float(hitCount)
-            KaraokeView.log(text: "scoreRatio:\(scoreRatio) = cumulativeScore:\(cumulativeScore) / hitCount: \(hitCount)")
+            body.append(string: boundaryPrefix)
+            body.append(string: "Content-Disposition: form-data; name=\"sample\"; filename=\"\(filename)\"\r\n")
+            body.append(string: "Content-Type: \(mimeType)\r\n\r\n")
+            body.append(data)
+            body.append(string: "\r\n")
+            body.append(string: "--".appending(boundary.appending("--")))
             
-            return scoreRatio
+            return body
         }
-        else {
-            KaraokeView.log(text: "usableFlag: \(result.usableFlag)")
-        }
-        return nil
+    
+    static func sign(httpMethod: String,
+                     httpUri: String,
+                     accessKey: String,
+                     access_secret: String,
+                     dataType: String,
+                     signatureVersion: UInt8,
+                     timeStamp: TimeInterval) -> String {
+        let stringToSign = httpMethod + "\n" + httpUri + "\n" + accessKey + "\n" + dataType + "\n" + "\(signatureVersion)" + "\n" + String(timeStamp)
+        let signDatas = stringToSign.hmac(by: .SHA1, key: access_secret.bytes)
+        let sign = signDatas.base64
+        return sign
     }
     
-    fileprivate static func calculatedBestScorePerTone(index: Int,
-                                                       value: Float,
-                                                       config: Config,
-                                                       refPitchs: [Float],
-                                                       maxValue: Float,
-                                                       voiceChanger: VoicePitchChanger) -> Float {
-        let scale: Float = 1.0
-        let radio = config.userPitchInterval / config.refPitchInterval
-        let centerIndex = Int(Float(index) * radio)
-        let start = max(Int(Float(centerIndex) - scale * radio), 0)
-        let end = max(Int(Float(centerIndex) + scale * radio), start)
+    static func convertPCMToWAV(pcmData: Data) -> Data {
+        let headerSize = 44
+        let totalAudioLen = pcmData.count
+        let totalDataLen = totalAudioLen + headerSize - 8
+        let longSampleRate = 16000
+        let channels = 1
+        let byteRate = 32 * longSampleRate * channels / 8
         
-        var score: Float = 0
-        var offset: Double = 0
-        var n: Double = 0
-        for refIndex in start..<end {
-            if refIndex >= refPitchs.count {
-                break
-            }
-            
-            let refPitch = refPitchs[refIndex]
-            if refPitch <= 0 {
-                continue
-            }
-            
-            let valueAfterVoiceChange = voiceChanger.handlePitch(stdPitch:Double(refPitch),
-                                                                 voicePitch: Double(value),
-                                                                 stdMaxPitch: Double(maxValue),
-                                                                 newOffset: offset,
-                                                                 newN: n)
-            let voicePitch = SettingData.share.setting.useVoiceChange ? valueAfterVoiceChange : Double(value)
-            let scoreLevel = SettingData.share.setting.scoreLevel
-            let scoreOffset = SettingData.share.setting.scoreOffset
-            let currentScore = ToneCalculator.calculedScore(voicePitch: voicePitch,
-                                                            stdPitch: Double(refPitch),
-                                                            scoreLevel: scoreLevel,
-                                                            scoreCompensationOffset: scoreOffset)
-            if currentScore >= score {
-                offset = voiceChanger.offset
-                n = voiceChanger.n
-            }
-            
-            score = max(currentScore, score)
-        }
-        print("best score \(score)")
-        return score
-    }
-    
-    fileprivate static func find(config: Config,
-                                 refPitchs: [Float],
-                                 userPitchs: [Float],
-                                 result: ResultType) -> Bool {
-        var cfg = KgeScoreFinddelayCfg_t()
-        cfg.refPitchLen = config.refPitchLen
-        cfg.refPitchInterval = config.refPitchInterval
-        cfg.userPitchLen = config.userPitchLen
-        cfg.userPitchInterval = config.userPitchInterval
-        cfg.minValidLen = config.minValidLen
-        cfg.minValidRatio = config.minValidRatio
-        cfg.corrThr = config.corrThr
-        cfg.effCorrCntThr = config.effCorrCntThr
-        cfg.debugFlag = config.debugFlag
-        
-        print("cfg.refPitchLen:\(cfg.refPitchLen) cfg.refPitchInterval:\(cfg.refPitchInterval) cfg.userPitchLen:\(cfg.userPitchLen) cfg.userPitchInterval:\(cfg.userPitchInterval) cfg.minValidLen:\(cfg.minValidLen) cfg.minValidRatio:\(cfg.minValidRatio) cfg.corrThr:\(cfg.corrThr) cfg.effCorrCntThr:\(cfg.effCorrCntThr) cfg.debugFlag:\(cfg.debugFlag)")
-        
-        var rawRefPitch = refPitchs
-        var rawUserPitch = userPitchs
-        
-        let refPitchLen = cfg.refPitchLen
-        var tmpBuffer1 = Array<Float>.init(repeating: 0, count: refPitchLen)
-        
-        let userPitchLen = cfg.userPitchLen
-        var tmpBuffer2 = Array<Float>.init(repeating: 0, count: userPitchLen)
-        
-        let status = agora_kge_score_finddelay(&cfg, &rawRefPitch, &tmpBuffer1, &rawUserPitch, &tmpBuffer2, result)
-        
-        if status == 0 {
-            KaraokeView.log(text: "Score Find Delay Success!")
-        } else {
-            KaraokeView.log(text: "Score Find Delay Failed!")
-        }
-        
-        let success = status == 0
-        return success
-    }
-    
-    static func makeMinMaxPitch(pitchs: [Float]) -> (Float, Float) {
-        let maxValue = pitchs.max() ?? 0
-        let minValue = pitchs.min() ?? 0
-        return (minValue, maxValue)
-    }
-    
-    struct Config {
-        // length of the array
-        let refPitchLen: Int
-        // ref. pitch sample interval, in ms
-        let refPitchInterval: Float
-        // length of the array userPitch
-        let userPitchLen: Int
-        // user pitch sample interval, in ms
-        let userPitchInterval: Float
-        // minimum length of voiced pitches, in ms
-        let minValidLen: Float = 2000.0
-        // minimum requirement of voiced pitches vs ref. pitches
-        let minValidRatio: Float = 0.1
-        // threshold on the correlation coefficient to assure reliable alignment
-        let corrThr: Float = 0.12
-        // threshold on the effective correlation points
-        let effCorrCntThr: Int32 = 50
-        // flag to enable the module's debug-mode
-        let debugFlag: Int32 = 1
-        
-        init(refPitchLen: Int,
-             refPitchInterval: Float,
-             userPitchLen: Int,
-             userPitchInterval: Float) {
-            self.refPitchLen = refPitchLen
-            self.refPitchInterval = refPitchInterval
-            self.userPitchLen = userPitchLen
-            self.userPitchInterval = userPitchInterval
-        }
-    }
-    
-}
-
-class SettingData {
-    static let share = SettingData()
-    
-    var setting = Setting()
-    
-    struct Setting {
-        var useVoiceChange: Bool = false
-        var scoreLevel: Int = 30
-        var scoreOffset: Int = 0
+        var header = Data()
+        header.append(contentsOf: [UInt8]("RIFF".utf8)) // RIFF chunk identifier
+        header.append(contentsOf: withUnsafeBytes(of: UInt32(totalDataLen).littleEndian) { Data($0) }) // RIFF chunk size
+        header.append(contentsOf: [UInt8]("WAVE".utf8)) // RIFF format
+        header.append(contentsOf: [UInt8]("fmt ".utf8)) // fmt subchunk identifier
+        header.append(contentsOf: withUnsafeBytes(of: UInt32(16).littleEndian) { Data($0) }) // fmt subchunk size (16 for PCM)
+        header.append(contentsOf: withUnsafeBytes(of: UInt16(1).littleEndian) { Data($0) }) // audio format (1 for PCM)
+        header.append(contentsOf: withUnsafeBytes(of: UInt16(channels).littleEndian) { Data($0) }) // number of channels
+        header.append(contentsOf: withUnsafeBytes(of: UInt32(longSampleRate).littleEndian) { Data($0) }) // sample rate
+        header.append(contentsOf: withUnsafeBytes(of: UInt32(byteRate).littleEndian) { Data($0) }) // byte rate
+        header.append(contentsOf: withUnsafeBytes(of: UInt16(channels * 16 / 8).littleEndian) { Data($0) }) // block align
+        header.append(contentsOf: withUnsafeBytes(of: UInt16(16).littleEndian) { Data($0) }) // bits per sample
+        header.append(contentsOf: [UInt8]("data".utf8)) // data subchunk identifier
+        header.append(contentsOf: withUnsafeBytes(of: UInt32(totalAudioLen).littleEndian) { Data($0) }) // data subchunk size
+        var wavData = header
+        wavData.append(pcmData)
+        return wavData
     }
 }
 
+
+extension String {
+    func hmac(by algorithm: Algorithm, key: [UInt8]) -> [UInt8] {
+        let count = Int(algorithm.digestLength())
+        var result = [UInt8](repeating: 0, count: count)
+        CCHmac(algorithm.algorithm(), key, key.count, self.bytes, self.bytes.count, &result)
+        return result
+    }
+    
+    var bytes: [UInt8] {
+        return [UInt8](self.utf8)
+    }
+}
+
+enum Algorithm {
+    case MD5, SHA1, SHA224, SHA256, SHA384, SHA512
+    
+    func algorithm() -> CCHmacAlgorithm {
+        var result: Int = 0
+        switch self {
+        case .MD5:    result = kCCHmacAlgMD5
+        case .SHA1:   result = kCCHmacAlgSHA1
+        case .SHA224: result = kCCHmacAlgSHA224
+        case .SHA256: result = kCCHmacAlgSHA256
+        case .SHA384: result = kCCHmacAlgSHA384
+        case .SHA512: result = kCCHmacAlgSHA512
+        }
+        return CCHmacAlgorithm(result)
+    }
+    
+    func digestLength() -> Int {
+        var result: CInt = 0
+        switch self {
+        case .MD5:
+            result = CC_MD5_DIGEST_LENGTH
+        case .SHA1:
+            result = CC_SHA1_DIGEST_LENGTH
+        case .SHA224:
+            result = CC_SHA224_DIGEST_LENGTH
+        case .SHA256:
+            result = CC_SHA256_DIGEST_LENGTH
+        case .SHA384:
+            result = CC_SHA384_DIGEST_LENGTH
+        case .SHA512:
+            result = CC_SHA512_DIGEST_LENGTH
+        }
+        return Int(result)
+    }
+}
+
+extension String {
+    var base64Encoded: String {
+        return self.data(using: .utf8)!.base64EncodedString()
+    }
+}
+
+extension Array where Element == UInt8 {
+    var base64: String {
+        let data = Data(self)
+        return data.base64EncodedString()
+    }
+}
+
+extension Data {
+    mutating func append(string: String) {
+        if let data = string.data(using: .utf8) {
+            append(data)
+        }
+    }
+}
+
+extension URLRequest {
+
+    var curlString: String {
+        guard let url = url else { return "" }
+        var baseCommand = "curl \(url.absoluteString)"
+        
+        if let httpMethod = httpMethod, httpMethod != "GET" {
+            baseCommand += " -X \(httpMethod)"
+        }
+        
+        allHTTPHeaderFields?.forEach { key, value in
+            baseCommand += " -H '\(key): \(value)'"
+        }
+        
+        if let httpBody = httpBody, let bodyString = String(data: httpBody, encoding: .utf8) {
+            var escapedBody = bodyString.replacingOccurrences(of: "\\\"", with: "\\\\\\\"")
+            escapedBody = escapedBody.replacingOccurrences(of: "\"", with: "\\\"")
+            
+            baseCommand += " -d \"\(escapedBody)\""
+        }
+        
+        return baseCommand
+    }
+}
+
+extension ScoreClaculator {
+    struct Status: Codable {
+        let msg: String
+        let version: String
+        let code: Int
+    }
+    
+    struct Humming: Codable {
+        let play_offset_ms: Int
+        let duration_ms: Int
+        let title: String
+        let score: Float
+    }
+    
+    struct Metadata: Codable {
+        let humming: [Humming]
+    }
+    
+    struct Respone: Codable {
+        let cost_time: Double?
+        let status: Status
+        let metadata: Metadata?
+    }
+    
+    struct ARCError: Error, LocalizedError {
+        let code: Int
+        
+        var errorDescription: String? {
+            return "ARCError \(code)"
+        }
+    }
+}

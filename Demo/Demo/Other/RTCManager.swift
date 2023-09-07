@@ -12,7 +12,6 @@ protocol RTCManagerDelegate: NSObjectProtocol {
     func RTCManagerDidOccurEvent(event: String)
     func RTCManagerDidGetLyricUrl(lyricUrl: String)
     func RTCManagerDidOpenCompleted()
-    func RTCManagerDidUpdatePitch(pitch: Double)
     func RTCManagerDidChangedTo(position: Int)
 }
 
@@ -23,6 +22,8 @@ class RTCManager: NSObject {
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
     var openCompleted = false
+    var isRecord = false
+    var pcmData = Data()
     
     func initEngine() {
         let config = AgoraRtcEngineConfig()
@@ -33,6 +34,7 @@ class RTCManager: NSObject {
         agoraKit.setParameters("{\"che.audio.aiaec.working_mode\":1}")
         agoraKit.setParameters("{\"che.audio.aiaec.postprocessing_strategy\":1}")
         agoraKit.setParameters("{\"che.audio.apm_dump\":true}")
+        agoraKit.setAudioFrameDelegate(self)
     }
     
     func initMCC() {
@@ -54,7 +56,6 @@ class RTCManager: NSObject {
     }
     
     func joinChannel() {
-        agoraKit.enableAudioVolumeIndication(50, smooth: 3, reportVad: true)
         let option = AgoraRtcChannelMediaOptions()
         option.clientRoleType = .broadcaster
         agoraKit.enableAudio()
@@ -110,6 +111,22 @@ class RTCManager: NSObject {
     public func enableMic(enable: Bool) {
         agoraKit.enableLocalAudio(enable)
     }
+    
+    public func startRecord() {
+        pcmData = Data()
+        isRecord = true
+    }
+    
+    public func stopRecord() -> Data {
+        isRecord = false
+        let result = pcmData
+        pcmData = Data()
+        return result
+    }
+    
+    public func getPcmData() -> Data {
+        return pcmData
+    }
 }
 
 extension RTCManager: AgoraRtcEngineDelegate, AgoraRtcMediaPlayerDelegate, AgoraMusicContentCenterEventDelegate {
@@ -141,7 +158,7 @@ extension RTCManager: AgoraRtcEngineDelegate, AgoraRtcMediaPlayerDelegate, Agora
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
         if state == .openCompleted {
             openCompleted = true
-            play()
+//            play()
         }
     }
     
@@ -157,10 +174,89 @@ extension RTCManager: AgoraRtcEngineDelegate, AgoraRtcMediaPlayerDelegate, Agora
         print("didJoinChannel withUid \(uid)")
     }
     
-    func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
-        if let pitch = speakers.last?.voicePitch {
-            invokeRTCManagerDidUpdatePitch(pitch: pitch)
+    func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {}
+    
+    
+}
+
+// MARK: - AudioFrameDelegate
+
+extension RTCManager: AgoraAudioFrameDelegate {
+    func onEarMonitoringAudioFrame(_ frame: AgoraAudioFrame) -> Bool {
+        true
+    }
+    
+    func getEarMonitoringAudioParams() -> AgoraAudioParams {
+        let params = AgoraAudioParams ()
+        params.sampleRate = 16000
+        params.channel = 1
+        params.mode = .readWrite
+        params.samplesPerCall = 480
+        return params
+    }
+    
+    func getPlaybackAudioParams() -> AgoraAudioParams {
+        let params = AgoraAudioParams ()
+        params.sampleRate = 16000
+        params.channel = 1
+        params.mode = .readWrite
+        params.samplesPerCall = 480
+        return params
+    }
+    
+    func getRecordAudioParams() -> AgoraAudioParams {
+        let params = AgoraAudioParams ()
+        params.sampleRate = 16000
+        params.channel = 1
+        params.mode = .readOnly
+        params.samplesPerCall = 480
+        return params
+    }
+    
+    func onRecordAudioFrame(_ frame: AgoraAudioFrame, channelId: String) -> Bool {
+        if isRecord, let buffer = frame.buffer  {
+            let count = frame.channels * frame.bytesPerSample * frame.samplesPerChannel
+            let data = Data(bytes: buffer, count: count)
+            pcmData.append(data)
+            
+            /// 每秒钟产生的字节数
+            let sec = 20
+            let bytesPerSec = frame.samplesPerSec * frame.bytesPerSample * frame.channels
+            /// 总字节数
+            let totalBytes = bytesPerSec * sec
+            if pcmData.count > totalBytes {
+                pcmData = pcmData[pcmData.count-totalBytes..<pcmData.count]
+            }
         }
+        return true
+    }
+    
+    func getObservedAudioFramePosition() -> AgoraAudioFramePosition {
+        return .record
+    }
+    
+
+    
+    func onPlaybackAudioFrame(_ frame: AgoraAudioFrame, channelId: String) -> Bool {
+        return true
+    }
+    
+    func onMixedAudioFrame(_ frame: AgoraAudioFrame, channelId: String) -> Bool {
+        return true
+    }
+    
+    func getMixedAudioParams() -> AgoraAudioParams {
+        let params = AgoraAudioParams ()
+        params.sampleRate = 16000
+        params.channel = 1
+        params.mode = .readWrite
+        params.samplesPerCall = 480
+        return params
+    }
+    
+    func onPlaybackAudioFrame(beforeMixing frame: AgoraAudioFrame, channelId: String, uid: UInt) -> Bool {
+        
+        return true
     }
 }
 
@@ -185,10 +281,6 @@ extension RTCManager {
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.RTCManagerDidGetLyricUrl(lyricUrl: lyricUrl)
         }
-    }
-    
-    func invokeRTCManagerDidUpdatePitch(pitch: Double) {
-        delegate?.RTCManagerDidUpdatePitch(pitch: pitch)
     }
     
     func invokeRTCManagerDidRecvSearch(result: AgoraMusicCollection) {

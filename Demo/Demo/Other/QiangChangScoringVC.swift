@@ -13,7 +13,6 @@ class QiangChangScoringVC: UIViewController {
     private var timer = GCDTimer()
     private var timeCount = 40
     private let rtcManager = RTCManager()
-    var currentPitchs = [Float]()
     var songs = [Song]()
     var song: Song!
     var isQiang = false
@@ -25,10 +24,12 @@ class QiangChangScoringVC: UIViewController {
         songs = [
             Song(refSongName: "桃花诺-原唱干声.wav",
                  refPitchName: "桃花诺-原唱干声.pitch",
-                 lyrics: "一寸土 一年木 一花一树一贪图\n情是种 爱偏开在迷途\n忘前路 忘旧物 忘心忘你忘最初\n花斑斑 留在爱你的路"),
+                 lyrics: "一寸土 一年木 一花一树一贪图\n情是种 爱偏开在迷途\n忘前路 忘旧物 忘心忘你忘最初\n花斑斑 留在爱你的路",
+                 name: "桃花诺"),
             Song(refSongName: "反方向的钟-原唱干声.wav",
                  refPitchName: "反方向的钟-原唱干声.pitch",
-                 lyrics: "穿梭时间的画面的钟\n从反方向 开始移动\n回到当初爱你的时空\n停格内容 不忠\n所有回忆对着我进攻\n我的伤口 被你拆封\n誓言太沉重泪被纵容\n脸上汹涌 失控")
+                 lyrics: "穿梭时间的画面的钟\n从反方向 开始移动\n回到当初爱你的时空\n停格内容 不忠\n所有回忆对着我进攻\n我的伤口 被你拆封\n誓言太沉重泪被纵容\n脸上汹涌 失控",
+                 name: "反方向的钟")
         ]
         
         setupUI()
@@ -60,15 +61,9 @@ class QiangChangScoringVC: UIViewController {
     }
     
     fileprivate func handleQiang() {
-        let useVoiceChange = qiangChangScoringView.voiceChangeSwitch.isOn
-        let scoreLevel = Int(qiangChangScoringView.scoreLevelTextField.text ?? "30") ?? 30
-        let scoreOffset = Int(qiangChangScoringView.scoreOffsetTextField.text ?? "0") ?? 0
-        SettingData.share.setting.scoreLevel = scoreLevel
-        SettingData.share.setting.scoreOffset = scoreOffset
-        SettingData.share.setting.useVoiceChange = useVoiceChange
-        
         isQiang = true
         rtcManager.stop()
+        rtcManager.startRecord()
         rtcManager.enableMic(enable: true)
         timer.scheduledMillisecondsTimer(withName: "QiangChangScoringVC",
                                          countDown: 1000000,
@@ -76,44 +71,63 @@ class QiangChangScoringVC: UIViewController {
                                          queue: .main) { [weak self](_, _) in
             guard let self = self else { return }
             timeCount -= 1
+            
+            if timeCount % 4 == 0 { /** 4s检测一次 **/
+                handleOk(isStop: false)
+            }
+            
             if timeCount > 0 {
                 qiangChangScoringView.updateOkTime(num: timeCount)
                 return
             }
             
             if timeCount <= 0 {
-                timer.destoryAllTimer()
-                timeCount = 40
-                handleOk()
+                handleOk(isStop: true)
             }
+            
         }
     }
     
-    fileprivate func handleOk() {
-        isQiang = false
-        rtcManager.enableMic(enable: false)
-        if currentPitchs.count >= 40 {
-            let userPitchs = currentPitchs
-             
-            KaraokeView.log(text:"============")
-            for p in currentPitchs {
-                KaraokeView.log(text:"\(p)")
-            }
-            KaraokeView.log(text:"============")
-            calculatedScore(userPitchs: userPitchs)
-            currentPitchs = [Float]()
+    fileprivate func handleOk(isStop: Bool) {
+        if isStop {
+            timer.destoryAllTimer()
+            timeCount = 40
+            isQiang = false
+            rtcManager.enableMic(enable: false)
         }
+        
+        let pcmData = rtcManager.getPcmData()
+        let wavData = ScoreClaculator.convertPCMToWAV(pcmData: pcmData)
+        ScoreClaculator.recognize(byData: wavData, title: song.name, completedHandler: { (score, error) in
+            DispatchQueue.main.async { [weak self] in
+                if let err = error as? LocalizedError {
+                    self?.qiangChangScoringView.setScore(string: err.localizedDescription, color: .red)
+                    return
+                }
+                
+                let string = "score: \(score!)"
+                self?.qiangChangScoringView.setScore(string: string)
+                
+                if score! > 0.6 {
+                    self?.timer.destoryAllTimer()
+                    self?.timeCount = 40
+                    self?.isQiang = false
+                    self?.rtcManager.enableMic(enable: false)
+                    self?.qiangChangScoringView.setCompleted()
+                }
+            }
+        })
     }
     
     fileprivate func handleQie() {
         song = songs[currentIndex]
         title = song.refPitchName
         qiangChangScoringView.setLiric(text: song.lyrics)
-        qiangChangScoringView.setScore(score: 0)
+        qiangChangScoringView.setScore(string: "--")
         rtcManager.stop()
+        let _ = rtcManager.stopRecord()
         isQiang = false
         rtcManager.enableMic(enable: false)
-        currentPitchs = [Float]()
         let path = Bundle.main.path(forResource: song.refSongName, ofType: nil)!
         rtcManager.open(url: path)
         
@@ -122,29 +136,6 @@ class QiangChangScoringVC: UIViewController {
         }
         else {
             currentIndex += 1
-        }
-    }
-    
-    func calculatedScore(userPitchs: [Float]) {
-        let refPitchUrl = URL(fileURLWithPath: Bundle.main.path(forResource: song.refPitchName, ofType: nil)!)
-        let refPitchData = try! Data(contentsOf: refPitchUrl)
-        let refModel = KaraokeView.parsePitchData(data: refPitchData)!
-        let refPitchs = refModel.items.map({ Float($0.value) })
-        
-        let refPitchInterval = Float(refModel.timeInterval)
-        let userPitchInterval: Float = 50
-        
-        let scoreRatio = ScoreClaculator.calculateMuti(refPitchInterval: refPitchInterval,
-                                                       userPitchInterval: userPitchInterval,
-                                                       refPitchs: refPitchs,
-                                                       userPitchs: userPitchs)
-        if let ratio = scoreRatio {
-            KaraokeView.log(text: "ratio: \(ratio)")
-            qiangChangScoringView.setScore(score: ratio)
-        }
-        else {
-            KaraokeView.log(text: "no score")
-            qiangChangScoringView.setScore(score: -1)
         }
     }
     
@@ -169,7 +160,7 @@ extension QiangChangScoringVC: QiangChangScoringViewDelegate {
             handleQiang()
             break
         case .ok:
-            handleOk()
+            handleOk(isStop: true)
             break
         case .qie:
             handleQie()
@@ -184,24 +175,6 @@ extension QiangChangScoringVC: RTCManagerDelegate {
     func RTCManagerDidOpenCompleted() {}
     func RTCManagerDidChangedTo(position: Int) {}
     
-    func RTCManagerDidUpdatePitch(pitch: Double) {
-        guard isQiang else {
-            return
-        }
-        
-//        let current = CFAbsoluteTimeGetCurrent()
-//        let gap = current - time
-//        time = current
-//        print("gap \(gap * 1000) pitch:\(pitch)")
-        
-        let count = 20 * 2
-        currentPitchs.append(Float(pitch))
-        if currentPitchs.count >= count, currentPitchs.count % count == 0 {
-            let userPitchs = currentPitchs
-            print("userPitchs:\(userPitchs.count)")
-            calculatedScore(userPitchs: userPitchs)
-        }
-    }
 }
 
 extension QiangChangScoringVC {
@@ -209,7 +182,6 @@ extension QiangChangScoringVC {
         let refSongName: String
         let refPitchName: String
         let lyrics: String
+        let name: String
     }
-    
-    
 }

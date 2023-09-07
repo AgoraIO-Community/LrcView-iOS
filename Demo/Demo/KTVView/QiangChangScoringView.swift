@@ -34,6 +34,9 @@ class QiangChangScoringView: UIView {
     }
     
     private func setupUI() {
+        voiceChangeSwitch.isHidden = true
+        scoreLevelTextField.isHidden = true
+        scoreOffsetTextField.isHidden = true
         backgroundColor = .white
         scoreLabel.textColor = .black
         scoreLabel.numberOfLines = 0
@@ -149,8 +152,14 @@ class QiangChangScoringView: UIView {
         lyricsLabel.text = text
     }
     
-    func setScore(score: Float) {
-        scoreLabel.text = "\(score)"
+    func setScore(string: String, color: UIColor = .black) {
+        scoreLabel.text = string
+        scoreLabel.textColor = color
+    }
+    
+    func setCompleted() {
+        qiangBtn.isHidden = false
+        okBtn.isHidden = true
     }
 }
 

@@ -99,6 +99,7 @@
 		268DB0DD2AA7092300CD9AF8 /* lk-1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 268DB0DC2AA7092300CD9AF8 /* lk-1.txt */; };
 		268DB0DF2AA712C400CD9AF8 /* lk-2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 268DB0DE2AA712C400CD9AF8 /* lk-2.txt */; };
 		268DB0E12AA72F1000CD9AF8 /* lk-3.txt in Resources */ = {isa = PBXBuildFile; fileRef = 268DB0E02AA72F1000CD9AF8 /* lk-3.txt */; };
+		268DB0E32AA980C300CD9AF8 /* query0017.wav in Resources */ = {isa = PBXBuildFile; fileRef = 268DB0E22AA980C300CD9AF8 /* query0017.wav */; };
 		26B88E4B2AA198030011AF40 /* 6625526603631810.bin in Resources */ = {isa = PBXBuildFile; fileRef = 26B88E4A2AA198030011AF40 /* 6625526603631810.bin */; };
 		26B88E4D2AA1C1C70011AF40 /* 6625526603631810.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26B88E4C2AA1C1C70011AF40 /* 6625526603631810.xml */; };
 		26B88E4F2AA1C6E80011AF40 /* 1_108852_h0_(Vocals).wav in Resources */ = {isa = PBXBuildFile; fileRef = 26B88E4E2AA1C6E80011AF40 /* 1_108852_h0_(Vocals).wav */; };
@@ -247,6 +248,7 @@
 		268DB0DC2AA7092300CD9AF8 /* lk-1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "lk-1.txt"; sourceTree = "<group>"; };
 		268DB0DE2AA712C400CD9AF8 /* lk-2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "lk-2.txt"; sourceTree = "<group>"; };
 		268DB0E02AA72F1000CD9AF8 /* lk-3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "lk-3.txt"; sourceTree = "<group>"; };
+		268DB0E22AA980C300CD9AF8 /* query0017.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = query0017.wav; sourceTree = "<group>"; };
 		26AC90A729ECE9D500AB6EC5 /* QiangChangVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiangChangVC.swift; sourceTree = "<group>"; };
 		26AC90AC29EE72A900AB6EC5 /* SongListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongListVC.swift; sourceTree = "<group>"; };
 		26B88E4A2AA198030011AF40 /* 6625526603631810.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = 6625526603631810.bin; sourceTree = "<group>"; };
@@ -367,6 +369,7 @@
 				2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */,
 				2689ED432987CD2D0012BC4D /* MainTestVC.swift */,
 				26C5452B2955B2FE009E0F37 /* Config.swift */,
+				268DB0E22AA980C300CD9AF8 /* query0017.wav */,
 				260942DC2952B5050022A50D /* Main.storyboard */,
 				260942DF2952B5060022A50D /* Assets.xcassets */,
 				260942E12952B5060022A50D /* LaunchScreen.storyboard */,
@@ -665,6 +668,7 @@
 				26B88E6C2AA1CC3B0011AF40 /* 十年.pitch in Resources */,
 				26820FE02AA3831300C56BA8 /* 反方向的钟-男声-两句.m4a in Resources */,
 				26820FC52AA3831300C56BA8 /* 反方向的钟-男声-两句.pitch in Resources */,
+				268DB0E32AA980C300CD9AF8 /* query0017.wav in Resources */,
 				26820FD62AA3831300C56BA8 /* 反方向的钟-女声-四句.bin in Resources */,
 				26820FC22AA3831300C56BA8 /* 反方向的钟-女声-两句.wav in Resources */,
 				26820FA52AA3831300C56BA8 /* 桃花诺-男声-四句.pitch in Resources */,
