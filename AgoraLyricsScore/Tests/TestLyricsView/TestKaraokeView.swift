@@ -14,7 +14,7 @@ final class TestKaraokeView: XCTestCase {
 
     func testExample() throws { /** 重现#CSD-59221、#CSD-60022 **/
 //        karaokeView = KaraokeView(frame: .init(x: 0, y: 0, width: 350, height: 400),loggers:[ConsoleLogger()])
-//        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "153378", ofType: "xml")!)
+//        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "testissue60022", ofType: "xml")!)
 //        let data = try! Data(contentsOf: url)
 //        guard let model = KaraokeView.parseLyricData(data: data) else {
 //            XCTFail()
@@ -22,7 +22,7 @@ final class TestKaraokeView: XCTestCase {
 //        }
 //
 //        karaokeView.setLyricData(data: model)
-//        for time in 38870...38879 {
+//        for time in 0...1001000 {
 //            karaokeView.setProgress(progress: time)
 //        }
 //        wait(for: [exp], timeout: 1)
