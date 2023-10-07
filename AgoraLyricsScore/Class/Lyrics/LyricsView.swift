@@ -273,10 +273,10 @@ extension LyricsView: LyricMachineDelegate {
                       didStartLineAt newIndexPath: IndexPath,
                       oldIndexPath: IndexPath,
                       animated: Bool) {
-//        guard !dataList.isEmpty else {
-//            Log.debug(text: "update tableView will be ignore because dataList is empty", tag: logTag)
-//            return
-//        }
+        guard !dataList.isEmpty else {
+            Log.debug(text: "update tableView will be ignore because dataList is empty", tag: logTag)
+            return
+        }
         UIView.performWithoutAnimation {
             tableView.reloadRows(at: [newIndexPath, oldIndexPath], with: .fade)
         }
