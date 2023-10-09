@@ -252,6 +252,7 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
 // MARK: - LyricMachineDelegate
 extension LyricsView: LyricMachineDelegate {
     func lyricMachine(_ lyricMachine: LyricMachine, didSetLyricData datas: [LyricCell.Model]) {
+        Log.debug(text: "set dataList \(datas.count)", tag: logTag)
         dataList = datas
         tableView.reloadData()
         
@@ -272,6 +273,10 @@ extension LyricsView: LyricMachineDelegate {
                       didStartLineAt newIndexPath: IndexPath,
                       oldIndexPath: IndexPath,
                       animated: Bool) {
+        guard !dataList.isEmpty else {
+            Log.debug(text: "update tableView will be ignore because dataList is empty", tag: logTag)
+            return
+        }
         UIView.performWithoutAnimation {
             tableView.reloadRows(at: [newIndexPath, oldIndexPath], with: .fade)
         }
