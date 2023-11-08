@@ -10,14 +10,6 @@ import XCTest
 
 class TestScoringVM: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func testCurrentIndexOfLine() throws {
         let vm = ScoringMachine()
         let lineEndTimes = [1000, 2000, 3000]
@@ -76,14 +68,16 @@ class TestScoringVM: XCTestCase {
         XCTAssertEqual(changer.handlePitch(stdPitch: 0, voicePitch: 0, stdMaxPitch: 400), 0)
         XCTAssertEqual(changer.handlePitch(stdPitch: 1, voicePitch: 0, stdMaxPitch: 400), 0)
         XCTAssertEqual(changer.handlePitch(stdPitch: 1, voicePitch: 1, stdMaxPitch: 400), 1)
-        XCTAssertEqual(changer.handlePitch(stdPitch: 100, voicePitch: 90, stdMaxPitch: 400), 93.0)
-        XCTAssertEqual(changer.handlePitch(stdPitch: 100, voicePitch: 80, stdMaxPitch: 400), 87.0)
-        XCTAssertEqual(changer.handlePitch(stdPitch: 200, voicePitch: 80, stdMaxPitch: 400), 110.0)
-        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 80, stdMaxPitch: 400), 164.60000000000002)
-        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 200, stdMaxPitch: 400), 311.66666666666663)
-        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 400, stdMaxPitch: 400), 400)
-        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 500, stdMaxPitch: 400), 400.0)
-        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 600, stdMaxPitch: 400), 400.0)
+        XCTAssertEqual(changer.handlePitch(stdPitch: 100, voicePitch: 90, stdMaxPitch: 400), 90.0)
+        XCTAssertEqual(changer.handlePitch(stdPitch: 100, voicePitch: 80, stdMaxPitch: 400), 80.0)
+        XCTAssertEqual(changer.handlePitch(stdPitch: 200, voicePitch: 80, stdMaxPitch: 400), 160.0)
+        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 80, stdMaxPitch: 400), 320.0)
+        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 200, stdMaxPitch: 400), 400.0)
+        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 400, stdMaxPitch: 400), 400.0)
+        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 500, stdMaxPitch: 400), 500.0)
+        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 600, stdMaxPitch: 400), 300.0)
+        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 700, stdMaxPitch: 400), 350.0)
+        XCTAssertEqual(changer.handlePitch(stdPitch: 400, voicePitch: 800, stdMaxPitch: 400), 400.0)
     }
     
     func testCalculatedScore() {
@@ -91,22 +85,22 @@ class TestScoringVM: XCTestCase {
         XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 200, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 0.0)
         XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 190, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 0.0)
         XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 180, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 0.0)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 170, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 8.135873)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 160, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 18.63141)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 150, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 29.804527)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 140, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 41.74881)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 130, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 54.578625)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 120, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 68.43588)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 110, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 83.49959)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 101, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 98.27737)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 170, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 9.763043)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 160, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 22.357689)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 150, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 35.765438)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 140, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 50.098568)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 130, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 65.494354)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 120, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 82.12307)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 110, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 100.0)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 101, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 100.0)
         XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 100, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 100)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 99, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 98.26005)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 80, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 61.36865)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 70, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 38.251263)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 60, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 11.564189)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 59, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 8.654488)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 58, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 5.695045)
-        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 57, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 2.6841342)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 99, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 100.0)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 80, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 73.64238)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 70, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 45.901512)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 60, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 13.877029)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 59, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 10.3853855)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 58, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 6.834053)
+        XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 57, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 3.2209551)
         XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 56, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 0)
         XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 55, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 0)
         XCTAssertEqual(ToneCalculator.calculedScore(voicePitch: 50, stdPitch: 100, scoreLevel: 10, scoreCompensationOffset: 0), 0)

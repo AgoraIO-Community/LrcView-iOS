@@ -192,6 +192,12 @@ extension XmlParser: XMLParserDelegate {
             switch last {
             case .name:
                 song.name = string
+//                if song.name != nil {
+//                    song.name += string
+//                }
+//                else {
+//                    song.name = string
+//                }
             case .singer:
                 song.singer = string
             case .type:
