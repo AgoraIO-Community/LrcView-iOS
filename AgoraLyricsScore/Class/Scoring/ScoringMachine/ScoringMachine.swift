@@ -167,11 +167,19 @@ class ScoringMachine {
                                                  scoreCompensationOffset: scoreCompensationOffset)
         
         /** 4.save tone score  **/
-        if let hitToneScore = toneScores.first(where: { $0.tone.beginTime == hitedInfo.beginTime }) {
-            hitToneScore.addScore(score: score)
+        var hitToneScore = toneScores.first(where: { $0.tone.beginTime == hitedInfo.beginTime })
+        if hitToneScore != nil {
+            hitToneScore!.addScore(score: score)
         }
-        else {
-            Log.error(error: "ignore score \(score) progress: \(progress), beginTime: \(hitedInfo.beginTime), endTime: \(hitedInfo.endTime) \(toneScores.map({ "\($0.tone.beginTime)-" }).reduce("", +))", tag: logTag)
+        else { /** reresetToneScores while can not find a specific one  **/
+            resetToneScores(position: progress)
+            hitToneScore = toneScores.first(where: { $0.tone.beginTime == hitedInfo.beginTime })
+            if hitToneScore != nil {
+                hitToneScore!.addScore(score: score)
+            }
+            else {
+                Log.error(error: "ignore score \(score) progress: \(progress), beginTime: \(hitedInfo.beginTime), endTime: \(hitedInfo.endTime) \(toneScores.map({ "\($0.tone.beginTime)-" }).reduce("", +))", tag: logTag)
+            }
         }
         
         /** 5.update HighlightInfos **/
@@ -223,6 +231,20 @@ class ScoringMachine {
         progress = position
         currentHighlightInfos = []
         isDragging = false
+    }
+    
+    private func resetToneScores(position: Int) {
+        guard let index = findCurrentIndexOfLine(progress: position, lineEndTimes: lineEndTimes) else {
+            return
+        }
+        if index >= 0, index < lineEndTimes.count, let data = lyricData {
+            toneScores = data.lines[index].tones.map({ ToneScoreModel(tone: $0, score: 0) })
+            for offset in index..<lineEndTimes.count {
+                lineScores[offset] = 0
+            }
+        }
+        currentHighlightInfos = []
+        Log.info(text: "resetToneScores", tag: logTag)
     }
     
     private func _reset() {

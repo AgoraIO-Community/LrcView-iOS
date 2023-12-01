@@ -62,7 +62,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
                         lineCount: Int) {
         self.cumulativeScore = cumulativeScore
         print("didFinishLineWith score: \(cumulativeScore)")
-        if cumulativeScore == 499 {
+        if cumulativeScore == 500 {
             exp.fulfill()
         }
     }

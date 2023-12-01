@@ -22,26 +22,30 @@ class VoicePitchChanger {
     func handlePitch(stdPitch: Double,
                      voicePitch: Double,
                      stdMaxPitch: Double) -> Double {
+        if useC {
+            return handlePitchC(stdPitch, voicePitch, stdMaxPitch)
+        }
+        
         if voicePitch <= 0 {
             return 0
         }
-        
+
         n += 1.0
         let gap = stdPitch - voicePitch
-        
+
         offset = offset * (n - 1)/n + gap/n
-        
+
         if offset < 0 {
             offset = max(offset, -1 * stdMaxPitch * 0.4)
         }
         else {
             offset = min(offset, stdMaxPitch * 0.4)
         }
-        
+
         if abs(voicePitch - stdPitch) < 1 { /** 差距过小，直接返回 **/
             return voicePitch
         }
-        
+
         switch n {
         case 1:
             return min(voicePitch + 0.5 * offset, stdMaxPitch)
@@ -59,6 +63,10 @@ class VoicePitchChanger {
     }
     
     func reset() {
+        if useC {
+            resetC()
+            return
+        }
         offset = 0.0
         n = 0.0
     }
