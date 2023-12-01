@@ -251,7 +251,7 @@ class ParamSetVC: UIViewController {
             }
             
             if indexPath.row == 3 {
-                param.karaoke.scoreLevel = genValue(current: param.karaoke.scoreLevel, ops: [0, 10, 30, 50, 70, 100])
+                param.karaoke.scoreLevel = genValue(current: param.karaoke.scoreLevel, ops: [0, 5, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 25, 30, 50, 70, 100])
             }
             
             if indexPath.row == 4 { /** karaokeView.scoringEnabled **/

@@ -19,7 +19,7 @@ extension MainTestVC {
 }
 
 class MainTestVC: UIViewController {
-    let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger()])
+    let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger(), FileLogger()])
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()
@@ -28,23 +28,39 @@ class MainTestVC: UIViewController {
     let quickButton = UIButton()
     let changeButton = UIButton()
     let pauseButton = UIButton()
+    let label = UILabel()
     var agoraKit: AgoraRtcEngineKit!
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
+    var pitchInvokeDuration:CFAbsoluteTime = 0
 //    var song = Item(code: 6246262727283870, isXML: false)
-    var song = Item(code: 6625526605291650, isXML: true)
+    var song = Item(code: 6246262727282120, isXML: true)
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
     /// 6768817613736320
-    var songs = [Item(code: 6246262727283870, isXML: false),
-                 Item(code: 6625526605291650, isXML: true),
-                 Item(code: 6775664001035810, isXML: true),
-                 Item(code: 6625526610023560, isXML: true),
-                 Item(code: 6625526603296890, isXML: true),
-                 /** xml 不打分 **/
-                 Item(code: 6315145508122860, isXML: true)]
+//    var songs = [Item(code: 6246262727283870, isXML: false),
+//                 Item(code: 6654550250051940, isXML: true),
+//                 Item(code: 6775664001035810, isXML: true),
+//                 Item(code: 6625526610023560, isXML: true),
+//                 Item(code: 6625526603296890, isXML: true),
+//                 /** xml 不打分 **/
+//                 Item(code: 6315145508122860, isXML: true)]
+//    var songs = [Item(code: 6625526604952630, isXML: true),
+//                 Item(code: 6654550250051940, isXML: true),
+//                 Item(code: 6625526606517650, isXML: true),
+//                 Item(code: 6625526608670440, isXML: true),
+//                 Item(code: 6625526619767100, isXML: true),
+//                 Item(code: 6654550256811200, isXML: true),
+//                 Item(code: 6625526603907880, isXML: true),
+//                 Item(code: 6654550242185930, isXML: true),
+//                 Item(code: 6625526603433040, isXML: true),
+//                 Item(code: 6654550244516420, isXML: true),
+//                 Item(code: 6625526603472520, isXML: true),
+//                 Item(code: 6625526603742770, isXML: true)]
+    var songs = [Item(code: 6246262727282120, isXML: true),
+                 Item(code: 6625526603472520, isXML: true)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
@@ -80,6 +96,8 @@ class MainTestVC: UIViewController {
         changeButton.backgroundColor = .red
         quickButton.backgroundColor = .red
         pauseButton.backgroundColor = .red
+        label.textColor = .white
+        label.backgroundColor = .red
         
         view.backgroundColor = .black
         view.addSubview(karaokeView)
@@ -91,6 +109,7 @@ class MainTestVC: UIViewController {
         view.addSubview(quickButton)
         view.addSubview(pauseButton)
         view.addSubview(lineScoreView)
+        view.addSubview(label)
         
         karaokeView.translatesAutoresizingMaskIntoConstraints = false
         gradeView.translatesAutoresizingMaskIntoConstraints = false
@@ -101,6 +120,7 @@ class MainTestVC: UIViewController {
         quickButton.translatesAutoresizingMaskIntoConstraints = false
         pauseButton.translatesAutoresizingMaskIntoConstraints = false
         lineScoreView.translatesAutoresizingMaskIntoConstraints = false
+        label.translatesAutoresizingMaskIntoConstraints = false
         
         karaokeView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         karaokeView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
@@ -134,6 +154,9 @@ class MainTestVC: UIViewController {
         
         pauseButton.leftAnchor.constraint(equalTo: skipButton.leftAnchor).isActive = true
         pauseButton.topAnchor.constraint(equalTo: changeButton.bottomAnchor, constant: 30).isActive = true
+        
+        label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        label.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
     func commonInit() {
@@ -159,6 +182,8 @@ class MainTestVC: UIViewController {
         config.audioScenario = .chorus
         config.channelProfile = .liveBroadcasting
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: config, delegate: self)
+        agoraKit.setParameters("{\"rtc.debug.enable\": true}")
+        agoraKit.setParameters("{\"che.audio.apm_dump\": true}")
     }
     
     func joinChannel() { /** 目的：发布mic流、接收音频流 **/
@@ -399,10 +424,21 @@ extension MainTestVC: AgoraRtcEngineDelegate {
             return
         }
         if let pitch = speakers.last?.voicePitch {
-            DispatchQueue.main.async { [weak self] in
-                self?.karaokeView.setPitch(pitch: pitch)
-            }
+//            DispatchQueue.main.async { [weak self] in
+//            let startTime = CFAbsoluteTimeGetCurrent()
+//            let gap = startTime - pitchInvokeDuration
+//            pitchInvokeDuration = startTime
+//            print("gap:[\(gap.keep3)] \(pitch)")
+            label.text = "\(pitch)"
+            karaokeView.setPitch(pitch: pitch)
+//            }
         }
+    }
+}
+
+extension Double {
+    var keep3: Double {
+        return Double(Darwin.round(self * 1000)/1000)
     }
 }
 
@@ -450,7 +486,7 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
                 self?.title = nil
             }
         }
-        
+        let songCode = song.code
         FileCache.fect(urlString: lyricUrl) { progress in
 
         } completion: { filePath in
@@ -458,6 +494,7 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
             let data = try! Data(contentsOf: url)
             let model = KaraokeView.parseLyricData(data: data)!
             self.lyricModel = model
+            print("linesCount:\(model.lines.count) songCode:\(songCode)")
             if !self.noLyric {
                 let canScoring = model.hasPitch
                 if canScoring { /** xml **/

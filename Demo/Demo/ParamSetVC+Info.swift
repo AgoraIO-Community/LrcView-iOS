@@ -37,7 +37,7 @@ class KaraokeViewParam {
     /// 评分组件和歌词组件之间的间距 默认: 0
     var spacing: CGFloat = 0
     
-    var scoreLevel = 10
+    var scoreLevel = 15
     var scoreCompensationOffset = 0
 }
 

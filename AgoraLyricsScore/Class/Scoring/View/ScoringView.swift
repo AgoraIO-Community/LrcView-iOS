@@ -38,7 +38,7 @@ public class ScoringView: UIView {
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
     
-    var scoreLevel = 10 { didSet { updateUI() } }
+    var scoreLevel = 15 { didSet { updateUI() } }
     var scoreCompensationOffset = 0 { didSet { updateUI() } }
     
     var progress: Int = 0 { didSet { updateProgress() } }
