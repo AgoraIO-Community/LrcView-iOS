@@ -23,10 +23,16 @@ public class ConsoleLogger: NSObject, ILogger {
 // MARK:- FileLogger
 
 public class FileLogger: NSObject, ILogger {
-    var name = "AgoraLyricsScore"
+    var name = "agora.AgoraLyricsScore"
     var maxFileSize: UInt64 = 1024 * 15
     var maxFileCount = 10
-    var directory = FileLogger.defaultDirectory() {
+    let logFilePath: String?
+    
+    @objc public init(logFilePath: String? = nil) {
+        self.logFilePath = logFilePath
+    }
+    
+    var directory = FileLogger.defaultDirectory(logFilePath: nil) {
         didSet {
             directory = NSString(string: directory).expandingTildeInPath
             
@@ -109,15 +115,18 @@ public class FileLogger: NSObject, ILogger {
     
     ///gets the log name
     func logName(_ num :Int) -> String {
-        return "\(name)-\(num).log"
+        return "\(name).\(num).log"
     }
     
     ///get the default log directory
-    class func defaultDirectory() -> String {
+    class func defaultDirectory(logFilePath: String?) -> String {
         var path = ""
         let fileManager = FileManager.default
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        path = "\(paths[0])/Logs"
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
+        path = "\(paths[0])"
+        if let logFilePath = logFilePath, logFilePath.count > 0 {
+            path = logFilePath
+        }
         if !fileManager.fileExists(atPath: path) && path != ""  {
             do {
                 try fileManager.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)

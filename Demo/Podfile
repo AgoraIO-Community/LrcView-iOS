@@ -7,7 +7,7 @@ target 'Demo' do
   source 'https://github.com/CocoaPods/Specs.git'
   
   pod "AgoraLyricsScore", :path => "../AgoraLyricsScore.podspec", :testspecs => ['Tests']
-#  pod "AgoraLyricsScore", "1.0.8.15"
+#  pod "AgoraLyricsScore", "1.1.5"
   pod 'RTMTokenBuilder', "1.0.0"
 #  pod 'AgoraAudio_Special_iOS', '4.1.1.7'
   pod 'AgoraRtcEngine_Special_iOS', '4.1.1.17'
