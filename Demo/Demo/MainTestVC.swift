@@ -47,20 +47,20 @@ class MainTestVC: UIViewController {
 //                 Item(code: 6625526603296890, isXML: true),
 //                 /** xml 不打分 **/
 //                 Item(code: 6315145508122860, isXML: true)]
-//    var songs = [Item(code: 6625526604952630, isXML: true),
-//                 Item(code: 6654550250051940, isXML: true),
-//                 Item(code: 6625526606517650, isXML: true),
-//                 Item(code: 6625526608670440, isXML: true),
-//                 Item(code: 6625526619767100, isXML: true),
-//                 Item(code: 6654550256811200, isXML: true),
-//                 Item(code: 6625526603907880, isXML: true),
-//                 Item(code: 6654550242185930, isXML: true),
-//                 Item(code: 6625526603433040, isXML: true),
-//                 Item(code: 6654550244516420, isXML: true),
-//                 Item(code: 6625526603472520, isXML: true),
-//                 Item(code: 6625526603742770, isXML: true)]
-    var songs = [Item(code: 6246262727282120, isXML: true),
-                 Item(code: 6625526603472520, isXML: true)]
+    var songs = [Item(code: 6625526604952630, isXML: true),
+                 Item(code: 6654550250051940, isXML: true),
+                 Item(code: 6625526606517650, isXML: true),
+                 Item(code: 6625526608670440, isXML: true),
+                 Item(code: 6625526619767100, isXML: true),
+                 Item(code: 6654550256811200, isXML: true),
+                 Item(code: 6625526603907880, isXML: true),
+                 Item(code: 6654550242185930, isXML: true),
+                 Item(code: 6625526603433040, isXML: true),
+                 Item(code: 6654550244516420, isXML: true),
+                 Item(code: 6625526603472520, isXML: true),
+                 Item(code: 6625526603742770, isXML: true)]
+//    var songs = [Item(code: 6246262727282120, isXML: true),
+//                 Item(code: 6625526603472520, isXML: true)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AgoraComponetLog
 
 // MARK:- ConsoleLogger
 
@@ -23,123 +24,20 @@ public class ConsoleLogger: NSObject, ILogger {
 // MARK:- FileLogger
 
 public class FileLogger: NSObject, ILogger {
-    var name = "agora.AgoraLyricsScore"
-    var maxFileSize: UInt64 = 1024 * 15
-    var maxFileCount = 10
-    let logFilePath: String?
-    
+    let componetFileLogger: AgoraComponetFileLogger!
     @objc public init(logFilePath: String? = nil) {
-        self.logFilePath = logFilePath
-    }
-    
-    var directory = FileLogger.defaultDirectory(logFilePath: nil) {
-        didSet {
-            directory = NSString(string: directory).expandingTildeInPath
-            
-            let fileManager = FileManager.default
-            if !fileManager.fileExists(atPath: directory) {
-                do {
-                    try fileManager.createDirectory(atPath: directory, withIntermediateDirectories: true, attributes: nil)
-                } catch {
-                    NSLog("Couldn't create directory at \(directory)")
-                }
-            }
-        }
-    }
-    
-    var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM-dd HH:mm:ss"
-        return formatter
-    }
-    
-    var currentPath: String {
-        return "\(directory)/\(logName(0))"
-    }
-    
-    func write(text: String) {
-        let writeText = text + "\n"
-        let path = currentPath
-        let fileManager = FileManager.default
-        if !fileManager.fileExists(atPath: path) {
-            do {
-                try "".write(toFile: path, atomically: true, encoding: String.Encoding.utf8)
-            } catch _ {}
-        }
-        if let fileHandle = FileHandle(forWritingAtPath: path) {
-            fileHandle.seekToEndOfFile()
-            fileHandle.write(writeText.data(using: String.Encoding.utf8)!)
-            fileHandle.closeFile()
-            cleanup()
-        }
-    }
-    
-    ///do the checks and cleanup
-    func cleanup() {
-        let path = "\(directory)/\(logName(0))"
-        let size = fileSize(path)
-        let maxSize: UInt64 = maxFileSize * 1024
-        if size > 0 && size >= maxSize && maxSize > 0 && maxFileCount > 0 {
-            rename(0)
-            //delete the oldest file
-            let deletePath = "\(directory)/\(logName(maxFileCount))"
-            let fileManager = FileManager.default
-            do {
-                try fileManager.removeItem(atPath: deletePath)
-            } catch _ {}
-        }
-    }
-    
-    ///check the size of a file
-    func fileSize(_ path: String) -> UInt64 {
-        let fileManager = FileManager.default
-        let attrs: NSDictionary? = try? fileManager.attributesOfItem(atPath: path) as NSDictionary
-        if let dict = attrs {
-            return dict.fileSize()
-        }
-        return 0
-    }
-    
-    ///Recursive method call to rename log files
-    func rename(_ index: Int) {
-        let fileManager = FileManager.default
-        let path = "\(directory)/\(logName(index))"
-        let newPath = "\(directory)/\(logName(index+1))"
-        if fileManager.fileExists(atPath: newPath) {
-            rename(index+1)
-        }
-        do {
-            try fileManager.moveItem(atPath: path, toPath: newPath)
-        } catch _ {}
-    }
-    
-    ///gets the log name
-    func logName(_ num :Int) -> String {
-        return "\(name).\(num).log"
-    }
-    
-    ///get the default log directory
-    class func defaultDirectory(logFilePath: String?) -> String {
-        var path = ""
-        let fileManager = FileManager.default
-        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
-        path = "\(paths[0])"
-        if let logFilePath = logFilePath, logFilePath.count > 0 {
-            path = logFilePath
-        }
-        if !fileManager.fileExists(atPath: path) && path != ""  {
-            do {
-                try fileManager.createDirectory(atPath: path, withIntermediateDirectories: false, attributes: nil)
-            } catch _ {}
-        }
-        return path
+        componetFileLogger = AgoraComponetFileLogger(logFilePath: logFilePath,
+                                                     filePrefixName: "agora.AgoraLyricsScore",
+                                                     maxFileSizeOfBytes: 1024 * 1024 * 2,
+                                                     maxFileCount: 8,
+                                                     domainName: "ALS")
     }
     
     @objc public func onLog(content: String,
                             tag: String?,
                             time: String,
                             level: LoggerLevel) {
-        let text = tag == nil ? "[\(time)][ALS][\(level)]: " + content : "[\(time)][ALS][\(level)][\(tag!)]: " + content
-        write(text: text)
+        let newLevel = AgoraComponetLoggerLevel(rawValue: UInt(level.rawValue))!
+        componetFileLogger.onLog(withContent: content, tag: tag, time: time, level: newLevel)
     }
 }

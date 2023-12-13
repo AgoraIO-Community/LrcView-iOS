@@ -14,6 +14,7 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target = '10.0'
   spec.swift_versions = "5.0"
   spec.requires_arc  = true
+  spec.dependency 'AgoraComponetLog'
   spec.resource_bundles = {
     'AgoraLyricsScoreBundle' => ['AgoraLyricsScore/Resources/*.xcassets']
   }
