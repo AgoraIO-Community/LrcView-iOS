@@ -11,12 +11,17 @@ import Foundation
 
 class DownloaderManager: NSObject {
     // 下载缓存池
-    private var downloadCache: Dictionary<String, Downloader>
+    private var downloadCache = SafeDictionary<String, Downloader>()
     private var failback: DownloadFailClosure?
     private let logTag = "DownloaderManager"
     
+    deinit {
+        Log.info(text: "deinit", tag: logTag)
+    }
+    
     override init() {
-        downloadCache = Dictionary()
+        Log.info(text: "init", tag: logTag)
+        
     }
     
     func download(url: URL,
@@ -25,31 +30,38 @@ class DownloaderManager: NSObject {
                   fail: @escaping DownloadFailClosure)  {
         self.failback = fail
         // 判断缓存池中是否已经存在
-        var downloader = self.downloadCache[url.path]
+        var downloader = downloadCache.getValue(forkey: url.absoluteString)
         if downloader != nil {
             Log.errorText(text: "当前下载已存在不需要重复下载！", tag: logTag)
-            let e = DownloadError(codeType: .repeatDownloading, msg: "当前下载已存在不需要重复下载！")
+            let e = DownloadError(domainType: .repeatDownloading,
+                                  code: DownloadErrorDomainType.repeatDownloading.rawValue,
+                                  msg: "当前下载已存在不需要重复下载")
             self.failback?(e)
             return
         }
         downloader = Downloader()
-        self.downloadCache[url.path] = downloader
-        weak var managerWeak = self
-        downloader?.download(url: url, progress: progress, completion: { (filePath) in
-            managerWeak?.downloadCache.removeValue(forKey: url.path)
+        downloadCache.set(value: downloader!, forkey: url.absoluteString)
+        downloader?.download(url: url, progress: progress, completion: { [weak self](filePath) in
+            guard let self = self else {
+                return
+            }
+            downloadCache.removeValue(forkey: url.absoluteString)
             completion(filePath)
         }, fail: fail)
     }
     
     func cancelTask(url: URL) {
-        let downloader = self.downloadCache[url.path]
+        let downloader = downloadCache.getValue(forkey: url.absoluteString)
         if downloader == nil {
             Log.debug(text: "任务已经移除，不需要重复移除！", tag: logTag)
             return
         }
-        //结束任务
-        downloader?.cancel()
         // 从缓存池中删除
-        self.downloadCache.removeValue(forKey: url.path)
+        downloadCache.removeValue(forkey: url.absoluteString)
+        //结束任务
+        downloader?.resetEventCloure()
+        downloader?.cancel()
     }
+    
+    
 }

@@ -11,6 +11,7 @@ import ScoreEffectUI
 import RTMTokenBuilder
 
 class HostVC: UIViewController {
+    let lyricsFileDownloader = LyricsFileDownloader()
     var agoraKit: AgoraRtcEngineKit!
     let ktvView = KTVView()
     var song = MainTestVC.Item(code: 6625526605291650, isXML: true)
@@ -42,6 +43,7 @@ class HostVC: UIViewController {
     }
     
     func commonInit() {
+        lyricsFileDownloader.delegate = self
         ktvView.karaokeView.delegate = self
         token = TokenBuilder.buildToken(Config.mccAppId,
                                         appCertificate: Config.mccCertificate,
@@ -225,22 +227,7 @@ extension HostVC: AgoraMusicContentCenterEventDelegate {
                 self?.title = nil
             }
         }
-        FileCache.fect(urlString: lyricUrl) { progress in
-
-        } completion: { filePath in
-            let url = URL(fileURLWithPath: filePath)
-            let data = try! Data(contentsOf: url)
-            let model = KaraokeView.parseLyricData(data: data)!
-            self.lyricModel = model
-            self.ktvView.karaokeView.setLyricData(data: model)
-            self.ktvView.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-            self.mccPlay()
-            /// auto skip
-            let toPosition = max(model.preludeEndPosition - 2000, 0)
-            self.mpk.seek(toPosition: toPosition)
-        } fail: { error in
-            print("fect fail")
-        }
+        let _ = lyricsFileDownloader.download(urlString: lyricUrl)
     }
     
     func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
@@ -279,5 +266,27 @@ extension HostVC: KaraokeDelegate {
         self.cumulativeScore = cumulativeScore
         ktvView.gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lineCount * 100)
         ktvView.incentiveView.show(score: score)
+    }
+}
+
+extension HostVC: LyricsFileDownloaderDelegate {
+    func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {
+        
+    }
+    
+    func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
+        if let data = fileData {
+            let model = KaraokeView.parseLyricData(data: data)!
+            self.lyricModel = model
+            self.ktvView.karaokeView.setLyricData(data: model)
+            self.ktvView.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+            self.mccPlay()
+            /// auto skip
+            let toPosition = max(model.preludeEndPosition - 2000, 0)
+            self.mpk.seek(toPosition: toPosition)
+        }
+        else {
+            print("fect fail")
+        }
     }
 }

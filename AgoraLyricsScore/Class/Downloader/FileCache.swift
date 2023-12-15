@@ -14,6 +14,10 @@ class FileCache {
     var maxFileAge: UInt = 8 * 60 * 60 { didSet { removeFilesIfNeeded() } }
     private let logTag = "FileCache"
     
+    init() {
+        Log.info(text: "init", tag: logTag)
+    }
+    
     deinit {
         Log.info(text: "deinit", tag: logTag)
     }
@@ -84,15 +88,22 @@ class FileCache {
     }
     
     func clearAll() {
+        Log.debug(text: "clearAll start", tag: logTag)
         let fileManager = FileManager.default
         let files = findXMLandLRCFiles(inDirectory: String.cacheFolderPath())
+        if files.isEmpty {
+            Log.debug(text: "no need to clear", tag: logTag)
+            return
+        }
         do {
             for file in files {
                 try fileManager.removeItem(atPath: file.path)
+                Log.debug(text: "rm \(file.path.fileName)", tag: logTag)
             }
         } catch let error {
             Log.error(error: "clearAll: \(error)", tag: logTag)
         }
+        Log.debug(text: "clearAll end", tag: logTag)
     }
 }
 

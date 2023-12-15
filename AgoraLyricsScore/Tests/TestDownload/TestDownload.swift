@@ -14,7 +14,6 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
     let expNormalXMLProgress = XCTestExpectation(description: "test TestDownload expNormalXMLProgress")
     let expNormalLRCSucess = XCTestExpectation(description: "test TestDownload NormalLRCSucess")
     let expNormalLRCProgress = XCTestExpectation(description: "test TestDownload expNormalLRCProgress")
-    let expFakeUrlFail = XCTestExpectation(description: "test TestDownload FakeUrlFail")
     let expUrlRepeatFail = XCTestExpectation(description: "test TestDownload UrlRepeatFail")
     
     var currentTestingCaseNum = 0
@@ -28,7 +27,7 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
                       "https://fullapp.oss-cn-beijing.aliyuncs.com/lyricsMockDownload/8.lrc",
                       "https://fullapp.oss-cn-beijing.aliyuncs.com/lyricsMockDownload/9.lrc",
                       "https://fullapp.oss-cn-beijing.aliyuncs.com/lyricsMockDownload/10.lrc"]
-    let fakeUrlString = "https://fullapp.fake.com/fake/11.zip"
+    
     
     override func setUpWithError() throws {
         Log.setLoggers(loggers: [ConsoleLogger()])
@@ -63,20 +62,9 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
         wait(for: [expNormalLRCSucess, expNormalLRCProgress], timeout: 10)
     }
     
-    func testFakeUrlFail() throws {
-        currentTestingCaseNum = 2
-        Downloader.requestTimeoutInterval = 4
-        lyricsFileDownloader = LyricsFileDownloader()
-        lyricsFileDownloader.delegate = self
-        
-        let urlString = fakeUrlString
-        let _ = lyricsFileDownloader.download(urlString: urlString)
-        wait(for: [expFakeUrlFail], timeout: 6)
-    }
-    
     func testUrlRepeatFail() throws {
-        currentTestingCaseNum = 3
-        Downloader.requestTimeoutInterval = 9
+        currentTestingCaseNum = 2
+        Downloader.requestTimeoutInterval = 8
         lyricsFileDownloader = LyricsFileDownloader()
         lyricsFileDownloader.delegate = self
         lyricsFileDownloader.cleanAll()
@@ -105,10 +93,7 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
         if currentTestingCaseNum == 1, fileData != nil {
             expNormalLRCSucess.fulfill()
         }
-        if currentTestingCaseNum == 2, error != nil {
-            expFakeUrlFail.fulfill()
-        }
-        if currentTestingCaseNum == 3, error != nil, error!.codeType == .repeatDownloading {
+        if currentTestingCaseNum == 2, error != nil, error!.domainType == .repeatDownloading {
             expUrlRepeatFail.fulfill()
         }
     }

@@ -25,6 +25,18 @@ class Downloader: NSObject {
     private var currentLength: Float = 0.0
     static var requestTimeoutInterval: TimeInterval = 60
     private let logTag = "Downloader"
+    
+    deinit {
+        Log.info(text: "deinit", tag: logTag)
+        if (downloadLoop != nil) {
+            CFRunLoopStop(downloadLoop)
+        }
+    }
+    
+    override init() {
+        super.init()
+        Log.info(text: "init", tag: logTag)
+    }
   
     // 开始下载
     func download(url: URL, progress: @escaping DownloadProgressClosure, completion: @escaping DownloadCompletionClosure, fail: @escaping DownloadFailClosure) {
@@ -37,19 +49,22 @@ class Downloader: NSObject {
             Log.errorText(text: "已经开始下载。。。。", tag: logTag)
             return
         }
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else {
+                return
+            }
             var request = URLRequest(url: self.downloadUrl!)
             request.httpMethod = "GET"
             request.cachePolicy = .reloadIgnoringLocalCacheData
             request.timeoutInterval = Downloader.requestTimeoutInterval
             // session会话
-            self.downloadSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+            downloadSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
             // 创建下载任务
             let downloadTask = self.downloadSession?.dataTask(with: request)
             // 开始下载
             downloadTask?.resume()
             // 当前运行循环
-            self.downloadLoop = CFRunLoopGetCurrent()
+            downloadLoop = CFRunLoopGetCurrent()
             CFRunLoopRun()
         }
         
@@ -57,37 +72,56 @@ class Downloader: NSObject {
     
     // 取消下载任务
     func cancel() {
-        self.downloadSession?.invalidateAndCancel()
-        self.downloadSession = nil
-        self.fileOutputStream = nil
+        downloadSession?.invalidateAndCancel()
+        downloadSession = nil
+        fileOutputStream = nil
         // 结束下载的线程
-        CFRunLoopStop(self.downloadLoop)
+        if (downloadLoop != nil) {
+            CFRunLoopStop(downloadLoop)
+        }
     }
     
-    
+    func resetEventCloure() {
+        fail = nil
+        completion = nil
+        progress = nil
+    }
 }
 
 extension Downloader: URLSessionDataDelegate {
     // 接收到服务器响应的时候调用该方法 completionHandler .allow 继续接收数据
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+    func urlSession(_ session: URLSession,
+                    dataTask: URLSessionDataTask,
+                    didReceive response: URLResponse,
+                    completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         Log.debug(text: "远程服务器开始响应...............", tag: logTag)
+        if let resp = response as? HTTPURLResponse, resp.statusCode != 200 {
+            Log.errorText(text: resp.description, tag: logTag)
+            let e = DownloadError(domainType: .httpDownloadErrorLogic, code: resp.statusCode, msg: "http error: \(resp.statusCode)")
+            Log.errorText(text: e.description, tag: logTag)
+            fail?(e)
+            fail = nil
+            completionHandler(.cancel)
+            cancel()
+            return
+        }
         //初始化本地文件地址
         // 远程文件名称
         let filename = dataTask.response?.suggestedFilename ?? "unKnownFileTitle.tmp"
         let dir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
         localUrl = dir.appendingPathComponent(filename)
         Log.debug(text: "本地地址：\(self.localUrl?.absoluteString ?? "")", tag: logTag)
-        self.fileOutputStream = OutputStream(url: self.localUrl!, append: true)
-        self.fileOutputStream?.open()
+        fileOutputStream = OutputStream(url: self.localUrl!, append: true)
+        fileOutputStream?.open()
         completionHandler(.allow)
-        
     }
     
     //接收到数据 可能调用多次
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         Log.debug(text: "接收到数据...............", tag: logTag)
-        _ = data.withUnsafeBytes {
-            self.fileOutputStream?.write($0, maxLength: data.count)
+        data.withUnsafeBytes { bufferPointer in
+            guard let baseAddress = bufferPointer.baseAddress else { return }
+            self.fileOutputStream?.write(baseAddress, maxLength: bufferPointer.count)
         }
         currentLength += Float(data.count)
         // 这里有个问题 有些自己做的数据返回 header里面没有length 那就无法计算进度
@@ -101,14 +135,17 @@ extension Downloader: URLSessionDataDelegate {
     }
     //下载结束 error有值表示失败
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        Log.info(text: "下载完成...........urlSession", tag: logTag)
-        self.fileOutputStream?.close()
-        self.cancel()
+        fileOutputStream?.close()
+        cancel()
         if error != nil {
-            let e = DownloadError(codeType: .httpDownloadError, msg: error!.localizedDescription)
-            self.fail?(e)
-        }else {
-            self.completion?(self.localUrl?.path ?? "")
+            Log.errorText(text: "download fail: \(error!.localizedDescription)", tag: logTag)
+            let e = DownloadError(domainType: .httpDownloadError, error: error! as NSError)
+            fail?(e)
+            fail = nil
+        } else {
+            Log.info(text: "download success", tag: logTag)
+            completion?(self.localUrl?.path ?? "")
+            completion = nil
         }
     }
 }

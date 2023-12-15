@@ -9,7 +9,9 @@ import Foundation
 import Zip
 
 public class LyricsFileDownloader: NSObject {
-    /// max number file in local (if reach max, sdk will remove oldest file)
+    typealias RequestId = Int
+    
+    /// max number of file in local (if reach max, sdk will remove oldest file)
     @objc public var maxFileNum: UInt8 = 50 { didSet { fileCache.maxFileNum = maxFileNum } }
     /// age of file (seconds), default is 8 hours
     @objc public var maxFileAge: UInt = 8 * 60 * 60 { didSet { fileCache.maxFileAge = maxFileAge } }
@@ -18,10 +20,16 @@ public class LyricsFileDownloader: NSObject {
     private let fileCache = FileCache()
     private let downloaderManager = DownloaderManager()
     private let queue = DispatchQueue(label: "com.agora.LyricsFileDownloader.queue")
-    private var requestIdDict = [Int : String]()
-    private var currentRequestId: Int = 0
+    private var requestIdDict = [RequestId : String]()
+    private var currentRequestId: RequestId = 0
+    private let maxConcurrentRequestCount = 3
+    private var waittingTaskQueue = Queue<TaskInfo>()
     private let logTag = "LyricsFileDownloader"
     // MARK: - Public Method
+    
+    public override init() {
+        Log.info(text: "init", tag: logTag)
+    }
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
@@ -36,22 +44,35 @@ public class LyricsFileDownloader: NSObject {
         
         /** check file Exist **/
         if let fileData = fetchFromLocal(urlString: urlString) {
-            invokeOnLyricsFileDownloadCompleted(requestId: requestId,
-                                                fileData: fileData,
-                                                error: nil)
+            queue.async { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                invokeOnLyricsFileDownloadCompleted(requestId: requestId,
+                                                    fileData: fileData,
+                                                    error: nil)
+            }
             return requestId
         }
-        
-        /** check local file **/
-        fileCache.removeFilesIfNeeded()
         
         /** start download **/
         queue.async { [weak self] in
             guard let self = self else {
                 return
             }
-            _addRequest(id: requestId, urlString: urlString)
-            _startDownload(urlString: urlString, requestId: requestId)
+            /** check local file **/
+            fileCache.removeFilesIfNeeded()
+            
+            if requestIdDict.count >= maxConcurrentRequestCount {
+                let logText = "request(\(requestId) was enqueued in waittingTaskQueue, current num of requesting task is \(requestIdDict.count)"
+                Log.info(text: logText, tag: logTag)
+                let taskInfo = TaskInfo(requestId: requestId, urlString: urlString)
+                waittingTaskQueue.enqueue(taskInfo)
+            }
+            else {
+                _addRequest(id: requestId, urlString: urlString)
+                _startDownload(requestId: requestId, urlString: urlString)
+            }
         }
         
         return requestId
@@ -69,12 +90,7 @@ public class LyricsFileDownloader: NSObject {
     
     /// clean all files in local
     @objc public func cleanAll() {
-        queue.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            _cleanAll()
-        }
+        _cleanAll()
     }
     
     // MARK: - Private Method - 0
@@ -89,8 +105,13 @@ public class LyricsFileDownloader: NSObject {
         return nil
     }
     
-    func _startDownload(urlString: String, requestId: Int) {
-        let url = URL(string: urlString)!
+    func _startDownload(requestId: Int, urlString: String) {
+        Log.debug(text: "_startDownload requestId:\(requestId)", tag: logTag)
+        guard let url = URL(string: urlString) else {
+            _removeRequest(id: requestId)
+            _resumeTaskIfNeeded()
+            return
+        }
         downloaderManager.download(url: url) { [weak self](progress) in
             guard let self = self else {
                 return
@@ -100,32 +121,44 @@ public class LyricsFileDownloader: NSObject {
             guard let self = self else {
                 return
             }
-            if filePath.split(separator: ".").last == "lrc" {
+            if filePath.split(separator: ".").last == "lrc" { /** lrc type **/
                 let url = URL(fileURLWithPath: filePath)
-                let data = try! Data(contentsOf: url)
-                removeRequest(id: requestId)
-                invokeOnLyricsFileDownloadCompleted(requestId: requestId,
-                                                    fileData: data,
-                                                    error: nil)
+                do {
+                    let data = try Data(contentsOf: url)
+                    removeRequest(id: requestId)
+                    resumeTaskIfNeeded()
+                    invokeOnLyricsFileDownloadCompleted(requestId: requestId,
+                                                        fileData: data,
+                                                        error: nil)
+                } catch let error {
+                    let logText = "get data from [\(url)] failed: \(error.localizedDescription)"
+                    Log.errorText(text: logText, tag: logTag)
+                }
                 return
             }
+            
+            /** xml type **/
             unzip(filePath: filePath, requestId: requestId)
         } fail: { [weak self](error) in
             guard let self = self else {
                 return
             }
             removeRequest(id: requestId)
+            resumeTaskIfNeeded()
             invokeOnLyricsFileDownloadCompleted(requestId: requestId, fileData: nil, error: error)
         }
     }
     
     func _cancleDownload(requestId: Int) {
         if let urlString = requestIdDict[requestId] {
-            let url = URL(string: urlString)!
+            guard let url = URL(string: urlString) else {
+                Log.errorText(text: "\(urlString) is not valid url", tag: logTag)
+                return
+            }
             downloaderManager.cancelTask(url: url)
         }
         else {
-            Log.debug(text: "no need to remove id:\(requestId)")
+            _removeWaittingTaskIfNeeded(requestId: requestId)
         }
     }
     
@@ -154,25 +187,29 @@ public class LyricsFileDownloader: NSObject {
             let url = URL(fileURLWithPath: path)
             let data = try Data(contentsOf: url)
             removeRequest(id: requestId)
+            resumeTaskIfNeeded()
             invokeOnLyricsFileDownloadCompleted(requestId: requestId,
                                                 fileData: data,
                                                 error: nil)
         } catch let error {
             removeRequest(id: requestId)
-            let e = DownloadError(codeType: .unzipFail, msg: error.localizedDescription)
+            resumeTaskIfNeeded()
+            let e = DownloadError(domainType: .unzipFail,
+                                  code: DownloadErrorDomainType.unzipFail.rawValue,
+                                  msg: error.localizedDescription)
             invokeOnLyricsFileDownloadCompleted(requestId: requestId,
                                                 fileData: nil,
                                                 error: e)
         }
     }
     
-    private func genId() -> Int {
+    private func genId() -> RequestId {
         let id = currentRequestId
         currentRequestId = currentRequestId == Int.max ? 0 : currentRequestId + 1
         return id
     }
     
-    private func addRequest(id: Int, urlString: String) {
+    private func addRequest(id: RequestId, urlString: String) {
         queue.async { [weak self] in
             guard let self = self else {
                 return
@@ -181,7 +218,7 @@ public class LyricsFileDownloader: NSObject {
         }
     }
     
-    private func removeRequest(id: Int) {
+    private func removeRequest(id: RequestId) {
         queue.async { [weak self] in
             guard let self = self else {
                 return
@@ -190,12 +227,48 @@ public class LyricsFileDownloader: NSObject {
         }
     }
     
-    private func _addRequest(id: Int, urlString: String) {
+    private func _addRequest(id: RequestId, urlString: String) {
         requestIdDict[id] = urlString
     }
     
-    private func _removeRequest(id: Int) {
+    private func _removeRequest(id: RequestId) {
         requestIdDict.removeValue(forKey: id)
+    }
+    
+    private func resumeTaskIfNeeded() {
+        queue.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            _resumeTaskIfNeeded()
+        }
+    }
+    
+    private func _resumeTaskIfNeeded() {
+        Log.debug(text: "_resumeTaskIfNeeded", tag: logTag)
+        if requestIdDict.count >= maxConcurrentRequestCount {
+            return
+        }
+        
+        if let taskInfo = waittingTaskQueue.dequeue() {
+            Log.info(text: "task was resume, requestId: \(taskInfo.requestId)", tag: logTag)
+            _addRequest(id: taskInfo.requestId, urlString: taskInfo.urlString)
+            _startDownload(requestId: taskInfo.requestId, urlString: taskInfo.urlString)
+        }
+    }
+    
+    private func _removeWaittingTaskIfNeeded(requestId: Int) {
+        Log.debug(text: "_removeWaittingTaskIfNeeded \(requestId)", tag: logTag)
+        var tasks = waittingTaskQueue.getAll()
+        let contain = tasks.contains(where: { $0.requestId == requestId })
+        if contain {
+            tasks = tasks.filter({ requestId != $0.requestId })
+            waittingTaskQueue.reset(newElements: tasks)
+            Log.debug(text: "task (id:\(requestId)) was remove in waitting tasks ", tag: logTag)
+        }
+        else {
+            Log.debug(text: "no task (id:\(requestId)) was should be remove in waitting tasks", tag: logTag)
+        }
     }
 }
 

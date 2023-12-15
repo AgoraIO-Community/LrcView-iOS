@@ -51,7 +51,8 @@ class ViewController: UIViewController {
                                             .init(title: "观众端"),
                                             .init(title: "主播端"),
                                             .init(title: "抢唱"),
-                                            .init(title: "miniSize")])]
+                                            .init(title: "miniSize"),
+                                            .init(title: "下载")])]
 
 //        list = [Section(title: "UI", rows: [.init(title: "View配置")])]
     }
@@ -168,6 +169,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             
             if indexPath.row == 13 { /** mini size 小视图 **/
                 let vc = MiniSizeVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 14 { /** 下载 **/
+                let vc = DownloadVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }

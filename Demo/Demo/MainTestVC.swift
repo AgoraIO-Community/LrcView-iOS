@@ -19,6 +19,7 @@ extension MainTestVC {
 }
 
 class MainTestVC: UIViewController {
+    let lyricsFileDownloader = LyricsFileDownloader()
     let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger(), FileLogger()])
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
@@ -160,6 +161,7 @@ class MainTestVC: UIViewController {
     }
     
     func commonInit() {
+        lyricsFileDownloader.delegate = self
         skipButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         setButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         changeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
@@ -486,33 +488,7 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
                 self?.title = nil
             }
         }
-        let songCode = song.code
-        FileCache.fect(urlString: lyricUrl) { progress in
-
-        } completion: { filePath in
-            let url = URL(fileURLWithPath: filePath)
-            let data = try! Data(contentsOf: url)
-            let model = KaraokeView.parseLyricData(data: data)!
-            self.lyricModel = model
-            print("linesCount:\(model.lines.count) songCode:\(songCode)")
-            if !self.noLyric {
-                let canScoring = model.hasPitch
-                if canScoring { /** xml **/
-                    self.karaokeView.setLyricData(data: model)
-                    self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-                }
-                else {/** lrc **/
-                    self.karaokeView.setLyricData(data: model)
-                }
-            }
-            else {
-                self.karaokeView.setLyricData(data: nil)
-                self.gradeView.isHidden = true
-            }
-            self.mccPlay()
-        } fail: { error in
-            print("fect fail")
-        }
+        let _ = lyricsFileDownloader.download(urlString: lyricUrl)
     }
     
     func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
@@ -566,6 +542,38 @@ extension MainTestVC: KaraokeDelegate {
     }
 }
 
+extension MainTestVC: LyricsFileDownloaderDelegate {
+    func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {
+        
+    }
+    
+    func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
+        if let data = fileData {
+            let model = KaraokeView.parseLyricData(data: data)!
+            lyricModel = model
+            print("linesCount:\(model.lines.count) songCode:\(self.song.code)")
+            if !self.noLyric {
+                let canScoring = model.hasPitch
+                if canScoring { /** xml **/
+                    self.karaokeView.setLyricData(data: model)
+                    self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+                }
+                else {/** lrc **/
+                    self.karaokeView.setLyricData(data: model)
+                }
+            }
+            else {
+                self.karaokeView.setLyricData(data: nil)
+                self.gradeView.isHidden = true
+            }
+            self.mccPlay()
+        }
+        else {
+            print("fect fail")
+        }
+    }
+}
+
 extension MainTestVC: ParamSetVCDelegate {
     func didSetParam(param: Param, noLyric: Bool) {
         self.noLyric = noLyric
@@ -579,3 +587,5 @@ extension MainTestVC: ParamSetVCDelegate {
         mccPreload()
     }
 }
+
+
