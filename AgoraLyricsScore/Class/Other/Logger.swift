@@ -26,8 +26,8 @@ public class ConsoleLogger: NSObject, ILogger {
 public class FileLogger: NSObject, ILogger {
     let componetFileLogger: AgoraComponetFileLogger!
     let filePrefixName = "agora.AgoraLyricsScore"
-    let maxFileSizeOfBytes: UInt64 = 1024 * 1024 * 2
-    let maxFileCount: UInt = 8
+    let maxFileSizeOfBytes: UInt64 = 1024 * 1024 * 1
+    let maxFileCount: UInt = 4
     let domainName = "ALS"
     
     @objc public override init() {

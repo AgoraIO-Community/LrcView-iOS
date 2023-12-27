@@ -82,7 +82,8 @@ final class TestDownloadForFakeUrl: XCTestCase, LyricsFileDownloaderDelegate {
         if currentTestingCaseNum == 0, let e = error, e.domainType == .httpDownloadError, e.code == -1004 { /** not connect **/
             expFakeUrlFail.fulfill()
         }
-        if currentTestingCaseNum == 1, let e = error, e.domainType == .httpDownloadError, e.code == -1001 { /** time out **/
+        if currentTestingCaseNum == 1, let e = error, e.domainType == .httpDownloadError, e.code == -1003 { /** time out **/
+            /// A server with the specified hostname could not be found.
             expFakeUrlFail2.fulfill()
         }
         if currentTestingCaseNum == 2, let e = error, e.domainType == .httpDownloadErrorLogic, e.code == 404 {
