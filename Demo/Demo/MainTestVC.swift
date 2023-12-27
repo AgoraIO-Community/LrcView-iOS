@@ -37,7 +37,7 @@ class MainTestVC: UIViewController {
     var mpk: AgoraMusicPlayerProtocol!
     var pitchInvokeDuration:CFAbsoluteTime = 0
 //    var song = Item(code: 6246262727283870, isXML: false)
-    var song = Item(code: 6625526604952630, isXML: true)
+    var song = Item(code: 6246262727282860, isXML: true)
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
@@ -50,12 +50,12 @@ class MainTestVC: UIViewController {
 //                 /** xml 不打分 **/
 //                 Item(code: 6315145508122860, isXML: true)]
     
-    var songs = [/// 日不落
-        Item(code: 6625526604952630, isXML: true),
-        /// 稻香
-        Item(code: 6654550250051940, isXML: true),
-        /// 荷塘月色
-        Item(code: 6625526606517650, isXML: true),
+    var songs = [/// 爱情转移
+        Item(code: 6246262727282860, isXML: true),
+        /// 说爱你
+        Item(code: 6654550221757560, isXML: true),
+        /// 江南
+        Item(code: 6246262727300580, isXML: true),
         /// 容易受伤的女人
         Item(code: 6625526608670440, isXML: true)]
 //    var songs = [Item(code: 6246262727282120, isXML: true),
@@ -214,7 +214,6 @@ class MainTestVC: UIViewController {
         config.mccUid = Config.mccUid
         config.token = token
         config.appId = Config.mccAppId
-        config.mccDomain = "api-test.agora.io"
         mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
         mcc.register(self)
         mpk = mcc.createMusicPlayer(delegate: self)
