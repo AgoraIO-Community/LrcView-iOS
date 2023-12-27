@@ -25,12 +25,29 @@ public class ConsoleLogger: NSObject, ILogger {
 
 public class FileLogger: NSObject, ILogger {
     let componetFileLogger: AgoraComponetFileLogger!
-    @objc public init(logFilePath: String? = nil) {
+    let filePrefixName = "agora.AgoraLyricsScore"
+    let maxFileSizeOfBytes: UInt64 = 1024 * 1024 * 2
+    let maxFileCount: UInt = 8
+    let domainName = "ALS"
+    
+    @objc public override init() {
+        self.componetFileLogger = AgoraComponetFileLogger(logFilePath: nil,
+                                                          filePrefixName: filePrefixName,
+                                                          maxFileSizeOfBytes: maxFileSizeOfBytes,
+                                                          maxFileCount: maxFileCount,
+                                                          domainName: domainName)
+        super.init()
+    }
+    
+    /// init
+    /// - Parameter logFilePath: custom log file path.
+    @objc public init(logFilePath: String) {
         componetFileLogger = AgoraComponetFileLogger(logFilePath: logFilePath,
-                                                     filePrefixName: "agora.AgoraLyricsScore",
-                                                     maxFileSizeOfBytes: 1024 * 1024 * 2,
-                                                     maxFileCount: 8,
-                                                     domainName: "ALS")
+                                                     filePrefixName: filePrefixName,
+                                                     maxFileSizeOfBytes: maxFileSizeOfBytes,
+                                                     maxFileCount: maxFileCount,
+                                          
+                                                     domainName: domainName)
     }
     
     @objc public func onLog(content: String,

@@ -47,7 +47,7 @@ public class KaraokeView: UIView {
     /// - Note: use for Swift. `KaraokeView(frame: frame)`
     /// - Parameters:
     ///   - logger: custom logger
-    @objc public convenience init(frame: CGRect, loggers: [ILogger] = [FileLogger(logFilePath: nil), ConsoleLogger()]) {
+    @objc public convenience init(frame: CGRect, loggers: [ILogger] = [FileLogger(), ConsoleLogger()]) {
         Log.setLoggers(loggers: loggers)
         self.init(frame: frame)
     }
@@ -122,6 +122,7 @@ extension KaraokeView {
     /// - Note: 可以从AgoraRTC回调方法 `- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine reportAudioVolumeIndicationOfSpeakers:(NSArray<AgoraRtcAudioVolumeInfo *> * _Nonnull)speakers totalVolume:(NSInteger)totalVolume`  获取
     /// - Parameter pitch: 实时音调值
     @objc public func setPitch(pitch: Double) {
+        Log.info(text: "p:\(pitch)", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setPitch not isMainThread ", tag: logTag)
         }

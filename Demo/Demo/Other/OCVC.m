@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
-    FileLogger *fileLogger = [[FileLogger alloc] initWithLogFilePath:nil];
+    FileLogger *fileLogger = [[FileLogger alloc] init];
     KaraokeView *karaokeView = [[KaraokeView alloc] initWithFrame:CGRectZero
                                                           loggers:@[[ConsoleLogger new],fileLogger]];
     karaokeView.backgroundImage = [UIImage imageNamed:@"ktv_top_bgIcon"];
@@ -67,20 +67,9 @@
                         score:(NSInteger)score
               cumulativeScore:(NSInteger)cumulativeScore
                     lineIndex:(NSInteger)lineIndex lineCount:(NSInteger)lineCount {}
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 - (void)onLogWithContent:(NSString *)content tag:(NSString *)tag time:(NSString *)time level:(enum LoggerLevel)level {
     
 }
-
-
 
 @end

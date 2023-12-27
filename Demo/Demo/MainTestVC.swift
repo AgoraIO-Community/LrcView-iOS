@@ -10,6 +10,7 @@ import AgoraRtcKit
 import RTMTokenBuilder
 import AgoraLyricsScore
 import ScoreEffectUI
+import os
 
 extension MainTestVC {
     struct Item {
@@ -36,7 +37,7 @@ class MainTestVC: UIViewController {
     var mpk: AgoraMusicPlayerProtocol!
     var pitchInvokeDuration:CFAbsoluteTime = 0
 //    var song = Item(code: 6246262727283870, isXML: false)
-    var song = Item(code: 6246262727282120, isXML: true)
+    var song = Item(code: 6625526604952630, isXML: true)
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
@@ -48,18 +49,15 @@ class MainTestVC: UIViewController {
 //                 Item(code: 6625526603296890, isXML: true),
 //                 /** xml 不打分 **/
 //                 Item(code: 6315145508122860, isXML: true)]
-    var songs = [Item(code: 6625526604952630, isXML: true),
-                 Item(code: 6654550250051940, isXML: true),
-                 Item(code: 6625526606517650, isXML: true),
-                 Item(code: 6625526608670440, isXML: true),
-                 Item(code: 6625526619767100, isXML: true),
-                 Item(code: 6654550256811200, isXML: true),
-                 Item(code: 6625526603907880, isXML: true),
-                 Item(code: 6654550242185930, isXML: true),
-                 Item(code: 6625526603433040, isXML: true),
-                 Item(code: 6654550244516420, isXML: true),
-                 Item(code: 6625526603472520, isXML: true),
-                 Item(code: 6625526603742770, isXML: true)]
+    
+    var songs = [/// 日不落
+        Item(code: 6625526604952630, isXML: true),
+        /// 稻香
+        Item(code: 6654550250051940, isXML: true),
+        /// 荷塘月色
+        Item(code: 6625526606517650, isXML: true),
+        /// 容易受伤的女人
+        Item(code: 6625526608670440, isXML: true)]
 //    var songs = [Item(code: 6246262727282120, isXML: true),
 //                 Item(code: 6625526603472520, isXML: true)]
     var currentSongIndex = 0
@@ -216,6 +214,7 @@ class MainTestVC: UIViewController {
         config.mccUid = Config.mccUid
         config.token = token
         config.appId = Config.mccAppId
+        config.mccDomain = "api-test.agora.io"
         mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
         mcc.register(self)
         mpk = mcc.createMusicPlayer(delegate: self)
@@ -349,13 +348,13 @@ class MainTestVC: UIViewController {
             break
         }
     }
-    
     func sendData(data: Data) {
         if streamId > 0 {
             agoraKit.sendStreamMessage(streamId, data: data)
         }
     }
     
+    ///
     func createData(time: Int) -> Data {
         /// 把time包装json格式
         let dic = ["time": time]
@@ -587,5 +586,3 @@ extension MainTestVC: ParamSetVCDelegate {
         mccPreload()
     }
 }
-
-
