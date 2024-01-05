@@ -124,6 +124,7 @@ public class LyricsFileDownloader: NSObject {
             if filePath.split(separator: ".").last == "lrc" { /** lrc type **/
                 let url = URL(fileURLWithPath: filePath)
                 do {
+                    try copyFile(from: filePath, to: .cacheFolderPath() + "/" + url.lastPathComponent)
                     let data = try Data(contentsOf: url)
                     removeRequest(id: requestId)
                     resumeTaskIfNeeded()
@@ -167,6 +168,12 @@ public class LyricsFileDownloader: NSObject {
     }
     
     // MARK: - Private Method
+    
+    private func copyFile(from sourcePath: String, to destinationPath: String) throws {
+        let sourceURL = URL(fileURLWithPath: sourcePath)
+        let destinationURL = URL(fileURLWithPath: destinationPath)
+        try FileManager.default.copyItem(at: sourceURL, to: destinationURL)
+    }
     
     private func unzip(filePath: String, requestId: Int) {
         queue.async { [weak self] in

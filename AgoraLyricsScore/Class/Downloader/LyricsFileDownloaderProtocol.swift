@@ -11,7 +11,9 @@ import Foundation
     case general = 0
     /// repeat url request, a same url is requesting
     case repeatDownloading = 1
+    /// error from http framework in ios, such as time out
     case httpDownloadError = 2
+    /// http logic error, such as 400/500
     case httpDownloadErrorLogic = 3
     case unzipFail = 4
     
