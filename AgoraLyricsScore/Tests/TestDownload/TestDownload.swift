@@ -112,6 +112,8 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
             expNormalXMLSucess.fulfill()
         }
         if currentTestingCaseNum == 1, fileData != nil {
+            let fileName = FileCache().findXMLandLRCFiles(inDirectory: .cacheFolderPath()).first?.path.fileName
+            XCTAssertEqual(fileName, "10.lrc")
             expNormalLRCSucess.fulfill()
         }
         if currentTestingCaseNum == 2, error != nil, error!.domainType == .repeatDownloading {
