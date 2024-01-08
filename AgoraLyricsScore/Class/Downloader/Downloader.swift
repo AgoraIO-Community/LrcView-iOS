@@ -89,12 +89,12 @@ class Downloader: NSObject {
 }
 
 extension Downloader: URLSessionDataDelegate {
-    // 接收到服务器响应的时候调用该方法 completionHandler .allow 继续接收数据
+    
     func urlSession(_ session: URLSession,
                     dataTask: URLSessionDataTask,
                     didReceive response: URLResponse,
                     completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
-        Log.debug(text: "远程服务器开始响应...............", tag: logTag)
+        Log.debug(text: "remote server start respone...", tag: logTag)
         if let resp = response as? HTTPURLResponse, resp.statusCode != 200 {
             Log.errorText(text: resp.description, tag: logTag)
             let e = DownloadError(domainType: .httpDownloadErrorLogic, code: resp.statusCode, msg: "http error: \(resp.statusCode)")
@@ -105,20 +105,21 @@ extension Downloader: URLSessionDataDelegate {
             cancel()
             return
         }
-        //初始化本地文件地址
-        // 远程文件名称
+        
+        // file name of remote
         let filename = dataTask.response?.suggestedFilename ?? "unKnownFileTitle.tmp"
-        let dir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        localUrl = dir.appendingPathComponent(filename)
-        Log.debug(text: "本地地址：\(self.localUrl?.absoluteString ?? "")", tag: logTag)
+        let downloadFloderURL = NSURL(fileURLWithPath: String.downloadedFloderPath())
+        FileManager.createDirectoryIfNeeded(atPath: downloadFloderURL.path!)
+        localUrl = downloadFloderURL.appendingPathComponent(filename)
+        Log.debug(text: "local path：\(self.localUrl?.path ?? "")", tag: logTag)
         fileOutputStream = OutputStream(url: self.localUrl!, append: true)
         fileOutputStream?.open()
         completionHandler(.allow)
     }
     
-    //接收到数据 可能调用多次
+    /// didReceive
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        Log.debug(text: "接收到数据...............", tag: logTag)
+        Log.debug(text: "didReceive...", tag: logTag)
         data.withUnsafeBytes { bufferPointer in
             guard let baseAddress = bufferPointer.baseAddress else { return }
             self.fileOutputStream?.write(baseAddress, maxLength: bufferPointer.count)
@@ -126,14 +127,15 @@ extension Downloader: URLSessionDataDelegate {
         currentLength += Float(data.count)
         // 这里有个问题 有些自己做的数据返回 header里面没有length 那就无法计算进度
         let totalLength = Float(dataTask.response?.expectedContentLength ?? -1)
-        var p = currentLength / totalLength
+        var progress = currentLength / totalLength
         if totalLength<0 {
-            p = 0.0
+            progress = 0.0
         }
-        Log.info(text: "current: \(currentLength) , total:\(totalLength), progress:\(p)", tag: logTag)
-        self.progress?(p)
+        Log.info(text: "current: \(currentLength) , total:\(totalLength), progress:\(progress)", tag: logTag)
+        self.progress?(progress)
     }
-    //下载结束 error有值表示失败
+    
+    /// Complete
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         fileOutputStream?.close()
         cancel()

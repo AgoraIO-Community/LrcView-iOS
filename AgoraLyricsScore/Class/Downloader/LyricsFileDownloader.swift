@@ -123,18 +123,36 @@ public class LyricsFileDownloader: NSObject {
             }
             if filePath.split(separator: ".").last == "lrc" { /** lrc type **/
                 let url = URL(fileURLWithPath: filePath)
+                var data: Data?
                 do {
-                    try copyFile(from: filePath, to: .cacheFolderPath() + "/" + url.lastPathComponent)
-                    let data = try Data(contentsOf: url)
+                    data = try Data(contentsOf: url)
                     removeRequest(id: requestId)
                     resumeTaskIfNeeded()
-                    invokeOnLyricsFileDownloadCompleted(requestId: requestId,
-                                                        fileData: data,
-                                                        error: nil)
                 } catch let error {
-                    let logText = "get data from [\(url)] failed: \(error.localizedDescription)"
+                    let logText = "get data from [\(url.path)] failed: \(error.localizedDescription)"
+                    Log.errorText(text: logText, tag: logTag)
+                    let e = DownloadError(domainType: .general, error: error as NSError)
+                    invokeOnLyricsFileDownloadCompleted(requestId: requestId,
+                                                        fileData: nil,
+                                                        error: e)
+                }
+                
+                do {
+                    FileManager.createDirectoryIfNeeded(atPath: .cacheFolderPath())
+                    if FileManager.default.fileExists(atPath: filePath) {
+                        Log.debug(text: "file exist: \(filePath)")
+                    }
+                    try FileManager.default.copyItem(atPath: filePath, toPath: .cacheFolderPath() + "/" + url.lastPathComponent)
+                    Log.debug(text: "ready to removeItem: \(filePath)")
+                    try FileManager.default.removeItem(atPath: filePath)
+                } catch let error {
+                    let logText = "get data from [\(url.path)] failed: \(error.localizedDescription)"
                     Log.errorText(text: logText, tag: logTag)
                 }
+                
+                invokeOnLyricsFileDownloadCompleted(requestId: requestId,
+                                                    fileData: data,
+                                                    error: nil)
                 return
             }
             
@@ -165,15 +183,10 @@ public class LyricsFileDownloader: NSObject {
     
     func _cleanAll() {
         fileCache.clearAll()
+        _clearDownloadFloder()
     }
     
     // MARK: - Private Method
-    
-    private func copyFile(from sourcePath: String, to destinationPath: String) throws {
-        let sourceURL = URL(fileURLWithPath: sourcePath)
-        let destinationURL = URL(fileURLWithPath: destinationPath)
-        try FileManager.default.copyItem(at: sourceURL, to: destinationURL)
-    }
     
     private func unzip(filePath: String, requestId: Int) {
         queue.async { [weak self] in
@@ -276,6 +289,26 @@ public class LyricsFileDownloader: NSObject {
         else {
             Log.debug(text: "no task (id:\(requestId)) was should be remove in waitting tasks", tag: logTag)
         }
+    }
+    
+    private func _clearDownloadFloder() {
+        Log.debug(text: "[DownloadFloder]clearDownloadFloder", tag: logTag)
+        
+        guard let directoryURL = URL(string: String.downloadedFloderPath()) else {
+            return
+        }
+        
+        let fileManager = FileManager.default
+        do {
+            let directoryContents = try fileManager.contentsOfDirectory(at: directoryURL, includingPropertiesForKeys: [.creationDateKey], options: [.skipsHiddenFiles])
+            for url in directoryContents {
+                try fileManager.removeItem(atPath: url.path)
+                Log.debug(text: "[DownloadFloder]rm \(url.path.fileName)", tag: logTag)
+            }
+        } catch let error {
+            Log.error(error: "[DownloadFloder]clearAll: \(error)", tag: logTag)
+        }
+        Log.debug(text: "[DownloadFloder]clearAll end", tag: logTag)
     }
 }
 

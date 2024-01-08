@@ -23,7 +23,7 @@ class FileCache {
     }
     
     func removeFilesIfNeeded() {
-        let files = findXMLandLRCFiles(inDirectory: String.cacheFolderPath())
+        let files = findFiles(inDirectory: String.cacheFolderPath())
         let manager = FileManager.default
         var hasFileBeRemove = false
         var fileForMinCreationTime: ExistedFile?
@@ -65,7 +65,7 @@ class FileCache {
         }
     }
       
-    func findXMLandLRCFiles(inDirectory directoryPath: String) -> [ExistedFile] {
+    func findFiles(inDirectory directoryPath: String) -> [ExistedFile] {
         let fileManager = FileManager.default
         guard let directoryURL = URL(string: directoryPath) else {
             return []
@@ -74,11 +74,9 @@ class FileCache {
         do {
             let directoryContents = try fileManager.contentsOfDirectory(at: directoryURL, includingPropertiesForKeys: [.creationDateKey], options: [.skipsHiddenFiles])
             for item in directoryContents {
-                if item.pathExtension == "xml" || item.pathExtension == "lrc" {
-                    if let creationDate = try item.resourceValues(forKeys: [.creationDateKey]).creationDate {
-                        let file = ExistedFile(path: item.path, createdTimeStamp: creationDate.timeIntervalSince1970)
-                        files.append(file)
-                    }
+                if let creationDate = try item.resourceValues(forKeys: [.creationDateKey]).creationDate {
+                    let file = ExistedFile(path: item.path, createdTimeStamp: creationDate.timeIntervalSince1970)
+                    files.append(file)
                 }
             }
         } catch {
@@ -90,7 +88,7 @@ class FileCache {
     func clearAll() {
         Log.debug(text: "clearAll start", tag: logTag)
         let fileManager = FileManager.default
-        let files = findXMLandLRCFiles(inDirectory: String.cacheFolderPath())
+        let files = findFiles(inDirectory: String.cacheFolderPath())
         if files.isEmpty {
             Log.debug(text: "no need to clear", tag: logTag)
             return
