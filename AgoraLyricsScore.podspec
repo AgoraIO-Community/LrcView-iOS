@@ -24,5 +24,6 @@ spec.test_spec 'Tests' do |test_spec|
     test_spec.source_files = "AgoraLyricsScore/Tests/**/*.{swift}"
     test_spec.resource = "AgoraLyricsScore/Tests/Resource/*"
     test_spec.frameworks = 'UIKit','Foundation'
+#    test_spec.requires_app_host = true
 end
 end
