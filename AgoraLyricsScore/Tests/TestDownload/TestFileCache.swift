@@ -33,7 +33,7 @@ final class TestFileCache: XCTestCase {
                                    attributes: nil)
         }
         
-        var files = fileCache.findXMLandLRCFiles(inDirectory: .cacheFolderPath()).sorted { l, r in
+        var files = fileCache.findFiles(inDirectory: .cacheFolderPath()).sorted { l, r in
             l.createdTimeStamp < r.createdTimeStamp
         }
         
@@ -44,7 +44,7 @@ final class TestFileCache: XCTestCase {
         
         fileCache.removeFilesIfNeeded()
         
-        files = fileCache.findXMLandLRCFiles(inDirectory: .cacheFolderPath()).sorted { l, r in
+        files = fileCache.findFiles(inDirectory: .cacheFolderPath()).sorted { l, r in
             l.createdTimeStamp < r.createdTimeStamp
         }
         for file in files {
@@ -57,7 +57,7 @@ final class TestFileCache: XCTestCase {
         
         fileCache.clearAll()
         
-        files = fileCache.findXMLandLRCFiles(inDirectory: .cacheFolderPath()).sorted { l, r in
+        files = fileCache.findFiles(inDirectory: .cacheFolderPath()).sorted { l, r in
             l.createdTimeStamp < r.createdTimeStamp
         }
         
@@ -79,7 +79,7 @@ final class TestFileCache: XCTestCase {
                                    attributes: nil)
         }
         
-        var files = fileCache.findXMLandLRCFiles(inDirectory: .cacheFolderPath()).sorted { l, r in
+        var files = fileCache.findFiles(inDirectory: .cacheFolderPath()).sorted { l, r in
             l.createdTimeStamp < r.createdTimeStamp
         }
         
@@ -91,7 +91,7 @@ final class TestFileCache: XCTestCase {
         Thread.sleep(forTimeInterval: 2)
         fileCache.removeFilesIfNeeded()
         
-        files = fileCache.findXMLandLRCFiles(inDirectory: .cacheFolderPath()).sorted { l, r in
+        files = fileCache.findFiles(inDirectory: .cacheFolderPath()).sorted { l, r in
             l.createdTimeStamp < r.createdTimeStamp
         }
         
