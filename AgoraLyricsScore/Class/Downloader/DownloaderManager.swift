@@ -17,11 +17,12 @@ class DownloaderManager: NSObject {
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
+        let downloadFloderURL = NSURL(fileURLWithPath: String.downloadedFloderPath())
+        FileManager.createDirectoryIfNeeded(atPath: downloadFloderURL.path!)
     }
     
     override init() {
         Log.info(text: "init", tag: logTag)
-        
     }
     
     func download(url: URL,

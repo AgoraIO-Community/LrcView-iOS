@@ -42,6 +42,9 @@ public class LyricsFileDownloader: NSObject {
     @objc public func download(urlString: String) -> Int {
         let requestId = genId()
         
+        /** check local file **/
+        fileCache.removeFilesIfNeeded()
+        
         /** check file Exist **/
         if let fileData = fetchFromLocal(urlString: urlString) {
             queue.async { [weak self] in

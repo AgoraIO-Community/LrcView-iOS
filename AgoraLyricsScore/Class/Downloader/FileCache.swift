@@ -16,6 +16,8 @@ class FileCache {
     
     init() {
         Log.info(text: "init", tag: logTag)
+        let cacheFolderPathUrl = NSURL(fileURLWithPath: String.cacheFolderPath())
+        FileManager.createDirectoryIfNeeded(atPath: cacheFolderPathUrl.path!)
     }
     
     deinit {
