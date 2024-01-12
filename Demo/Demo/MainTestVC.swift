@@ -37,7 +37,7 @@ class MainTestVC: UIViewController {
     var mpk: AgoraMusicPlayerProtocol!
     var pitchInvokeDuration:CFAbsoluteTime = 0
 //    var song = Item(code: 6246262727283870, isXML: false)
-    var song = Item(code: 6246262727282860, isXML: true)
+    var song = Item(code: 6625526603329280, isXML: true)
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
@@ -457,36 +457,36 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         }
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
-//        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
-//        DispatchQueue.main.async {
-//            let url = URL(fileURLWithPath: filePath)
-//            let data = try! Data(contentsOf: url)
-//            let model = KaraokeView.parseLyricData(data: data)!
-//            self.lyricModel = model
-//            if !self.noLyric {
-//                self.karaokeView.setLyricData(data: model)
-//                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-//                self.gradeView.isHidden = false
-//            }
-//            else {
-//                self.karaokeView.setLyricData(data: nil)
-//                self.gradeView.isHidden = true
-//            }
-//            self.mccPlay()
-//        }
+        let filePath = Bundle.main.path(forResource: "146807", ofType: "xml")!
+        DispatchQueue.main.async {
+            let url = URL(fileURLWithPath: filePath)
+            let data = try! Data(contentsOf: url)
+            let model = KaraokeView.parseLyricData(data: data)!
+            self.lyricModel = model
+            if !self.noLyric {
+                self.karaokeView.setLyricData(data: model)
+                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+                self.gradeView.isHidden = false
+            }
+            else {
+                self.karaokeView.setLyricData(data: nil)
+                self.gradeView.isHidden = true
+            }
+            self.mccPlay()
+        }
         
-        if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
-            DispatchQueue.main.async { [weak self] in
-                self?.title = "无歌词地址"
-            }
-            return
-        }
-        else {
-            DispatchQueue.main.async { [weak self] in
-                self?.title = nil
-            }
-        }
-        let _ = lyricsFileDownloader.download(urlString: lyricUrl)
+//        if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
+//            DispatchQueue.main.async { [weak self] in
+//                self?.title = "无歌词地址"
+//            }
+//            return
+//        }
+//        else {
+//            DispatchQueue.main.async { [weak self] in
+//                self?.title = nil
+//            }
+//        }
+//        let _ = lyricsFileDownloader.download(urlString: lyricUrl)
     }
     
     func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
