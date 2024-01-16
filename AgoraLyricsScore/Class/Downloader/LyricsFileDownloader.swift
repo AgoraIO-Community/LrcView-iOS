@@ -319,9 +319,10 @@ public class LyricsFileDownloader: NSObject {
     }
     
     private func isValidURL(urlString: String) -> Bool {
-        let urlRegex = "^(https?://)"
-        let urlPredicate = NSPredicate(format: "SELF MATCHES %@", urlRegex)
-        return urlPredicate.evaluate(with: urlString)
+        if urlString.isEmpty {
+            return false
+        }
+        return urlString.hasPrefix("http://") || urlString.hasPrefix("https://")
     }
 }
 

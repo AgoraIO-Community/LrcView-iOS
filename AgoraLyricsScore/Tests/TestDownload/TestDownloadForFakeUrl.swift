@@ -28,6 +28,8 @@ final class TestDownloadForFakeUrl: XCTestCase, LyricsFileDownloaderDelegate {
         lyricsFileDownloader = LyricsFileDownloader()
         XCTAssertEqual(lyricsFileDownloader.download(urlString: ""), -1)
         XCTAssertEqual(lyricsFileDownloader.download(urlString: "yhhp://baidu.com"), -1)
+        XCTAssert(lyricsFileDownloader.download(urlString: "https://baidu.com") >= 0 )
+        XCTAssert(lyricsFileDownloader.download(urlString: "https://baidu.com") >= 0 )
     }
 
     let expFakeUrlFail = XCTestExpectation(description: "test TestDownload FakeUrlFail")
