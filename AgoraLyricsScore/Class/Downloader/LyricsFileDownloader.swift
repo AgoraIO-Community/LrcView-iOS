@@ -38,8 +38,12 @@ public class LyricsFileDownloader: NSObject {
     /// start a download
     /// - Parameters:
     ///   - urlString: url from result of `AgoraMusicContentCenter`
-    /// - Returns: `requestId`, if rseult < 0, means fail. if rseult >= 0, means success
+    /// - Returns: `requestId`, if rseult < 0, means fail, such as -1 means urlString not valid. if rseult >= 0, means success
     @objc public func download(urlString: String) -> Int {
+        guard isValidURL(urlString: urlString) else {
+            return -1
+        }
+        
         let requestId = genId()
         
         /** check local file **/
@@ -312,6 +316,12 @@ public class LyricsFileDownloader: NSObject {
             Log.error(error: "[DownloadFloder]clearAll: \(error)", tag: logTag)
         }
         Log.debug(text: "[DownloadFloder]clearAll end", tag: logTag)
+    }
+    
+    private func isValidURL(urlString: String) -> Bool {
+        let urlRegex = "^(https?://)"
+        let urlPredicate = NSPredicate(format: "SELF MATCHES %@", urlRegex)
+        return urlPredicate.evaluate(with: urlString)
     }
 }
 

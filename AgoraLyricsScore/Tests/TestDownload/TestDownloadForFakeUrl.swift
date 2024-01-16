@@ -23,6 +23,12 @@ final class TestDownloadForFakeUrl: XCTestCase, LyricsFileDownloaderDelegate {
     override func tearDownWithError() throws {
         lyricsFileDownloader = nil
     }
+    
+    func testFakeUrlString() {
+        lyricsFileDownloader = LyricsFileDownloader()
+        XCTAssertEqual(lyricsFileDownloader.download(urlString: ""), -1)
+        XCTAssertEqual(lyricsFileDownloader.download(urlString: "yhhp://baidu.com"), -1)
+    }
 
     let expFakeUrlFail = XCTestExpectation(description: "test TestDownload FakeUrlFail")
     func testFakeUrlFail() throws {
