@@ -69,7 +69,7 @@ public class LyricsFileDownloader: NSObject {
             }
             /** check local file **/
             fileCache.removeFilesIfNeeded()
-            
+            Log.info(text: "requestId:\(requestId) start work", tag: logTag)
             if requestIdDict.count >= maxConcurrentRequestCount {
                 let logText = "request(\(requestId) was enqueued in waittingTaskQueue, current num of requesting task is \(requestIdDict.count)"
                 Log.info(text: logText, tag: logTag)
@@ -182,7 +182,7 @@ public class LyricsFileDownloader: NSObject {
                 Log.errorText(text: "\(urlString) is not valid url", tag: logTag)
                 return
             }
-            Log.info(text: "_cancleDownload: \(requestId)", tag: logTag)
+            Log.info(text: "_cancleDownload in current request: \(requestId)", tag: logTag)
             downloaderManager.cancelTask(url: url)
         }
         else {

@@ -9,7 +9,8 @@ import XCTest
 @testable import AgoraLyricsScore
 
 final class TestDownloadCancle: XCTestCase, LyricsFileDownloaderDelegate {
-    
+    let exp = XCTestExpectation(description: "TestDownloadCancle.cancel")
+    var actualSuccessCount = 0
     var lyricsFileDownloader: LyricsFileDownloader!
     let urlStrings = ["https://fullapp.oss-cn-beijing.aliyuncs.com/lyricsMockDownload/1.zip",
                       "https://fullapp.oss-cn-beijing.aliyuncs.com/lyricsMockDownload/2.zip",
@@ -24,6 +25,7 @@ final class TestDownloadCancle: XCTestCase, LyricsFileDownloaderDelegate {
     
     
     override func setUpWithError() throws {
+        exp.expectedFulfillmentCount = 7
         Downloader.requestTimeoutInterval = 9
         Log.setLoggers(loggers: [ConsoleLogger()])
     }
@@ -42,23 +44,27 @@ final class TestDownloadCancle: XCTestCase, LyricsFileDownloaderDelegate {
             print("[test] download for id:\(id)")
         }
         
-        lyricsFileDownloader.cancleDownload(requestId: 5)
-        lyricsFileDownloader.cancleDownload(requestId: 6)
         lyricsFileDownloader.cancleDownload(requestId: 7)
+        lyricsFileDownloader.cancleDownload(requestId: 8)
+        lyricsFileDownloader.cancleDownload(requestId: 9)
         
-        sleep(10)
+        wait(for: [exp], timeout: 10)
+        
         let fileCache = FileCache()
         let count = fileCache.findFiles(inDirectory: .cacheFolderPath()).count
-        XCTAssertEqual(count, 7)
+        XCTAssertEqual(count, actualSuccessCount)
     }
 
-    func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {
-        
-    }
-    
     func onLyricsFileDownloadCompleted(requestId: Int,
                                        fileData: Data?,
                                        error: DownloadError?) {
+        if error == nil {
+            actualSuccessCount += 1
+        }
+        exp.fulfill()
+    }
+    
+    func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {
         
     }
 }

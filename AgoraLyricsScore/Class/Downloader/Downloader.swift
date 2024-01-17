@@ -24,7 +24,7 @@ class Downloader: NSObject {
     private var downloadLoop: CFRunLoop?
     private var currentLength: Float = 0.0
     static var requestTimeoutInterval: TimeInterval = 60
-    private let logTag = "Downloader"
+    private var logTag = "Downloader"
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
@@ -40,6 +40,7 @@ class Downloader: NSObject {
   
     // 开始下载
     func download(url: URL, progress: @escaping DownloadProgressClosure, completion: @escaping DownloadCompletionClosure, fail: @escaping DownloadFailClosure) {
+        logTag += "[\(url.lastPathComponent)]"
         self.progress = progress
         self.completion = completion
         self.fail = fail
