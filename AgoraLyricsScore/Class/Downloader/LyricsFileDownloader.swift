@@ -87,6 +87,7 @@ public class LyricsFileDownloader: NSObject {
     
     /// cancle a downloading task
     @objc public func cancleDownload(requestId: Int) {
+        Log.info(text: "cancleDownload: \(requestId)", tag: logTag)
         queue.async { [weak self] in
             guard let self = self else {
                 return
@@ -181,9 +182,11 @@ public class LyricsFileDownloader: NSObject {
                 Log.errorText(text: "\(urlString) is not valid url", tag: logTag)
                 return
             }
+            Log.info(text: "_cancleDownload: \(requestId)", tag: logTag)
             downloaderManager.cancelTask(url: url)
         }
         else {
+            Log.info(text: "_cancleDownload: no need to cancle \(requestId), can not find this url", tag: logTag)
             _removeWaittingTaskIfNeeded(requestId: requestId)
         }
     }
