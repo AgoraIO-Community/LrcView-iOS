@@ -45,7 +45,7 @@ public class LyricsFileDownloader: NSObject {
         }
         
         let requestId = genId()
-        
+        Log.info(text: "download: \(requestId)", tag: logTag)
         /** check local file **/
         fileCache.removeFilesIfNeeded()
         
@@ -186,7 +186,6 @@ public class LyricsFileDownloader: NSObject {
             downloaderManager.cancelTask(url: url)
         }
         else {
-            Log.info(text: "_cancleDownload: no need to cancle \(requestId), can not find this url", tag: logTag)
             _removeWaittingTaskIfNeeded(requestId: requestId)
         }
     }
@@ -335,6 +334,7 @@ extension LyricsFileDownloader {
     fileprivate func invokeOnLyricsFileDownloadCompleted(requestId: Int,
                                                          fileData: Data?,
                                                          error: DownloadError?) {
+        Log.debug(text: "invokeOnLyricsFileDownloadCompleted requestId:\(requestId) isSuccess:\(error == nil)", tag: logTag)
         if Thread.isMainThread {
             delegate?.onLyricsFileDownloadCompleted(requestId: requestId,
                                                     fileData: fileData,
