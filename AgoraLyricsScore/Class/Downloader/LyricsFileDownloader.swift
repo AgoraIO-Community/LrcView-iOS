@@ -184,6 +184,7 @@ public class LyricsFileDownloader: NSObject {
                 return
             }
             Log.info(text: "_cancleDownload in current request: \(requestId)", tag: logTag)
+            _removeRequest(id: requestId)
             downloaderManager.cancelTask(url: url)
         }
         else {
