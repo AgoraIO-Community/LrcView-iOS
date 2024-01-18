@@ -47,6 +47,9 @@ public class LyricsFileDownloader: NSObject {
         let requestId = genId()
         Log.info(text: "download: \(requestId)", tag: logTag)
         
+        /// remove file outdate
+        fileCache.removeFilesIfNeeded()
+        
         /** check file Exist **/
         if let fileData = fetchFromLocal(urlString: urlString) {
             queue.async { [weak self] in
