@@ -46,8 +46,6 @@ public class LyricsFileDownloader: NSObject {
         
         let requestId = genId()
         Log.info(text: "download: \(requestId)", tag: logTag)
-        /** check local file **/
-        fileCache.removeFilesIfNeeded()
         
         /** check file Exist **/
         if let fileData = fetchFromLocal(urlString: urlString) {
@@ -67,8 +65,6 @@ public class LyricsFileDownloader: NSObject {
             guard let self = self else {
                 return
             }
-            /** check local file **/
-            fileCache.removeFilesIfNeeded()
             Log.info(text: "requestId:\(requestId) start work", tag: logTag)
             if requestIdDict.count >= maxConcurrentRequestCount {
                 let logText = "request(\(requestId) was enqueued in waittingTaskQueue, current num of requesting task is \(requestIdDict.count)"
@@ -336,6 +332,9 @@ extension LyricsFileDownloader {
     fileprivate func invokeOnLyricsFileDownloadCompleted(requestId: Int,
                                                          fileData: Data?,
                                                          error: DownloadError?) {
+        /** check local file **/
+        fileCache.removeFilesIfNeeded()
+        
         Log.debug(text: "invokeOnLyricsFileDownloadCompleted requestId:\(requestId) isSuccess:\(error == nil)", tag: logTag)
         if Thread.isMainThread {
             delegate?.onLyricsFileDownloadCompleted(requestId: requestId,
