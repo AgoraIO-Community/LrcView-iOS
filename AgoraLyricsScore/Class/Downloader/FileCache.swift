@@ -54,7 +54,7 @@ class FileCache {
         }
         
         /// remove earliest one
-        if files.count >= maxFileNum,
+        if files.count > maxFileNum,
            !hasFileBeRemove,
             let currentFileForMinCreationTime = fileForMinCreationTime {
             do {
