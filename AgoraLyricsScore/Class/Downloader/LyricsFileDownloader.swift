@@ -93,6 +93,7 @@ public class LyricsFileDownloader: NSObject {
                 return
             }
             _cancleDownload(requestId: requestId)
+            _resumeTaskIfNeeded()
         }
     }
     
