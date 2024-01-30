@@ -10,25 +10,28 @@ import XCTest
 
 class TestMockScoring: XCTestCase, ScoringMachineDelegate {
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        Log.setLoggers(loggers: [ConsoleLogger()])
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        vm.reset()
     }
 
     var cumulativeScore = 0
-    let vm = ScoringMachine()
+    var testCaseNum = 0
+    var vm = ScoringMachine()
     let exp = XCTestExpectation(description: "test score")
+    let exp2 = XCTestExpectation(description: "test score2")
     
-    func testAll() { /** test score **/
+    func testAll() { /** test score 每个tone命中一次 **/
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
         guard let model = KaraokeView.parseLyricData(data: data) else {
             XCTFail()
             return
         }
-        
+        vm = ScoringMachine()
+        vm.scoreLevel = 10
         vm.delegate = self
         vm.setLyricData(data: model)
         for index in 0...5 {
@@ -40,6 +43,36 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
             }
         }
         wait(for: [exp], timeout: 3)
+    }
+    
+    func testAll2() { /** test score 每个tone命中多次 **/
+        testCaseNum = 1
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
+        let data = try! Data(contentsOf: url)
+        guard let model = KaraokeView.parseLyricData(data: data) else {
+            XCTFail()
+            return
+        }
+        
+        vm = ScoringMachine()
+        vm.delegate = self
+        vm.scoreLevel = 15
+        vm.setLyricData(data: model)
+        
+        let line = model.lines.first!
+        var time = line.beginTime
+        var gap = 0
+        while time <= line.endTime+20 {
+            vm.setProgress(progress: time)
+            if gap == 40 {
+                gap = 0
+                vm.setPitch(pitch: 50)
+            }
+            gap += 20
+            time += 20
+            Thread.sleep(forTimeInterval: 0.02)
+        }
+        wait(for: [exp2], timeout: 10)
     }
 
     func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {
@@ -60,10 +93,18 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
                         cumulativeScore: Int,
                         lineIndex: Int,
                         lineCount: Int) {
-        self.cumulativeScore = cumulativeScore
-        print("didFinishLineWith score: \(cumulativeScore)")
-        if cumulativeScore == 500 {
-            exp.fulfill()
+        if testCaseNum == 0 {
+            self.cumulativeScore = cumulativeScore
+            print("didFinishLineWith cumulativeScore: \(cumulativeScore)")
+            if cumulativeScore == 500 {
+                exp.fulfill()
+            }
+        }
+        else {
+            XCTAssertEqual(cumulativeScore, 66)
+            if cumulativeScore == 66 {
+                exp2.fulfill()
+            }
         }
     }
 }

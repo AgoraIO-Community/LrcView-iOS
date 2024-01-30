@@ -122,6 +122,7 @@ extension KaraokeView {
     /// - Note: 可以从AgoraRTC回调方法 `- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine reportAudioVolumeIndicationOfSpeakers:(NSArray<AgoraRtcAudioVolumeInfo *> * _Nonnull)speakers totalVolume:(NSInteger)totalVolume`  获取
     /// - Parameter pitch: 实时音调值
     @objc public func setPitch(pitch: Double) {
+        Log.info(text: "p:\(pitch)", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setPitch not isMainThread ", tag: logTag)
         }
@@ -177,7 +178,7 @@ extension KaraokeView {
     
     /// 设置打分难易程度(难度系数)
     /// - Note: 值越小打分难度越小，值越高打分难度越大
-    /// - Parameter level: 系数, 范围：[0, 100], 如不设置默认为10
+    /// - Parameter level: 系数, 范围：[0, 100], 如不设置默认为15
     @objc public func setScoreLevel(level: Int) {
         if !Thread.isMainThread {
             Log.error(error: "invoke setScoreLevel not isMainThread ", tag: logTag)

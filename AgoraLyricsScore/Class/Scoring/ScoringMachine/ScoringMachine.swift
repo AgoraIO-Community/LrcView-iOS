@@ -189,7 +189,7 @@ class ScoringMachine {
                                                        currentVisiableInfos: currentVisiableInfos,
                                                        currentHighlightInfos: currentHighlightInfos)
         }
-        Log.debug(text: "score: \(score)", tag: logTag)
+        Log.debug(text: "progress:\(progress) score: \(score) pitch: \(pitch) after: \(voicePitch) stdPitch:\(hitedInfo.pitch)", tag: logTag)
         /** 6.calculated ui info **/
         let showAnimation = score >= hitScoreThreshold * 100
         let y = calculatedY(pitch: voicePitch,
@@ -300,7 +300,7 @@ class ScoringMachine {
         
         cumulativeScore = calculatedCumulativeScore(indexOfLine: indexOfLineEnd,
                                                     lineScores: lineScores)
-        Log.debug(text: "didLineEnd indexOfLineEnd: \(indexOfLineEnd) \(lineScore) \(lineScores) cumulativeScore:\(cumulativeScore)", tag: "drag")
+        Log.debug(text: "score didLineEnd indexOfLineEnd: \(indexOfLineEnd) \(lineScore) \(lineScores) cumulativeScore:\(cumulativeScore)", tag: logTag)
         invokeScoringMachine(didFinishLineWith: data.lines[indexOfLineEnd],
                              score: lineScore,
                              cumulativeScore: cumulativeScore,

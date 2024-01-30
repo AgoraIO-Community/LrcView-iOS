@@ -12,6 +12,7 @@ import RTMTokenBuilder
 
 /// 观众端
 class AudienceVC: UIViewController {
+    let lyricsFileDownloader = LyricsFileDownloader()
     var agoraKit: AgoraRtcEngineKit!
     let ktvView = KTVView()
     var mcc: AgoraMusicContentCenter!
@@ -39,6 +40,7 @@ class AudienceVC: UIViewController {
     }
     
     func commonInit() {
+        lyricsFileDownloader.delegate = self
         token = TokenBuilder.buildToken(Config.mccAppId,
                                         appCertificate: Config.mccCertificate,
                                         userUuid: "\(Config.mccUid)")
@@ -67,18 +69,7 @@ class AudienceVC: UIViewController {
     }
     
     func fetch() {
-        FileCache.fect(urlString: lyricUrl!) { progress in
-
-        } completion: { filePath in
-            let url = URL(fileURLWithPath: filePath)
-            let data = try! Data(contentsOf: url)
-            let model = KaraokeView.parseLyricData(data: data)!
-            self.lyricModel = model
-            self.ktvView.karaokeView.setLyricData(data: model)
-            self.ktvView.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-        } fail: { error in
-            print("fect fail")
-        }
+        let _ = lyricsFileDownloader.download(urlString: lyricUrl!)
     }
     
     func startTimer() {
@@ -185,3 +176,21 @@ extension AudienceVC: AgoraRtcEngineDelegate {
     }
 }
 
+
+extension AudienceVC: LyricsFileDownloaderDelegate {
+    func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {
+        
+    }
+    
+    func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
+        if let data = fileData {
+            let model = KaraokeView.parseLyricData(data: data)!
+            self.lyricModel = model
+            self.ktvView.karaokeView.setLyricData(data: model)
+            self.ktvView.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+        }
+        else {
+            print("fect fail")
+        }
+    }
+}

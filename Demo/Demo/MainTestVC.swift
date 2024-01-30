@@ -10,6 +10,7 @@ import AgoraRtcKit
 import RTMTokenBuilder
 import AgoraLyricsScore
 import ScoreEffectUI
+import os
 
 extension MainTestVC {
     struct Item {
@@ -19,6 +20,7 @@ extension MainTestVC {
 }
 
 class MainTestVC: UIViewController {
+    let lyricsFileDownloader = LyricsFileDownloader()
     let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger(), FileLogger()])
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
@@ -35,7 +37,7 @@ class MainTestVC: UIViewController {
     var mpk: AgoraMusicPlayerProtocol!
     var pitchInvokeDuration:CFAbsoluteTime = 0
 //    var song = Item(code: 6246262727283870, isXML: false)
-    var song = Item(code: 6246262727282120, isXML: true)
+    var song = Item(code: 6625526603329280, isXML: true)
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
@@ -47,20 +49,17 @@ class MainTestVC: UIViewController {
 //                 Item(code: 6625526603296890, isXML: true),
 //                 /** xml 不打分 **/
 //                 Item(code: 6315145508122860, isXML: true)]
-//    var songs = [Item(code: 6625526604952630, isXML: true),
-//                 Item(code: 6654550250051940, isXML: true),
-//                 Item(code: 6625526606517650, isXML: true),
-//                 Item(code: 6625526608670440, isXML: true),
-//                 Item(code: 6625526619767100, isXML: true),
-//                 Item(code: 6654550256811200, isXML: true),
-//                 Item(code: 6625526603907880, isXML: true),
-//                 Item(code: 6654550242185930, isXML: true),
-//                 Item(code: 6625526603433040, isXML: true),
-//                 Item(code: 6654550244516420, isXML: true),
-//                 Item(code: 6625526603472520, isXML: true),
-//                 Item(code: 6625526603742770, isXML: true)]
-    var songs = [Item(code: 6246262727282120, isXML: true),
-                 Item(code: 6625526603472520, isXML: true)]
+    
+    var songs = [/// 爱情转移
+        Item(code: 6246262727282860, isXML: true),
+        /// 说爱你
+        Item(code: 6654550221757560, isXML: true),
+        /// 江南
+        Item(code: 6246262727300580, isXML: true),
+        /// 容易受伤的女人
+        Item(code: 6625526608670440, isXML: true)]
+//    var songs = [Item(code: 6246262727282120, isXML: true),
+//                 Item(code: 6625526603472520, isXML: true)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
@@ -160,6 +159,7 @@ class MainTestVC: UIViewController {
     }
     
     func commonInit() {
+        lyricsFileDownloader.delegate = self
         skipButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         setButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         changeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
@@ -347,13 +347,13 @@ class MainTestVC: UIViewController {
             break
         }
     }
-    
     func sendData(data: Data) {
         if streamId > 0 {
             agoraKit.sendStreamMessage(streamId, data: data)
         }
     }
     
+    ///
     func createData(time: Int) -> Data {
         /// 把time包装json格式
         let dic = ["time": time]
@@ -457,62 +457,36 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         }
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
-//        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
-//        DispatchQueue.main.async {
-//            let url = URL(fileURLWithPath: filePath)
-//            let data = try! Data(contentsOf: url)
-//            let model = KaraokeView.parseLyricData(data: data)!
-//            self.lyricModel = model
-//            if !self.noLyric {
-//                self.karaokeView.setLyricData(data: model)
-//                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-//                self.gradeView.isHidden = false
-//            }
-//            else {
-//                self.karaokeView.setLyricData(data: nil)
-//                self.gradeView.isHidden = true
-//            }
-//            self.mccPlay()
-//        }
-        
-        if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
-            DispatchQueue.main.async { [weak self] in
-                self?.title = "无歌词地址"
-            }
-            return
-        }
-        else {
-            DispatchQueue.main.async { [weak self] in
-                self?.title = nil
-            }
-        }
-        let songCode = song.code
-        FileCache.fect(urlString: lyricUrl) { progress in
-
-        } completion: { filePath in
+        let filePath = Bundle.main.path(forResource: "146807", ofType: "xml")!
+        DispatchQueue.main.async {
             let url = URL(fileURLWithPath: filePath)
             let data = try! Data(contentsOf: url)
             let model = KaraokeView.parseLyricData(data: data)!
             self.lyricModel = model
-            print("linesCount:\(model.lines.count) songCode:\(songCode)")
             if !self.noLyric {
-                let canScoring = model.hasPitch
-                if canScoring { /** xml **/
-                    self.karaokeView.setLyricData(data: model)
-                    self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-                }
-                else {/** lrc **/
-                    self.karaokeView.setLyricData(data: model)
-                }
+                self.karaokeView.setLyricData(data: model)
+                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+                self.gradeView.isHidden = false
             }
             else {
                 self.karaokeView.setLyricData(data: nil)
                 self.gradeView.isHidden = true
             }
             self.mccPlay()
-        } fail: { error in
-            print("fect fail")
         }
+        
+//        if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
+//            DispatchQueue.main.async { [weak self] in
+//                self?.title = "无歌词地址"
+//            }
+//            return
+//        }
+//        else {
+//            DispatchQueue.main.async { [weak self] in
+//                self?.title = nil
+//            }
+//        }
+//        let _ = lyricsFileDownloader.download(urlString: lyricUrl)
     }
     
     func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
@@ -563,6 +537,38 @@ extension MainTestVC: KaraokeDelegate {
         self.cumulativeScore = cumulativeScore
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lineCount * 100)
         incentiveView.show(score: score)
+    }
+}
+
+extension MainTestVC: LyricsFileDownloaderDelegate {
+    func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {
+        
+    }
+    
+    func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
+        if let data = fileData {
+            let model = KaraokeView.parseLyricData(data: data)!
+            lyricModel = model
+            print("linesCount:\(model.lines.count) songCode:\(self.song.code)")
+            if !self.noLyric {
+                let canScoring = model.hasPitch
+                if canScoring { /** xml **/
+                    self.karaokeView.setLyricData(data: model)
+                    self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+                }
+                else {/** lrc **/
+                    self.karaokeView.setLyricData(data: model)
+                }
+            }
+            else {
+                self.karaokeView.setLyricData(data: nil)
+                self.gradeView.isHidden = true
+            }
+            self.mccPlay()
+        }
+        else {
+            print("fect fail")
+        }
     }
 }
 
