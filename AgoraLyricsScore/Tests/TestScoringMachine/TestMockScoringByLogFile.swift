@@ -68,10 +68,8 @@ extension TestMockScoringByLogFile {
             if str.contains("[ALS][D][ScoringMachine]: progress: ") {
                 let strVal = String(str.split(separator: " ").last!)
                 let progress = UInt(strVal)!
-//                print("\(progress)")
                 lastProgress = progress
                 if (progress == 18770) {
-//                    print("")
                 }
                 continue
             }
@@ -111,7 +109,7 @@ extension TestMockScoringByLogFile {
         
         for item in items {
             vm.setProgress(progress: Int(item.progress))
-            vm.setPitch(pitch: item.pitch)
+            vm.setPitch(pitch: item.pitch!)
             usleep(15)
         }
         vm.setProgress(progress: 186022 + 1)

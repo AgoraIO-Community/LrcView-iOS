@@ -12,6 +12,7 @@ import AgoraLyricsScore
 import ScoreEffectUI
 
 class QiangChangVC: UIViewController {
+    let lyricsFileDownloader = LyricsFileDownloader()
     typealias Item = MainTestVC.Item
     let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger()])
     let lineScoreView = LineScoreView()
@@ -140,6 +141,7 @@ class QiangChangVC: UIViewController {
     }
     
     func commonInit() {
+        lyricsFileDownloader.delegate = self
         skipButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         setButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         changeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
@@ -456,32 +458,7 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
                 self?.title = nil
             }
         }
-        
-        FileCache.fect(urlString: lyricUrl) { progress in
-            
-        } completion: { filePath in
-            let url = URL(fileURLWithPath: filePath)
-            let data = try! Data(contentsOf: url)
-            let model = KaraokeView.parseLyricData(data: data)!
-            self.lyricModel = model
-            if !self.noLyric {
-                let canScoring = model.hasPitch
-                if canScoring { /** xml **/
-                    self.karaokeView.setLyricData(data: model)
-                    self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-                }
-                else {/** lrc **/
-                    self.karaokeView.setLyricData(data: model)
-                }
-            }
-            else {
-                self.karaokeView.setLyricData(data: nil)
-                self.gradeView.isHidden = true
-            }
-            self.mccPlay()
-        } fail: { error in
-            print("fect fail")
-        }
+        let _ = lyricsFileDownloader.download(urlString: lyricUrl)
     }
     
     func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
@@ -555,5 +532,36 @@ extension QiangChangVC: ParamSetVCDelegate {
 extension QiangChangVC: SongListVCDelegate {
     func songListVCDidSelectedSong(song: SongListVC.Song) {
         
+    }
+}
+
+extension QiangChangVC: LyricsFileDownloaderDelegate {
+    func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {
+        
+    }
+    
+    func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
+        if let data = fileData {
+            let model = KaraokeView.parseLyricData(data: data)!
+            self.lyricModel = model
+            if !self.noLyric {
+                let canScoring = model.hasPitch
+                if canScoring { /** xml **/
+                    self.karaokeView.setLyricData(data: model)
+                    self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+                }
+                else {/** lrc **/
+                    self.karaokeView.setLyricData(data: model)
+                }
+            }
+            else {
+                self.karaokeView.setLyricData(data: nil)
+                self.gradeView.isHidden = true
+            }
+            self.mccPlay()
+        }
+        else {
+            print("fect fail")
+        }
     }
 }

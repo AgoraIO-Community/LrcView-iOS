@@ -38,12 +38,10 @@
 		26C545322955B684009E0F37 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 26C545312955B684009E0F37 /* music.mp3 */; };
 		26C545342955B6C2009E0F37 /* 105780.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26C545332955B6C2009E0F37 /* 105780.xml */; };
 		26D01F9A2977D7F500B9D31A /* ScoreAniVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D01F992977D7F500B9D31A /* ScoreAniVC.swift */; };
+		26E211FE2B2AF84800297136 /* DownloadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E211FD2B2AF84800297136 /* DownloadVC.swift */; };
+		26E212002B2AF8AD00297136 /* DownloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E211FF2B2AF8AD00297136 /* DownloadView.swift */; };
 		26E5BF7D2990D6B30051AF67 /* 235653.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26E5BF7C2990D6B30051AF67 /* 235653.xml */; };
 		26E5BF7F299245E10051AF67 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BF7E299245E10051AF67 /* SearchVC.swift */; };
-		26E5BF9529924A2A0051AF67 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BF9329924A2A0051AF67 /* Downloader.swift */; };
-		26E5BF9629924A2A0051AF67 /* DownloaderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BF9429924A2A0051AF67 /* DownloaderManager.swift */; };
-		26E5BF9829924AA60051AF67 /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BF9729924AA60051AF67 /* FileCache.swift */; };
-		26E5BFA729924B970051AF67 /* AgoraStringExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BF9F29924B970051AF67 /* AgoraStringExtention.swift */; };
 		26E5BFBC29926F2D0051AF67 /* GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */; };
 		26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E8030E298BAF1B00DBF23F /* OCVC.m */; };
 		F88793560A341F9CBCF66020 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */; };
@@ -85,12 +83,10 @@
 		26C545312955B684009E0F37 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
 		26C545332955B6C2009E0F37 /* 105780.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 105780.xml; sourceTree = "<group>"; };
 		26D01F992977D7F500B9D31A /* ScoreAniVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreAniVC.swift; sourceTree = "<group>"; };
+		26E211FD2B2AF84800297136 /* DownloadVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadVC.swift; sourceTree = "<group>"; };
+		26E211FF2B2AF8AD00297136 /* DownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadView.swift; sourceTree = "<group>"; };
 		26E5BF7C2990D6B30051AF67 /* 235653.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 235653.xml; sourceTree = "<group>"; };
 		26E5BF7E299245E10051AF67 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
-		26E5BF9329924A2A0051AF67 /* Downloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
-		26E5BF9429924A2A0051AF67 /* DownloaderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloaderManager.swift; sourceTree = "<group>"; };
-		26E5BF9729924AA60051AF67 /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
-		26E5BF9F29924B970051AF67 /* AgoraStringExtention.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraStringExtention.swift; sourceTree = "<group>"; };
 		26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDTimer.swift; sourceTree = "<group>"; };
 		26E8030C298BAF1A00DBF23F /* Demo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Demo-Bridging-Header.h"; sourceTree = "<group>"; };
 		26E8030D298BAF1B00DBF23F /* OCVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCVC.h; sourceTree = "<group>"; };
@@ -125,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				2602311D29C9DCDF0036F74A /* KTVView.swift */,
+				26E211FF2B2AF8AD00297136 /* DownloadView.swift */,
 			);
 			path = KTVView;
 			sourceTree = "<group>";
@@ -166,7 +163,6 @@
 				260942E12952B5060022A50D /* LaunchScreen.storyboard */,
 				260942E42952B5060022A50D /* Info.plist */,
 				26E8030C298BAF1A00DBF23F /* Demo-Bridging-Header.h */,
-				26E5BF80299246C60051AF67 /* FileCache */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -205,19 +201,9 @@
 				26E8030D298BAF1B00DBF23F /* OCVC.h */,
 				26E8030E298BAF1B00DBF23F /* OCVC.m */,
 				269189BF2A8F749100F2B03C /* MiniSizeVC.swift */,
+				26E211FD2B2AF84800297136 /* DownloadVC.swift */,
 			);
 			path = Other;
-			sourceTree = "<group>";
-		};
-		26E5BF80299246C60051AF67 /* FileCache */ = {
-			isa = PBXGroup;
-			children = (
-				26E5BF9F29924B970051AF67 /* AgoraStringExtention.swift */,
-				26E5BF9329924A2A0051AF67 /* Downloader.swift */,
-				26E5BF9429924A2A0051AF67 /* DownloaderManager.swift */,
-				26E5BF9729924AA60051AF67 /* FileCache.swift */,
-			);
-			path = FileCache;
 			sourceTree = "<group>";
 		};
 		71C0091C9A3C4A9E26233CC8 /* Frameworks */ = {
@@ -356,26 +342,24 @@
 				26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */,
 				2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */,
 				26C5452C2955B2FE009E0F37 /* Config.swift in Sources */,
+				26E212002B2AF8AD00297136 /* DownloadView.swift in Sources */,
 				260942D72952B5050022A50D /* AppDelegate.swift in Sources */,
 				26C5452E2955B370009E0F37 /* AVPlayerTestVC.swift in Sources */,
 				2689ED3E298654C90012BC4D /* IncentiveVC.swift in Sources */,
+				26E211FE2B2AF84800297136 /* DownloadVC.swift in Sources */,
 				260942D92952B5050022A50D /* SceneDelegate.swift in Sources */,
 				26C5452429557D25009E0F37 /* LyricsTestVC.swift in Sources */,
 				26E5BF7F299245E10051AF67 /* SearchVC.swift in Sources */,
-				26E5BF9529924A2A0051AF67 /* Downloader.swift in Sources */,
-				26E5BFA729924B970051AF67 /* AgoraStringExtention.swift in Sources */,
 				26AC90AD29EE72A900AB6EC5 /* SongListVC.swift in Sources */,
 				2602311E29C9DCDF0036F74A /* KTVView.swift in Sources */,
 				2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */,
 				26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */,
 				269189C02A8F749100F2B03C /* MiniSizeVC.swift in Sources */,
-				26E5BF9829924AA60051AF67 /* FileCache.swift in Sources */,
 				2689ED442987CD2D0012BC4D /* MainTestVC.swift in Sources */,
 				2602311B29C9D9E70036F74A /* AudienceVC.swift in Sources */,
 				26E5BFBC29926F2D0051AF67 /* GCDTimer.swift in Sources */,
 				26AC90A829ECE9D500AB6EC5 /* QiangChangVC.swift in Sources */,
 				2689ED422987C8890012BC4D /* ParamSetVC.swift in Sources */,
-				26E5BF9629924A2A0051AF67 /* DownloaderManager.swift in Sources */,
 				26105FE52966787A00712EDA /* EmitterVC.swift in Sources */,
 				26D01F9A2977D7F500B9D31A /* ScoreAniVC.swift in Sources */,
 				2602312029CAD3630036F74A /* HostVC.swift in Sources */,
@@ -529,7 +513,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -546,7 +530,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.5;
+				MARKETING_VERSION = 1.1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.test.entfull;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -565,7 +549,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -582,7 +566,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.5;
+				MARKETING_VERSION = 1.1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.test.entfull;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

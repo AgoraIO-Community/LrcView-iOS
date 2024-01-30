@@ -9,7 +9,7 @@
 #### 1.初始化
 
 ```swift
-let karaokeView = KaraokeView()
+let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger(), FileLogger()])
 karaokeView.frame = ....
 view.addSubview(karaokeView)
 karaokeView.delegate = self
@@ -101,7 +101,7 @@ karaokeView.reset()
 
 /// 设置打分难易程度(难度系数)
 /// - Note: 值越小打分难度越小，值越高打分难度越大
-/// - Parameter level: 系数, 范围：[0, 100], 如不设置默认为10
+/// - Parameter level: 系数, 范围：[0, 100], 如不设置默认为15
 @objc public func setScoreLevel(level: Int)
 
 /// 设置打分分值补偿
@@ -226,5 +226,5 @@ karaokeView.reset()
 
 
 ```ruby
-pod 'AgoraLyricsScore', '~> 1.1.0'"
+pod 'AgoraLyricsScore', '~> 1.1.6'"
 ```
