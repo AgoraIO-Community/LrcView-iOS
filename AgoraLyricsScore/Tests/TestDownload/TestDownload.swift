@@ -75,6 +75,17 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
         let _ = lyricsFileDownloader.download(urlString: urlString)
         let _ = lyricsFileDownloader.download(urlString: urlString)
         wait(for: [expUrlRepeatFail], timeout: 10)
+        
+        let requestId = lyricsFileDownloader.download(urlString: urlString)
+        if requestId < 0 {
+            /// download fail
+            return
+        }
+        
+        /// save the requestId
+        var saveRequestId = requestId
+        
+        
     }
     
     let sempSame = DispatchSemaphore(value: 0)
