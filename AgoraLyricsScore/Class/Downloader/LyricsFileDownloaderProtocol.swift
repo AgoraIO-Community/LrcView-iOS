@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// the enum type to describe the error
 @objc public enum DownloadErrorDomainType: Int {
     case general = 0
     /// repeat url request, a same url is requesting
@@ -15,8 +16,10 @@ import Foundation
     case httpDownloadError = 2
     /// http logic error, such as 400/500
     case httpDownloadErrorLogic = 3
+    /// unzip fail
     case unzipFail = 4
     
+    /// the string to indicate the type
     public var domain: String {
         switch self {
         case .general:
@@ -32,6 +35,7 @@ import Foundation
         }
     }
     
+    /// the name to describe the type
     public var name: String {
         switch self {
         case .general:
@@ -48,9 +52,13 @@ import Foundation
     }
 }
 
+/// the class to describe the error
 public class DownloadError: NSError {
+    /// the message to describe the error
     public let msg: String
+    /// the type of different error
     public let domainType: DownloadErrorDomainType
+    /// original error from http framework in ios, such as time out
     public var originalError: NSError?
     
     init(domainType: DownloadErrorDomainType, code: Int, msg: String) {
