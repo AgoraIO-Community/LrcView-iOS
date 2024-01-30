@@ -178,7 +178,7 @@ extension KaraokeView {
     
     /// 设置打分难易程度(难度系数)
     /// - Note: 值越小打分难度越小，值越高打分难度越大
-    /// - Parameter level: 系数, 范围：[0, 100], 如不设置默认为10
+    /// - Parameter level: 系数, 范围：[0, 100], 如不设置默认为15
     @objc public func setScoreLevel(level: Int) {
         if !Thread.isMainThread {
             Log.error(error: "invoke setScoreLevel not isMainThread ", tag: logTag)
