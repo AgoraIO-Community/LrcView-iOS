@@ -67,7 +67,7 @@ final class TestDownloadMutiThread: XCTestCase, LyricsFileDownloaderDelegate {
     let queue1 = DispatchQueue(label: "test.queue.1")
     let queue2 = DispatchQueue(label: "test.queue.1")
     let expectation = XCTestExpectation(description: "异步方法未调用")
-    /** 测试在不同线程下，执行download和cancleDownload，url是一个预期不存在域名的类型
+    /** 测试在不同线程下，执行download和cancelDownload，url是一个预期不存在域名的类型
         预期是不会执行回调方法`onLyricsFileDownloadCompleted`
      **/
     func testMutiThread1() throws {
@@ -90,7 +90,7 @@ final class TestDownloadMutiThread: XCTestCase, LyricsFileDownloaderDelegate {
         queue2.async { [weak self] in
             guard let self  = self else { return }
             semp.wait()
-            let _ = lyricsFileDownloader.cancleDownload(requestId: 0)
+            let _ = lyricsFileDownloader.cancelDownload(requestId: 0)
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {

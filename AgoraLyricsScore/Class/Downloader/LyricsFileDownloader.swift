@@ -84,14 +84,14 @@ public class LyricsFileDownloader: NSObject {
         return requestId
     }
     
-    /// cancle a downloading task
-    @objc public func cancleDownload(requestId: Int) {
-        Log.info(text: "cancleDownload: \(requestId)", tag: logTag)
+    /// cancel a downloading task
+    @objc public func cancelDownload(requestId: Int) {
+        Log.info(text: "cancelDownload: \(requestId)", tag: logTag)
         queue.async { [weak self] in
             guard let self = self else {
                 return
             }
-            _cancleDownload(requestId: requestId)
+            _cancelDownload(requestId: requestId)
             _resumeTaskIfNeeded()
         }
     }
@@ -176,13 +176,13 @@ public class LyricsFileDownloader: NSObject {
         }
     }
     
-    func _cancleDownload(requestId: Int) {
+    func _cancelDownload(requestId: Int) {
         if let urlString = requestIdDict[requestId] {
             guard let url = URL(string: urlString) else {
                 Log.errorText(text: "\(urlString) is not valid url", tag: logTag)
                 return
             }
-            Log.info(text: "_cancleDownload in current request: \(requestId)", tag: logTag)
+            Log.info(text: "_cancelDownload in current request: \(requestId)", tag: logTag)
             _removeRequest(id: requestId)
             downloaderManager.cancelTask(url: url)
         }
