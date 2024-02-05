@@ -64,7 +64,7 @@ extension DownloadVC: DownloadViewDelegate, LyricsFileDownloaderDelegate {
         
         if action == .cancel, let info = info {
             if info.state == .created || info.state == .progress {
-                lyricsFileDownloader.cancleDownload(requestId: info.requestId)
+                lyricsFileDownloader.cancelDownload(requestId: info.requestId)
                 info.state = .canceled
                 downloadView.reloadData()
             }
