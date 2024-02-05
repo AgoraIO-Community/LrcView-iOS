@@ -44,9 +44,9 @@ final class TestDownloadCancle: XCTestCase, LyricsFileDownloaderDelegate {
             print("[test] download for id:\(id)")
         }
         
-        lyricsFileDownloader.cancleDownload(requestId: 7)
-        lyricsFileDownloader.cancleDownload(requestId: 8)
-        lyricsFileDownloader.cancleDownload(requestId: 9)
+        lyricsFileDownloader.cancelDownload(requestId: 7)
+        lyricsFileDownloader.cancelDownload(requestId: 8)
+        lyricsFileDownloader.cancelDownload(requestId: 9)
         
         wait(for: [exp], timeout: 10)
         
