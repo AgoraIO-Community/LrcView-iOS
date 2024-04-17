@@ -81,7 +81,7 @@ class ViewTestVC: UIViewController {
         let data = try! Data(contentsOf: url)
         let model = KaraokeView.parseLyricData(data: data)!
         karaokeView.setLyricData(data: model)
-        karaokeView.setProgress(progress: 70 * 1000)
+//        karaokeView.setProgress(progress: 70 * 1000)
     }
     
 }

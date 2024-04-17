@@ -263,7 +263,7 @@ class MiniSizeVC: UIViewController {
             if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
                 time -= 250
             }
-            self.karaokeView.setProgress(progress: current )
+//            self.karaokeView.setProgress(progress: current )
         }
     }
     
@@ -355,8 +355,8 @@ class MiniSizeVC: UIViewController {
         karaokeView.backgroundImage = param.karaoke.backgroundImage
         karaokeView.scoringEnabled = param.karaoke.scoringEnabled
         karaokeView.spacing = param.karaoke.spacing
-        karaokeView.setScoreLevel(level: param.karaoke.scoreLevel)
-        karaokeView.setScoreCompensationOffset(offset: param.karaoke.scoreCompensationOffset)
+//        karaokeView.setScoreLevel(level: param.karaoke.scoreLevel)
+//        karaokeView.setScoreCompensationOffset(offset: param.karaoke.scoreCompensationOffset)
         
         karaokeView.lyricsView.lyricLineSpacing = param.lyric.lyricLineSpacing
         karaokeView.lyricsView.noLyricTipsColor = param.lyric.noLyricTipsColor
@@ -408,7 +408,7 @@ extension MiniSizeVC: AgoraRtcEngineDelegate {
         }
         if let pitch = speakers.last?.voicePitch {
             DispatchQueue.main.async { [weak self] in
-                self?.karaokeView.setPitch(pitch: pitch)
+//                self?.karaokeView.setPitch(pitch: pitch)
             }
         }
     }
@@ -495,7 +495,7 @@ extension MiniSizeVC: KaraokeDelegate {
         /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
         self.last = position + 250
         mpk.seek(toPosition: position)
-        cumulativeScore = view.scoringView.getCumulativeScore()
+//        cumulativeScore = view.scoringView.getCumulativeScore()
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lyricModel.lines.count * 100)
     }
     

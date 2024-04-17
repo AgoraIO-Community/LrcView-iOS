@@ -46,7 +46,7 @@ class FirstToneHintViewTestVC: UIViewController {
         timer.scheduledMillisecondsTimer(withName: "ExpTestVC", countDown: 1000000, milliseconds: 10, queue: .main) { [weak self](_, time) in
             guard let self = self else { return }
             self.progress += 10
-            self.karaokeView.setProgress(progress: self.progress)
+//            self.karaokeView.setProgress(progress: self.progress)
         }
     }
 }

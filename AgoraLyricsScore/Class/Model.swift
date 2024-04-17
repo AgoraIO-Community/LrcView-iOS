@@ -134,24 +134,7 @@ public class LyricToneModel: NSObject {
     }
 }
 
-/// 字得分
-public class ToneScoreModel: NSObject {
-    @objc public let tone: LyricToneModel
-    /// 0-100
-    @objc public var score: Float
-    var scores = [Float]()
-    
-    @objc public init(tone: LyricToneModel,
-                      score: Float) {
-        self.tone = tone
-        self.score = score
-    }
-    
-    func addScore(score: Float) {
-        scores.append(score)
-        self.score = scores.reduce(0, +) / Float(scores.count)
-    }
-}
+
 
 @objc public enum Lang: Int {
     case zh = 1

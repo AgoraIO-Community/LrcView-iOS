@@ -142,7 +142,7 @@ class HostVC: UIViewController {
             if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
                 time -= 250
             }
-            self.ktvView.karaokeView.setProgress(progress: current )
+//            self.ktvView.karaokeView.setProgress(progress: current )
         }
     }
     
@@ -196,7 +196,7 @@ extension HostVC: AgoraRtcEngineDelegate {
             let dict: [String : Any] = ["type": 1, "pitch": pitch, "packageNum" : self.packageNum]
             let data = self.createData(dic: dict)
             sendData(data: data)
-            ktvView.karaokeView.setPitch(pitch: pitch)
+//            ktvView.karaokeView.setPitch(pitch: pitch)
         }
     }
 }

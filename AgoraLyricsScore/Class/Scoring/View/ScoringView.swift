@@ -62,11 +62,6 @@ public class ScoringView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    /// 获取当前累计分数
-    @objc public func getCumulativeScore() -> Int {
-        scoringMachine.getCumulativeScore()
-    }
-    
     /// stop Animation and reset position of Cursor
     @objc public func forceStopIndicatorAnimationWhenReachingContinuousZeros() {
         localPitchView.reset()
@@ -76,12 +71,12 @@ public class ScoringView: UIView {
         scoringMachine.setLyricData(data: data)
     }
     
-    func setPitch(pitch: Double) {
-        scoringMachine.setPitch(pitch: pitch)
-    }
-    
-    func setScoreAlgorithm(algorithm: IScoreAlgorithm) {
-        scoringMachine.scoreAlgorithm = algorithm
+    func setPitch(speakerPitch: Double,
+                  pitchScore: Float,
+                  progressInMs: Int) {
+        scoringMachine.setPitch(speakerPitch: speakerPitch,
+                                pitchScore: pitchScore,
+                                progressInMs: progressInMs)
     }
     
     func dragBegain() {
@@ -188,19 +183,5 @@ extension ScoringView: ScoringMachineDelegate {
             let text = "y: \(Float(centerY)) \npitch: \(debugInfo.pitch.keep2) \nani: \(showAnimation) \nw:\(debugInfo.hitedInfo?.word ?? "") \nstd:\(debugInfo.hitedInfo?.pitch ?? 0) progress: \(debugInfo.progress)"
             consoleView.set(text: text)
         }
-    }
-    
-    func scoringMachine(_ scoringMachine: ScoringMachine,
-                   didFinishLineWith model: LyricLineModel,
-                   score: Int,
-                   cumulativeScore: Int,
-                   lineIndex: Int,
-                   lineCount: Int) {
-        delegate?.scoringView(self,
-                              didFinishLineWith: model,
-                              score: score,
-                              cumulativeScore: cumulativeScore,
-                              lineIndex: lineIndex,
-                              lineCount: lineCount)
     }
 }

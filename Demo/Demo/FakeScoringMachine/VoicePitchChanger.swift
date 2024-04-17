@@ -22,13 +22,6 @@ class VoicePitchChanger {
     func handlePitch(stdPitch: Double,
                      voicePitch: Double,
                      stdMaxPitch: Double) -> Double {
-        if useC {
-            return handlePitchC(stdPitch, voicePitch, stdMaxPitch)
-        }
-        
-        if voicePitch <= 0 {
-            return 0
-        }
 
         n += 1.0
         let gap = stdPitch - voicePitch
@@ -63,10 +56,7 @@ class VoicePitchChanger {
     }
     
     func reset() {
-        if useC {
-            resetC()
-            return
-        }
+        
         offset = 0.0
         n = 0.0
     }

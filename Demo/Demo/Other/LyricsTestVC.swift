@@ -152,7 +152,7 @@ class LyricsTestVC: UIViewController {
             
             self.last = current
             
-            self.karaokeView.setProgress(progress: self.last )
+//            self.karaokeView.setProgress(progress: self.last )
         }
     }
     
@@ -182,7 +182,7 @@ extension LyricsTestVC: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
         if let pitch = speakers.last?.voicePitch {
-            karaokeView.setPitch(pitch: pitch)
+//            karaokeView.setPitch(pitch: pitch)
         }
     }
 }

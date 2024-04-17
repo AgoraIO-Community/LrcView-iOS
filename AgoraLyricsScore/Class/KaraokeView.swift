@@ -118,90 +118,49 @@ extension KaraokeView {
         scoringView.reset()
     }
     
+    /// 设置当前歌曲的进度
+    /// - Note: 可以获取播放器的当前进度进行设置
+    /// - Parameter progress: 歌曲进度 (ms)
+    @objc public func setProgress(progressInMs: Int) {
+        if !Thread.isMainThread {
+            Log.error(error: "invoke setProgress not isMainThread ", tag: logTag)
+        }
+        guard isStart else { return }
+        logProgressIfNeed(progress: progressInMs)
+        lyricsView.setProgress(progress: progressInMs)
+        scoringView.progress = progressInMs
+        progressChecker.set(progress: progressInMs)
+    }
+    
     /// 设置实时采集(mic)的Pitch
-    /// - Note: 可以从AgoraRTC回调方法 `- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine reportAudioVolumeIndicationOfSpeakers:(NSArray<AgoraRtcAudioVolumeInfo *> * _Nonnull)speakers totalVolume:(NSInteger)totalVolume`  获取
-    /// - Parameter pitch: 实时音调值
-    @objc public func setPitch(pitch: Double) {
-        Log.info(text: "p:\(pitch)", tag: logTag)
+    /// - Note: 可以从AgoraRTC DRM回调方法 `onPitch`[该回调频率是50ms/次]  获取
+    /// - Parameter speakerPitch: 演唱者的实时音高值
+    /// - Parameter pitchScore: 实时音高分数
+    /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）
+    @objc public func setPitch(speakerPitch: Double, pitchScore: Float, progressInMs: Int) {
+        if !Thread.isMainThread {
+            Log.error(error: "invoke setProgress not isMainThread ", tag: logTag)
+        }
+        guard isStart else { return }
+        
+        Log.info(text: "p:\(speakerPitch)", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setPitch not isMainThread ", tag: logTag)
         }
-        if pitch < 0 { return }
+        if speakerPitch < 0 { return }
         guard isStart else { return }
-        if pitch == 0 {
+        if speakerPitch == 0 {
             pitchIsZeroCount += 1
         }
         else {
             pitchIsZeroCount = 0
         }
-        if pitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
+        if speakerPitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
             pitchIsZeroCount = 0
-            scoringView.setPitch(pitch: pitch)
+            scoringView.setPitch(speakerPitch: speakerPitch,
+                                 pitchScore: pitchScore,
+                                 progressInMs: progressInMs)
         }
-    }
-    
-    /// 设置当前歌曲的进度
-    /// - Note: 可以获取播放器的当前进度进行设置
-    /// - Parameter progress: 歌曲进度 (ms)
-    @objc public func setProgress(progress: Int) {
-        if !Thread.isMainThread {
-            Log.error(error: "invoke setProgress not isMainThread ", tag: logTag)
-        }
-        guard isStart else { return }
-        logProgressIfNeed(progress: progress)
-        lyricsView.setProgress(progress: progress)
-        scoringView.progress = progress
-        progressChecker.set(progress: progress)
-    }
-    
-    /// 同时设置进度和Pitch (建议观众端使用)
-    /// - Parameters:
-    ///   - pitch: 实时音调值
-    ///   - progress: 歌曲进度 (ms)
-    @objc public func setPitch(pitch: Double, progress: Int) {
-        if !Thread.isMainThread {
-            Log.error(error: "invoke setPitch(pitch, progress) not isMainThread ", tag: logTag)
-        }
-        setProgress(progress: progress)
-        setPitch(pitch: pitch)
-    }
-    
-    /// 设置自定义分数计算对象
-    /// - Note: 如果不调用此方法，则内部使用默认计分规则
-    /// - Parameter algorithm: 遵循`IScoreAlgorithm`协议实现的对象
-    @objc public func setScoreAlgorithm(algorithm: IScoreAlgorithm) {
-        if !Thread.isMainThread {
-            Log.error(error: "invoke setScoreAlgorithm not isMainThread ", tag: logTag)
-        }
-        scoringView.setScoreAlgorithm(algorithm: algorithm)
-    }
-    
-    /// 设置打分难易程度(难度系数)
-    /// - Note: 值越小打分难度越小，值越高打分难度越大
-    /// - Parameter level: 系数, 范围：[0, 100], 如不设置默认为15
-    @objc public func setScoreLevel(level: Int) {
-        if !Thread.isMainThread {
-            Log.error(error: "invoke setScoreLevel not isMainThread ", tag: logTag)
-        }
-        if level < 0 || level > 100 {
-            Log.error(error: "setScoreLevel out bounds \(level), [0, 100]", tag: logTag)
-            return
-        }
-        scoringView.scoreLevel = level
-    }
-    
-    /// 设置打分分值补偿
-    /// - Note: 在计算分值的时候作为补偿
-    /// - Parameter offset: 分值补偿 [-100, 100], 如不设置默认为0
-    @objc public func setScoreCompensationOffset(offset: Int) {
-        if !Thread.isMainThread {
-            Log.error(error: "invoke setScoreCompensationOffset not isMainThread ", tag: logTag)
-        }
-        if offset < -100 || offset > 100 {
-            Log.error(error: "setScoreCompensationOffset out bounds \(offset), [-100, 100]", tag: logTag)
-            return
-        }
-        scoringView.scoreCompensationOffset = offset
     }
 }
 
@@ -280,21 +239,6 @@ extension KaraokeView: LyricsViewDelegate {
 extension KaraokeView: ScoringViewDelegate {
     func scoringViewShouldUpdateViewLayout(view: ScoringView) {
         updateUI()
-    }
-    
-    func scoringView(_ view: ScoringView,
-                     didFinishLineWith model: LyricLineModel,
-                     score: Int,
-                     cumulativeScore: Int,
-                     lineIndex: Int,
-                     lineCount: Int) {
-        Log.info(text: "didFinishLineWith score:\(score) lineIndex:\(lineIndex) lineCount:\(lineCount) cumulativeScore:\(cumulativeScore)", tag: logTag)
-        delegate?.onKaraokeView?(view: self,
-                                 didFinishLineWith: model,
-                                 score: score,
-                                 cumulativeScore: cumulativeScore,
-                                 lineIndex: lineIndex,
-                                 lineCount: lineCount)
     }
 }
 

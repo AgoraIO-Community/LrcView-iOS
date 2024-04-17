@@ -20,14 +20,6 @@ protocol ScoringMachineDelegate: NSObjectProtocol {
                         didUpdateCursor centerY: CGFloat,
                         showAnimation: Bool,
                         debugInfo: ScoringMachine.DebugInfo)
-    
-    /// 更新句子分数
-    func scoringMachine(_ scoringMachine: ScoringMachine,
-                        didFinishLineWith model: LyricLineModel,
-                        score: Int,
-                        cumulativeScore: Int,
-                        lineIndex: Int,
-                        lineCount: Int)
 }
 
 extension ScoringMachine { /** invoke **/
@@ -65,32 +57,6 @@ extension ScoringMachine { /** invoke **/
                                           didUpdateCursor: centerY,
                                           showAnimation: showAnimation,
                                           debugInfo: debugInfo)
-        }
-    }
-    
-    func invokeScoringMachine(didFinishLineWith model: LyricLineModel,
-                              score: Int,
-                              cumulativeScore: Int,
-                              lineIndex: Int,
-                              lineCount: Int) {
-        if Thread.isMainThread {
-            delegate?.scoringMachine(self,
-                                     didFinishLineWith: model,
-                                     score: score,
-                                     cumulativeScore: cumulativeScore,
-                                     lineIndex: lineIndex,
-                                     lineCount: lineCount)
-            return
-        }
-        
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.delegate?.scoringMachine(self,
-                                          didFinishLineWith: model,
-                                          score: score,
-                                          cumulativeScore: cumulativeScore,
-                                          lineIndex: lineIndex,
-                                          lineCount: lineCount)
         }
     }
 }

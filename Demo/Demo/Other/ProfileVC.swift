@@ -46,12 +46,12 @@ class ProfileVC: UIViewController {
                 self.timer.destoryAllTimer()
             }
             
-            self.karaokeView.setProgress(progress: self.progress)
+//            self.karaokeView.setProgress(progress: self.progress)
             
             count += 1
             if count == 3 {
                 count = 0
-                self.karaokeView.setPitch(pitch: Double.random(in: 87...300))
+//                self.karaokeView.setPitch(pitch: Double.random(in: 87...300))
             }
             
         }

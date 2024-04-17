@@ -12,11 +12,11 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
     override func setUpWithError() throws {
         Log.setLoggers(loggers: [ConsoleLogger()])
     }
-
+    
     override func tearDownWithError() throws {
         vm.reset()
     }
-
+    
     var cumulativeScore = 0
     var testCaseNum = 0
     var vm = ScoringMachine()
@@ -39,7 +39,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
             for tone in line.tones {
                 let time = tone.beginTime + tone.duration/2
                 vm.setProgress(progress: time)
-                vm.setPitch(pitch: tone.pitch - 1)
+                vm.setPitch(speakerPitch: tone.pitch - 1, pitchScore: 90, progressInMs: time)
             }
         }
         wait(for: [exp], timeout: 3)
@@ -66,7 +66,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
             vm.setProgress(progress: time)
             if gap == 40 {
                 gap = 0
-                vm.setPitch(pitch: 50)
+                vm.setPitch(speakerPitch: 50, pitchScore: 90, progressInMs: time)
             }
             gap += 20
             time += 20
@@ -74,36 +74,27 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
         }
         wait(for: [exp2], timeout: 10)
     }
-
+    
     func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {
         return .init(width: 380, height: 100)
     }
     
-    func scoringMachine(_ scoringMachine: ScoringMachine, didUpdateDraw standardInfos: [ScoringMachine.DrawInfo], highlightInfos: [ScoringMachine.DrawInfo]) {
+    func scoringMachine(_ scoringMachine: ScoringMachine,
+                        didUpdateDraw standardInfos: [ScoringMachine.DrawInfo],
+                        highlightInfos: [ScoringMachine.DrawInfo]) {
         
     }
     
-    func scoringMachine(_ scoringMachine: ScoringMachine, didUpdateCursor centerY: CGFloat, showAnimation: Bool, debugInfo: ScoringMachine.DebugInfo) {
-        
-    }
-   
     func scoringMachine(_ scoringMachine: ScoringMachine,
-                        didFinishLineWith model: LyricLineModel,
-                        score: Int,
-                        cumulativeScore: Int,
-                        lineIndex: Int,
-                        lineCount: Int) {
-        if testCaseNum == 0 {
-            self.cumulativeScore = cumulativeScore
-            print("didFinishLineWith cumulativeScore: \(cumulativeScore)")
-            if cumulativeScore == 500 {
-                exp.fulfill()
-            }
-        }
-        else {
-            XCTAssertEqual(cumulativeScore, 66)
-            if cumulativeScore == 66 {
+                        didUpdateCursor centerY: CGFloat,
+                        showAnimation: Bool,
+                        debugInfo: ScoringMachine.DebugInfo) {
+        if (showAnimation) {
+            if testCaseNum == 1 {
                 exp2.fulfill()
+            }
+            else {
+                exp.fulfill()
             }
         }
     }

@@ -37,27 +37,28 @@ class MainTestVC: UIViewController {
     var mpk: AgoraMusicPlayerProtocol!
     var pitchInvokeDuration:CFAbsoluteTime = 0
 //    var song = Item(code: 6246262727283870, isXML: false)
-    var song = Item(code: 6625526603329280, isXML: true)
+    var song = Item(code: 6625526605291650, isXML: true)
+    let fakeScoringMachine = FakeScoringMachine()
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
     /// 6768817613736320
-//    var songs = [Item(code: 6246262727283870, isXML: false),
-//                 Item(code: 6654550250051940, isXML: true),
-//                 Item(code: 6775664001035810, isXML: true),
-//                 Item(code: 6625526610023560, isXML: true),
-//                 Item(code: 6625526603296890, isXML: true),
-//                 /** xml 不打分 **/
-//                 Item(code: 6315145508122860, isXML: true)]
+    var songs = [Item(code: 6246262727283870, isXML: false),
+                 Item(code: 6654550250051940, isXML: true),
+                 Item(code: 6775664001035810, isXML: true),
+                 Item(code: 6625526610023560, isXML: true),
+                 Item(code: 6625526603296890, isXML: true),
+                 /** xml 不打分 **/
+                 Item(code: 6315145508122860, isXML: true)]
     
-    var songs = [/// 爱情转移
-        Item(code: 6246262727282860, isXML: true),
-        /// 说爱你
-        Item(code: 6654550221757560, isXML: true),
-        /// 江南
-        Item(code: 6246262727300580, isXML: true),
-        /// 容易受伤的女人
-        Item(code: 6625526608670440, isXML: true)]
+//    var songs = [/// 爱情转移
+//        Item(code: 6246262727282860, isXML: true),
+//        /// 说爱你
+//        Item(code: 6654550221757560, isXML: true),
+//        /// 江南
+//        Item(code: 6246262727300580, isXML: true),
+//        /// 容易受伤的女人
+//        Item(code: 6625526608670440, isXML: true)]
 //    var songs = [Item(code: 6246262727282120, isXML: true),
 //                 Item(code: 6625526603472520, isXML: true)]
     var currentSongIndex = 0
@@ -174,6 +175,7 @@ class MainTestVC: UIViewController {
         initMCC()
         mccPreload()
         karaokeView.delegate = self
+        fakeScoringMachine.delegate = self
     }
     
     func initEngine() {
@@ -245,6 +247,9 @@ class MainTestVC: UIViewController {
             return
         }
         print("== play success")
+        
+        fakeScoringMachine.startScore()
+        
         self.last = 0
         timer.scheduledMillisecondsTimer(withName: "MainTestVC",
                                          countDown: 1000000,
@@ -269,7 +274,8 @@ class MainTestVC: UIViewController {
             if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
                 time -= 250
             }
-            self.karaokeView.setProgress(progress: current )
+            self.karaokeView.setProgress(progressInMs: time)
+            self.fakeScoringMachine.setProgress(progressInMs: time)
         }
     }
     
@@ -372,8 +378,6 @@ class MainTestVC: UIViewController {
         karaokeView.backgroundImage = param.karaoke.backgroundImage
         karaokeView.scoringEnabled = param.karaoke.scoringEnabled
         karaokeView.spacing = param.karaoke.spacing
-        karaokeView.setScoreLevel(level: param.karaoke.scoreLevel)
-        karaokeView.setScoreCompensationOffset(offset: param.karaoke.scoreCompensationOffset)
         
         karaokeView.lyricsView.lyricLineSpacing = param.lyric.lyricLineSpacing
         karaokeView.lyricsView.noLyricTipsColor = param.lyric.noLyricTipsColor
@@ -429,8 +433,8 @@ extension MainTestVC: AgoraRtcEngineDelegate {
 //            let gap = startTime - pitchInvokeDuration
 //            pitchInvokeDuration = startTime
 //            print("gap:[\(gap.keep3)] \(pitch)")
-            label.text = "\(pitch)"
-            karaokeView.setPitch(pitch: pitch)
+//            label.text = "\(pitch)"
+            fakeScoringMachine.pushPitch(pitch: pitch)
 //            }
         }
     }
@@ -523,20 +527,8 @@ extension MainTestVC: KaraokeDelegate {
         /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
         self.last = position + 250
         mpk.seek(toPosition: position)
-        cumulativeScore = view.scoringView.getCumulativeScore()
+//        cumulativeScore = view.scoringView.getCumulativeScore()
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lyricModel.lines.count * 100)
-    }
-    
-    func onKaraokeView(view: KaraokeView,
-                       didFinishLineWith model: LyricLineModel,
-                       score: Int,
-                       cumulativeScore: Int,
-                       lineIndex: Int,
-                       lineCount: Int) {
-        lineScoreView.showScoreView(score: score)
-        self.cumulativeScore = cumulativeScore
-        gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lineCount * 100)
-        incentiveView.show(score: score)
     }
 }
 
@@ -549,22 +541,8 @@ extension MainTestVC: LyricsFileDownloaderDelegate {
         if let data = fileData {
             let model = KaraokeView.parseLyricData(data: data)!
             lyricModel = model
+            self.fakeScoringMachine.setLyricsModel(lyricModel: model)
             print("linesCount:\(model.lines.count) songCode:\(self.song.code)")
-            if !self.noLyric {
-                let canScoring = model.hasPitch
-                if canScoring { /** xml **/
-                    self.karaokeView.setLyricData(data: model)
-                    self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-                }
-                else {/** lrc **/
-                    self.karaokeView.setLyricData(data: model)
-                }
-            }
-            else {
-                self.karaokeView.setLyricData(data: nil)
-                self.gradeView.isHidden = true
-            }
-            self.mccPlay()
         }
         else {
             print("fect fail")
@@ -583,5 +561,39 @@ extension MainTestVC: ParamSetVCDelegate {
         gradeView.reset()
         updateView(param: param)
         mccPreload()
+    }
+}
+
+extension MainTestVC: FakeScoringMachineDelegate {
+    func fakeScoringMachine(onPitch model: RawScoreDataModel) {
+        karaokeView.setPitch(speakerPitch: model.speakerPitch,
+                             pitchScore: model.pitchScore,
+                             progressInMs: model.progressInMs)
+    }
+    
+    func fakeScoringMachine(onLineScore model: CumulativeScoreDataModel) {
+        let score = Int(model.performedLineScore)
+        lineScoreView.showScoreView(score: score)
+        self.cumulativeScore = Int(model.cumulativeTotalLinePitchScores)
+        gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: model.performedTotalLines * 100)
+        incentiveView.show(score: score)
+    }
+    
+    func fakeScoringMachine(onAllRefPitchs model: LyricModel) {
+        if !self.noLyric {
+            let canScoring = model.hasPitch
+            if canScoring { /** xml **/
+                self.karaokeView.setLyricData(data: model)
+                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+            }
+            else {/** lrc **/
+                self.karaokeView.setLyricData(data: model)
+            }
+        }
+        else {
+            self.karaokeView.setLyricData(data: nil)
+            self.gradeView.isHidden = true
+        }
+        self.mccPlay()
     }
 }
