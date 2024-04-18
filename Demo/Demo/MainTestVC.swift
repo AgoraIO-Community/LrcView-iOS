@@ -452,7 +452,6 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
     }
     
     func onMusicCollectionResult(_ requestId: String, result: AgoraMusicCollection, errorCode: AgoraMusicContentCenterStatusCode) {
-        
     }
     
     func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
