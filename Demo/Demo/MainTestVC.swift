@@ -433,7 +433,7 @@ extension MainTestVC: AgoraRtcEngineDelegate {
 //            let gap = startTime - pitchInvokeDuration
 //            pitchInvokeDuration = startTime
 //            print("gap:[\(gap.keep3)] \(pitch)")
-//            label.text = "\(pitch)"
+            label.text = "\(pitch)"
             fakeScoringMachine.pushPitch(pitch: pitch)
 //            }
         }
@@ -461,36 +461,28 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         }
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
-//        let filePath = Bundle.main.path(forResource: "146807", ofType: "xml")!
-//        DispatchQueue.main.async {
-//            let url = URL(fileURLWithPath: filePath)
-//            let data = try! Data(contentsOf: url)
-//            let model = KaraokeView.parseLyricData(data: data)!
-//            self.lyricModel = model
-//            if !self.noLyric {
-//                self.karaokeView.setLyricData(data: model)
-//                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-//                self.gradeView.isHidden = false
-//            }
-//            else {
-//                self.karaokeView.setLyricData(data: nil)
-//                self.gradeView.isHidden = true
-//            }
-//            self.mccPlay()
-//        }
+        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
+        DispatchQueue.main.async {
+            let url = URL(fileURLWithPath: filePath)
+            let data = try! Data(contentsOf: url)
+            let model = KaraokeView.parseLyricData(data: data)!
+            self.lyricModel = model
+            self.fakeScoringMachine.setLyricsModel(lyricModel: model)
+            print("linesCount:\(model.lines.count) songCode:\(self.song.code)")
+        }
         
-        if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
-            DispatchQueue.main.async { [weak self] in
-                self?.title = "无歌词地址"
-            }
-            return
-        }
-        else {
-            DispatchQueue.main.async { [weak self] in
-                self?.title = nil
-            }
-        }
-        let _ = lyricsFileDownloader.download(urlString: lyricUrl)
+//        if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
+//            DispatchQueue.main.async { [weak self] in
+//                self?.title = "无歌词地址"
+//            }
+//            return
+//        }
+//        else {
+//            DispatchQueue.main.async { [weak self] in
+//                self?.title = nil
+//            }
+//        }
+//        let _ = lyricsFileDownloader.download(urlString: lyricUrl)
     }
     
     func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
@@ -559,6 +551,7 @@ extension MainTestVC: ParamSetVCDelegate {
         karaokeView.reset()
         incentiveView.reset()
         gradeView.reset()
+        fakeScoringMachine.reset()
         updateView(param: param)
         mccPreload()
     }

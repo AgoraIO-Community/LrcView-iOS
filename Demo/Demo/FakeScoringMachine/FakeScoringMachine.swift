@@ -83,6 +83,10 @@ class FakeScoringMachine: NSObject {
         }
         
         guard let stdPitch = lyricModel.getHitedPitch(progress: progress) else {
+            let model = RawScoreDataModel(progressInMs: progress,
+                                          speakerPitch: pitch,
+                                          pitchScore: 0)
+            delegate?.fakeScoringMachine(onPitch: model)
             return
         }
         
@@ -120,6 +124,12 @@ class FakeScoringMachine: NSObject {
     
     func resumeScore() {
         isStart = true
+    }
+    
+    func reset() {
+        lyricModel = nil
+        isStart = false
+        voicePitchChanger.reset()
     }
     
     func setScoreLevel(level: Int) {

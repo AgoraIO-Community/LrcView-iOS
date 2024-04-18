@@ -45,7 +45,7 @@ class ScoringMachine {
     }
     
     func setProgress(progress: Int) {
-        Log.debug(text: "progress: \(progress)", tag: "progress")
+//        Log.debug(text: "progress: \(progress)", tag: "progress")
         queue.async { [weak self] in
             self?._setProgress(progress: progress)
         }
@@ -117,6 +117,7 @@ class ScoringMachine {
                                       pitch: speakerPitch,
                                       hitedInfo: nil,
                                       progress: progressInMs)
+            Log.debug(text: "_setPitch[0] porgress:\(progressInMs) speakerPitch:\(speakerPitch) score:\(pitchScore)", tag: logTag)
             invokeScoringMachine(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
             return
         }
@@ -134,10 +135,11 @@ class ScoringMachine {
                 Log.errorText(text: "y is invalid, at getHitedInfo step", tag: logTag)
             }
             let yValue = (y != nil) ? y! : (canvasViewSize.height >= 0 ? canvasViewSize.height : 0)
-            let debugInfo = DebugInfo(originalPitch: speakerPitch,
+            let debugInfo = DebugInfo(originalPitch: -1,
                                       pitch: speakerPitch,
                                       hitedInfo: nil,
-                                      progress: progress)
+                                      progress: progressInMs)
+            Log.debug(text: "_setPitch[1] porgress:\(progressInMs) speakerPitch:\(speakerPitch) score:\(pitchScore)", tag: logTag)
             invokeScoringMachine(didUpdateCursor: yValue,
                                  showAnimation: false,
                                  debugInfo: debugInfo)
@@ -153,11 +155,10 @@ class ScoringMachine {
                                                        currentVisiableInfos: currentVisiableInfos,
                                                        currentHighlightInfos: currentHighlightInfos)
         }
-        Log.debug(text: "progressInMs:\(progressInMs) score: \(score) pitch: \(speakerPitch) stdPitch:\(hitedInfo.pitch)", tag: logTag)
         
         /** 3.calculated ui info **/
         let showAnimation = score >= hitScoreThreshold * 100
-        let y = calculatedY(pitch: speakerPitch,
+        let y = calculatedY(pitch: showAnimation ? hitedInfo.pitch : speakerPitch,
                             viewHeight: canvasViewSize.height,
                             minPitch: minPitch,
                             maxPitch: maxPitch,
@@ -166,10 +167,11 @@ class ScoringMachine {
             Log.errorText(text: "y is invalid, at calculated ui info step", tag: logTag)
         }
         let yValue = (y != nil) ? y! : (canvasViewSize.height >= 0 ? canvasViewSize.height : 0)
-        let debugInfo = DebugInfo(originalPitch: speakerPitch,
+        let debugInfo = DebugInfo(originalPitch: hitedInfo.pitch,
                                   pitch: speakerPitch,
                                   hitedInfo: hitedInfo,
                                   progress: progressInMs)
+        Log.debug(text: "_setPitch[2] porgress:\(progressInMs) speakerPitch:\(speakerPitch) score:\(pitchScore)", tag: logTag)
         invokeScoringMachine(didUpdateCursor: yValue, showAnimation: showAnimation, debugInfo: debugInfo)
     }
     
