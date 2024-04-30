@@ -35,8 +35,6 @@
 		263565432BD124D90087B4CE /* RTCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565422BD124D90087B4CE /* RTCManager.swift */; };
 		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
-		268127D52BDE2E3200BACA81 /* TestOC.mm in Sources */ = {isa = PBXBuildFile; fileRef = 268127D42BDE2E3200BACA81 /* TestOC.mm */; };
-		268127E32BDE39D800BACA81 /* IHttpImplementation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 268127E12BDE39D800BACA81 /* IHttpImplementation.cpp */; };
 		2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */; };
 		2689ED3E298654C90012BC4D /* IncentiveVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED3D298654C90012BC4D /* IncentiveVC.swift */; };
 		2689ED422987C8890012BC4D /* ParamSetVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED412987C8890012BC4D /* ParamSetVC.swift */; };
@@ -94,10 +92,6 @@
 		263565402BD122160087B4CE /* ProgressProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressProvider.swift; sourceTree = "<group>"; };
 		263565422BD124D90087B4CE /* RTCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCManager.swift; sourceTree = "<group>"; };
 		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
-		268127D32BDE2E3200BACA81 /* TestOC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestOC.h; sourceTree = "<group>"; };
-		268127D42BDE2E3200BACA81 /* TestOC.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestOC.mm; sourceTree = "<group>"; };
-		268127E12BDE39D800BACA81 /* IHttpImplementation.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IHttpImplementation.cpp; sourceTree = "<group>"; };
-		268127E22BDE39D800BACA81 /* IHttpImplementation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IHttpImplementation.hpp; sourceTree = "<group>"; };
 		2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstToneHintViewTestVC.swift; sourceTree = "<group>"; };
 		2689ED3D298654C90012BC4D /* IncentiveVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncentiveVC.swift; sourceTree = "<group>"; };
 		2689ED412987C8890012BC4D /* ParamSetVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamSetVC.swift; sourceTree = "<group>"; };
@@ -238,10 +232,6 @@
 				26AC90AC29EE72A900AB6EC5 /* SongListVC.swift */,
 				26E8030D298BAF1B00DBF23F /* OCVC.h */,
 				26E8030E298BAF1B00DBF23F /* OCVC.m */,
-				268127D32BDE2E3200BACA81 /* TestOC.h */,
-				268127D42BDE2E3200BACA81 /* TestOC.mm */,
-				268127E22BDE39D800BACA81 /* IHttpImplementation.hpp */,
-				268127E12BDE39D800BACA81 /* IHttpImplementation.cpp */,
 				269189BF2A8F749100F2B03C /* MiniSizeVC.swift */,
 				26E211FD2B2AF84800297136 /* DownloadVC.swift */,
 			);
@@ -438,8 +428,6 @@
 				26AC90AD29EE72A900AB6EC5 /* SongListVC.swift in Sources */,
 				26119D492BD78CA700530607 /* LyricModel+Extension.swift in Sources */,
 				263565332BD1095F0087B4CE /* Algorithm.c in Sources */,
-				268127D52BDE2E3200BACA81 /* TestOC.mm in Sources */,
-				268127E32BDE39D800BACA81 /* IHttpImplementation.cpp in Sources */,
 				26119D4D2BD79B7100530607 /* MainView.swift in Sources */,
 				2602311E29C9DCDF0036F74A /* KTVView.swift in Sources */,
 				2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */,
