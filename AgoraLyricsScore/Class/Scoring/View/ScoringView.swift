@@ -38,9 +38,6 @@ public class ScoringView: UIView {
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
     
-    var scoreLevel = 15 { didSet { updateUI() } }
-    var scoreCompensationOffset = 0 { didSet { updateUI() } }
-    
     var progress: Int = 0 { didSet { updateProgress() } }
     fileprivate let localPitchView = LocalPitchView()
     fileprivate let canvasView = ScoringCanvasView()
@@ -139,8 +136,6 @@ public class ScoringView: UIView {
         scoringMachine.standardPitchStickViewHeight = standardPitchStickViewHeight
         scoringMachine.movingSpeedFactor = movingSpeedFactor
         scoringMachine.hitScoreThreshold = hitScoreThreshold
-        scoringMachine.scoreLevel = scoreLevel
-        scoringMachine.scoreCompensationOffset = scoreCompensationOffset
         
         delegate?.scoringViewShouldUpdateViewLayout(view: self)
         
