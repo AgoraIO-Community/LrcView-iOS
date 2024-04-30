@@ -83,7 +83,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
 
         if indexPath.section == 0 { /** UI配置测试 **/
-            let vc = MainTestVC()
+            let vc = MainTestVC2()
             navigationController?.pushViewController(vc, animated: true)
             return
         }

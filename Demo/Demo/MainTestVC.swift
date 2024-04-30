@@ -248,7 +248,7 @@ class MainTestVC: UIViewController {
         }
         print("== play success")
         
-        fakeScoringMachine.startScore()
+        fakeScoringMachine.startScore(songId: song.code)
         
         self.last = 0
         timer.scheduledMillisecondsTimer(withName: "MainTestVC",
@@ -557,13 +557,14 @@ extension MainTestVC: ParamSetVCDelegate {
 }
 
 extension MainTestVC: FakeScoringMachineDelegate {
-    func fakeScoringMachine(onPitch model: RawScoreDataModel) {
+    
+    func onFakePitch(model: RawScoreDataModel) {
         karaokeView.setPitch(speakerPitch: model.speakerPitch,
                              pitchScore: model.pitchScore,
                              progressInMs: model.progressInMs)
     }
     
-    func fakeScoringMachine(onLineScore model: CumulativeScoreDataModel) {
+    func onFakeLineScore(model: CumulativeScoreDataModel) {
         let score = Int(model.performedLineScore)
         lineScoreView.showScoreView(score: score)
         self.cumulativeScore = Int(model.cumulativeTotalLinePitchScores)
@@ -571,7 +572,7 @@ extension MainTestVC: FakeScoringMachineDelegate {
         incentiveView.show(score: score)
     }
     
-    func fakeScoringMachine(onAllRefPitchs model: LyricModel) {
+    func onFakeAllRefPitchs(model: LyricModel) {
         if !self.noLyric {
             let canScoring = model.hasPitch
             if canScoring { /** xml **/
