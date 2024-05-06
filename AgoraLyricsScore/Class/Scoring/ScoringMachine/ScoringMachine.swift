@@ -89,8 +89,8 @@ class ScoringMachine {
         let (lineEnds, infos) = ScoringMachine.createData(data: lyricData)
         dataList = infos
         lineEndTimes = lineEnds
-        let (min, max) = makeMinMaxPitch(dataList: dataList)
-        minPitch = min
+        let (_, max) = makeMinMaxPitch(dataList: dataList)
+        minPitch = 0
         maxPitch = max
         handleProgress()
     }
@@ -144,10 +144,10 @@ class ScoringMachine {
             return
         }
         
-        let score = pitchScore
+        let showAnimation = (abs(hitedInfo.pitch - speakerPitch) < 1)
         
         /** 2.update HighlightInfos **/
-        if score >= hitScoreThreshold * 100 {
+        if showAnimation {
             currentHighlightInfos = makeHighlightInfos(progress: progressInMs,
                                                        hitedInfo: hitedInfo,
                                                        currentVisiableInfos: currentVisiableInfos,
@@ -155,16 +155,7 @@ class ScoringMachine {
         }
         
         /** 3.calculated ui info **/
-        let showAnimation = score >= hitScoreThreshold * 100
-        /**
-         (lldb) po minPitch
-         89.0
-
-         (lldb) po maxPitch
-         329.0
-         **/
         
-        /// denug
         if speakerPitch > maxPitch {
             Log.errorText(text: "speakerPitch > maxPitch, \(speakerPitch)", tag: logTag)
         }

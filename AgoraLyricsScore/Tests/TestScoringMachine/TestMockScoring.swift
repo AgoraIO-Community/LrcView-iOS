@@ -31,7 +31,6 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
             return
         }
         vm = ScoringMachine()
-        vm.scoreLevel = 10
         vm.delegate = self
         vm.setLyricData(data: model)
         for index in 0...5 {
@@ -56,7 +55,6 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
         
         vm = ScoringMachine()
         vm.delegate = self
-        vm.scoreLevel = 15
         vm.setLyricData(data: model)
         
         let line = model.lines.first!

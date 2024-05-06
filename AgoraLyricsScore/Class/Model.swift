@@ -23,6 +23,12 @@ import Foundation
     }
 }
 
+struct KrcPitchData: Codable {
+    let pitch: Double
+    let startTime: UInt
+    let duration: UInt
+}
+
 public class LyricModel: NSObject {
     /// 歌曲名称
     @objc public var name: String
@@ -38,6 +44,8 @@ public class LyricModel: NSObject {
     @objc public var duration: UInt
     /// 是否有pitch值
     @objc public var hasPitch: Bool
+
+    var pitchDatas: [KrcPitchData] = []
     
     @objc public init(name: String,
                       singer: String,

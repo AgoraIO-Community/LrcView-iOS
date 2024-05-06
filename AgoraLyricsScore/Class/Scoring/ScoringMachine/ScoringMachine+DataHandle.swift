@@ -11,37 +11,18 @@ extension ScoringMachine {
     /// 创建Scoring内部数据
     ///   - shouldFixTime: 是否要修复时间异常问题
     ///   - return: (行结束时间, 字模型)
-    static func createData(data: LyricModel, shouldFixTime: Bool = true) -> ([UInt], [Info]) {
+    static func createData(data: LyricModel) -> ([UInt], [Info]) {
         var array = [Info]()
-        var lineEndTimes = [UInt]()
-        var preEndTime: UInt = 0
-        for line in data.lines {
-            for tone in line.tones {
-                var beginTime = tone.beginTime
-                var duration = tone.duration
-                if shouldFixTime { /** 时间异常修复 **/
-                    if beginTime < preEndTime {
-                        /// 取出endTime文件原始值
-                        let endTime = tone.endTime
-                        beginTime = preEndTime
-                        duration = endTime - beginTime
-                    }
-                }
-                
-                let info = Info(beginTime: beginTime,
-                                duration: duration,
-                                word: tone.word,
-                                pitch: tone.pitch,
-                                drawBeginTime: tone.beginTime,
-                                drawDuration: tone.duration,
-                                isLastInLine: tone == line.tones.last)
-                
-                preEndTime = tone.endTime
-                
-                array.append(info)
-            }
-            lineEndTimes.append(preEndTime)
+        for (index, pitchData) in data.pitchDatas.enumerated() {
+            let info = Info(beginTime: pitchData.startTime,
+                            duration: pitchData.duration,
+                            word: "\(index)",
+                            pitch: pitchData.pitch,
+                            drawBeginTime: pitchData.startTime,
+                            drawDuration: pitchData.duration)
+            array.append(info)
         }
+        let lineEndTimes = data.lines.map({ $0.endTime })
         return (lineEndTimes, array)
     }
     
@@ -69,8 +50,7 @@ extension ScoringMachine {
                         word: stdInfo.word,
                         pitch: stdInfo.pitch,
                         drawBeginTime: drawBeginTime,
-                        drawDuration: drawDuration,
-                        isLastInLine: false)
+                        drawDuration: drawDuration)
         var temp = currentHighlightInfos
         temp.append(info)
         return temp

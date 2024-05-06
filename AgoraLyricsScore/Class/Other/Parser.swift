@@ -32,4 +32,40 @@ class Parser {
         
         fatalError("unknow file type")
     }
+    
+    func parseLyricData(krcFileData: Data,
+                        pitchFileData: Data,
+                        includeCopyrightSentence: Bool = true) -> LyricModel? {
+        guard krcFileData.count > 0 else {
+            Log.errorText(text: "krcFileData.count == 0", tag: logTag)
+            return nil
+        }
+        
+        guard pitchFileData.count > 0 else {
+            Log.errorText(text: "pitchFileData.count == 0", tag: logTag)
+            return nil
+        }
+        
+        let krcPaeser = KRCParser()
+        guard let lyricModel = krcPaeser.parse(krcFileData: krcFileData) else {
+            return nil
+        }
+        
+        let pitchParser = PitchParser()
+        guard let pitchModel = pitchParser.parse(fileContent: pitchFileData) else {
+            return nil
+        }
+        
+        lyricModel.pitchDatas = pitchModel.pitchDatas
+        lyricModel.hasPitch = !pitchModel.pitchDatas.isEmpty
+        lyricModel.preludeEndPosition = pitchModel.pitchDatas.first?.startTime ?? 0
+        
+        if includeCopyrightSentence {
+            lyricModel.lines = lyricModel.lines.filter { line in
+                return line.beginTime > (pitchModel.pitchDatas.first?.startTime ?? 0)
+            }
+        }
+        
+        return lyricModel
+    }
 }

@@ -23,7 +23,7 @@ final class TestKaraokeView: XCTestCase, KaraokeDelegate {
         karaokeView.delegate = self
         karaokeView.setLyricData(data: model)
         for time in 0...1001000 {
-            karaokeView.setProgress(progressInMs: time)
+            karaokeView.setProgress(progressInMs: UInt(time))
         }
         sleep(1)
         karaokeView.reset()

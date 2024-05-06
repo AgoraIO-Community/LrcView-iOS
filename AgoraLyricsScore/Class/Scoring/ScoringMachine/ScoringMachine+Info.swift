@@ -20,22 +20,20 @@ extension ScoringMachine {
         let word: String
         let pitch: Double
         /// 是否句子中最后的一个字
-        let isLastInLine: Bool
+        
         
         required init(beginTime: UInt,
                       duration: UInt,
                       word: String,
                       pitch: Double,
                       drawBeginTime: UInt,
-                      drawDuration: UInt,
-                      isLastInLine: Bool) {
+                      drawDuration: UInt) {
             self.beginTime = beginTime
             self.duration = duration
             self.word = word
             self.pitch = pitch
             self.drawBeginTime = drawBeginTime
             self.drawDuration = drawDuration
-            self.isLastInLine = isLastInLine
         }
         
         var endTime: UInt {

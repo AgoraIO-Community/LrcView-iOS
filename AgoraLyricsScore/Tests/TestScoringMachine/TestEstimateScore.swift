@@ -76,7 +76,7 @@ class TestEstimateScore: XCTestCase, ScoringMachineDelegate {
             if index % 50 == 0, index > 0 {
                 if i < pitchs.count {
                     let pitch = pitchs[i]
-                    vm.setPitch(pitch: pitch)
+//                    vm.setPitch(pitch: pitch)
                     i += 1
                 }
             }

@@ -80,6 +80,21 @@ extension KaraokeView {
         return parser.parseLyricData(data: data)
     }
     
+    /// 解析歌词文件krc
+    /// - Parameters:
+    ///   - krcFileData: krc文件的内容
+    ///   - pitchFileData: pitch文件的内容
+    ///   - includeCopyrightSentence: 是否需要包含版本信息类型的句子
+    /// - Returns: 歌词信息
+    @objc public static func parseLyricData(krcFileData: Data,
+                                            pitchFileData: Data,
+                                            includeCopyrightSentence: Bool = true) -> LyricModel? {
+        let parser = Parser()
+        return parser.parseLyricData(krcFileData: krcFileData,
+                                     pitchFileData: pitchFileData,
+                                     includeCopyrightSentence: includeCopyrightSentence)
+    }
+    
     /// 设置歌词数据信息
     /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `nil`.
     @objc public func setLyricData(data: LyricModel?) {
