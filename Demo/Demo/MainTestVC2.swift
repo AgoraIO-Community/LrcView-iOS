@@ -97,13 +97,20 @@ extension MainTestVC2: RTCManagerDelegate {
     }
     
     func onLineScore(_ songCode: Int, value: AgoraCumulativeScoreData) {
-        let score = 70
-        let cumulativeScore = Int(value.cumulativeTotalLinePitchScores)
-        let totalScore = value.performedTotalLines * 100
-        mainView.lineScoreView.showScoreView(score: score)
-        mainView.incentiveView.show(score: score)
-        mainView.gradeView.setScore(cumulativeScore: cumulativeScore,
-                                    totalScore: totalScore)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            
+            let score = 70
+            let cumulativeScore = Int(value.cumulativeTotalLinePitchScores)
+            let totalScore = value.performedTotalLines * 100
+            mainView.lineScoreView.showScoreView(score: score)
+            mainView.incentiveView.show(score: score)
+            mainView.gradeView.setScore(cumulativeScore: cumulativeScore,
+                                        totalScore: totalScore)
+        }
+        
     }
     
     func onCumulativeScore(_ songCode: Int, value: AgoraCumulativeScoreData) {

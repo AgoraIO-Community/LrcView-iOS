@@ -18,8 +18,6 @@ protocol RTCManagerDelegate: NSObjectProtocol {
 }
 
 class RTCManager: NSObject {
-    
-    
     private var agoraKit: AgoraRtcEngineKit!
     private var mcc: AgoraMusicContentCenter!
     private var mpk: AgoraMusicPlayerProtocol!
@@ -47,6 +45,7 @@ class RTCManager: NSObject {
         config.audioScenario = .chorus
         config.channelProfile = .liveBroadcasting
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: config, delegate: self)
+        agoraKit.registerExtension(withVendor: "agora_audio_filters_aed", extension: "audio_event_detection_post", sourceType: .audioPlayout)
     }
     
     func joinChannel() { /** 目的：发布mic流、接收音频流 **/
@@ -218,7 +217,7 @@ extension RTCManager: AgoraRtcEngineDelegate {
 
 extension RTCManager: AgoraMusicContentCenterScoreEventDelegate {
     func onPitch(_ songCode: Int, item: AgoraRawScoreData) {
-        print("== onPitch \(item.description)")
+        print("== onPitch speakerPitch:\(item.speakerPitch) pitchScore:\(item.pitchScore) progressInMs:\(item.progressInMs)")
         delegate?.onPitch(songCode, item: item)
     }
     
@@ -290,4 +289,3 @@ extension RTCManager: AgoraRtcMediaPlayerDelegate {
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol,
                              didChangedTo position: Int) {}
 }
- 
