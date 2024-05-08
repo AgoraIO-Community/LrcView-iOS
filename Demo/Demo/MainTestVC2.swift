@@ -69,6 +69,7 @@ class MainTestVC2: UIViewController {
     }
     
     var lastPitchTime:CFAbsoluteTime = 0
+    var lastProgressInMs = 0
 }
 
 // MARK: - RTCManagerDelegate
@@ -95,7 +96,14 @@ extension MainTestVC2: RTCManagerDelegate {
     }
     
     func onPitch(_ songCode: Int, item: AgoraRawScoreData) {
-        let displayText = "speakerPitch:\(item.speakerPitch) \npitchScore:\(item.pitchScore) \nprogressInMs:\(item.progressInMs)"
+        let progressGap = Int(item.progressInMs) - lastProgressInMs
+        lastProgressInMs = Int(item.progressInMs)
+        
+        var displayText = "speakerPitch:\(item.speakerPitch) \npitchScore:\(item.pitchScore) \nprogressInMs:\(item.progressInMs)"
+        if (progressGap > 50) {
+            displayText += "\nprogressGap:\(progressGap)"
+        }
+        
         let startTime = CFAbsoluteTimeGetCurrent()
         let gap = startTime - lastPitchTime
         lastPitchTime = startTime
@@ -105,9 +113,14 @@ extension MainTestVC2: RTCManagerDelegate {
         else {
             print("gap:[\(gap.keep3)] \(item.speakerPitch)")
         }
+        
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             mainView.setConsoleText(displayText)
+        }
+        
+        if (item.speakerPitch < 0) {
+            print("")
         }
         
         mainView.karaokeView.setPitch(speakerPitch: Double(item.speakerPitch),

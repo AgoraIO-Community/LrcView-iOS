@@ -15,8 +15,6 @@ class ScoringMachine {
     var movingSpeedFactor: CGFloat = 120
     /// 打分容忍度 范围：0-1
     var hitScoreThreshold: Float = 0.7
-    var scoreLevel = 10
-    var scoreCompensationOffset = 0
     weak var delegate: ScoringMachineDelegate?
     
     fileprivate var progress: Int = 0
