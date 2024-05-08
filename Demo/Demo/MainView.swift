@@ -35,6 +35,7 @@ class MainView: UIView {
     private let changeButton = UIButton()
     private let pauseButton = UIButton()
     private let label = UILabel()
+    private let consoleView = ConsoleView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -78,6 +79,7 @@ class MainView: UIView {
         addSubview(pauseButton)
         addSubview(lineScoreView)
         addSubview(label)
+        addSubview(consoleView)
         
         karaokeView.translatesAutoresizingMaskIntoConstraints = false
         gradeView.translatesAutoresizingMaskIntoConstraints = false
@@ -89,6 +91,7 @@ class MainView: UIView {
         pauseButton.translatesAutoresizingMaskIntoConstraints = false
         lineScoreView.translatesAutoresizingMaskIntoConstraints = false
         label.translatesAutoresizingMaskIntoConstraints = false
+        consoleView.translatesAutoresizingMaskIntoConstraints = false
         
         karaokeView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         karaokeView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -125,6 +128,11 @@ class MainView: UIView {
         
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        
+        consoleView.rightAnchor.constraint(equalTo: karaokeView.rightAnchor).isActive = true
+        consoleView.bottomAnchor.constraint(equalTo: karaokeView.bottomAnchor).isActive = true
+        consoleView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        consoleView.widthAnchor.constraint(equalToConstant: 150).isActive = true
     }
     
     func commonInit() {
@@ -189,5 +197,36 @@ class MainView: UIView {
         default:
             break
         }
+    }
+    
+    func setConsoleText(_ text: String) {
+        consoleView.set(text: text)
+    }
+}
+
+class ConsoleView: UIView {
+    private let label = UILabel()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        
+        label.numberOfLines = 0
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 9)
+        addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        label.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        label.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        label.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func set(text: String) {
+        label.text = text
     }
 }

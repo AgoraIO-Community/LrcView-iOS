@@ -39,11 +39,17 @@ class ProgressProvider: NSObject {
 
             self.lastPrpgress = current
             var time = current
-            if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
-                time -= 250
-            }
+//            if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
+//                time -= 250
+//            }
             delegate?.progressProvider(self, didUpdate: time)
         }
+    }
+    
+    func skip(progress: Int) {
+        timer.destoryTimer(withName: "MainTestVC")
+        lastPrpgress = progress
+        startTime()
     }
     
     func pause() {

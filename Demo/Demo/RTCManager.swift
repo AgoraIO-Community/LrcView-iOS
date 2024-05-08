@@ -84,6 +84,7 @@ class RTCManager: NSObject {
     func createMusicPlayer() {
         print("== createMusicPlayer")
         mpk = mcc.createMusicPlayer(delegate: self)
+        mpk.setPlayMode(mode: .original)
     }
     
     func preload(songId: Int) {
@@ -127,11 +128,15 @@ class RTCManager: NSObject {
         print("== stop success")
     }
     /// 跳过前奏
-    func skipMusicPrelude() {
-        guard let preludeEndPosition = lyricInfo?.preludeEndPosition else {
-            return
+    func skipMusicPrelude() -> Int? {
+        guard var preludeEndPosition = lyricInfo?.preludeEndPosition else {
+            return nil
         }
-        mpk.seek(toPosition: preludeEndPosition)
+        if preludeEndPosition > 1000 {
+            preludeEndPosition -= 1000
+        }
+        mpk.seek(toPosition: Int(preludeEndPosition))
+        return Int(preludeEndPosition)
     }
     
     func getLyricInfo(songId: Int) -> AgoraLyricInfo {

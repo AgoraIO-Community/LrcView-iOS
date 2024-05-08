@@ -158,6 +158,19 @@ class ScoringMachine {
         
         /** 3.calculated ui info **/
         let showAnimation = score >= hitScoreThreshold * 100
+        /**
+         (lldb) po minPitch
+         89.0
+
+         (lldb) po maxPitch
+         329.0
+         **/
+        
+        /// denug
+        if speakerPitch > maxPitch {
+            Log.errorText(text: "speakerPitch > maxPitch, \(speakerPitch)", tag: logTag)
+        }
+        
         let y = calculatedY(pitch: showAnimation ? hitedInfo.pitch : speakerPitch,
                             viewHeight: canvasViewSize.height,
                             minPitch: minPitch,

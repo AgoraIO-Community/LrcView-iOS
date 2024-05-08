@@ -169,9 +169,9 @@ extension ScoringView: ScoringMachineDelegate {
     }
     
     func scoringMachine(_ scoringMachine: ScoringMachine,
-                   didUpdateCursor centerY: CGFloat,
-                   showAnimation: Bool,
-                   debugInfo: ScoringMachine.DebugInfo) {
+                        didUpdateCursor centerY: CGFloat,
+                        showAnimation: Bool,
+                        debugInfo: ScoringMachine.DebugInfo) {
         localPitchView.setIndicatedViewY(y: centerY)
         showAnimation ? localPitchView.startEmitter() : localPitchView.stopEmitter()
         if showDebugView {

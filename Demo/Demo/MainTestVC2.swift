@@ -13,8 +13,9 @@ class MainTestVC2: UIViewController {
     private let mainView = MainView()
     private var rtcManager: RTCManager!
     private let progressProvider = ProgressProvider()
-    private let songId = 6843909838011090
+    private let songId = 6625526605291650
     var lyricModel: LyricModel!
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         rtcManager = RTCManager()
@@ -38,6 +39,7 @@ class MainTestVC2: UIViewController {
     private func setupUI() {
         view.addSubview(mainView)
         mainView.frame = view.bounds
+        mainView.karaokeView.scoringView.showDebugView = true
     }
     
     private func commonInit() {
@@ -48,13 +50,13 @@ class MainTestVC2: UIViewController {
     
     private func setLyricToView() {
         let info = rtcManager.getLyricInfo(songId: songId)
-        let lines = info.sentences.map({ LyricLineModel(beginTime: $0.begin, duration: $0.duration, content: $0.content, tones:$0.words.map({ LyricToneModel(beginTime: $0.begin, duration: $0.duration, word: $0.word, pitch: $0.refPitch, lang: .zh, pronounce: "") })) })
+        let lines = info.sentences.map({ LyricLineModel(beginTime: Int($0.begin), duration: Int($0.duration), content: $0.content, tones:$0.words.map({ LyricToneModel(beginTime: Int($0.begin), duration: Int($0.duration), word: $0.word, pitch: $0.refPitch, lang: .zh, pronounce: "") })) })
         let model = LyricModel(name: info.name,
                                singer: info.singer,
                                type: .slow,
                                lines: lines,
-                               preludeEndPosition: info.preludeEndPosition,
-                               duration: info.duration,
+                               preludeEndPosition: Int(info.preludeEndPosition),
+                               duration: Int(info.duration),
                                hasPitch: info.hasPitch)
         mainView.karaokeView.setLyricData(data: model)
         mainView.gradeView.setTitle(title: "\(info.name)-\(info.singer)")
@@ -65,6 +67,8 @@ class MainTestVC2: UIViewController {
         mainView.gradeView.reset()
         mainView.incentiveView.reset()
     }
+    
+    var lastPitchTime:CFAbsoluteTime = 0
 }
 
 // MARK: - RTCManagerDelegate
@@ -91,9 +95,24 @@ extension MainTestVC2: RTCManagerDelegate {
     }
     
     func onPitch(_ songCode: Int, item: AgoraRawScoreData) {
+        let displayText = "speakerPitch:\(item.speakerPitch) \npitchScore:\(item.pitchScore) \nprogressInMs:\(item.progressInMs)"
+        let startTime = CFAbsoluteTimeGetCurrent()
+        let gap = startTime - lastPitchTime
+        lastPitchTime = startTime
+        if (gap > 0.1) {
+            print("> gap:[\(gap.keep3)] \(item.speakerPitch)")
+        }
+        else {
+            print("gap:[\(gap.keep3)] \(item.speakerPitch)")
+        }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            mainView.setConsoleText(displayText)
+        }
+        
         mainView.karaokeView.setPitch(speakerPitch: Double(item.speakerPitch),
                                       pitchScore: item.pitchScore,
-                                      progressInMs: item.progressInMs)
+                                      progressInMs: Int(item.progressInMs))
     }
     
     func onLineScore(_ songCode: Int, value: AgoraCumulativeScoreData) {
@@ -102,13 +121,13 @@ extension MainTestVC2: RTCManagerDelegate {
                 return
             }
             
-            let score = 70
+            let score = Int(value.performedLinePitchScore)
             let cumulativeScore = Int(value.cumulativeTotalLinePitchScores)
             let totalScore = value.performedTotalLines * 100
             mainView.lineScoreView.showScoreView(score: score)
             mainView.incentiveView.show(score: score)
             mainView.gradeView.setScore(cumulativeScore: cumulativeScore,
-                                        totalScore: totalScore)
+                                        totalScore: Int(totalScore))
         }
         
     }
@@ -146,7 +165,9 @@ extension MainTestVC2: MainViewDelegate {
         switch onAction {
         case .skip:
             print("skip")
-            rtcManager.skipMusicPrelude()
+            if let preludeEndPosition = rtcManager.skipMusicPrelude() {
+                progressProvider.skip(progress: preludeEndPosition)
+            }
         case .pause:
             print("pause")
             rtcManager.pauseScore()
