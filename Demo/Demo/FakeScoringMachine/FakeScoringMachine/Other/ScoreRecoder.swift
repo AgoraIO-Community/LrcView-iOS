@@ -10,11 +10,11 @@ import AgoraLyricsScore
 
 class LineScore {
     var toneScores: [ToneScoreModel]
-    var begainTime: Int
-    var endTime: Int
+    var begainTime: UInt
+    var endTime: UInt
     var score: Float
     
-    init(toneScores: [ToneScoreModel], begainTime: Int, endTime: Int, score: Float) {
+    init(toneScores: [ToneScoreModel], begainTime: UInt, endTime: UInt, score: Float) {
         self.toneScores = toneScores
         self.begainTime = begainTime
         self.endTime = endTime
@@ -34,14 +34,14 @@ class ScoreRecoder: NSObject {
         for line in lyricModel.lines {
             let toneScores = line.tones.map({ ToneScoreModel(tone: $0, score: 0) })
             let lineScore = LineScore(toneScores: toneScores,
-                      begainTime: line.beginTime,
-                      endTime: line.beginTime + line.duration,
-                      score: 0)
+                                      begainTime: line.beginTime,
+                                      endTime: line.beginTime + line.duration,
+                                      score: 0)
             lineScores.append(lineScore)
         }
     }
     
-    func appendScore(in progressInMs: Int, score: Float) {
+    func appendScore(in progressInMs: UInt, score: Float) {
         for lineScore in lineScores {
             if progressInMs >= lineScore.begainTime && progressInMs <= lineScore.endTime {
                 for toneScore in lineScore.toneScores {

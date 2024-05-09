@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+        let hh = VoicePitchChanger().handlePitch(stdPitch: 126, voicePitch: 65.989906, stdMaxPitch: 329)
         return true
     }
 

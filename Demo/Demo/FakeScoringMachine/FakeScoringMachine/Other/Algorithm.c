@@ -52,8 +52,8 @@ float calculedScoreC(double voicePitch, double stdPitch, int scoreLevel, int sco
     return match;
 }
 
-static double n;
-static double offset;
+//static double n;
+//static double offset;
 
 
 // octave pitch compensation v0.2
@@ -95,6 +95,6 @@ double handlePitchC(double stdPitch, double voicePitch, double stdMaxPitch) {
 }
 
 void resetC(void) {
-    offset = 0.0;
-    n = 0.0;
+//    offset = 0.0;
+//    n = 0.0;
 }

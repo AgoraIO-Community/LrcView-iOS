@@ -10,7 +10,7 @@ import AgoraLyricsScore
 
 class FakeScoringMachine: BaseFakeScoringMachine {
     private var isStart = false
-    private var progress = 0
+    private var progress: UInt = 0
     private var voicePitchChanger = VoicePitchChanger()
     private var level: Int = 15
     private let scoreRecoder = ScoreRecoder()
@@ -33,7 +33,7 @@ class FakeScoringMachine: BaseFakeScoringMachine {
         voicePitchChanger.reset()
     }
     
-    override func setProgress(progressInMs: Int) {
+    override func setProgress(progressInMs: UInt) {
         guard lyricModel != nil else {
             fatalError("model is nil")
         }

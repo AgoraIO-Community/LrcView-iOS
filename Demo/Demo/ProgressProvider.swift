@@ -8,16 +8,16 @@
 import Foundation
 
 protocol ProgressProviderDelegate: NSObjectProtocol {
-    func progressProviderGetPlayerPosition(_ provider: ProgressProvider) -> Int
-    func progressProvider(_ provider: ProgressProvider, shouldSend postion: Int)
-    func progressProvider(_ provider: ProgressProvider, didUpdate progressInMs: Int)
+    func progressProviderGetPlayerPosition(_ provider: ProgressProvider) -> UInt
+    func progressProvider(_ provider: ProgressProvider, shouldSend postion: UInt)
+    func progressProvider(_ provider: ProgressProvider, didUpdate progressInMs: UInt)
 }
 
 class ProgressProvider: NSObject {
     weak var delegate: ProgressProviderDelegate?
     private var timer = GCDTimer()
     private var isPause = false
-    private var lastPrpgress = 0
+    private var lastPrpgress: UInt = 0
     
     func startTime() {
         timer.scheduledMillisecondsTimer(withName: "MainTestVC",
@@ -46,7 +46,7 @@ class ProgressProvider: NSObject {
         }
     }
     
-    func skip(progress: Int) {
+    func skip(progress: UInt) {
         timer.destoryTimer(withName: "MainTestVC")
         lastPrpgress = progress
         startTime()

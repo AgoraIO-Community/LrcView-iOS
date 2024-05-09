@@ -8,13 +8,13 @@
 import AgoraLyricsScore
 
 struct RawScoreDataModel {
-    let progressInMs: Int
+    let progressInMs: UInt
     let speakerPitch: Double
     let pitchScore: Float
 }
 
 struct CumulativeScoreDataModel {
-    let progressInMs: Int
+    let progressInMs: UInt
     /// 已经演唱过的最近一个歌曲的行数
     let performedLineIndex: Int
     /// 已经演唱过的歌曲行数
@@ -48,7 +48,7 @@ class BaseFakeScoringMachine: NSObject {
     func setScoreLevel(level: Int) {
         
     }
-    func setProgress(progressInMs: Int) {}
+    func setProgress(progressInMs: UInt) {}
     func pushPitch(pitch: Double) {}
     func reset() {}
 }

@@ -263,7 +263,7 @@ class QiangChangVC: UIViewController {
         switch sender {
         case skipButton:
             if let data = lyricModel {
-                let toPosition = max(data.preludeEndPosition - 2000, 0)
+                let toPosition = max(Int(data.preludeEndPosition) - 2000, 0)
                 mpk.seek(toPosition: toPosition)
             }
             return

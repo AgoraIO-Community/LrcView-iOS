@@ -128,7 +128,7 @@ class RTCManager: NSObject {
         print("== stop success")
     }
     /// 跳过前奏
-    func skipMusicPrelude() -> Int? {
+    func skipMusicPrelude() -> UInt? {
         guard var preludeEndPosition = lyricInfo?.preludeEndPosition else {
             return nil
         }
@@ -136,7 +136,7 @@ class RTCManager: NSObject {
             preludeEndPosition -= 1000
         }
         mpk.seek(toPosition: Int(preludeEndPosition))
-        return Int(preludeEndPosition)
+        return preludeEndPosition
     }
     
     func getLyricInfo(songId: Int) -> AgoraLyricInfo {

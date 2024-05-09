@@ -282,7 +282,7 @@ extension HostVC: LyricsFileDownloaderDelegate {
             self.ktvView.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
             self.mccPlay()
             /// auto skip
-            let toPosition = max(model.preludeEndPosition - 2000, 0)
+            let toPosition = max(Int(model.preludeEndPosition) - 2000, 0)
             self.mpk.seek(toPosition: toPosition)
         }
         else {

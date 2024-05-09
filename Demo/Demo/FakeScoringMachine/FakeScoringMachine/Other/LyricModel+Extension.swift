@@ -20,7 +20,7 @@ extension LyricModel {
         return maxValue
     }
     
-    func getHitedPitch(progress: Int) -> Double? {
+    func getHitedPitch(progress: UInt) -> Double? {
         let pitchBeginTime = progress
         for line in lines {
             if pitchBeginTime >= line.beginTime && pitchBeginTime <= line.beginTime + line.duration {
@@ -34,7 +34,7 @@ extension LyricModel {
         return nil
     }
     
-    func findCurrentIndexOfLine(progress: Int) -> Int? {
+    func findCurrentIndexOfLine(progress: UInt) -> Int? {
         let lineEndTimes = lines.map({ $0.beginTime + $0.duration })
         
         if progress > lineEndTimes.last! {
@@ -45,7 +45,7 @@ extension LyricModel {
             return 0
         }
         
-        var lastEnd = 0
+        var lastEnd: UInt = 0
         for (offset, value) in lineEndTimes.enumerated() {
             if progress > lastEnd, progress <= value  {
                 return offset

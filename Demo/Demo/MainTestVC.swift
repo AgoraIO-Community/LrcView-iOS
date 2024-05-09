@@ -239,7 +239,7 @@ class MainTestVC: UIViewController {
         print("== openMedia success")
     }
     
-    var last = 0
+    var last: UInt = 0
     func mccPlay() {
         let ret = mpk.play()
         if ret != 0 {
@@ -263,7 +263,7 @@ class MainTestVC: UIViewController {
             
             var current = self.last
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
-                current = self.mpk.getPosition()
+                current = UInt(self.mpk.getPosition())
                 let data = self.createData(time: current + 20)
                 self.sendData(data: data)
             }
@@ -288,7 +288,7 @@ class MainTestVC: UIViewController {
         switch sender {
         case skipButton:
             if let data = lyricModel {
-                let toPosition = max(data.preludeEndPosition - 2000, 0)
+                let toPosition = max(Int(data.preludeEndPosition) - 2000, 0)
                 mpk.seek(toPosition: toPosition)
             }
             return
@@ -360,7 +360,7 @@ class MainTestVC: UIViewController {
     }
     
     ///
-    func createData(time: Int) -> Data {
+    func createData(time: UInt) -> Data {
         /// 把time包装json格式
         let dic = ["time": time]
         let data = try! JSONSerialization.data(withJSONObject: dic, options: [])
@@ -514,10 +514,10 @@ extension MainTestVC: AgoraRtcMediaPlayerDelegate {
 }
 
 extension MainTestVC: KaraokeDelegate {
-    func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
+    func onKaraokeView(view: KaraokeView, didDragTo position: UInt) {
         /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
         self.last = position + 250
-        mpk.seek(toPosition: position)
+        mpk.seek(toPosition: Int(position))
 //        cumulativeScore = view.scoringView.getCumulativeScore()
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lyricModel.lines.count * 100)
     }

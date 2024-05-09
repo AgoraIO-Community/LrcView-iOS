@@ -50,13 +50,13 @@ class MainTestVC2: UIViewController {
     
     private func setLyricToView() {
         let info = rtcManager.getLyricInfo(songId: songId)
-        let lines = info.sentences.map({ LyricLineModel(beginTime: Int($0.begin), duration: Int($0.duration), content: $0.content, tones:$0.words.map({ LyricToneModel(beginTime: Int($0.begin), duration: Int($0.duration), word: $0.word, pitch: $0.refPitch, lang: .zh, pronounce: "") })) })
+        let lines = info.sentences.map({ LyricLineModel(beginTime: $0.begin, duration: $0.duration, content: $0.content, tones:$0.words.map({ LyricToneModel(beginTime: $0.begin, duration: $0.duration, word: $0.word, pitch: $0.refPitch, lang: .zh, pronounce: "") })) })
         let model = LyricModel(name: info.name,
                                singer: info.singer,
                                type: .slow,
                                lines: lines,
-                               preludeEndPosition: Int(info.preludeEndPosition),
-                               duration: Int(info.duration),
+                               preludeEndPosition: info.preludeEndPosition,
+                               duration: info.duration,
                                hasPitch: info.hasPitch)
         mainView.karaokeView.setLyricData(data: model)
         mainView.gradeView.setTitle(title: "\(info.name)-\(info.singer)")
@@ -125,7 +125,7 @@ extension MainTestVC2: RTCManagerDelegate {
         
         mainView.karaokeView.setPitch(speakerPitch: Double(item.speakerPitch),
                                       pitchScore: item.pitchScore,
-                                      progressInMs: Int(item.progressInMs))
+                                      progressInMs: item.progressInMs)
     }
     
     func onLineScore(_ songCode: Int, value: AgoraCumulativeScoreData) {
@@ -155,15 +155,15 @@ extension MainTestVC2: RTCManagerDelegate {
 }
 
 extension MainTestVC2: ProgressProviderDelegate {
-    func progressProviderGetPlayerPosition(_ provider: ProgressProvider) -> Int {
-        rtcManager.getMPKCurrentPosition()
+    func progressProviderGetPlayerPosition(_ provider: ProgressProvider) -> UInt {
+        UInt(rtcManager.getMPKCurrentPosition())
     }
     
-    func progressProvider(_ provider: ProgressProvider, shouldSend postion: Int) {
+    func progressProvider(_ provider: ProgressProvider, shouldSend postion: UInt) {
         
     }
     
-    func progressProvider(_ provider: ProgressProvider, didUpdate progressInMs: Int) {
+    func progressProvider(_ provider: ProgressProvider, didUpdate progressInMs: UInt) {
         /// opt for setting fake machine
         if rtcManager.useFakeScoringMachine {
             rtcManager.fakeScoringMachine?.setProgress(progressInMs: progressInMs)
