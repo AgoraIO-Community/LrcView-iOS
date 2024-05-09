@@ -26,7 +26,7 @@ class LyricMachine {
         }
     }
     
-    func setProgress(progress: Int) {
+    func setProgress(progress: UInt) {
         queue.async { [weak self] in
             self?._setProgress(progress: progress)
         }
@@ -66,9 +66,9 @@ class LyricMachine {
         Log.info(text: "_setLyricData", tag: logTag)
     }
     
-    private func _setProgress(progress: Int) {
+    private func _setProgress(progress: UInt) {
         guard let data = lyricData else { return }
-        let remainingTime = data.preludeEndPosition - progress
+        let remainingTime = Int(data.preludeEndPosition) - Int(progress)
         invokeLyricMachine(didUpdate: remainingTime)
         
         if currentIndex < dataList.count {
@@ -145,7 +145,7 @@ extension LyricMachine {
     /// - Parameters:
     ///   - canScoring: 是否可以打分（数据源是lrc格式不可打分）
     /// - Returns: `nil` 表示无法计算, 其他： [0, 1]
-    static func calculateProgressRate(progress: Int,
+    static func calculateProgressRate(progress: UInt,
                                       model: LyricCell.Model,
                                       canScoring: Bool) -> Double? {
         if canScoring {

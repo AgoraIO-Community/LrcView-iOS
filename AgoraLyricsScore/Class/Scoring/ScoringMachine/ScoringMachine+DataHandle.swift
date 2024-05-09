@@ -11,10 +11,10 @@ extension ScoringMachine {
     /// 创建Scoring内部数据
     ///   - shouldFixTime: 是否要修复时间异常问题
     ///   - return: (行结束时间, 字模型)
-    static func createData(data: LyricModel, shouldFixTime: Bool = true) -> ([Int], [Info]) {
+    static func createData(data: LyricModel, shouldFixTime: Bool = true) -> ([UInt], [Info]) {
         var array = [Info]()
-        var lineEndTimes = [Int]()
-        var preEndTime = 0
+        var lineEndTimes = [UInt]()
+        var preEndTime: UInt = 0
         for line in data.lines {
             for tone in line.tones {
                 var beginTime = tone.beginTime
@@ -45,16 +45,16 @@ extension ScoringMachine {
         return (lineEndTimes, array)
     }
     
-    func makeHighlightInfos(progress: Int,
+    func makeHighlightInfos(progress: UInt,
                             hitedInfo: Info,
                             currentVisiableInfos: [Info],
                             currentHighlightInfos: [Info]) -> [Info] {
         let pitchDuration = 50
         if let preHitInfo = currentHighlightInfos.last, preHitInfo.beginTime == hitedInfo.beginTime { /** 判断是否需要追加 **/
             let newDrawBeginTime = max(progress, preHitInfo.beginTime)
-            let distance = newDrawBeginTime - preHitInfo.drawEndTime
+            let distance = abs(Int(newDrawBeginTime) - Int(preHitInfo.drawEndTime))
             if distance < pitchDuration { /** 追加 **/
-                let drawDuration = min(preHitInfo.drawDuration + pitchDuration + distance, preHitInfo.duration)
+                let drawDuration = min(preHitInfo.drawDuration + UInt(pitchDuration) + UInt(distance), preHitInfo.duration)
                 preHitInfo.drawDuration = drawDuration
                 return currentHighlightInfos
             }
@@ -63,7 +63,7 @@ extension ScoringMachine {
         /** 新建 **/
         let stdInfo = hitedInfo
         let drawBeginTime = max(progress, stdInfo.beginTime)
-        let drawDuration = min(pitchDuration, stdInfo.duration)
+        let drawDuration = min(UInt(pitchDuration), stdInfo.duration)
         let info = Info(beginTime: stdInfo.beginTime,
                         duration: stdInfo.duration,
                         word: stdInfo.word,
@@ -78,7 +78,7 @@ extension ScoringMachine {
     
     /// 生成DrawInfo
     /// - Returns: (visiableDrawInfos, highlightDrawInfos, currentVisiableInfos, currentHighlightInfos)
-    func makeInfos(progress: Int,
+    func makeInfos(progress: UInt,
                    dataList: [Info],
                    currentHighlightInfos: [Info],
                    defaultPitchCursorX: CGFloat,
@@ -88,11 +88,11 @@ extension ScoringMachine {
                    minPitch: Double,
                    maxPitch: Double) -> ([DrawInfo], [DrawInfo], [Info], [Info]) {
         /// 视图最左边到游标这段距离对应的时长
-        let defaultPitchCursorXTime = Int(defaultPitchCursorX / widthPreMs)
+        let defaultPitchCursorXTime = UInt(defaultPitchCursorX / widthPreMs)
         /// 游标到视图最右边对应的时长
-        let remainTime = Int((canvasViewSize.width - defaultPitchCursorX) / widthPreMs)
+        let remainTime = UInt((canvasViewSize.width - defaultPitchCursorX) / widthPreMs)
         /// 需要显示音高的开始时间
-        let beginTime = max(progress - defaultPitchCursorXTime, 0)
+        let beginTime = UInt(max(Int(progress) - Int(defaultPitchCursorXTime), 0))
         /// 需要显示音高的结束时间
         let endTime = progress + remainTime
         
@@ -143,7 +143,7 @@ extension ScoringMachine {
     }
     
     /// 获取击中数据
-    func getHitedInfo(progress: Int,
+    func getHitedInfo(progress: UInt,
                       currentVisiableInfos: [Info]) -> Info? {
         let pitchBeginTime = progress
         return currentVisiableInfos.first { info in
@@ -179,8 +179,8 @@ extension ScoringMachine {
     
     /// 筛选指定时间下的infos
     func filterInfos(infos: [Info],
-                     beginTime: Int,
-                     endTime: Int) -> [Info] {
+                     beginTime: UInt,
+                     endTime: UInt) -> [Info] {
         var result = [Info]()
         for info in infos {
             if info.drawBeginTime >= endTime {
@@ -198,7 +198,7 @@ extension ScoringMachine {
 
 extension ScoringMachine { /** ui 位置 **/
     /// 计算音准线的位置
-    func calculateDrawRect(progress: Int,
+    func calculateDrawRect(progress: UInt,
                            info: Info,
                            standardPitchStickViewHeight: CGFloat,
                            widthPreMs: CGFloat,
@@ -211,7 +211,7 @@ extension ScoringMachine { /** ui 位置 **/
         
         /// 视图最左边到游标这段距离对应的时长
         let defaultPitchCursorXTime = Int(defaultPitchCursorX / widthPreMs)
-        let x = CGFloat(beginTime - (progress - defaultPitchCursorXTime)) * widthPreMs
+        let x = CGFloat(Int(beginTime) - (Int(progress) - defaultPitchCursorXTime)) * widthPreMs
         let y = calculatedY(pitch: pitch,
                             viewHeight: canvasViewSize.height,
                             minPitch: minPitch,

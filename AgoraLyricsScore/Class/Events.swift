@@ -13,7 +13,7 @@ import Foundation
     /// - Parameters:
     ///   - view: KaraokeView
     ///   - position: 当前时间点 (ms)
-    @objc optional func onKaraokeView(view: KaraokeView, didDragTo position: Int)
+    @objc optional func onKaraokeView(view: KaraokeView, didDragTo position: UInt)
 }
 
 /// 日志协议

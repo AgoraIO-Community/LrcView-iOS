@@ -44,7 +44,7 @@ class XmlParser: NSObject {
             return nil
         }
         var hasPitch = false
-        var preludeEndPosition = -1
+        var preludeEndPosition: UInt?
         for line in song.lines {
             var content = ""
             for item in line.tones.enumerated() {
@@ -59,21 +59,29 @@ class XmlParser: NSObject {
                 if tone.pitch > 0 {
                     hasPitch = true
                 }
-                if preludeEndPosition == -1 {
+                if preludeEndPosition == nil {
                     preludeEndPosition = tone.beginTime
                 }
                 content += tone.word
             }
             
-            let lineBeginTime = line.tones.first?.beginTime ?? -1
-            let lineEndTime = (line.tones.last?.duration ?? -1) + (line.tones.last?.beginTime ?? -1)
-            if lineBeginTime < 0 || lineEndTime < 0 || lineEndTime - lineBeginTime < 0 {
-                let text = "data error. lineBeginTime: \(lineBeginTime) lineEndTime: \(lineEndTime)"
+            let lineBeginTime: UInt? = line.tones.first?.beginTime
+            
+            guard let lineBeginTime = lineBeginTime else {
+                let text = "data error. lineBeginTime is nil)"
                 Log.error(error: text, tag: logTag)
                 return nil
             }
+
+            let lineDuration: UInt? = line.tones.last?.duration
+            guard let lineDuration = lineDuration else {
+                let text = "data error. lineDuration is nil)"
+                Log.error(error: text, tag: logTag)
+                return nil
+            }
+            
             line.beginTime = lineBeginTime
-            line.duration = lineEndTime - lineBeginTime
+            line.duration = lineDuration
             line.content = content
         }
         
@@ -82,7 +90,7 @@ class XmlParser: NSObject {
             song.duration = lastDuration + lastBeginTime
         }
         song.hasPitch = hasPitch
-        song.preludeEndPosition = preludeEndPosition
+        song.preludeEndPosition = preludeEndPosition ?? 0
         return song
     }
 }
@@ -140,7 +148,7 @@ extension XmlParser: XMLParserDelegate {
             push(.type)
         case "sentence":
             push(.sentence)
-            let line = LyricLineModel(beginTime: -1, duration: -1, content: "", tones: [])
+            let line = LyricLineModel(beginTime: 0, duration: 0, content: "", tones: [])
             song.lines.append(line)
         case "tone":
             push(.tone)
@@ -148,8 +156,8 @@ extension XmlParser: XMLParserDelegate {
                 let beginValue = Double(attributeDict["begin"] ?? "0") ?? 0
                 let endValue = Double(attributeDict["end"] ?? "0") ?? 0
                 let pitchValue = Float(attributeDict["pitch"] ?? "0") ?? 0
-                let begin = Int(beginValue * 1000)
-                let end = Int(endValue * 1000)
+                let begin = UInt(beginValue * 1000)
+                let end = UInt(endValue * 1000)
                 let pitch = Double(pitchValue)
                 let pronounce = attributeDict["pronounce"] ?? ""
                 let langValue = Int(attributeDict["lang"] ?? "") ?? -1
@@ -168,8 +176,8 @@ extension XmlParser: XMLParserDelegate {
             push(.overlap)
             let beginValue = Double(attributeDict["begin"] ?? "0") ?? 0
             let endValue = Double(attributeDict["end"] ?? "0") ?? 0
-            let begin = Int(beginValue * 1000)
-            let end = Int(endValue * 1000)
+            let begin = UInt(beginValue * 1000)
+            let end = UInt(endValue * 1000)
             let pitch: Double = 0
             let pronounce = ""
             let langValue = Int(attributeDict["lang"] ?? "") ?? -1

@@ -38,7 +38,7 @@ public class ScoringView: UIView {
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
     
-    var progress: Int = 0 { didSet { updateProgress() } }
+    var progress: UInt = 0 { didSet { updateProgress() } }
     fileprivate let localPitchView = LocalPitchView()
     fileprivate let canvasView = ScoringCanvasView()
     /// use for debug only
@@ -70,7 +70,7 @@ public class ScoringView: UIView {
     
     func setPitch(speakerPitch: Double,
                   pitchScore: Float,
-                  progressInMs: Int) {
+                  progressInMs: UInt) {
         scoringMachine.setPitch(speakerPitch: speakerPitch,
                                 pitchScore: pitchScore,
                                 progressInMs: progressInMs)
@@ -80,7 +80,7 @@ public class ScoringView: UIView {
         scoringMachine.dragBegain()
     }
     
-    func dragDidEnd(position: Int) {
+    func dragDidEnd(position: UInt) {
         scoringMachine.dragDidEnd(position: position)
     }
     

@@ -33,9 +33,9 @@ public class LyricModel: NSObject {
     /// 行信息
     @objc public var lines: [LyricLineModel]
     /// 前奏结束时间
-    @objc public var preludeEndPosition: Int
+    @objc public var preludeEndPosition: UInt
     /// 歌词总时长 (ms)
-    @objc public var duration: Int
+    @objc public var duration: UInt
     /// 是否有pitch值
     @objc public var hasPitch: Bool
     
@@ -43,8 +43,8 @@ public class LyricModel: NSObject {
                       singer: String,
                       type: MusicType,
                       lines: [LyricLineModel],
-                      preludeEndPosition: Int,
-                      duration: Int,
+                      preludeEndPosition: UInt,
+                      duration: UInt,
                       hasPitch: Bool) {
         self.name = name
         self.singer = singer
@@ -92,16 +92,16 @@ public class LyricModel: NSObject {
 
 public class LyricLineModel: NSObject {
     /// 开始时间 单位为毫秒
-    @objc public var beginTime: Int
+    @objc public var beginTime: UInt
     /// 总时长 (ms)
-    @objc public var duration: Int
+    @objc public var duration: UInt
     /// 行内容
     @objc public var content: String
     /// 每行歌词的字信息
     @objc public var tones: [LyricToneModel]
     
-    @objc public init(beginTime: Int,
-                      duration: Int,
+    @objc public init(beginTime: UInt,
+                      duration: UInt,
                       content: String,
                       tones: [LyricToneModel]) {
         self.beginTime = beginTime
@@ -112,15 +112,15 @@ public class LyricLineModel: NSObject {
 }
 
 public class LyricToneModel: NSObject {
-    @objc public let beginTime: Int
-    @objc public let duration: Int
+    @objc public let beginTime: UInt
+    @objc public let duration: UInt
     @objc public var word: String
     @objc public let pitch: Double
     @objc public var lang: Lang
     @objc public let pronounce: String
     
-    @objc public init(beginTime: Int,
-                      duration: Int,
+    @objc public init(beginTime: UInt,
+                      duration: UInt,
                       word: String,
                       pitch: Double,
                       lang: Lang,

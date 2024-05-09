@@ -36,7 +36,7 @@ public class KaraokeView: UIView {
     fileprivate var isStart = false
     fileprivate let logTag = "KaraokeView"
     /// use for debug
-    fileprivate var lastProgress = 0
+    fileprivate var lastProgress: UInt = 0
     fileprivate var progressPrintCount = 0
     fileprivate var progressPrintCountMax = 80
     
@@ -121,7 +121,7 @@ extension KaraokeView {
     /// 设置当前歌曲的进度
     /// - Note: 可以获取播放器的当前进度进行设置
     /// - Parameter progress: 歌曲进度 (ms)
-    @objc public func setProgress(progressInMs: Int) {
+    @objc public func setProgress(progressInMs: UInt) {
         if !Thread.isMainThread {
             Log.error(error: "invoke setProgress not isMainThread ", tag: logTag)
         }
@@ -137,7 +137,7 @@ extension KaraokeView {
     /// - Parameter speakerPitch: 演唱者的实时音高值
     /// - Parameter pitchScore: 实时音高分数
     /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）
-    @objc public func setPitch(speakerPitch: Double, pitchScore: Float, progressInMs: Int) {
+    @objc public func setPitch(speakerPitch: Double, pitchScore: Float, progressInMs: UInt) {
         if !Thread.isMainThread {
             Log.error(error: "invoke setProgress not isMainThread ", tag: logTag)
         }
@@ -228,7 +228,7 @@ extension KaraokeView: LyricsViewDelegate {
         scoringView.dragBegain()
     }
     
-    func onLyricsView(view: LyricsView, didDragTo position: Int) {
+    func onLyricsView(view: LyricsView, didDragTo position: UInt) {
         Log.debug(text: "=== didDragTo \(position)", tag: "drag")
         scoringView.dragDidEnd(position: position)
         delegate?.onKaraokeView?(view: self, didDragTo: position)
@@ -251,8 +251,8 @@ extension KaraokeView: ProgressCheckerDelegate {
 
 // MARK: -- Log
 extension KaraokeView {
-    func logProgressIfNeed(progress: Int) {
-        let gap = progress - lastProgress
+    func logProgressIfNeed(progress: UInt) {
+        let gap = Int(progress) - Int(lastProgress)
         if progressPrintCount < progressPrintCountMax, gap > 20 {
             let text = "setProgress:\(progress) last:\(lastProgress) gap:\(progress-lastProgress)"
             Log.warning(text: text, tag: logTag)
