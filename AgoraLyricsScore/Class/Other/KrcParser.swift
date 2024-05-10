@@ -34,6 +34,12 @@ public class KRCParser {
                         }
                         
                         if let lineModel = parseLine(line: line, offset: offsetValue) {
+                            /* check line duration valid */
+                            if !lineModel.tones.isEmpty,
+                               lineModel.duration != lineModel.tones.map({ $0.duration }).reduce(0, +) {
+                                Log.warning(text: "line duration invalid, content:\(lineModel.content) at index:\(lineModels.count)", tag: logTag)
+                            }
+                            
                             lineModels.append(lineModel)
                         }
                         else {

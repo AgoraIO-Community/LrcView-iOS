@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ProgressProviderDelegate: NSObjectProtocol {
-    func progressProviderGetPlayerPosition(_ provider: ProgressProvider) -> UInt
+    func progressProviderGetPlayerPosition(_ provider: ProgressProvider) -> UInt?
     func progressProvider(_ provider: ProgressProvider, shouldSend postion: UInt)
     func progressProvider(_ provider: ProgressProvider, didUpdate progressInMs: UInt)
 }
@@ -32,17 +32,13 @@ class ProgressProvider: NSObject {
             
             var current = self.lastPrpgress
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
-                current = delegate!.progressProviderGetPlayerPosition(self)
+                current = delegate!.progressProviderGetPlayerPosition(self) ?? current
                 delegate?.progressProvider(self, shouldSend: current + 20)
             }
             current += 20
 
             self.lastPrpgress = current
-            var time = current
-//            if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
-//                time -= 250
-//            }
-            delegate?.progressProvider(self, didUpdate: time)
+            delegate?.progressProvider(self, didUpdate: current)
         }
     }
     

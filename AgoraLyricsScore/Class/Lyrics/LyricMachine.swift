@@ -55,7 +55,7 @@ class LyricMachine {
         dataList = data?.lines.map({ LyricCell.Model(text: $0.content,
                                                      progressRate: 0,
                                                      beginTime: $0.beginTime,
-                                                     duration: $0.duration,
+                                                     duration: $0.tones.map({ $0.duration }).reduce(0, +),
                                                      status: .normal,
                                                      tones: $0.tones) }) ?? []
         if let first = dataList.first { /** 默认高亮第一个 **/

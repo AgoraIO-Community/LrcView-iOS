@@ -60,7 +60,7 @@ class Parser {
         lyricModel.hasPitch = !pitchModel.pitchDatas.isEmpty
         lyricModel.preludeEndPosition = pitchModel.pitchDatas.first?.startTime ?? 0
         
-        if includeCopyrightSentence {
+        if !includeCopyrightSentence { /** 移除版权信息类型的句子 **/
             lyricModel.lines = lyricModel.lines.filter { line in
                 return line.beginTime > (pitchModel.pitchDatas.first?.startTime ?? 0)
             }
