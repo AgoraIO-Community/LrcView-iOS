@@ -24,9 +24,11 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
     let exp2 = XCTestExpectation(description: "test score2")
     
     func testAll() { /** test score 每个tone命中一次 **/
-        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
-        let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.krc", ofType: nil)!))
+        let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
+        
+        guard let model = KaraokeView.parseLyricData(krcFileData: krcFileData,
+                                                     pitchFileData: pitchFileData) else {
             XCTFail()
             return
         }
@@ -38,7 +40,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
             for tone in line.tones {
                 let time = tone.beginTime + tone.duration/2
                 vm.setProgress(progress: time)
-                vm.setPitch(speakerPitch: tone.pitch - 1, pitchScore: 90, progressInMs: time)
+                vm.setPitch(speakerPitch: 3, pitchScore: 0, progressInMs: time)
             }
         }
         wait(for: [exp], timeout: 3)
@@ -46,9 +48,12 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
     
     func testAll2() { /** test score 每个tone命中多次 **/
         testCaseNum = 1
-        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
-        let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.krc", ofType: nil)!))
+        let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
+        
+        guard let model = KaraokeView.parseLyricData(krcFileData: krcFileData,
+                                                     pitchFileData: pitchFileData,
+                                                     includeCopyrightSentence: false) else {
             XCTFail()
             return
         }
@@ -64,7 +69,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
             vm.setProgress(progress: time)
             if gap == 40 {
                 gap = 0
-                vm.setPitch(speakerPitch: 50, pitchScore: 90, progressInMs: time)
+                vm.setPitch(speakerPitch: 3, pitchScore: 0, progressInMs: time)
             }
             gap += 20
             time += 20

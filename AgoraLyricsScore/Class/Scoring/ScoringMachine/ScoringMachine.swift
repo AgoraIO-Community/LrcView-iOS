@@ -50,7 +50,6 @@ class ScoringMachine {
     }
     
     func setPitch(speakerPitch: Double,
-                  pitchScore: Float,
                   progressInMs: UInt) {
         queue.async { [weak self] in
             self?._setPitch(speakerPitch: UInt8(speakerPitch),
@@ -132,22 +131,10 @@ class ScoringMachine {
             return
         }
         
-        var actualspeakerPitch: Double = 0
-        if speakerPitch <= 5 {
-            if speakerPitch == 3 {
-                actualspeakerPitch = hitedInfo.pitch
-            }
-            else if speakerPitch < 3 {
-                actualspeakerPitch = hitedInfo.pitch - Double(speakerPitch)
-            }
-            else {
-                actualspeakerPitch = hitedInfo.pitch + Double(speakerPitch)
-            }
-        }
-        else {
-            actualspeakerPitch = Double(speakerPitch)
-        }
+        /// 计算出真实的speakerPitch
+        let actualspeakerPitch = calculateActualSpeakerPitch(speakerPitch: speakerPitch, refPitch: hitedInfo.pitch)
         
+        /// 着色、动画开启与否
         let showAnimation = speakerPitch <= 5
         
         /** 2.update HighlightInfos **/

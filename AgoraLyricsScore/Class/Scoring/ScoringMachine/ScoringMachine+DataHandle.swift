@@ -9,8 +9,6 @@ import Foundation
 
 extension ScoringMachine {
     /// 创建Scoring内部数据
-    ///   - shouldFixTime: 是否要修复时间异常问题
-    ///   - return: (行结束时间, 字模型)
     static func createData(data: LyricModel) -> ([UInt], [Info]) {
         var array = [Info]()
         for (index, pitchData) in data.pitchDatas.enumerated() {
@@ -174,6 +172,41 @@ extension ScoringMachine {
         return result
     }
     
+    func calculateActualSpeakerPitch(speakerPitch: UInt8, refPitch: Double) -> Double {
+        guard speakerPitch != 0 else {
+            Log.errorText(text: "speakerPitch:\(speakerPitch)", tag: logTag)
+            fatalError("speakerPitch must > 0, <= 100")
+        }
+        
+        guard speakerPitch <= 100 else {
+            Log.errorText(text: "speakerPitch:\(speakerPitch)", tag: logTag)
+            fatalError("speakerPitch must > 0, <= 100")
+        }
+        
+        var actualspeakerPitch: Double = 0
+        switch speakerPitch {
+        case 1:
+            actualspeakerPitch = refPitch - 2
+            break
+        case 2:
+            actualspeakerPitch = refPitch - 1
+            break
+        case 3:
+            actualspeakerPitch = refPitch - 0
+            break
+        case 4:
+            actualspeakerPitch = refPitch + 1
+            break
+        case 5:
+            actualspeakerPitch = refPitch + 2
+            break
+        default:
+            actualspeakerPitch = Double(speakerPitch)
+            break
+        }
+        
+        return actualspeakerPitch
+    }
 }
 
 extension ScoringMachine { /** ui 位置 **/

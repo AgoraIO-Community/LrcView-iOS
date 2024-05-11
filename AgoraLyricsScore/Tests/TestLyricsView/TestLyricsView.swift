@@ -19,9 +19,12 @@ class TestLyricsView: XCTestCase {
     }
 
     func testLyricsToneSpace() { /** 测试计算进度算法，tone之间有空隙 **/
-        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "153378", ofType: "xml")!)
-        let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.krc", ofType: nil)!))
+        let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
+        
+        guard let model = KaraokeView.parseLyricData(krcFileData: krcFileData,
+                                                     pitchFileData: pitchFileData,
+                                                     includeCopyrightSentence: false) else {
             XCTFail()
             return
         }
@@ -34,9 +37,10 @@ class TestLyricsView: XCTestCase {
                                                         tones: $0.tones) })
         let line = dataList[3]
         
-        XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: 43285, model: line, canScoring: true))
-        XCTAssertNil(LyricMachine.calculateProgressRate(progress: 43295, model: line, canScoring: true))
-        XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: 43795, model: line, canScoring: true))
+        XCTAssertNil(LyricMachine.calculateProgressRate(progress: 0, model: line, canScoring: true))
+        XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: line.beginTime + 30, model: line, canScoring: true))
+        XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: line.beginTime + 60, model: line, canScoring: true))
+        XCTAssertEqual(LyricMachine.calculateProgressRate(progress: 26596+191, model: line, canScoring: true), 0.5)
     }
 
 }

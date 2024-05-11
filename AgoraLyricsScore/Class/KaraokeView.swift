@@ -72,14 +72,6 @@ public class KaraokeView: UIView {
 
 // MARK: - Public Method
 extension KaraokeView {
-    /// 解析歌词文件xml数据
-    /// - Parameter data: xml二进制数据
-    /// - Returns: 歌词信息
-    @objc public static func parseLyricData(data: Data) -> LyricModel? {
-        let parser = Parser()
-        return parser.parseLyricData(data: data)
-    }
-    
     /// 解析歌词文件krc
     /// - Parameters:
     ///   - krcFileData: krc文件的内容
@@ -150,9 +142,8 @@ extension KaraokeView {
     /// 设置实时采集(mic)的Pitch
     /// - Note: 可以从AgoraRTC DRM回调方法 `onPitch`[该回调频率是50ms/次]  获取
     /// - Parameter speakerPitch: 演唱者的实时音高值
-    /// - Parameter pitchScore: 实时音高分数
     /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）
-    @objc public func setPitch(speakerPitch: Double, pitchScore: Float, progressInMs: UInt) {
+    @objc public func setPitch(speakerPitch: Double, progressInMs: UInt) {
         if !Thread.isMainThread {
             Log.error(error: "invoke setProgress not isMainThread ", tag: logTag)
         }
@@ -173,7 +164,6 @@ extension KaraokeView {
         if speakerPitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
             pitchIsZeroCount = 0
             scoringView.setPitch(speakerPitch: speakerPitch,
-                                 pitchScore: pitchScore,
                                  progressInMs: progressInMs)
         }
     }

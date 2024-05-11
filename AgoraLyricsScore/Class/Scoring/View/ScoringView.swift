@@ -69,10 +69,8 @@ public class ScoringView: UIView {
     }
     
     func setPitch(speakerPitch: Double,
-                  pitchScore: Float,
                   progressInMs: UInt) {
         scoringMachine.setPitch(speakerPitch: speakerPitch,
-                                pitchScore: pitchScore,
                                 progressInMs: progressInMs)
     }
     
