@@ -20,9 +20,9 @@ class FirstToneHintViewTestVC: UIViewController {
         setupUI()
         let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        let model = KaraokeView.parseLyricData(data: data)!
-        model.preludeEndPosition = 6 * 1000
-        karaokeView.setLyricData(data: model)
+//        let model = KaraokeView.parseLyricData(data: data)!
+//        model.preludeEndPosition = 6 * 1000
+//        karaokeView.setLyricData(data: model)
     }
     
     func setupUI() {

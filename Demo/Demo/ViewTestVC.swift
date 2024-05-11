@@ -77,10 +77,10 @@ class ViewTestVC: UIViewController {
     func reset() {
         karaokeView.reset()
         
-        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
-        let data = try! Data(contentsOf: url)
-        let model = KaraokeView.parseLyricData(data: data)!
-        karaokeView.setLyricData(data: model)
+//        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
+//        let data = try! Data(contentsOf: url)
+//        let model = KaraokeView.parseLyricData(data: data)!
+//        karaokeView.setLyricData(data: model)
 //        karaokeView.setProgress(progress: 70 * 1000)
     }
     

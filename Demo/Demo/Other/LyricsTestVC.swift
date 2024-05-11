@@ -200,13 +200,13 @@ extension LyricsTestVC: AgoraMusicContentCenterEventDelegate {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl!)")
         let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        let model = KaraokeView.parseLyricData(data: data)!
-        DispatchQueue.main.async { [weak self] in
-            self?.karaokeView.setLyricData(data: model)
-            self?.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-            self?.mccPlay()
-            self?.mpk.seek(toPosition: 16000)
-        }
+//        let model = KaraokeView.parseLyricData(data: data)!
+//        DispatchQueue.main.async { [weak self] in
+//            self?.karaokeView.setLyricData(data: model)
+//            self?.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+//            self?.mccPlay()
+//            self?.mpk.seek(toPosition: 16000)
+//        }
     }
     
     func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {

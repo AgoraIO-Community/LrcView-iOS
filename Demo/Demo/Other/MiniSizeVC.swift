@@ -19,7 +19,6 @@ extension MiniSizeVC {
 }
 
 class MiniSizeVC: UIViewController {
-    let lyricsFileDownloader = LyricsFileDownloader()
     let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger()])
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
@@ -155,7 +154,6 @@ class MiniSizeVC: UIViewController {
     }
     
     func commonInit() {
-        lyricsFileDownloader.delegate = self
         skipButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         setButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         changeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
@@ -458,7 +456,7 @@ extension MiniSizeVC: AgoraMusicContentCenterEventDelegate {
                 self?.title = nil
             }
         }
-        let _ = lyricsFileDownloader.download(urlString: lyricUrl)
+        
     }
     
     func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
@@ -526,33 +524,3 @@ extension MiniSizeVC: ParamSetVCDelegate {
     }
 }
 
-extension MiniSizeVC: LyricsFileDownloaderDelegate {
-    func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {
-        
-    }
-    
-    func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
-        if let data = fileData {
-            let model = KaraokeView.parseLyricData(data: data)!
-            self.lyricModel = model
-            if !self.noLyric {
-                let canScoring = model.hasPitch
-                if canScoring { /** xml **/
-                    self.karaokeView.setLyricData(data: model)
-                    self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-                }
-                else {/** lrc **/
-                    self.karaokeView.setLyricData(data: model)
-                }
-            }
-            else {
-                self.karaokeView.setLyricData(data: nil)
-                self.gradeView.isHidden = true
-            }
-            self.mccPlay()
-        }
-        else {
-            print("fect fail")
-        }
-    }
-}

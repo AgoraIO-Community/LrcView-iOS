@@ -150,20 +150,20 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
             
             if indexPath.row == 10 { /** 观众端 **/
-                let vc = AudienceVC()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = AudienceVC()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
             
             if indexPath.row == 11 { /** 主播端 **/
-                let vc = HostVC()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = HostVC()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
             
             if indexPath.row == 12 { /** 抢唱 **/
-                let vc = QiangChangVC()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = QiangChangVC()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
             
@@ -174,8 +174,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
             
             if indexPath.row == 14 { /** 下载 **/
-                let vc = DownloadVC()
-                navigationController?.pushViewController(vc, animated: true)
+                
                 return
             }
         }

@@ -116,7 +116,6 @@ extension MainTestVC2: RTCManagerDelegate {
         }
 
         mainView.karaokeView.setPitch(speakerPitch: Double(data.speakerPitch),
-                                      pitchScore: Float(data.pitchScore),
                                       progressInMs: UInt(data.progressInMs))
     }
 

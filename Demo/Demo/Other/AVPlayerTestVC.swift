@@ -36,24 +36,24 @@ class AVPlayerTestVC: UIViewController {
     }
     
     func commonInit() {
-        let data = try! Data(contentsOf: URL(fileURLWithPath: lrcUrl))
-        let model = KaraokeView.parseLyricData(data: data)!
-        karaokeView.setLyricData(data: model)
-        initAudioPlayer(url:URL(fileURLWithPath: songUrl))
-        let ret = audioPlayer!.play()
-        print("play ret \(ret)")
-        
-        
-        
-        timer.scheduledMillisecondsTimer(withName: "AVPlayerTestVC",
-                                         countDown: 1000000,
-                                         milliseconds: 50,
-                                         queue: .main) { [weak self](_, time) in
-            guard let self = self else { return }
-            if let currentTime = self.audioPlayer?.currentTime {
-//                self.karaokeView.setProgress(progress: Int(currentTime * 1000) )
-            }
-        }
+//        let data = try! Data(contentsOf: URL(fileURLWithPath: lrcUrl))
+//        let model = KaraokeView.parseLyricData(data: data)!
+//        karaokeView.setLyricData(data: model)
+//        initAudioPlayer(url:URL(fileURLWithPath: songUrl))
+//        let ret = audioPlayer!.play()
+//        print("play ret \(ret)")
+//
+//
+//
+//        timer.scheduledMillisecondsTimer(withName: "AVPlayerTestVC",
+//                                         countDown: 1000000,
+//                                         milliseconds: 50,
+//                                         queue: .main) { [weak self](_, time) in
+//            guard let self = self else { return }
+//            if let currentTime = self.audioPlayer?.currentTime {
+////                self.karaokeView.setProgress(progress: Int(currentTime * 1000) )
+//            }
+//        }
     }
     
     private func initAudioPlayer(url: URL) {
