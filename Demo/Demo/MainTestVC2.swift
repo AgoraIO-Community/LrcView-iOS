@@ -12,20 +12,11 @@ import AgoraMccExService
 
 class MainTestVC2: UIViewController {
     private let mainView = MainView()
-    private var rtcManager: RTCManager!
+    private let rtcManager = RTCManager()
     private let progressProvider = ProgressProvider()
     private let songId = 40289835
     var lyricModel: LyricModel!
     fileprivate let logTag = "MainTestVC2"
-    
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        rtcManager = RTCManager()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
@@ -38,6 +29,7 @@ class MainTestVC2: UIViewController {
         rtcManager.initEngine()
         rtcManager.joinChannel()
         rtcManager.initMccEx()
+        rtcManager.createMusicPlayer()
     }
     
     private func setupUI() {
@@ -100,7 +92,6 @@ extension MainTestVC2: RTCManagerDelegate {
             guard let self = self else {
                 return
             }
-            rtcManager.createMusicPlayer()
             rtcManager.preload(songId: songId)
         }
     }
@@ -114,6 +105,10 @@ extension MainTestVC2: RTCManagerDelegate {
 
         logOnPitchInvokeGap_debug()
         logNInvalidSpeakPitch_debug(data: data)
+        
+        if data.speakerPitch < 0 {
+            return
+        }
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -180,14 +175,11 @@ extension MainTestVC2: MainViewDelegate {
             resetView()
         case .quick:
             Log.info(text: "change", tag: self.logTag)
-            progressProvider.pause()
             rtcManager.pauseScore()
             rtcManager.stopMusic()
             rtcManager.leaveChannel()
             progressProvider.stop()
-            mainView.karaokeView.reset()
-            mainView.gradeView.reset()
-            mainView.incentiveView.reset()
+            resetView()
             navigationController?.popViewController(animated: true)
         }
     }

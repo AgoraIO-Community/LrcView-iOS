@@ -45,15 +45,14 @@ class RTCManager: NSObject {
         config.audioScenario = .chorus
         config.channelProfile = .liveBroadcasting
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: config, delegate: self)
-        agoraKit.registerExtension(withVendor: "agora_audio_filters_aed", extension: "audio_event_detection_post", sourceType: .audioPlayout)
     }
     
     func joinChannel() { /** 目的：发布mic流、接收音频流 **/
         Log.info(text: "joinChannel", tag: logTag)
-        agoraKit.enableAudioVolumeIndication(50, smooth: 3, reportVad: true)
         let option = AgoraRtcChannelMediaOptions()
         option.clientRoleType = .broadcaster
         agoraKit.enableAudio()
+        agoraKit.disableVideo()
         agoraKit.setClientRole(.broadcaster)
         let ret = agoraKit.joinChannel(byToken: nil,
                                        channelId: Config.channelId,
@@ -67,13 +66,37 @@ class RTCManager: NSObject {
     }
     
     func initMccEx() {
-        
+        Log.info(text: "initMccEx", tag: logTag)
+        let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
+        let pid = Config.pid
+        let pKey = Config.pKey
+        let token = Config.token
+        let userId = Config.userId
+        let vendorConfig = AgoraYSDVendorConfigure(appId: pid,
+                                                   appKey: pKey,
+                                                   token: token,
+                                                   userId: userId,
+                                                   deviceId: deviceId,
+                                                   chargeMode: .once)
+        let config = AgoraMusicContentCenterExConfiguration.init(rtcEngine: agoraKit,
+                                                                 vendorConfigure: vendorConfig,
+                                                                 enableLog: true,
+                                                                 enableSaveLogToFile: true,
+                                                                 logFilePath: "",
+                                                                 maxCacheSize: 50,
+                                                                 eventDelegate: self,
+                                                                 scoreEventDelegate: self,
+                                                                 audioFrameDelegate: nil)
+        mccExService = AgoraMusicContentCenterEx.sharedInstance()
+        mccExService?.initialize(config)
+        mccExService.setScoreLevel(.level1)
     }
     
     func createMusicPlayer() {
         Log.info(text: "createMusicPlayer", tag: logTag)
         mpk = mccExService.createMusicPlayer(with: self)
         if mpk == nil {
+            Log.errorText(text: "mpk is nil", tag: logTag)
             fatalError()
         }
         mpk.setPlayMode(mode: .original)
