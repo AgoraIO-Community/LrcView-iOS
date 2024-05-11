@@ -53,8 +53,7 @@ class ScoringMachine {
                   pitchScore: Float,
                   progressInMs: UInt) {
         queue.async { [weak self] in
-            self?._setPitch(speakerPitch: speakerPitch,
-                            pitchScore: pitchScore,
+            self?._setPitch(speakerPitch: UInt8(speakerPitch),
                             progressInMs: progressInMs)
         }
     }
@@ -103,19 +102,21 @@ class ScoringMachine {
         handleProgress()
     }
     
-    private func _setPitch(speakerPitch: Double,
-                           pitchScore: Float,
+    /// _setPitch
+    /// - Parameters:
+    ///   - speakerPitch: 0-100
+    private func _setPitch(speakerPitch: UInt8,
                            progressInMs: UInt) {
         guard !isDragging else { return }
         guard let model = lyricData, model.hasPitch else { return }
         
         if speakerPitch <= 0 {
             let y = canvasViewSize.height
-            let debugInfo = DebugInfo(originalPitch: speakerPitch,
-                                      pitch: speakerPitch,
+            let debugInfo = DebugInfo(originalPitch: -1.0,
+                                      pitch: Double(speakerPitch),
                                       hitedInfo: nil,
                                       progress: progressInMs)
-            Log.debug(text: "_setPitch[0] porgress:\(progressInMs) speakerPitch:\(speakerPitch) score:\(pitchScore)", tag: logTag)
+            Log.debug(text: "_setPitch[0] porgress:\(progressInMs) speakerPitch:\(speakerPitch)", tag: logTag)
             invokeScoringMachine(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
             return
         }
@@ -123,28 +124,31 @@ class ScoringMachine {
         /** 1.get hitedInfo **/
         guard let hitedInfo = getHitedInfo(progress: progressInMs,
                                            currentVisiableInfos: currentVisiableInfos) else {
-            let y = calculatedY(pitch: speakerPitch,
-                                viewHeight: canvasViewSize.height,
-                                minPitch: minPitch,
-                                maxPitch: maxPitch,
-                                standardPitchStickViewHeight: standardPitchStickViewHeight)
-            
-            if y == nil {
-                Log.errorText(text: "y is invalid, at getHitedInfo step", tag: logTag)
-            }
-            let yValue = (y != nil) ? y! : (canvasViewSize.height >= 0 ? canvasViewSize.height : 0)
             let debugInfo = DebugInfo(originalPitch: -1,
-                                      pitch: speakerPitch,
+                                      pitch: Double(speakerPitch),
                                       hitedInfo: nil,
                                       progress: progressInMs)
-            Log.debug(text: "_setPitch[1] porgress:\(progressInMs) speakerPitch:\(speakerPitch) score:\(pitchScore)", tag: logTag)
-            invokeScoringMachine(didUpdateCursor: yValue,
-                                 showAnimation: false,
-                                 debugInfo: debugInfo)
+            Log.debug(text: "_setPitch[1] porgress:\(progressInMs) speakerPitch:\(speakerPitch)", tag: logTag)
             return
         }
         
-        let showAnimation = (abs(hitedInfo.pitch - speakerPitch) < 1)
+        var actualspeakerPitch: Double = 0
+        if speakerPitch <= 5 {
+            if speakerPitch == 3 {
+                actualspeakerPitch = hitedInfo.pitch
+            }
+            else if speakerPitch < 3 {
+                actualspeakerPitch = hitedInfo.pitch - Double(speakerPitch)
+            }
+            else {
+                actualspeakerPitch = hitedInfo.pitch + Double(speakerPitch)
+            }
+        }
+        else {
+            actualspeakerPitch = Double(speakerPitch)
+        }
+        
+        let showAnimation = speakerPitch <= 5
         
         /** 2.update HighlightInfos **/
         if showAnimation {
@@ -156,11 +160,11 @@ class ScoringMachine {
         
         /** 3.calculated ui info **/
         
-        if speakerPitch > maxPitch {
-            Log.errorText(text: "speakerPitch > maxPitch, \(speakerPitch)", tag: logTag)
+        if actualspeakerPitch > maxPitch {
+            Log.errorText(text: "actualspeakerPitch > maxPitch, \(actualspeakerPitch)", tag: logTag)
         }
         
-        let y = calculatedY(pitch: showAnimation ? hitedInfo.pitch : speakerPitch,
+        let y = calculatedY(pitch: showAnimation ? hitedInfo.pitch : actualspeakerPitch,
                             viewHeight: canvasViewSize.height,
                             minPitch: minPitch,
                             maxPitch: maxPitch,
@@ -170,10 +174,10 @@ class ScoringMachine {
         }
         let yValue = (y != nil) ? y! : (canvasViewSize.height >= 0 ? canvasViewSize.height : 0)
         let debugInfo = DebugInfo(originalPitch: hitedInfo.pitch,
-                                  pitch: speakerPitch,
+                                  pitch: Double(speakerPitch),
                                   hitedInfo: hitedInfo,
                                   progress: progressInMs)
-        Log.debug(text: "_setPitch[2] porgress:\(progressInMs) speakerPitch:\(speakerPitch) score:\(pitchScore)", tag: logTag)
+        Log.debug(text: "_setPitch[2] porgress:\(progressInMs) speakerPitch:\(speakerPitch)", tag: logTag)
         invokeScoringMachine(didUpdateCursor: yValue, showAnimation: showAnimation, debugInfo: debugInfo)
     }
     
