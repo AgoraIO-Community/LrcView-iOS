@@ -200,11 +200,10 @@ extension ScoringMachine {
         case 5:
             actualspeakerPitch = refPitch + 2
             break
-        default:
+        default: /** [6,100] */
             actualspeakerPitch = Double(speakerPitch)
             break
         }
-        
         return actualspeakerPitch
     }
 }

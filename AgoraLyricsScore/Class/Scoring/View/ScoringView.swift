@@ -34,6 +34,7 @@ public class ScoringView: UIView {
     /// 使用图片创建粒子动画
     @objc public var emitterImages: [UIImage]? { didSet { updateUI() } }
     /// 打分容忍度 范围：0-1
+    @available(*, deprecated, message: "out date")
     @objc public var hitScoreThreshold: Float = 0.7 { didSet { updateUI() } }
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
