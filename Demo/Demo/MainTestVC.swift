@@ -10,7 +10,7 @@ import AgoraLyricsScore
 import AgoraRtcKit
 import AgoraMccExService
 
-class MainTestVC2: UIViewController {
+class MainTestVC: UIViewController {
     private let mainView = MainView()
     private let rtcManager = RTCManager()
     private let progressProvider = ProgressProvider()
@@ -29,7 +29,6 @@ class MainTestVC2: UIViewController {
         rtcManager.initEngine()
         rtcManager.joinChannel()
         rtcManager.initMccEx()
-        rtcManager.createMusicPlayer()
     }
     
     private func setupUI() {
@@ -62,7 +61,17 @@ class MainTestVC2: UIViewController {
 }
 
 // MARK: - RTCManagerDelegate
-extension MainTestVC2: RTCManagerDelegate {
+extension MainTestVC: RTCManagerDelegate {
+    func rtcManagerDidInitializeMcc(_ manager: RTCManager) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            rtcManager.createMusicPlayer()
+            rtcManager.preload(songId: songId)
+        }
+    }
+    
     func rtcManager(_ manager: RTCManager,
                     didProloadMusicWithSongId: Int,
                     lyricData: Data,
@@ -74,25 +83,19 @@ extension MainTestVC2: RTCManagerDelegate {
                                                    includeCopyrightSentence: false)
             self.lyricModel = model
             setLyricToView()
-            manager.open(songId: songId)
+            manager.startScore(songId: songId)
         }
+    }
+    
+    func rtcManagerDidStartScoreMcc(_ manager: RTCManager) {
+        manager.open(songId: songId)
     }
     
     func rtcManagerDidOpenMusic(_ manager: RTCManager) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            manager.playMusic()
-            manager.startScore(songId: songId)
             progressProvider.startTime()
-        }
-    }
-    
-    func rtcManagerDidInitializeMcc(_ manager: RTCManager) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            rtcManager.preload(songId: songId)
+            manager.playMusic()
         }
     }
     
@@ -131,7 +134,7 @@ extension MainTestVC2: RTCManagerDelegate {
     }
 }
 
-extension MainTestVC2: ProgressProviderDelegate {
+extension MainTestVC: ProgressProviderDelegate {
     func progressProviderGetPlayerPosition(_ provider: ProgressProvider) -> UInt? {
         let value = rtcManager.getMPKCurrentPosition()
         if value < 0 { return nil }
@@ -143,16 +146,12 @@ extension MainTestVC2: ProgressProviderDelegate {
     }
     
     func progressProvider(_ provider: ProgressProvider, didUpdate progressInMs: UInt) {
-        /// opt for setting fake machine
-        if rtcManager.useFakeScoringMachine {
-            rtcManager.fakeScoringMachine?.setProgress(progressInMs: progressInMs)
-        }
         mainView.karaokeView.setProgress(progressInMs: progressInMs)
     }
 }
 
 // MARK: - MainViewDelegate
-extension MainTestVC2: MainViewDelegate {
+extension MainTestVC: MainViewDelegate {
     func mainView(_ mainView: MainView, onAction: MainView.Action) {
         switch onAction {
         case .skip:
@@ -185,27 +184,27 @@ extension MainTestVC2: MainViewDelegate {
 }
 
 // MARK: - ParamSetVCDelegate
-extension MainTestVC2: ParamSetVCDelegate {
+extension MainTestVC: ParamSetVCDelegate {
     func didSetParam(param: Param, noLyric: Bool) {
         mainView.updateView(param: param)
     }
 }
 
-extension MainTestVC2 { /** for debug **/
-    static var lastProgressInMs = 0
+extension MainTestVC { /** for debug **/
+    static var lastProgressInMs: UInt = 0
     static var lastPitchTime:CFAbsoluteTime = 0
     
-    func calculateProgressGap_debug(progressInMs: Int) -> Int {
-        let progressGap = progressInMs - MainTestVC2.lastProgressInMs
-        MainTestVC2.lastProgressInMs = progressInMs
+    func calculateProgressGap_debug(progressInMs: UInt) -> UInt {
+        let progressGap = progressInMs - MainTestVC.lastProgressInMs
+        MainTestVC.lastProgressInMs = progressInMs
         return progressGap
     }
     
     /// 打印onPitch回调间隔
     func logOnPitchInvokeGap_debug() {
         let startTime = CFAbsoluteTimeGetCurrent()
-        let gap = startTime - MainTestVC2.lastPitchTime
-        MainTestVC2.lastPitchTime = startTime
+        let gap = startTime - MainTestVC.lastPitchTime
+        MainTestVC.lastPitchTime = startTime
         if (gap > 0.1) {
             Log.warning(text: "OnPitch invoke gap \(gap)", tag: self.logTag)
         }

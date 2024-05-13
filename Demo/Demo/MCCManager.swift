@@ -8,27 +8,21 @@ import AgoraRtcKit
 import RTMTokenBuilder
 import AgoraMccExService
 
-protocol RTCManagerDelegate: NSObjectProtocol {
-    func rtcManager(_ manager: RTCManager, didProloadMusicWithSongId: Int, lyricData: Data, pitchData: Data)
-    func rtcManagerDidOpenMusic(_ manager: RTCManager)
-    func rtcManagerDidInitializeMcc(_ manager: RTCManager)
+protocol MCCManagerDelegate: NSObjectProtocol {
+    func onMccExInitialize(_ manager: MCCManager)
+    func onProloadMusic(_ manager: MCCManager, songId: Int, lyricData: Data, pitchData: Data)
+    func onOpenMusic(_ manager: MCCManager)
+    func onMccExScoreStart(_ manager: MCCManager)
     func onPitch(_ songCode: Int, data: AgoraRawScoreData)
     func onLineScore(_ songCode: Int, value: AgoraLineScoreData)
 }
 
-class RTCManager: NSObject {
+class MCCManager: NSObject {
     fileprivate let logTag = "RTCManager"
     private var agoraKit: AgoraRtcEngineKit!
     private var mpk: AgoraMusicPlayerProtocolEx!
-    weak var delegate: RTCManagerDelegate?
-    var fakeScoringMachine: BaseFakeScoringMachine?
-    let useFakeScoringMachine: Bool
+    weak var delegate: MCCManagerDelegate?
     var mccExService: AgoraMusicContentCenterEx!
-    
-    init(fakeScoringMachine: BaseFakeScoringMachine? = nil) {
-        self.fakeScoringMachine = fakeScoringMachine
-        useFakeScoringMachine = fakeScoringMachine != nil
-    }
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
@@ -38,8 +32,8 @@ class RTCManager: NSObject {
         AgoraRtcEngineKit.destroy()
     }
     
-    func initEngine() {
-        Log.info(text: "initEngine", tag: logTag)
+    func initRtcEngine() {
+        Log.info(text: "initRtcEngine", tag: logTag)
         let config = AgoraRtcEngineConfig()
         config.appId = Config.rtcAppId
         config.audioScenario = .chorus
@@ -99,7 +93,6 @@ class RTCManager: NSObject {
             Log.errorText(text: "mpk is nil", tag: logTag)
             fatalError()
         }
-        mpk.setPlayMode(mode: .original)
     }
     
     func preload(songId: Int) {
@@ -169,11 +162,6 @@ class RTCManager: NSObject {
     }
     
     func startScore(songId: Int) {
-        if useFakeScoringMachine {
-            fakeScoringMachine?.startScore(songId: songId)
-            return
-        }
-        
         let newSongId = getSongCode(songId: songId)
         
         let ret = mccExService.startScore(newSongId)
@@ -186,21 +174,11 @@ class RTCManager: NSObject {
     }
     
     func pauseScore() {
-        if useFakeScoringMachine {
-            fakeScoringMachine?.pauseScore()
-            return
-        }
-        
         mccExService.pauseScore()
         Log.info(text: "pauseScore success", tag: logTag)
     }
     
     func resumeScore() {
-        if useFakeScoringMachine {
-            fakeScoringMachine?.resumeScore()
-            return
-        }
-        
         mccExService.resumeScore()
         Log.info(text: "resumeScore success", tag: logTag)
     }
@@ -215,7 +193,7 @@ class RTCManager: NSObject {
     }
 }
 
-extension RTCManager: AgoraRtcEngineDelegate {
+extension MCCManager: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit,
                    didOccurError errorCode: AgoraErrorCode) {
         Log.debug(text: "didOccurError \(errorCode)", tag: self.logTag)
@@ -235,17 +213,18 @@ extension RTCManager: AgoraRtcEngineDelegate {
     }
 }
 
-extension RTCManager: AgoraMusicContentCenterExEventDelegate {
+extension MCCManager: AgoraMusicContentCenterExEventDelegate {
     func onInitializeResult(_ state: AgoraMusicContentCenterExState,
                             reason: AgoraMusicContentCenterExStateReason) {
         Log.info(text: "[MccEx]: onInitializeResult: \(state.rawValue) reason: \(reason.rawValue)", tag: self.logTag)
         if state == .initialized, reason == .OK {
-            delegate?.rtcManagerDidInitializeMcc(self)
+            delegate?.onMccExInitialize(self)
         }
     }
     
     func onStartScoreResult(_ songCode: Int, state: AgoraMusicContentCenterExState, reason: AgoraMusicContentCenterExStateReason) {
         Log.info(text: "[MccEx]: onStartScoreResult: \(songCode) state: \(state.rawValue) reason: \(reason.rawValue)", tag: self.logTag)
+        delegate?.onMccExScoreStart(self)
     }
     
     func onPreLoadEvent(_ requestId: String,
@@ -276,8 +255,7 @@ extension RTCManager: AgoraMusicContentCenterExEventDelegate {
             
             let lyricData = try! Data(contentsOf: URL(fileURLWithPath: lyricPath))
             let pitchData = try! Data(contentsOf: URL(fileURLWithPath: pitchPath))
-            
-            delegate?.rtcManager(self, didProloadMusicWithSongId: songCode, lyricData: lyricData, pitchData: pitchData)
+            delegate?.onProloadMusic(self, songId: songCode, lyricData: lyricData, pitchData: pitchData)
         }
     }
     
@@ -290,12 +268,10 @@ extension RTCManager: AgoraMusicContentCenterExEventDelegate {
                        pitchPath: String?,
                        offsetBegin: Int,
                        offsetEnd: Int,
-                       reason: AgoraMusicContentCenterExStateReason) {
-        
-    }
+                       reason: AgoraMusicContentCenterExStateReason) {}
 }
 
-extension RTCManager: AgoraMusicContentCenterExScoreEventDelegate {
+extension MCCManager: AgoraMusicContentCenterExScoreEventDelegate {
     func onPitch(_ songCode: Int, data: AgoraRawScoreData) {
         Log.info(text: "[MccEx]: onPitch: \(songCode) progressInMs: \(data.progressInMs) speakerPitch: \(data.speakerPitch) pitchScore: \(data.pitchScore)", tag: self.logTag)
         DispatchQueue.main.async { [weak self] in
@@ -317,13 +293,14 @@ extension RTCManager: AgoraMusicContentCenterExScoreEventDelegate {
     }
 }
 
-extension RTCManager: AgoraRtcMediaPlayerDelegate {
+extension MCCManager: AgoraRtcMediaPlayerDelegate {
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol,
                              didChangedTo state: AgoraMediaPlayerState,
                              error: AgoraMediaPlayerError) {
         if state == .openCompleted {
+            mpk.setPlayMode(mode: .original)
             Log.info(text: "openCompleted", tag: logTag)
-            delegate?.rtcManagerDidOpenMusic(self)
+            delegate?.onOpenMusic(self)
         }
     }
     
