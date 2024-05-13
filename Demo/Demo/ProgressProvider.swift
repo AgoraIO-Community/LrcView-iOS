@@ -8,19 +8,23 @@
 import Foundation
 
 protocol ProgressProviderDelegate: NSObjectProtocol {
+    /// 读取播放器的进入，用于校准。
     func progressProviderGetPlayerPosition(_ provider: ProgressProvider) -> UInt?
+    /// 通知外部广播发送进度
     func progressProvider(_ provider: ProgressProvider, shouldSend postion: UInt)
+    /// 进度更新
     func progressProvider(_ provider: ProgressProvider, didUpdate progressInMs: UInt)
 }
 
+/// 提供20ms级别的歌曲进度
 class ProgressProvider: NSObject {
     weak var delegate: ProgressProviderDelegate?
     private var timer = GCDTimer()
     private var isPause = false
     private var lastPrpgress: UInt = 0
     
-    func startTime() {
-        timer.scheduledMillisecondsTimer(withName: "MainTestVC",
+    func start() {
+        timer.scheduledMillisecondsTimer(withName: "ProgressProvider",
                                          countDown: 1000000,
                                          milliseconds: 20,
                                          queue: .main) { [weak self](_, time) in
@@ -43,9 +47,9 @@ class ProgressProvider: NSObject {
     }
     
     func skip(progress: UInt) {
-        timer.destoryTimer(withName: "MainTestVC")
+        timer.destoryTimer(withName: "ProgressProvider")
         lastPrpgress = progress
-        startTime()
+        start()
     }
     
     func pause() {
@@ -58,6 +62,6 @@ class ProgressProvider: NSObject {
     
     func stop() {
         isPause = true
-        timer.destoryTimer(withName: "MainTestVC")
+        timer.destoryTimer(withName: "ProgressProvider")
     }
 }

@@ -19,6 +19,9 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
     FileLogger *fileLogger = [[FileLogger alloc] init];
+    LyricModel *m = [KaraokeView parseLyricDataWithKrcFileData:[NSData new]
+                                                 pitchFileData:[NSData new]
+                                      includeCopyrightSentence:NO];
     KaraokeView *karaokeView = [[KaraokeView alloc] initWithFrame:CGRectZero
                                                           loggers:@[[ConsoleLogger new],fileLogger]];
     karaokeView.backgroundImage = [UIImage imageNamed:@"ktv_top_bgIcon"];
@@ -54,19 +57,15 @@
     lView.noLyricTipsFont = [UIFont systemFontOfSize:23];
     lView.noLyricTipsText = @"没有歌词呢";
     lView.noLyricTipsColor = [UIColor redColor];
-//    [karaokeView setLyricDataWithData:nil];
+    
+    [karaokeView setLyricDataWithData:nil];
 }
 
 
-- (void)onKaraokeViewWithView:(KaraokeView *)view didDragTo:(NSInteger)position {
+- (void)onKaraokeViewWithView:(KaraokeView *)view didDragTo:(NSUInteger)position {
     
 }
 
-- (void)onKaraokeViewWithView:(KaraokeView *)view
-            didFinishLineWith:(LyricLineModel *)model
-                        score:(NSInteger)score
-              cumulativeScore:(NSInteger)cumulativeScore
-                    lineIndex:(NSInteger)lineIndex lineCount:(NSInteger)lineCount {}
 
 - (void)onLogWithContent:(NSString *)content tag:(NSString *)tag time:(NSString *)time level:(enum LoggerLevel)level {
     

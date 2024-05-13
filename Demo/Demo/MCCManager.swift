@@ -1,5 +1,5 @@
 //
-//  RTCManager.swift
+//  MCCManager.swift
 //  Demo
 //
 //  Created by ZYP on 2024/4/18.
@@ -18,7 +18,7 @@ protocol MCCManagerDelegate: NSObjectProtocol {
 }
 
 class MCCManager: NSObject {
-    fileprivate let logTag = "RTCManager"
+    fileprivate let logTag = "MCCManager"
     private var agoraKit: AgoraRtcEngineKit!
     private var mpk: AgoraMusicPlayerProtocolEx!
     weak var delegate: MCCManagerDelegate?
@@ -105,7 +105,7 @@ class MCCManager: NSObject {
             Log.errorText(text: "preload error", tag: logTag)
         }
         else {
-            Log.info(text: "preload success", tag: logTag)
+            Log.info(text: "preload invoke success", tag: logTag)
         }
     }
     

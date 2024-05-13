@@ -11,12 +11,15 @@ import AgoraRtcKit
 import AgoraMccExService
 
 class MainTestVC: UIViewController {
+    /// 主视图
     private let mainView = MainView()
-    private let rtcManager = RTCManager()
+    /// MusicContentConter 管理实例
+    private let mccManager = MCCManager()
+    /// 进度进度校准和进度提供者
     private let progressProvider = ProgressProvider()
     private let songId = 40289835
     var lyricModel: LyricModel!
-    fileprivate let logTag = "MainTestVC2"
+    fileprivate let logTag = "MainTestVC"
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
@@ -26,9 +29,9 @@ class MainTestVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         commonInit()
-        rtcManager.initEngine()
-        rtcManager.joinChannel()
-        rtcManager.initMccEx()
+        mccManager.initRtcEngine()
+        mccManager.joinChannel()
+        mccManager.initMccEx()
     }
     
     private func setupUI() {
@@ -41,7 +44,7 @@ class MainTestVC: UIViewController {
     private func commonInit() {
         Log.info(text: "commonInit", tag: logTag)
         mainView.delegate = self
-        rtcManager.delegate = self
+        mccManager.delegate = self
         progressProvider.delegate = self
     }
     
@@ -61,21 +64,18 @@ class MainTestVC: UIViewController {
 }
 
 // MARK: - RTCManagerDelegate
-extension MainTestVC: RTCManagerDelegate {
-    func rtcManagerDidInitializeMcc(_ manager: RTCManager) {
+extension MainTestVC: MCCManagerDelegate {
+    func onMccExInitialize(_ manager: MCCManager) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
                 return
             }
-            rtcManager.createMusicPlayer()
-            rtcManager.preload(songId: songId)
+            mccManager.createMusicPlayer()
+            mccManager.preload(songId: songId)
         }
     }
     
-    func rtcManager(_ manager: RTCManager,
-                    didProloadMusicWithSongId: Int,
-                    lyricData: Data,
-                    pitchData: Data) {
+    func onProloadMusic(_ manager: MCCManager, songId: Int, lyricData: Data, pitchData: Data) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             let model = KaraokeView.parseLyricData(krcFileData: lyricData,
@@ -87,14 +87,14 @@ extension MainTestVC: RTCManagerDelegate {
         }
     }
     
-    func rtcManagerDidStartScoreMcc(_ manager: RTCManager) {
+    func onMccExScoreStart(_ manager: MCCManager) {
         manager.open(songId: songId)
     }
     
-    func rtcManagerDidOpenMusic(_ manager: RTCManager) {
+    func onOpenMusic(_ manager: MCCManager) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            progressProvider.startTime()
+            progressProvider.start()
             manager.playMusic()
         }
     }
@@ -136,7 +136,7 @@ extension MainTestVC: RTCManagerDelegate {
 
 extension MainTestVC: ProgressProviderDelegate {
     func progressProviderGetPlayerPosition(_ provider: ProgressProvider) -> UInt? {
-        let value = rtcManager.getMPKCurrentPosition()
+        let value = mccManager.getMPKCurrentPosition()
         if value < 0 { return nil }
         return UInt(value)
     }
@@ -156,12 +156,12 @@ extension MainTestVC: MainViewDelegate {
         switch onAction {
         case .skip:
             Log.info(text: "skip", tag: self.logTag)
-            rtcManager.skipMusicPrelude(preludeEndPosition: lyricModel.preludeEndPosition)
+            mccManager.skipMusicPrelude(preludeEndPosition: lyricModel.preludeEndPosition)
             progressProvider.skip(progress: lyricModel.preludeEndPosition)
         case .pause:
             Log.info(text: "pause", tag: self.logTag)
-            rtcManager.pauseScore()
-            rtcManager.pauseMusic()
+            mccManager.pauseScore()
+            mccManager.pauseMusic()
             progressProvider.pause()
         case .set:
             let vc = ParamSetVC()
@@ -173,9 +173,9 @@ extension MainTestVC: MainViewDelegate {
             resetView()
         case .quick:
             Log.info(text: "change", tag: self.logTag)
-            rtcManager.pauseScore()
-            rtcManager.stopMusic()
-            rtcManager.leaveChannel()
+            mccManager.pauseScore()
+            mccManager.stopMusic()
+            mccManager.leaveChannel()
             progressProvider.stop()
             resetView()
             navigationController?.popViewController(animated: true)

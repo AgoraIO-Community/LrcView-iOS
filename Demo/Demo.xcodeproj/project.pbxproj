@@ -18,20 +18,11 @@
 		2609430129530FCC0022A50D /* lrc.lrc in Resources */ = {isa = PBXBuildFile; fileRef = 2609430029530FCC0022A50D /* lrc.lrc */; };
 		260A43402985378B00C2DB5D /* 123602.xml in Resources */ = {isa = PBXBuildFile; fileRef = 260A433F2985378B00C2DB5D /* 123602.xml */; };
 		26105FE52966787A00712EDA /* EmitterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26105FE42966787A00712EDA /* EmitterVC.swift */; };
-		26119D492BD78CA700530607 /* LyricModel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26119D482BD78CA700530607 /* LyricModel+Extension.swift */; };
-		26119D4B2BD79A9000530607 /* MainTestVC2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26119D4A2BD79A9000530607 /* MainTestVC2.swift */; };
+		26119D4B2BD79A9000530607 /* MainTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26119D4A2BD79A9000530607 /* MainTestVC.swift */; };
 		26119D4D2BD79B7100530607 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26119D4C2BD79B7100530607 /* MainView.swift */; };
 		261B74142BEF48AC0090AEF1 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261B74132BEF48AC0090AEF1 /* Log.swift */; };
-		263565232BCFA8470087B4CE /* FakeScoringMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565222BCFA8470087B4CE /* FakeScoringMachine.swift */; };
-		263565272BCFB60B0087B4CE /* VoicePitchChanger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565242BCFB60A0087B4CE /* VoicePitchChanger.swift */; };
-		263565292BCFB60B0087B4CE /* ToneCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565262BCFB60B0087B4CE /* ToneCalculator.swift */; };
-		2635652B2BCFB6670087B4CE /* ScoreAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2635652A2BCFB6670087B4CE /* ScoreAlgorithm.swift */; };
-		263565302BCFBCBB0087B4CE /* ScoreRecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2635652F2BCFBCBB0087B4CE /* ScoreRecoder.swift */; };
-		263565332BD1095F0087B4CE /* Algorithm.c in Sources */ = {isa = PBXBuildFile; fileRef = 263565322BD1095F0087B4CE /* Algorithm.c */; };
-		263565392BD119FD0087B4CE /* BaseFakeScoringMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565382BD119FD0087B4CE /* BaseFakeScoringMachine.swift */; };
-		2635653F2BD11ABF0087B4CE /* FileScoringMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2635653E2BD11ABF0087B4CE /* FileScoringMachine.swift */; };
 		263565412BD122160087B4CE /* ProgressProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565402BD122160087B4CE /* ProgressProvider.swift */; };
-		263565432BD124D90087B4CE /* RTCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565422BD124D90087B4CE /* RTCManager.swift */; };
+		263565432BD124D90087B4CE /* MCCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565422BD124D90087B4CE /* MCCManager.swift */; };
 		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
 		2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */; };
@@ -70,21 +61,11 @@
 		2609430029530FCC0022A50D /* lrc.lrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lrc.lrc; sourceTree = "<group>"; };
 		260A433F2985378B00C2DB5D /* 123602.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 123602.xml; sourceTree = "<group>"; };
 		26105FE42966787A00712EDA /* EmitterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitterVC.swift; sourceTree = "<group>"; };
-		26119D482BD78CA700530607 /* LyricModel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LyricModel+Extension.swift"; sourceTree = "<group>"; };
-		26119D4A2BD79A9000530607 /* MainTestVC2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTestVC2.swift; sourceTree = "<group>"; };
+		26119D4A2BD79A9000530607 /* MainTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTestVC.swift; sourceTree = "<group>"; };
 		26119D4C2BD79B7100530607 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		261B74132BEF48AC0090AEF1 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
-		263565222BCFA8470087B4CE /* FakeScoringMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeScoringMachine.swift; sourceTree = "<group>"; };
-		263565242BCFB60A0087B4CE /* VoicePitchChanger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoicePitchChanger.swift; sourceTree = "<group>"; };
-		263565262BCFB60B0087B4CE /* ToneCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToneCalculator.swift; sourceTree = "<group>"; };
-		2635652A2BCFB6670087B4CE /* ScoreAlgorithm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreAlgorithm.swift; sourceTree = "<group>"; };
-		2635652F2BCFBCBB0087B4CE /* ScoreRecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreRecoder.swift; sourceTree = "<group>"; };
-		263565312BD1095F0087B4CE /* Algorithm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Algorithm.h; sourceTree = "<group>"; };
-		263565322BD1095F0087B4CE /* Algorithm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Algorithm.c; sourceTree = "<group>"; };
-		263565382BD119FD0087B4CE /* BaseFakeScoringMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseFakeScoringMachine.swift; sourceTree = "<group>"; };
-		2635653E2BD11ABF0087B4CE /* FileScoringMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileScoringMachine.swift; sourceTree = "<group>"; };
 		263565402BD122160087B4CE /* ProgressProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressProvider.swift; sourceTree = "<group>"; };
-		263565422BD124D90087B4CE /* RTCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTCManager.swift; sourceTree = "<group>"; };
+		263565422BD124D90087B4CE /* MCCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCCManager.swift; sourceTree = "<group>"; };
 		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstToneHintViewTestVC.swift; sourceTree = "<group>"; };
 		2689ED3D298654C90012BC4D /* IncentiveVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncentiveVC.swift; sourceTree = "<group>"; };
@@ -174,11 +155,10 @@
 				260942EC2952BD4C0022A50D /* ViewTestVC.swift */,
 				2689ED412987C8890012BC4D /* ParamSetVC.swift */,
 				2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */,
-				26119D4A2BD79A9000530607 /* MainTestVC2.swift */,
+				26119D4A2BD79A9000530607 /* MainTestVC.swift */,
 				26119D4C2BD79B7100530607 /* MainView.swift */,
-				263565422BD124D90087B4CE /* RTCManager.swift */,
+				263565422BD124D90087B4CE /* MCCManager.swift */,
 				263565402BD122160087B4CE /* ProgressProvider.swift */,
-				2635652C2BCFBB660087B4CE /* FakeScoringMachine */,
 				26C5452B2955B2FE009E0F37 /* Config.swift */,
 				260942DC2952B5050022A50D /* Main.storyboard */,
 				260942DF2952B5060022A50D /* Assets.xcassets */,
@@ -229,47 +209,6 @@
 				269189BF2A8F749100F2B03C /* MiniSizeVC.swift */,
 			);
 			path = Other;
-			sourceTree = "<group>";
-		};
-		2635652C2BCFBB660087B4CE /* FakeScoringMachine */ = {
-			isa = PBXGroup;
-			children = (
-				263565382BD119FD0087B4CE /* BaseFakeScoringMachine.swift */,
-				2635653D2BD11A9A0087B4CE /* FileScoringMachine */,
-				2635653A2BD11A060087B4CE /* FakeScoringMachine */,
-			);
-			path = FakeScoringMachine;
-			sourceTree = "<group>";
-		};
-		2635653A2BD11A060087B4CE /* FakeScoringMachine */ = {
-			isa = PBXGroup;
-			children = (
-				263565222BCFA8470087B4CE /* FakeScoringMachine.swift */,
-				2635653B2BD11A3B0087B4CE /* Other */,
-			);
-			path = FakeScoringMachine;
-			sourceTree = "<group>";
-		};
-		2635653B2BD11A3B0087B4CE /* Other */ = {
-			isa = PBXGroup;
-			children = (
-				263565312BD1095F0087B4CE /* Algorithm.h */,
-				263565322BD1095F0087B4CE /* Algorithm.c */,
-				2635652F2BCFBCBB0087B4CE /* ScoreRecoder.swift */,
-				2635652A2BCFB6670087B4CE /* ScoreAlgorithm.swift */,
-				263565242BCFB60A0087B4CE /* VoicePitchChanger.swift */,
-				263565262BCFB60B0087B4CE /* ToneCalculator.swift */,
-				26119D482BD78CA700530607 /* LyricModel+Extension.swift */,
-			);
-			path = Other;
-			sourceTree = "<group>";
-		};
-		2635653D2BD11A9A0087B4CE /* FileScoringMachine */ = {
-			isa = PBXGroup;
-			children = (
-				2635653E2BD11ABF0087B4CE /* FileScoringMachine.swift */,
-			);
-			path = FileScoringMachine;
 			sourceTree = "<group>";
 		};
 		71C0091C9A3C4A9E26233CC8 /* Frameworks */ = {
@@ -407,8 +346,8 @@
 				260942DB2952B5050022A50D /* ViewController.swift in Sources */,
 				26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */,
 				2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */,
-				263565432BD124D90087B4CE /* RTCManager.swift in Sources */,
-				26119D4B2BD79A9000530607 /* MainTestVC2.swift in Sources */,
+				263565432BD124D90087B4CE /* MCCManager.swift in Sources */,
+				26119D4B2BD79A9000530607 /* MainTestVC.swift in Sources */,
 				26C5452C2955B2FE009E0F37 /* Config.swift in Sources */,
 				26E212002B2AF8AD00297136 /* DownloadView.swift in Sources */,
 				260942D72952B5050022A50D /* AppDelegate.swift in Sources */,
@@ -418,22 +357,13 @@
 				260942D92952B5050022A50D /* SceneDelegate.swift in Sources */,
 				26C5452429557D25009E0F37 /* LyricsTestVC.swift in Sources */,
 				26E5BF7F299245E10051AF67 /* SearchVC.swift in Sources */,
-				26119D492BD78CA700530607 /* LyricModel+Extension.swift in Sources */,
-				263565332BD1095F0087B4CE /* Algorithm.c in Sources */,
 				26119D4D2BD79B7100530607 /* MainView.swift in Sources */,
 				2602311E29C9DCDF0036F74A /* KTVView.swift in Sources */,
 				2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */,
-				263565292BCFB60B0087B4CE /* ToneCalculator.swift in Sources */,
-				2635653F2BD11ABF0087B4CE /* FileScoringMachine.swift in Sources */,
 				26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */,
 				263565412BD122160087B4CE /* ProgressProvider.swift in Sources */,
 				269189C02A8F749100F2B03C /* MiniSizeVC.swift in Sources */,
-				263565302BCFBCBB0087B4CE /* ScoreRecoder.swift in Sources */,
-				2635652B2BCFB6670087B4CE /* ScoreAlgorithm.swift in Sources */,
-				263565232BCFA8470087B4CE /* FakeScoringMachine.swift in Sources */,
-				263565272BCFB60B0087B4CE /* VoicePitchChanger.swift in Sources */,
 				26E5BFBC29926F2D0051AF67 /* GCDTimer.swift in Sources */,
-				263565392BD119FD0087B4CE /* BaseFakeScoringMachine.swift in Sources */,
 				2689ED422987C8890012BC4D /* ParamSetVC.swift in Sources */,
 				26105FE52966787A00712EDA /* EmitterVC.swift in Sources */,
 				26D01F9A2977D7F500B9D31A /* ScoreAniVC.swift in Sources */,
