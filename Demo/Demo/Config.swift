@@ -16,13 +16,13 @@ struct Config {
     static let mccUid: Int = 333
     
     /// agora important vars
-    static let rtcAppId = <#rtcAppId without Token#>
-    static let mccAppId = <#mccAppId#>
-    static let mccCertificate = <#mccCertificate#>
+    static let rtcAppId = <#rtcAppId#>
+    static var mccAppId = <#mccAppId#>
+    static var mccCertificate = <#mccCertificate#>
     
     /// ysd important vars
     static let pid = <#pid#>
     static let pKey = <#pKey#>
-    static let token = <#token#>
-    static let userId = <#userId#>
+    static var token: String? = <#token#>
+    static var userId: String? = <#userId#>
 }

@@ -17,7 +17,7 @@ class MainTestVC: UIViewController {
     private let mccManager = MCCManager()
     /// 进度进度校准和进度提供者
     private let progressProvider = ProgressProvider()
-    private let songId = 40289835
+    private var songId = 40289835
     var lyricModel: LyricModel!
     fileprivate let logTag = "MainTestVC"
     
@@ -70,6 +70,7 @@ extension MainTestVC: MCCManagerDelegate {
             guard let self = self else {
                 return
             }
+            songId = mccManager.getInternalSongCode(songId: songId)
             mccManager.createMusicPlayer()
             mccManager.preload(songId: songId)
         }

@@ -96,11 +96,8 @@ class MCCManager: NSObject {
     }
     
     func preload(songId: Int) {
-        Log.info(text: "getSongCode \(songId)", tag: logTag)
-        let newSongId = getSongCode(songId: songId)
-        
-        Log.info(text: "preload \(newSongId)", tag: logTag)
-        let ret = mccExService.preload(newSongId)
+        Log.info(text: "preload \(songId)", tag: logTag)
+        let ret = mccExService.preload(songId)
         if ret == nil {
             Log.errorText(text: "preload error", tag: logTag)
         }
@@ -109,7 +106,7 @@ class MCCManager: NSObject {
         }
     }
     
-    func getSongCode(songId: Int) -> Int {
+    func getInternalSongCode(songId: Int) -> Int {
         guard let mcc = mccExService else { return 0 }
         let musicId = "\(songId)"
         let jsonOption = "{\"format\":{\"highPart\":0}}"
@@ -118,8 +115,7 @@ class MCCManager: NSObject {
     }
     
     func open(songId: Int) {
-        let newSongId = getSongCode(songId: songId)
-        let ret = mpk.openMedia(songCode: newSongId, startPos: 0)
+        let ret = mpk.openMedia(songCode: songId, startPos: 0)
         if ret != 0 {
             Log.errorText(text: "openMedia error \(ret)", tag: logTag)
             return
@@ -162,9 +158,7 @@ class MCCManager: NSObject {
     }
     
     func startScore(songId: Int) {
-        let newSongId = getSongCode(songId: songId)
-        
-        let ret = mccExService.startScore(newSongId)
+        let ret = mccExService.startScore(songId)
         if ret != 0 {
             Log.errorText(text: "startScore error \(ret)", tag: logTag)
         }
