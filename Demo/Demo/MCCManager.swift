@@ -59,13 +59,13 @@ class MCCManager: NSObject {
         agoraKit.leaveChannel()
     }
     
-    func initMccEx() {
+    func initMccEx(pid: String, pKey: String, token: String, userId: String) {
         Log.info(text: "initMccEx", tag: logTag)
         let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
-        let pid = Config.pid
-        let pKey = Config.pKey
-        let token = Config.token
-        let userId = Config.userId
+        let pid = pid
+        let pKey = pKey
+        let token = token
+        let userId = userId
         let vendorConfig = AgoraYSDVendorConfigure(appId: pid,
                                                    appKey: pKey,
                                                    token: token,
@@ -153,8 +153,8 @@ class MCCManager: NSObject {
         }
     }
     /// 跳过前奏
-    func skipMusicPrelude(preludeEndPosition: UInt) {
-        mpk.seek(toPosition: Int(preludeEndPosition))
+    func seek(position: UInt) {
+        mpk.seek(toPosition: Int(position))
     }
     
     func startScore(songId: Int) {

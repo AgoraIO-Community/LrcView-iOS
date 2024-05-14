@@ -14,16 +14,16 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target = '10.0'
   spec.swift_versions = "5.0"
   spec.requires_arc  = true
-  spec.dependency 'AgoraComponetLog'
+  spec.dependency 'AgoraComponetLog', "0.0.2"
   spec.dependency 'Zip'
   spec.resource_bundles = {
     'AgoraLyricsScoreBundle' => ['AgoraLyricsScore/Resources/*.xcassets']
   }
   
-#spec.test_spec 'Tests' do |test_spec|
-#    test_spec.source_files = "AgoraLyricsScore/Tests/**/*.{swift}"
-#    test_spec.resource = "AgoraLyricsScore/Tests/Resource/*"
-#    test_spec.frameworks = 'UIKit','Foundation'
+spec.test_spec 'Tests' do |test_spec|
+    test_spec.source_files = "AgoraLyricsScore/Tests/**/*.{swift}"
+    test_spec.resource = "AgoraLyricsScore/Tests/Resource/*"
+    test_spec.frameworks = 'UIKit','Foundation'
 ##    test_spec.requires_app_host = true
-#end
+end
 end

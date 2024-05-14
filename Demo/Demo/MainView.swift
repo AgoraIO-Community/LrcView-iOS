@@ -172,7 +172,6 @@ class MainView: UIView {
         karaokeView.scoringView.defaultPitchCursorX = param.scoring.defaultPitchCursorX
         karaokeView.scoringView.topSpaces = param.scoring.topSpaces
         karaokeView.scoringView.viewHeight = param.scoring.viewHeight
-        karaokeView.scoringView.hitScoreThreshold = param.scoring.hitScoreThreshold
         karaokeView.scoringView.movingSpeedFactor = param.scoring.movingSpeedFactor
         karaokeView.scoringView.showDebugView = param.scoring.showDebugView
     }

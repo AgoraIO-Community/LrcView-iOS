@@ -25,12 +25,16 @@
 		263565432BD124D90087B4CE /* MCCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565422BD124D90087B4CE /* MCCManager.swift */; };
 		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
+		268018502BF1F54800325584 /* MainTestVC+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2680184F2BF1F54800325584 /* MainTestVC+Debug.swift */; };
+		268018532BF21EA600325584 /* 4875936889260991133.pitch in Resources */ = {isa = PBXBuildFile; fileRef = 268018512BF21EA600325584 /* 4875936889260991133.pitch */; };
+		268018542BF21EA600325584 /* 4875936889260991133.krc in Resources */ = {isa = PBXBuildFile; fileRef = 268018522BF21EA600325584 /* 4875936889260991133.krc */; };
 		2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */; };
 		2689ED3E298654C90012BC4D /* IncentiveVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED3D298654C90012BC4D /* IncentiveVC.swift */; };
 		2689ED422987C8890012BC4D /* ParamSetVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED412987C8890012BC4D /* ParamSetVC.swift */; };
 		2689ED462988EA540012BC4D /* ParamSetVC+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */; };
 		2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED472988FDE10012BC4D /* LyricLabelVC.swift */; };
 		269189C02A8F749100F2B03C /* MiniSizeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269189BF2A8F749100F2B03C /* MiniSizeVC.swift */; };
+		269F0F902BF308B500401BFE /* AccessProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269F0F8F2BF308B500401BFE /* AccessProvider.swift */; };
 		26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */; };
 		26C5452429557D25009E0F37 /* LyricsTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452329557D25009E0F37 /* LyricsTestVC.swift */; };
 		26C5452C2955B2FE009E0F37 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452B2955B2FE009E0F37 /* Config.swift */; };
@@ -67,12 +71,16 @@
 		263565402BD122160087B4CE /* ProgressProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressProvider.swift; sourceTree = "<group>"; };
 		263565422BD124D90087B4CE /* MCCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCCManager.swift; sourceTree = "<group>"; };
 		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
+		2680184F2BF1F54800325584 /* MainTestVC+Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainTestVC+Debug.swift"; sourceTree = "<group>"; };
+		268018512BF21EA600325584 /* 4875936889260991133.pitch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 4875936889260991133.pitch; sourceTree = "<group>"; };
+		268018522BF21EA600325584 /* 4875936889260991133.krc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 4875936889260991133.krc; sourceTree = "<group>"; };
 		2682B05A2954535E005285B9 /* FirstToneHintViewTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstToneHintViewTestVC.swift; sourceTree = "<group>"; };
 		2689ED3D298654C90012BC4D /* IncentiveVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncentiveVC.swift; sourceTree = "<group>"; };
 		2689ED412987C8890012BC4D /* ParamSetVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParamSetVC.swift; sourceTree = "<group>"; };
 		2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParamSetVC+Info.swift"; sourceTree = "<group>"; };
 		2689ED472988FDE10012BC4D /* LyricLabelVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricLabelVC.swift; sourceTree = "<group>"; };
 		269189BF2A8F749100F2B03C /* MiniSizeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniSizeVC.swift; sourceTree = "<group>"; };
+		269F0F8F2BF308B500401BFE /* AccessProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessProvider.swift; sourceTree = "<group>"; };
 		26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoLyricsTestVC.swift; sourceTree = "<group>"; };
 		26C5452329557D25009E0F37 /* LyricsTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsTestVC.swift; sourceTree = "<group>"; };
 		26C5452729559918009E0F37 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -152,10 +160,12 @@
 				260942D62952B5050022A50D /* AppDelegate.swift */,
 				260942D82952B5050022A50D /* SceneDelegate.swift */,
 				260942DA2952B5050022A50D /* ViewController.swift */,
+				269F0F8F2BF308B500401BFE /* AccessProvider.swift */,
 				260942EC2952BD4C0022A50D /* ViewTestVC.swift */,
 				2689ED412987C8890012BC4D /* ParamSetVC.swift */,
 				2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */,
 				26119D4A2BD79A9000530607 /* MainTestVC.swift */,
+				2680184F2BF1F54800325584 /* MainTestVC+Debug.swift */,
 				26119D4C2BD79B7100530607 /* MainView.swift */,
 				263565422BD124D90087B4CE /* MCCManager.swift */,
 				263565402BD122160087B4CE /* ProgressProvider.swift */,
@@ -177,6 +187,8 @@
 				260942FC295302370022A50D /* 745012.xml */,
 				2609430029530FCC0022A50D /* lrc.lrc */,
 				26C545332955B6C2009E0F37 /* 105780.xml */,
+				268018522BF21EA600325584 /* 4875936889260991133.krc */,
+				268018512BF21EA600325584 /* 4875936889260991133.pitch */,
 				26C545312955B684009E0F37 /* music.mp3 */,
 			);
 			path = Resource;
@@ -285,7 +297,9 @@
 				260942FD295302370022A50D /* 745012.xml in Resources */,
 				2609430129530FCC0022A50D /* lrc.lrc in Resources */,
 				26C545322955B684009E0F37 /* music.mp3 in Resources */,
+				268018542BF21EA600325584 /* 4875936889260991133.krc in Resources */,
 				260942E32952B5060022A50D /* LaunchScreen.storyboard in Resources */,
+				268018532BF21EA600325584 /* 4875936889260991133.pitch in Resources */,
 				26E5BF7D2990D6B30051AF67 /* 235653.xml in Resources */,
 				26C545342955B6C2009E0F37 /* 105780.xml in Resources */,
 				260942DE2952B5050022A50D /* Main.storyboard in Resources */,
@@ -345,9 +359,11 @@
 			files = (
 				260942DB2952B5050022A50D /* ViewController.swift in Sources */,
 				26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */,
+				269F0F902BF308B500401BFE /* AccessProvider.swift in Sources */,
 				2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */,
 				263565432BD124D90087B4CE /* MCCManager.swift in Sources */,
 				26119D4B2BD79A9000530607 /* MainTestVC.swift in Sources */,
+				268018502BF1F54800325584 /* MainTestVC+Debug.swift in Sources */,
 				26C5452C2955B2FE009E0F37 /* Config.swift in Sources */,
 				26E212002B2AF8AD00297136 /* DownloadView.swift in Sources */,
 				260942D72952B5050022A50D /* AppDelegate.swift in Sources */,
@@ -517,7 +533,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -542,7 +558,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Demo/curl",
 				);
-				MARKETING_VERSION = 1.1.6;
+				MARKETING_VERSION = 2.0.0.130;
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.test.entfull;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -561,7 +577,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -586,7 +602,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Demo/curl",
 				);
-				MARKETING_VERSION = 1.1.6;
+				MARKETING_VERSION = 2.0.0.130;
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.test.entfull;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

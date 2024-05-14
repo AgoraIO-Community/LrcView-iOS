@@ -31,9 +31,7 @@ class ParamSetVC: UIViewController {
     func createData() {
         list = [Section(title: "karaoke", rows: [.init(title: "backgroundImage"),
                                                  .init(title: "spacing"),
-                                                 .init(title: "scoringEnabled"),
-                                                 .init(title: "打分难易程度（越大越难）"),
-                                                 .init(title: "打分分值补偿")]),
+                                                 .init(title: "scoringEnabled")]),
                 Section(title: "Lyrics", rows: [.init(title: "隐藏等待开始圆点"),
                                                 .init(title: "等待开始圆点颜色"),
                                                 .init(title: "等待开始圆点大小"),
@@ -58,7 +56,6 @@ class ParamSetVC: UIViewController {
                                                  .init(title: "音准线匹配后的背景色"),
                                                  .init(title: "是否隐藏粒子动画效果"),
                                                  .init(title: "使用图片创建粒子动画"),
-                                                 .init(title: "打分容忍度 范围：0-1"),
                                                  .init(title: "showDebugView"),
                 ]),
         ]
@@ -120,14 +117,6 @@ class ParamSetVC: UIViewController {
             
             if indexPath.row == 2 { /** karaokeView.scoringEnabled **/
                 cell.detailTextLabel?.text = "\(param.karaoke.scoringEnabled ? "true" : "false")"
-            }
-            
-            if indexPath.row == 3 {
-                cell.detailTextLabel?.text = "\(param.karaoke.scoreLevel)"
-            }
-            
-            if indexPath.row == 4 { /** karaokeView.scoringEnabled **/
-                cell.detailTextLabel?.text = "\(param.karaoke.scoreCompensationOffset)"
             }
         }
         
@@ -224,13 +213,8 @@ class ParamSetVC: UIViewController {
                 cell.detailTextLabel?.text = param.scoring.emitterImages != nil ? "有" : "无"
             }
             
-            /// 打分容忍度 范围：0-1
-            if indexPath.row == 9 {
-                cell.detailTextLabel?.text = "\(param.scoring.hitScoreThreshold)"
-            }
-            
             /// showDebugView
-            if indexPath.row == 10 {
+            if indexPath.row == 9 {
                 cell.detailTextLabel?.text = "\(param.scoring.showDebugView)"
             }
         }
@@ -248,14 +232,6 @@ class ParamSetVC: UIViewController {
             
             if indexPath.row == 2 { /** karaokeView.scoringEnabled **/
                 param.karaoke.scoringEnabled = !param.karaoke.scoringEnabled
-            }
-            
-            if indexPath.row == 3 {
-                param.karaoke.scoreLevel = genValue(current: param.karaoke.scoreLevel, ops: [0, 5, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 25, 30, 50, 70, 100])
-            }
-            
-            if indexPath.row == 4 { /** karaokeView.scoringEnabled **/
-                param.karaoke.scoreCompensationOffset = genValue(current: param.karaoke.scoreCompensationOffset, ops: [-100, -70, -10, 0, 10, 70, 100])
             }
         }
         
@@ -358,13 +334,8 @@ class ParamSetVC: UIViewController {
                 }
             }
             
-            /// 打分容忍度 范围：0-1
-            if indexPath.row == 9 {
-                param.scoring.hitScoreThreshold = genValue(current: param.scoring.hitScoreThreshold, ops: [0, 0.2, 0.5, 0.7, 1])
-            }
-            
             /// showDebugView
-            if indexPath.row == 10 {
+            if indexPath.row == 9 {
                 param.scoring.showDebugView = !param.scoring.showDebugView
             }
         }

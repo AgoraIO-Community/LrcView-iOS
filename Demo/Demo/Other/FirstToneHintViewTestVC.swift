@@ -13,16 +13,19 @@ class FirstToneHintViewTestVC: UIViewController {
 
     let karaokeView = KaraokeView()
     private var timer = GCDTimer()
-    var progress = 0
+    var progress: UInt = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
-        let data = try! Data(contentsOf: url)
-//        let model = KaraokeView.parseLyricData(data: data)!
+        
+        
+        let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "4875936889260991133", ofType: "krc")!))
+        let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
+        
+        let model = KaraokeView.parseLyricData(krcFileData: krcFileData, pitchFileData: pitchFileData)!
 //        model.preludeEndPosition = 6 * 1000
-//        karaokeView.setLyricData(data: model)
+        karaokeView.setLyricData(data: model)
     }
     
     func setupUI() {
@@ -46,7 +49,7 @@ class FirstToneHintViewTestVC: UIViewController {
         timer.scheduledMillisecondsTimer(withName: "ExpTestVC", countDown: 1000000, milliseconds: 10, queue: .main) { [weak self](_, time) in
             guard let self = self else { return }
             self.progress += 10
-//            self.karaokeView.setProgress(progress: self.progress)
+            self.karaokeView.setProgress(progressInMs: self.progress)
         }
     }
 }
