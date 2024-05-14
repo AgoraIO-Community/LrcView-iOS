@@ -69,6 +69,7 @@ class LyricMachine {
     private func _setProgress(progress: UInt) {
         guard let data = lyricData else { return }
         let remainingTime = Int(data.preludeEndPosition) - Int(progress)
+        print("remainingTime: \(remainingTime)")
         invokeLyricMachine(didUpdate: remainingTime)
         
         if currentIndex < dataList.count {

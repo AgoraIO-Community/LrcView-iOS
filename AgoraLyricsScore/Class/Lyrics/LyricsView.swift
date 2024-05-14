@@ -176,7 +176,7 @@ extension LyricsView {
         noLyricTipsLabel.isHidden = !isNoLyric
         tableView.isHidden = isNoLyric
         tableView.isScrollEnabled = draggable
-        firstToneHintView.isHidden = isNoLyric ? true : waitingViewHidden
+        firstToneHintView.mustHidden = isNoLyric ? true : waitingViewHidden
         firstToneHintView.style = firstToneHintViewStyle
         let constant = firstToneHintViewStyle.size + firstToneHintViewStyle.bottomMargin
         tableViewTopConstraint.constant = constant

@@ -22,7 +22,7 @@ public class FirstToneHintViewStyle: NSObject {
 
 class FirstToneHintView: UIView {
     var style = FirstToneHintViewStyle() { didSet { updateUI() } }
-    var mustHidden = false
+    var mustHidden = false { didSet { updateHidden() } }
     private let loadViews: [UIView] = [.init(), .init(), .init()]
     private var loadViewConstraints = [NSLayoutConstraint]()
     /// 剩余开始时间 ms
@@ -77,6 +77,10 @@ class FirstToneHintView: UIView {
         }
     }
     
+    private func updateHidden() {
+        isHidden = mustHidden
+    }
+    
     func updateStyle(style: FirstToneHintViewStyle) {
         self.style = style
         updateUI()
@@ -89,6 +93,12 @@ class FirstToneHintView: UIView {
             reset()
             return
         }
+        
+        if mustHidden {
+            return
+        }
+        
+        isHidden = false
         
         /** 过滤，500ms设置一次 **/
         if lastRemainingTime == 0 {

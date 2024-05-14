@@ -19,7 +19,7 @@ class PitchParser {
         do {
             let pitchModel = try JSONDecoder().decode(PitchModel.self, from: data)
             return pitchModel
-        } catch {
+        } catch let error {
             Log.error(error: error.localizedDescription, tag: logTag)
             return nil
         }
