@@ -7,14 +7,11 @@ target 'Demo' do
   source 'https://github.com/CocoaPods/Specs.git'
   
   pod "AgoraLyricsScore", :path => "../AgoraLyricsScore.podspec", :testspecs => ['Tests']
-#  pod "AgoraLyricsScore", "1.1.5"
   pod 'RTMTokenBuilder', "1.0.0"
-#  pod 'AgoraAudio_Special_iOS', '4.1.1.7'
 #  pod 'AgoraRtcEngine_Special_iOS', '4.1.1.17'
   pod 'AgoraRtcEngine_iOS', :path => "/Volumes/T5/PodSpec/mccysd/AgoraRtcEngine_iOS.podspec"
   pod "Zip"
   pod "ScoreEffectUI", :path => "../../ScoringEffectUI/ScoreEffectUI/ScoreEffectUI.podspec", :testspecs => ['Tests']
-#  pod 'AgoraComponetLog', :path => "/Volumes/T5/公司项目/AgoraComponetLog/AgoraComponetLog/AgoraComponetLog_Local.podspec"
   pod 'AgoraComponetLog', "0.0.2"
 end
 
