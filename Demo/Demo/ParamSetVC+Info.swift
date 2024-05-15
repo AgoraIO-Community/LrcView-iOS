@@ -57,8 +57,6 @@ class LyricViewParam {
     var inactiveLineFontSize = UIFont(name: "PingFangSC-Semibold", size: 15)!
     /// 高亮歌词文字大小
     var activeLineUpcomingFontSize = UIFont(name: "PingFangSC-Semibold", size: 18)!
-    /// 歌词最大宽度
-    var maxWidth: CGFloat = UIScreen.main.bounds.width - 30
     /// 歌词上下间距
     var lyricLineSpacing: CGFloat = 10
     /// 等待开始圆点风格

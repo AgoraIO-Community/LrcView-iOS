@@ -26,8 +26,8 @@ class MCCManager: NSObject {
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
-        agoraKit.disableAudio()
-        mccExService.destroyMusicPlayer(mpk)
+        agoraKit?.disableAudio()
+        mccExService?.destroyMusicPlayer(mpk)
         AgoraMusicContentCenterEx.destroy()
         AgoraRtcEngineKit.destroy()
     }
@@ -143,6 +143,16 @@ class MCCManager: NSObject {
         }
     }
     
+    func resumeMusic() {
+        let ret = mpk.resume()
+        if ret != 0 {
+            Log.errorText(text: "resumeMusic error \(ret)", tag: logTag)
+        }
+        else {
+            Log.info(text: "resumeMusic success", tag: logTag)
+        }
+    }
+    
     func stopMusic() {
         let ret = mpk.stop()
         if ret != 0 {
@@ -154,6 +164,7 @@ class MCCManager: NSObject {
     }
     /// 跳过前奏
     func seek(position: UInt) {
+        Log.info(text: "seek \(Int(position))", tag: logTag)
         mpk.seek(toPosition: Int(position))
     }
     

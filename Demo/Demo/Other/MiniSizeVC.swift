@@ -56,6 +56,12 @@ class MiniSizeVC: UIViewController {
         super.viewDidLoad()
         setupUI()
         commonInit()
+        
+        let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "4875936889260991133", ofType: "krc")!))
+        let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
+        
+        let model = KaraokeView.parseLyricData(krcFileData: krcFileData, pitchFileData: pitchFileData)!
+        karaokeView.setLyricData(data: model)
     }
     
     deinit {
@@ -123,19 +129,6 @@ class MiniSizeVC: UIViewController {
         karaokeView.widthAnchor.constraint(equalToConstant: 140).isActive = true
         karaokeView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         karaokeView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        
-//        gradeView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: 15).isActive = true
-//        gradeView.leftAnchor.constraint(equalTo: karaokeView.leftAnchor, constant: 15).isActive = true
-//        gradeView.rightAnchor.constraint(equalTo: karaokeView.rightAnchor, constant: -15).isActive = true
-//        gradeView.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//
-//        incentiveView.centerYAnchor.constraint(equalTo: karaokeView.scoringView.centerYAnchor).isActive = true
-//        incentiveView.centerXAnchor.constraint(equalTo: karaokeView.centerXAnchor, constant: -10).isActive = true
-//
-//        lineScoreView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: karaokeView.scoringView.defaultPitchCursorX).isActive = true
-//        lineScoreView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: karaokeView.scoringView.topSpaces).isActive = true
-//        lineScoreView.heightAnchor.constraint(equalToConstant: karaokeView.scoringView.viewHeight).isActive = true
-//        lineScoreView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
         skipButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100).isActive = true
         skipButton.topAnchor.constraint(equalTo: karaokeView.bottomAnchor, constant: 30).isActive = true
@@ -369,7 +362,6 @@ class MiniSizeVC: UIViewController {
         karaokeView.lyricsView.firstToneHintViewStyle.backgroundColor = param.lyric.firstToneHintViewStyle.backgroundColor
         karaokeView.lyricsView.firstToneHintViewStyle.size = param.lyric.firstToneHintViewStyle.size
         karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = param.lyric.firstToneHintViewStyle.bottomMargin
-        karaokeView.lyricsView.maxWidth = param.lyric.maxWidth
         karaokeView.lyricsView.draggable = param.lyric.draggable
         
         karaokeView.scoringView.particleEffectHidden = param.scoring.particleEffectHidden

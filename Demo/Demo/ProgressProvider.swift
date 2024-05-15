@@ -24,7 +24,6 @@ class ProgressProvider: NSObject {
     private var lastPrpgress: UInt = 0
     
     func start() {
-        isPause = false
         timer.scheduledMillisecondsTimer(withName: "ProgressProvider",
                                          countDown: 1000000,
                                          milliseconds: 20,
@@ -62,7 +61,8 @@ class ProgressProvider: NSObject {
     }
     
     func stop() {
-        isPause = true
+        isPause = false
+        lastPrpgress = 0
         timer.destoryTimer(withName: "ProgressProvider")
     }
 }

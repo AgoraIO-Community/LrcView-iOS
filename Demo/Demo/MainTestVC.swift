@@ -17,12 +17,17 @@ class MainTestVC: UIViewController {
     private let mccManager = MCCManager()
     /// 进度进度校准和进度提供者
     private let progressProvider = ProgressProvider()
-    private var songId = 40289835
+    private var songId: Int? = 239038150
+    private var songIds = [40289835, 239038150]
     var lyricModel: LyricModel!
     let logTag = "MainTestVC"
     fileprivate var isSeeking = false
     fileprivate var canUseParamsSet = false
     fileprivate var noLyric = false
+    var isPause = false
+    /// 七里香 972295
+    /// 明月几时有：239038150
+    /// 十年 40289835
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
@@ -109,9 +114,15 @@ extension MainTestVC: MCCManagerDelegate {
             guard let self = self else {
                 return
             }
-            songId = mccManager.getInternalSongCode(songId: songId)
+            songIds = songIds.map({ [weak self] in
+                guard let self = self else {
+                    return $0
+                }
+                return self.mccManager.getInternalSongCode(songId: $0)
+            })
+            songId = songIds.first
             mccManager.createMusicPlayer()
-            mccManager.preload(songId: songId)
+            mccManager.preload(songId: songId!)
         }
     }
     
@@ -133,7 +144,7 @@ extension MainTestVC: MCCManagerDelegate {
     }
     
     func onMccExScoreStart(_ manager: MCCManager) {
-        manager.open(songId: songId)
+        manager.open(songId: songId!)
     }
     
     func onOpenMusic(_ manager: MCCManager) {
@@ -211,13 +222,26 @@ extension MainTestVC: MainViewDelegate, KaraokeDelegate {
         switch onAction {
         case .skip:
             Log.info(text: "skip", tag: self.logTag)
-            mccManager.seek(position: lyricModel.preludeEndPosition)
-            progressProvider.seek(position: lyricModel.preludeEndPosition)
+            
+            var position = lyricModel.preludeEndPosition - 1000
+            if position > 1000 {
+                position -= 1000
+            }
+            mccManager.seek(position: position)
+            progressProvider.seek(position: position)
         case .pause:
             Log.info(text: "pause", tag: self.logTag)
-            mccManager.pauseScore()
-            mccManager.pauseMusic()
-            progressProvider.pause()
+            if isPause {
+                mccManager.resumeScore()
+                mccManager.resumeMusic()
+                progressProvider.resume()
+            }
+            else {
+                mccManager.pauseScore()
+                mccManager.pauseMusic()
+                progressProvider.pause()
+            }
+            isPause = !isPause
         case .set:
             guard canUseParamsSet else {
                 return
@@ -228,7 +252,13 @@ extension MainTestVC: MainViewDelegate, KaraokeDelegate {
             present(vc, animated: true)
         case .change:
             Log.info(text: "change", tag: self.logTag)
+            progressProvider.stop()
+            mccManager.pauseScore()
+            mccManager.stopMusic()
             resetView()
+            songId == songIds.last ? (songId = songIds.first) : (songId = songIds[songIds.firstIndex(of: songId!)! + 1])
+            mccManager.preload(songId: songId!)
+            break
         case .quick:
             Log.info(text: "change", tag: self.logTag)
             mccManager.pauseScore()
@@ -254,15 +284,15 @@ extension MainTestVC: ParamSetVCDelegate {
     func didSetParam(param: Param, noLyric: Bool) {
         self.noLyric = noLyric
         
+        progressProvider.stop()
         mccManager.stopMusic()
         mccManager.pauseScore()
-        progressProvider.stop()
         
         mainView.karaokeView.reset()
         mainView.incentiveView.reset()
         mainView.gradeView.reset()
         mainView.updateView(param: param)
         
-        mccManager.preload(songId: songId)
+        mccManager.preload(songId: songId!)
     }
 }

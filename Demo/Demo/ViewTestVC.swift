@@ -161,11 +161,6 @@ extension ViewTestVC: UITableViewDelegate, UITableViewDataSource {
                 reset()
                 return
             }
-            if indexPath.row == 7 { /** lyricsView.maxWidth **/
-                karaokeView.lyricsView.maxWidth = CGFloat.random(in: 100...350)
-                reset()
-                return
-            }
         }
         
         if indexPath.section == 2 {
