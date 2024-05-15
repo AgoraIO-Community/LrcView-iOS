@@ -31,8 +31,6 @@ public class LyricsView: UIView {
     @objc public var inactiveLineFontSize = UIFont(name: "PingFangSC-Semibold", size: 15)!
     /// 活跃歌词文字大小 （即将唱、正在唱）
     @objc public var activeLineUpcomingFontSize = UIFont(name: "PingFangSC-Semibold", size: 18)!
-    /// 歌词最大宽度
-    @objc public var maxWidth: CGFloat = UIScreen.main.bounds.width - 30
     /// 歌词上下间距
     @objc public var lyricLineSpacing: CGFloat = 10
     /// 等待开始圆点风格
@@ -216,7 +214,6 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
         cell.textHighlightedColor = activeLinePlayedTextColor
         cell.textNormalFontSize = inactiveLineFontSize
         cell.textHighlightFontSize = activeLineUpcomingFontSize
-        cell.maxWidth = maxWidth
         cell.lyricLineSpacing = lyricLineSpacing
         
         let model = dataList[indexPath.row]

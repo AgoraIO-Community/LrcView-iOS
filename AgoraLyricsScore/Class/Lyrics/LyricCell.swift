@@ -29,10 +29,6 @@ class LyricCell: UITableViewCell {
     var textHighlightFontSize: UIFont = .systemFont(ofSize: 18) {
         didSet { updateUI() }
     }
-    /// 最大宽度
-    var maxWidth: CGFloat = UIScreen.main.bounds.width - 30 {
-        didSet { updateUI() }
-    }
     /// 上下间距
     var lyricLineSpacing: CGFloat = 10 {
         didSet { updateUI() }

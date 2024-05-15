@@ -33,6 +33,7 @@ extension ScoringMachine {
             let newDrawBeginTime = max(progress, preHitInfo.beginTime)
             let distance = abs(Int(newDrawBeginTime) - Int(preHitInfo.drawEndTime))
             if distance < pitchDuration { /** 追加 **/
+                /// if distance less than 50ms, it will be added to the previous pitch, and add the distance to the drawDuration
                 let drawDuration = min(preHitInfo.drawDuration + UInt(pitchDuration) + UInt(distance), preHitInfo.duration)
                 preHitInfo.drawDuration = drawDuration
                 return currentHighlightInfos
