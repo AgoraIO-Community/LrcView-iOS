@@ -117,15 +117,14 @@ extension MainTestVC2: RTCManagerDelegate {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             mainView.setConsoleText(displayText)
+            mainView.karaokeView.setPitch(speakerPitch: Double(item.speakerPitch),
+                                          pitchScore: item.pitchScore,
+                                          progressInMs: item.progressInMs)
         }
         
         if (item.speakerPitch < 0) {
-            print("")
+            Log.errorText(text: "speakerPitch < 0")
         }
-        
-        mainView.karaokeView.setPitch(speakerPitch: Double(item.speakerPitch),
-                                      pitchScore: item.pitchScore,
-                                      progressInMs: item.progressInMs)
     }
     
     func onLineScore(_ songCode: Int, value: AgoraCumulativeScoreData) {

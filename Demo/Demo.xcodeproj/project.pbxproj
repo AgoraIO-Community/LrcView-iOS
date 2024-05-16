@@ -57,6 +57,7 @@
 		26E5BF7F299245E10051AF67 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BF7E299245E10051AF67 /* SearchVC.swift */; };
 		26E5BFBC29926F2D0051AF67 /* GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */; };
 		26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E8030E298BAF1B00DBF23F /* OCVC.m */; };
+		26ED13BC2BF5E81600AF9798 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26ED13BB2BF5E81600AF9798 /* Log.swift */; };
 		F88793560A341F9CBCF66020 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -118,6 +119,7 @@
 		26E8030C298BAF1A00DBF23F /* Demo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Demo-Bridging-Header.h"; sourceTree = "<group>"; };
 		26E8030D298BAF1B00DBF23F /* OCVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCVC.h; sourceTree = "<group>"; };
 		26E8030E298BAF1B00DBF23F /* OCVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCVC.m; sourceTree = "<group>"; };
+		26ED13BB2BF5E81600AF9798 /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		97B9305873CDD18897DEA957 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		B11BABF3447B1F591F0171BB /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 		260942D52952B5050022A50D /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				26ED13BA2BF5E81600AF9798 /* Log */,
 				2602311C29C9DCC40036F74A /* KTVView */,
 				2632A2CC299B73AD00C2A534 /* Other */,
 				260942F92952FD410022A50D /* Resource */,
@@ -277,6 +280,14 @@
 				2635653E2BD11ABF0087B4CE /* FileScoringMachine.swift */,
 			);
 			path = FileScoringMachine;
+			sourceTree = "<group>";
+		};
+		26ED13BA2BF5E81600AF9798 /* Log */ = {
+			isa = PBXGroup;
+			children = (
+				26ED13BB2BF5E81600AF9798 /* Log.swift */,
+			);
+			path = Log;
 			sourceTree = "<group>";
 		};
 		71C0091C9A3C4A9E26233CC8 /* Frameworks */ = {
@@ -419,6 +430,7 @@
 				26C5452C2955B2FE009E0F37 /* Config.swift in Sources */,
 				26E212002B2AF8AD00297136 /* DownloadView.swift in Sources */,
 				260942D72952B5050022A50D /* AppDelegate.swift in Sources */,
+				26ED13BC2BF5E81600AF9798 /* Log.swift in Sources */,
 				26C5452E2955B370009E0F37 /* AVPlayerTestVC.swift in Sources */,
 				2689ED3E298654C90012BC4D /* IncentiveVC.swift in Sources */,
 				26E211FE2B2AF84800297136 /* DownloadVC.swift in Sources */,
