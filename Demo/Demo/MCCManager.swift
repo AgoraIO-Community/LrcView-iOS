@@ -71,6 +71,7 @@ class MCCManager: NSObject {
                                                    token: token,
                                                    userId: userId,
                                                    deviceId: deviceId,
+                                                   urlTokenExpireTime: 15*60,
                                                    chargeMode: .once)
         let config = AgoraMusicContentCenterExConfiguration.init(rtcEngine: agoraKit,
                                                                  vendorConfigure: vendorConfig,
