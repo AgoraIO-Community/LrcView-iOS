@@ -44,8 +44,8 @@ extension ScoringMachine {
             drawBeginTime + drawDuration
         }
         
-        var tone: LyricToneModel {
-            return LyricToneModel(beginTime: beginTime,
+        var tone: LyricToneModelEx {
+            return LyricToneModelEx(beginTime: beginTime,
                                   duration: duration,
                                   word: word,
                                   pitch: pitch,

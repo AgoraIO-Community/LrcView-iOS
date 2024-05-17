@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 
 protocol ParamSetVCDelegate: NSObjectProtocol {
     func didSetParam(param: Param, noLyric: Bool)

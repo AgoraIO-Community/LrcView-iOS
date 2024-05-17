@@ -6,8 +6,9 @@
 //
 
 import UIKit
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 import ScoreEffectUI
+import AgoraLyricsScore
 
 extension MainView {
     enum Action {
@@ -25,7 +26,8 @@ protocol MainViewDelegate: NSObjectProtocol {
 
 class MainView: UIView {
     weak var delegate: MainViewDelegate?
-    let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger(), FileLogger()])
+    let karaokeView = KaraokeViewEx(frame: .zero, loggers: [ConsoleLoggerEx(), FileLoggerEx()])
+    let karaokeView1 = KaraokeView(frame: .zero, loggers: [ConsoleLogger(), FileLogger()])
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()

@@ -9,7 +9,7 @@ import Foundation
 
 extension ScoringMachine {
     /// 创建Scoring内部数据
-    static func createData(data: LyricModel) -> ([UInt], [Info]) {
+    static func createData(data: LyricModelEx) -> ([UInt], [Info]) {
         var array = [Info]()
         for (index, pitchData) in data.pitchDatas.enumerated() {
             let info = Info(beginTime: pitchData.startTime,

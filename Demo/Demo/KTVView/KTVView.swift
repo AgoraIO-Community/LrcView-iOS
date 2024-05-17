@@ -6,12 +6,12 @@
 //
 
 import UIKit
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 import ScoreEffectUI
 
 /// 包装 KaraokeView & LineScoreView & GradeView & incentiveView
 class KTVView: UIView {
-    let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger()])
+    let karaokeView = KaraokeViewEx(frame: .zero, loggers: [ConsoleLoggerEx()])
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()

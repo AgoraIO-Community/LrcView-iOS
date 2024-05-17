@@ -8,11 +8,11 @@
 import UIKit
 import AgoraRtcKit
 import RTMTokenBuilder
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 import ScoreEffectUI
 
 class LyricsTestVC: UIViewController {
-    let karaokeView = KaraokeView()
+    let karaokeView = KaraokeViewEx()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()
     var agoraKit: AgoraRtcEngineKit!
@@ -242,13 +242,13 @@ extension LyricsTestVC: AgoraRtcMediaPlayerDelegate {
     }
 }
 
-extension LyricsTestVC: KaraokeDelegate {
-    func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
+extension LyricsTestVC: KaraokeDelegateEx {
+    func onKaraokeView(view: KaraokeViewEx, didDragTo position: Int) {
         mpk.seek(toPosition: position)
     }
     
-    func onKaraokeView(view: KaraokeView,
-                       didFinishLineWith model: LyricLineModel,
+    func onKaraokeView(view: KaraokeViewEx,
+                       didFinishLineWith model: LyricLineModelEx,
                        score: Int,
                        lineIndex: Int,
                        lineCount: Int) {

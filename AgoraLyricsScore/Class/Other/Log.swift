@@ -36,15 +36,15 @@ class Log {
         provider.warning(text: text, tag: tag)
     }
     
-    static func setLoggers(loggers: [ILogger]) {
+    static func setLoggers(loggers: [ILoggerEx]) {
         provider.loggers = loggers
     }
 }
 
 class LogManager {
     static let share = LogManager()
-    var loggers = [ILogger]()
-    private let queue = DispatchQueue(label: "LogManager")
+    var loggers = [ILoggerEx]()
+    private let queue = DispatchQueue(label: "LogManagerEx")
     let dateFormatter: DateFormatter
     
     init() {
@@ -100,7 +100,7 @@ class LogManager {
             tag: tag)
     }
     
-    fileprivate func log(type: LoggerLevel,
+    fileprivate func log(type: LoggerLevelEx,
                          text: String,
                          tag: String?) {
         queue.async { [weak self] in
@@ -110,7 +110,7 @@ class LogManager {
         }
     }
     
-    func log(content: String, tag: String?, time: String, level: LoggerLevel) {
+    func log(content: String, tag: String?, time: String, level: LoggerLevelEx) {
         for logger in loggers {
             logger.onLog(content: content, tag: tag, time: time, level: level)
         }

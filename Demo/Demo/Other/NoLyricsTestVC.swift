@@ -6,10 +6,10 @@
 //
 
 import UIKit
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 
 class NoLyricsTestVC: UIViewController {
-    let karaokeView = KaraokeView()
+    let karaokeView = KaraokeViewEx()
     
     override func viewDidLoad() {
         super.viewDidLoad()

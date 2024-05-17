@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class ScoringView: UIView {
+public class ScoringViewEx: UIView {
     /// 评分视图高度
     @objc public var viewHeight: CGFloat = 120 { didSet { updateUI() } }
     /// 渲染视图到顶部的间距
@@ -65,7 +65,7 @@ public class ScoringView: UIView {
         localPitchView.reset()
     }
     
-    func setLyricData(data: LyricModel?) {
+    func setLyricData(data: LyricModelEx?) {
         scoringMachine.setLyricData(data: data)
     }
     
@@ -155,7 +155,7 @@ public class ScoringView: UIView {
 }
 
 // MARK: - ScoringMachineDelegate
-extension ScoringView: ScoringMachineDelegate {
+extension ScoringViewEx: ScoringMachineDelegate {
     func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {
         return canvasView.bounds.size
     }

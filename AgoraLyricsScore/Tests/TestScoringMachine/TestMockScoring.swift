@@ -6,11 +6,11 @@
 //
 
 import XCTest
-@testable import AgoraLyricsScore
+@testable import AgoraLyricsScoreEx
 
 class TestMockScoring: XCTestCase, ScoringMachineDelegate {
     override func setUpWithError() throws {
-        Log.setLoggers(loggers: [ConsoleLogger()])
+        Log.setLoggers(loggers: [ConsoleLoggerEx()])
     }
     
     override func tearDownWithError() throws {
@@ -27,7 +27,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
         let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.krc", ofType: nil)!))
         let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
         
-        guard let model = KaraokeView.parseLyricData(krcFileData: krcFileData,
+        guard let model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData,
                                                      pitchFileData: pitchFileData) else {
             XCTFail()
             return
@@ -51,7 +51,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
         let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.krc", ofType: nil)!))
         let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
         
-        guard let model = KaraokeView.parseLyricData(krcFileData: krcFileData,
+        guard let model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData,
                                                      pitchFileData: pitchFileData,
                                                      includeCopyrightSentence: false) else {
             XCTFail()

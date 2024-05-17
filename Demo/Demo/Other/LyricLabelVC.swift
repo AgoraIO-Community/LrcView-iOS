@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 
 class LyricLabelVC: UIViewController {
 //    let label = LyricLabel()

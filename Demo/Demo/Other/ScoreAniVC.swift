@@ -7,7 +7,7 @@
 
 import Foundation
 
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 
 class ScoreAniVC: UIViewController {
 

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 
 struct Section {
     let title: String

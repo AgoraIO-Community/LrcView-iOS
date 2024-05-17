@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import AgoraLyricsScore
+@testable import AgoraLyricsScoreEx
 
 class TestParser: XCTestCase {
     
@@ -87,7 +87,7 @@ class TestParser: XCTestCase {
     
     func testKrcEmptyData() { /** EmptyData **/
         let data = Data()
-        let model = KaraokeView.parseLyricData(krcFileData: data, pitchFileData: data)
+        let model = KaraokeViewEx.parseLyricData(krcFileData: data, pitchFileData: data)
         XCTAssertNil(model)
     }
 }

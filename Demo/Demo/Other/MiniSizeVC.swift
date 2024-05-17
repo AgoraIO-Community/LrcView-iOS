@@ -8,7 +8,7 @@
 import UIKit
 import AgoraRtcKit
 import RTMTokenBuilder
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 import ScoreEffectUI
 
 extension MiniSizeVC {
@@ -19,7 +19,7 @@ extension MiniSizeVC {
 }
 
 class MiniSizeVC: UIViewController {
-    let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger()])
+    let karaokeView = KaraokeViewEx(frame: .zero, loggers: [ConsoleLoggerEx()])
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()
@@ -48,7 +48,7 @@ class MiniSizeVC: UIViewController {
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
-    var lyricModel: LyricModel!
+    var lyricModel: LyricModelEx!
     var noLyric = false
     var isPause = false
     
@@ -60,7 +60,7 @@ class MiniSizeVC: UIViewController {
         let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "4875936889260991133", ofType: "krc")!))
         let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
         
-        let model = KaraokeView.parseLyricData(krcFileData: krcFileData, pitchFileData: pitchFileData)!
+        let model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData, pitchFileData: pitchFileData)!
         karaokeView.setLyricData(data: model)
     }
     
@@ -479,8 +479,8 @@ extension MiniSizeVC: AgoraRtcMediaPlayerDelegate {
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo position: Int) {}
 }
 
-extension MiniSizeVC: KaraokeDelegate {
-    func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
+extension MiniSizeVC: KaraokeDelegateEx {
+    func onKaraokeView(view: KaraokeViewEx, didDragTo position: Int) {
         /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
         self.last = position + 250
         mpk.seek(toPosition: position)
@@ -488,8 +488,8 @@ extension MiniSizeVC: KaraokeDelegate {
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lyricModel.lines.count * 100)
     }
     
-    func onKaraokeView(view: KaraokeView,
-                       didFinishLineWith model: LyricLineModel,
+    func onKaraokeView(view: KaraokeViewEx,
+                       didFinishLineWith model: LyricLineModelEx,
                        score: Int,
                        cumulativeScore: Int,
                        lineIndex: Int,

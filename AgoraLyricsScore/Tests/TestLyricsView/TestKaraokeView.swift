@@ -6,23 +6,23 @@
 //
 
 import XCTest
-@testable import AgoraLyricsScore
+@testable import AgoraLyricsScoreEx
 
-final class TestKaraokeView: XCTestCase, KaraokeDelegate {
-    var karaokeView: KaraokeView!
+final class TestKaraokeView: XCTestCase, KaraokeDelegateEx {
+    var karaokeView: KaraokeViewEx!
     let exp = XCTestExpectation(description: "test TestKaraokeView")
 
     func testExample() throws { /** 重现#CSD-59221、#CSD-60022 **/
-        karaokeView = KaraokeView(frame: .init(x: 0, y: 0, width: 350, height: 400),loggers:[ConsoleLogger()])
+        karaokeView = KaraokeViewEx(frame: .init(x: 0, y: 0, width: 350, height: 400),loggers:[ConsoleLoggerEx()])
         let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.krc", ofType: nil)!))
         let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
         
-        guard let model = KaraokeView.parseLyricData(krcFileData: krcFileData,
+        guard let model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData,
                                                      pitchFileData: pitchFileData) else {
             XCTFail()
             return
         }
-        guard let model = KaraokeView.parseLyricData(krcFileData: krcFileData, pitchFileData: pitchFileData) else {
+        guard let model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData, pitchFileData: pitchFileData) else {
             XCTFail()
             return
         }

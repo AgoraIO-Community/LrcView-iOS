@@ -8,11 +8,11 @@
 import UIKit
 
 protocol LyricsViewDelegate: NSObjectProtocol {
-    func onLyricsViewBegainDrag(view: LyricsView)
-    func onLyricsView(view: LyricsView, didDragTo position: UInt)
+    func onLyricsViewBegainDrag(view: LyricsViewEx)
+    func onLyricsView(view: LyricsViewEx, didDragTo position: UInt)
 }
 
-public class LyricsView: UIView {
+public class LyricsViewEx: UIView {
     /// 无歌词提示文案
     @objc public var noLyricTipsText: String = "无歌词" { didSet { updateUI() } }
     /// 无歌词提示文字颜色
@@ -71,7 +71,7 @@ public class LyricsView: UIView {
         Log.info(text: "deinit", tag: logTag)
     }
     
-    func setLyricData(data: LyricModel?) {
+    func setLyricData(data: LyricModelEx?) {
         isNoLyric = data == nil
         updateUI()
         lyricMachine.setLyricData(data: data)
@@ -114,7 +114,7 @@ public class LyricsView: UIView {
 }
 
 // MARK: - UI
-extension LyricsView {
+extension LyricsViewEx {
     fileprivate func setupUI() {
         backgroundColor = .clear
         tableView.backgroundColor = .clear
@@ -202,7 +202,7 @@ extension LyricsView {
 }
 
 // MARK: - UITableViewDataSource UITableViewDelegate
-extension LyricsView: UITableViewDataSource, UITableViewDelegate {
+extension LyricsViewEx: UITableViewDataSource, UITableViewDelegate {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataList.count
     }
@@ -247,7 +247,7 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
 }
 
 // MARK: - LyricMachineDelegate
-extension LyricsView: LyricMachineDelegate {
+extension LyricsViewEx: LyricMachineDelegate {
     func lyricMachine(_ lyricMachine: LyricMachine, didSetLyricData datas: [LyricCell.Model]) {
         Log.debug(text: "set dataList \(datas.count)", tag: logTag)
         dataList = datas

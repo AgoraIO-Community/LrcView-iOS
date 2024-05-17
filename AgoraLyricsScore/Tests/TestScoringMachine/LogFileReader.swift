@@ -25,7 +25,7 @@ class LogFileReader {
         var result2 = [Item]()
         var songIndex: Int = -1
         for str in array {
-            if str.contains("[ALS][I][KaraokeView]: setLyricData") {
+            if str.contains("[ALS][I][KaraokeViewEx]: setLyricData") {
                 if songIndex == -1 {
                     songIndex = 0
                     continue

@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import AgoraLyricsScore
+@testable import AgoraLyricsScoreEx
 
 class TestLyricsView: XCTestCase {
 
@@ -22,7 +22,7 @@ class TestLyricsView: XCTestCase {
         let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.krc", ofType: nil)!))
         let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
         
-        guard let model = KaraokeView.parseLyricData(krcFileData: krcFileData,
+        guard let model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData,
                                                      pitchFileData: pitchFileData,
                                                      includeCopyrightSentence: false) else {
             XCTFail()

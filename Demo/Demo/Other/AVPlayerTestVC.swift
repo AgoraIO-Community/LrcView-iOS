@@ -8,11 +8,11 @@
 import UIKit
 import AgoraRtcKit
 import RTMTokenBuilder
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 import AVFoundation
 
 class AVPlayerTestVC: UIViewController {
-    let karaokeView = KaraokeView()
+    let karaokeView = KaraokeViewEx()
     private var audioPlayer: AVAudioPlayer?
     let lrcUrl = Bundle.main.path(forResource: "105780", ofType: "xml")!
     let songUrl = Bundle.main.path(forResource: "music", ofType: "mp3")!
@@ -37,7 +37,7 @@ class AVPlayerTestVC: UIViewController {
     
     func commonInit() {
 //        let data = try! Data(contentsOf: URL(fileURLWithPath: lrcUrl))
-//        let model = KaraokeView.parseLyricData(data: data)!
+//        let model = KaraokeViewEx.parseLyricData(data: data)!
 //        karaokeView.setLyricData(data: model)
 //        initAudioPlayer(url:URL(fileURLWithPath: songUrl))
 //        let ret = audioPlayer!.play()

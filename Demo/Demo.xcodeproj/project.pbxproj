@@ -25,6 +25,7 @@
 		263565432BD124D90087B4CE /* MCCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565422BD124D90087B4CE /* MCCManager.swift */; };
 		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
+		267798432BF73DEE00EA78C2 /* OCVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E8030E298BAF1B00DBF23F /* OCVC.m */; };
 		268018502BF1F54800325584 /* MainTestVC+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2680184F2BF1F54800325584 /* MainTestVC+Debug.swift */; };
 		268018532BF21EA600325584 /* 4875936889260991133.pitch in Resources */ = {isa = PBXBuildFile; fileRef = 268018512BF21EA600325584 /* 4875936889260991133.pitch */; };
 		268018542BF21EA600325584 /* 4875936889260991133.krc in Resources */ = {isa = PBXBuildFile; fileRef = 268018522BF21EA600325584 /* 4875936889260991133.krc */; };
@@ -46,7 +47,6 @@
 		26E5BF7D2990D6B30051AF67 /* 235653.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26E5BF7C2990D6B30051AF67 /* 235653.xml */; };
 		26E5BF7F299245E10051AF67 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BF7E299245E10051AF67 /* SearchVC.swift */; };
 		26E5BFBC29926F2D0051AF67 /* GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */; };
-		26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E8030E298BAF1B00DBF23F /* OCVC.m */; };
 		F88793560A341F9CBCF66020 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -357,6 +357,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				267798432BF73DEE00EA78C2 /* OCVC.m in Sources */,
 				260942DB2952B5050022A50D /* ViewController.swift in Sources */,
 				26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */,
 				269F0F902BF308B500401BFE /* AccessProvider.swift in Sources */,
@@ -376,7 +377,6 @@
 				26119D4D2BD79B7100530607 /* MainView.swift in Sources */,
 				2602311E29C9DCDF0036F74A /* KTVView.swift in Sources */,
 				2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */,
-				26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */,
 				263565412BD122160087B4CE /* ProgressProvider.swift in Sources */,
 				269189C02A8F749100F2B03C /* MiniSizeVC.swift in Sources */,
 				26E5BFBC29926F2D0051AF67 /* GCDTimer.swift in Sources */,

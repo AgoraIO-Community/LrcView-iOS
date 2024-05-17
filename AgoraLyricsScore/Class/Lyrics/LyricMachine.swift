@@ -9,7 +9,7 @@ import Foundation
 
 class LyricMachine {
     weak var delegate: LyricMachineDelegate?
-    fileprivate var lyricData: LyricModel?
+    fileprivate var lyricData: LyricModelEx?
     fileprivate var dataList = [LyricCell.Model]()
     fileprivate var progress: Int = 0
     fileprivate var currentIndex = 0
@@ -20,7 +20,7 @@ class LyricMachine {
     
     // MARK: - Internal
     
-    func setLyricData(data: LyricModel?) {
+    func setLyricData(data: LyricModelEx?) {
         queue.async { [weak self] in
             self?._setLyricData(data: data)
         }
@@ -50,7 +50,7 @@ class LyricMachine {
     
     // MARK: - Private
     
-    private func _setLyricData(data: LyricModel?) {
+    private func _setLyricData(data: LyricModelEx?) {
         lyricData = data
         dataList = data?.lines.map({ LyricCell.Model(text: $0.content,
                                                      progressRate: 0,

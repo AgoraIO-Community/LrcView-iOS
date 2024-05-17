@@ -27,14 +27,14 @@ class ScoringMachine {
     fileprivate var minPitch: Double = 0
     
     fileprivate var canvasViewSize: CGSize = .zero
-    fileprivate var lyricData: LyricModel?
+    fileprivate var lyricData: LyricModelEx?
     fileprivate var isDragging = false
     fileprivate let queue = DispatchQueue(label: "ScoringMachine")
     let logTag = "ScoringMachine"
     
     // MARK: - Internal
     
-    func setLyricData(data: LyricModel?) {
+    func setLyricData(data: LyricModelEx?) {
         guard let lyricData = data else { return }
         guard let size = delegate?.sizeOfCanvasView(self) else { fatalError("sizeOfCanvasView has not been implemented") }
         queue.async { [weak self] in
@@ -81,7 +81,7 @@ class ScoringMachine {
     
     // MARK: - Private
     
-    private func _setLyricData(lyricData: LyricModel, size: CGSize) {
+    private func _setLyricData(lyricData: LyricModelEx, size: CGSize) {
         canvasViewSize = size
         self.lyricData = lyricData
         let (lineEnds, infos) = ScoringMachine.createData(data: lyricData)

@@ -6,12 +6,12 @@
 //
 
 import UIKit
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 
 /// 测试等待视图
 class FirstToneHintViewTestVC: UIViewController {
 
-    let karaokeView = KaraokeView()
+    let karaokeView = KaraokeViewEx()
     private var timer = GCDTimer()
     var progress: UInt = 0
     
@@ -23,7 +23,7 @@ class FirstToneHintViewTestVC: UIViewController {
         let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "4875936889260991133", ofType: "krc")!))
         let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.main.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
         
-        let model = KaraokeView.parseLyricData(krcFileData: krcFileData, pitchFileData: pitchFileData)!
+        let model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData, pitchFileData: pitchFileData)!
 //        model.preludeEndPosition = 6 * 1000
         karaokeView.setLyricData(data: model)
     }

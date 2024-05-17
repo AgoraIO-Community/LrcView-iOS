@@ -10,10 +10,10 @@ import Foundation
 public class KRCParser {
     fileprivate let logTag = "KRCParser"
     
-    func parse(krcFileData: Data) -> LyricModel? {
+    func parse(krcFileData: Data) -> LyricModelEx? {
         let content = String(data: krcFileData, encoding: .utf8)!
         var metadata: [String: String] = [:]
-        var lineModels = [LyricLineModel]()
+        var lineModels = [LyricLineModelEx]()
         
         let lines = content.components(separatedBy: "\r\n")
         for line in lines {
@@ -51,7 +51,7 @@ public class KRCParser {
             }
         }
         
-        return LyricModel(name: metadata["ti"] ?? "unknowName",
+        return LyricModelEx(name: metadata["ti"] ?? "unknowName",
                           singer: metadata["ar"] ?? "unknowSinger",
                           type: .slow,
                           lines: lineModels,
@@ -65,7 +65,7 @@ public class KRCParser {
     ///   - line: 行字符串, 如：`[0,1600]<0,177,0>星<177,177,0>晴<354,177,0> <531,177,0>-<708,177,0> <885,177,0>我<1062,177,0>的<1239,177,0>女<1416,177,0>孩`
     ///   - offset: metadata中的offset字段，表示时间偏移量。用于调整歌词与歌曲播放时间的同步性。
     /// - Returns: 行模型
-    private func parseLine(line: String, offset: UInt) -> LyricLineModel? {
+    private func parseLine(line: String, offset: UInt) -> LyricLineModelEx? {
         guard let range = line.range(of: "["), let rangeEnd = line.range(of: "]") else {
             return nil
         }
@@ -83,7 +83,7 @@ public class KRCParser {
         let lineContent = line[rangeEnd.upperBound...].trimmingCharacters(in: .whitespacesAndNewlines)
         
         /// 解析行内容：`<0,177,0>星<177,177,0>晴<354,177,0> <531,177,0>-<708,177,0> <885,177,0>我<1062,177,0>的<1239,177,0>女<1416,177,0>孩" 转化成 LyricToneModel`
-        var tones = [LyricToneModel]()
+        var tones = [LyricToneModelEx]()
         let toneComponents = lineContent.components(separatedBy: "<")
         for toneComponent in toneComponents {
             if toneComponent.isEmpty {
@@ -100,7 +100,7 @@ public class KRCParser {
                     let startTime = lineStartTime + (UInt(timeParts[0]) ?? 0)
                     let duration = UInt(timeParts[1]) ?? 0
                     let pitch = Double(timeParts[2]) ?? 0
-                    let tone = LyricToneModel(beginTime: startTime,
+                    let tone = LyricToneModelEx(beginTime: startTime,
                                               duration: duration,
                                               word: word,
                                               pitch: pitch,
@@ -113,7 +113,7 @@ public class KRCParser {
             }
         }
         
-        return LyricLineModel(beginTime: lineStartTime,
+        return LyricLineModelEx(beginTime: lineStartTime,
                               duration: lineDuration,
                               content: tones.map({ $0.word }).joined(),
                               tones: tones)

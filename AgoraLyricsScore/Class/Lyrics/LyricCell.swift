@@ -151,14 +151,14 @@ extension LyricCell {
         /// 状态
         var status: Status
         
-        var tones: [LyricToneModel]
+        var tones: [LyricToneModelEx]
         
         init(text: String,
              progressRate: Double,
              beginTime: UInt,
              duration: UInt,
              status: Status,
-             tones: [LyricToneModel]) {
+             tones: [LyricToneModelEx]) {
             self.text = text
             self.progressRate = progressRate
             self.beginTime = beginTime

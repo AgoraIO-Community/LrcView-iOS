@@ -6,10 +6,10 @@
 //
 
 #import "OCVC.h"
-@import AgoraLyricsScore;
+@import AgoraLyricsScoreEx;
 @import ScoreEffectUI;
 
-@interface OCVC ()<KaraokeDelegate, ILogger>
+@interface OCVC ()<KaraokeDelegateEx, ILoggerEx>
 
 @end
 
@@ -18,12 +18,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
-    FileLogger *fileLogger = [[FileLogger alloc] init];
-    LyricModel *m = [KaraokeView parseLyricDataWithKrcFileData:[NSData new]
+    FileLoggerEx *fileLogger = [[FileLoggerEx alloc] init];
+    LyricModelEx *m = [KaraokeViewEx parseLyricDataWithKrcFileData:[NSData new]
                                                  pitchFileData:[NSData new]
                                       includeCopyrightSentence:NO];
-    KaraokeView *karaokeView = [[KaraokeView alloc] initWithFrame:CGRectZero
-                                                          loggers:@[[ConsoleLogger new],fileLogger]];
+    KaraokeViewEx *karaokeView = [[KaraokeViewEx alloc] initWithFrame:CGRectZero
+                                                          loggers:@[[ConsoleLoggerEx new],fileLogger]];
     karaokeView.backgroundImage = [UIImage imageNamed:@"ktv_top_bgIcon"];
     karaokeView.spacing = 5;
     karaokeView.scoringEnabled = YES;
@@ -31,8 +31,8 @@
     [self.view addSubview:karaokeView];
     karaokeView.delegate = self;
     
-    ScoringView *sView = karaokeView.scoringView;
-    LyricsView *lView= karaokeView.lyricsView;
+    ScoringViewEx *sView = karaokeView.scoringView;
+    LyricsViewEx *lView= karaokeView.lyricsView;
     sView.viewHeight = 160;
     sView.topSpaces = 70;
     
@@ -62,13 +62,23 @@
 }
 
 
-- (void)onKaraokeViewWithView:(KaraokeView *)view didDragTo:(NSUInteger)position {
+- (void)onKaraokeViewWithView:(KaraokeViewEx *)view didDragTo:(NSUInteger)position {
     
 }
 
 
-- (void)onLogWithContent:(NSString *)content tag:(NSString *)tag time:(NSString *)time level:(enum LoggerLevel)level {
+- (void)onLogWithContent:(NSString *)content tag:(NSString *)tag time:(NSString *)time level:(enum LoggerLevelEx)level {
     
 }
+
+
+//- (void)onKaraokeViewWithView:(KaraokeView *)view didDragTo:(NSUInteger)position {
+//
+//}
+//
+//
+//- (void)onLogWithContent:(NSString *)content tag:(NSString *)tag time:(NSString *)time level:(enum LoggerLevel)level {
+//
+//}
 
 @end

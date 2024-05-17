@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class KaraokeView: UIView {
+public class KaraokeViewEx: UIView {
     /// 背景图
     @objc public var backgroundImage: UIImage? = nil {
         didSet { updateUI() }
@@ -24,17 +24,17 @@ public class KaraokeView: UIView {
         didSet { updateUI() }
     }
     
-    @objc public weak var delegate: KaraokeDelegate?
-    @objc public let lyricsView = LyricsView()
-    @objc public let scoringView = ScoringView()
+    @objc public weak var delegate: KaraokeDelegateEx?
+    @objc public let lyricsView = LyricsViewEx()
+    @objc public let scoringView = ScoringViewEx()
     fileprivate let backgroundImageView = UIImageView()
     fileprivate var lyricsViewTopConstraint: NSLayoutConstraint!
     fileprivate var scoringViewHeightConstraint, scoringViewTopConstraint: NSLayoutConstraint!
-    fileprivate var lyricData: LyricModel?
+    fileprivate var lyricData: LyricModelEx?
     fileprivate let progressChecker = ProgressChecker()
     fileprivate var pitchIsZeroCount = 0
     fileprivate var isStart = false
-    fileprivate let logTag = "KaraokeView"
+    fileprivate let logTag = "KaraokeViewEx"
     /// use for debug
     fileprivate var lastProgress: UInt = 0
     fileprivate var progressPrintCount = 0
@@ -43,11 +43,11 @@ public class KaraokeView: UIView {
     /// init
     /// - !!! Only one init method
     /// - Note: can set custom logger
-    /// - Note: use for Objective-C. `[[KaraokeView alloc] initWithFrame:frame loggers:@[[ConsoleLogger new], [FileLogger new]]]`
-    /// - Note: use for Swift. `KaraokeView(frame: frame)`
+    /// - Note: use for Objective-C. `[[KaraokeViewEx alloc] initWithFrame:frame loggers:@[[ConsoleLogger new], [FileLogger new]]]`
+    /// - Note: use for Swift. `KaraokeViewEx(frame: frame)`
     /// - Parameters:
     ///   - logger: custom logger
-    @objc public convenience init(frame: CGRect, loggers: [ILogger] = [FileLogger(), ConsoleLogger()]) {
+    @objc public convenience init(frame: CGRect, loggers: [ILoggerEx] = [FileLoggerEx(), ConsoleLoggerEx()]) {
         Log.setLoggers(loggers: loggers)
         self.init(frame: frame)
     }
@@ -71,7 +71,7 @@ public class KaraokeView: UIView {
 }
 
 // MARK: - Public Method
-extension KaraokeView {
+extension KaraokeViewEx {
     /// 解析歌词文件krc
     /// - Parameters:
     ///   - krcFileData: krc文件的内容
@@ -80,7 +80,7 @@ extension KaraokeView {
     /// - Returns: 歌词信息
     @objc public static func parseLyricData(krcFileData: Data,
                                             pitchFileData: Data,
-                                            includeCopyrightSentence: Bool = true) -> LyricModel? {
+                                            includeCopyrightSentence: Bool = true) -> LyricModelEx? {
         let parser = Parser()
         return parser.parseLyricData(krcFileData: krcFileData,
                                      pitchFileData: pitchFileData,
@@ -89,7 +89,7 @@ extension KaraokeView {
     
     /// 设置歌词数据信息
     /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `nil`.
-    @objc public func setLyricData(data: LyricModel?) {
+    @objc public func setLyricData(data: LyricModelEx?) {
         Log.info(text: "setLyricData \(data?.name ?? "nil")", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setLyricData not isMainThread ", tag: logTag)
@@ -170,7 +170,7 @@ extension KaraokeView {
 }
 
 // MARK: - UI
-extension KaraokeView {
+extension KaraokeViewEx {
     fileprivate func setupUI() {
         scoringView.backgroundColor = .clear
         lyricsView.backgroundColor = .clear
@@ -228,26 +228,26 @@ extension KaraokeView {
 }
 
 // MARK: - ProgressCheckerDelegate
-extension KaraokeView: LyricsViewDelegate {
-    func onLyricsViewBegainDrag(view: LyricsView) {
+extension KaraokeViewEx: LyricsViewDelegate {
+    func onLyricsViewBegainDrag(view: LyricsViewEx) {
         scoringView.dragBegain()
     }
     
-    func onLyricsView(view: LyricsView, didDragTo position: UInt) {
+    func onLyricsView(view: LyricsViewEx, didDragTo position: UInt) {
         Log.debug(text: "=== didDragTo \(position)", tag: "drag")
         scoringView.dragDidEnd(position: position)
-        delegate?.onKaraokeView?(view: self, didDragTo: position)
+        delegate?.onKaraokeViewEx?(view: self, didDragTo: position)
     }
 }
 
 // MARK: - ProgressCheckerDelegate
-extension KaraokeView: ScoringViewDelegate {
-    func scoringViewShouldUpdateViewLayout(view: ScoringView) {
+extension KaraokeViewEx: ScoringViewDelegate {
+    func scoringViewShouldUpdateViewLayout(view: ScoringViewEx) {
         updateUI()
     }
 }
 
-extension KaraokeView: ProgressCheckerDelegate {
+extension KaraokeViewEx: ProgressCheckerDelegate {
     func progressCheckerDidProgressPause() {
         Log.debug(text: "progressCheckerDidProgressPause", tag: logTag)
         scoringView.forceStopIndicatorAnimationWhenReachingContinuousZeros()
@@ -255,7 +255,7 @@ extension KaraokeView: ProgressCheckerDelegate {
 }
 
 // MARK: -- Log
-extension KaraokeView {
+extension KaraokeViewEx {
     func logProgressIfNeed(progress: UInt) {
         let gap = Int(progress) - Int(lastProgress)
         if progressPrintCount < progressPrintCountMax, gap > 20 {

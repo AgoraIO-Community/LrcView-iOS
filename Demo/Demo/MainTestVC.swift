@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 import AgoraRtcKit
 import AgoraMccExService
 
@@ -19,7 +19,7 @@ class MainTestVC: UIViewController {
     private let progressProvider = ProgressProvider()
     private var songId: Int? = 239038150
     private var songIds = [40289835, 239038150]
-    var lyricModel: LyricModel!
+    var lyricModel: LyricModelEx!
     let logTag = "MainTestVC"
     fileprivate var isSeeking = false
     fileprivate var canUseParamsSet = false
@@ -129,7 +129,7 @@ extension MainTestVC: MCCManagerDelegate {
     func onProloadMusic(_ manager: MCCManager, songId: Int, lyricData: Data, pitchData: Data) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let model = KaraokeView.parseLyricData(krcFileData: lyricData,
+            let model = KaraokeViewEx.parseLyricData(krcFileData: lyricData,
                                                    pitchFileData: pitchData,
                                                    includeCopyrightSentence: false)
             self.lyricModel = model
@@ -217,7 +217,7 @@ extension MainTestVC: ProgressProviderDelegate {
 }
 
 // MARK: - MainViewDelegate
-extension MainTestVC: MainViewDelegate, KaraokeDelegate {
+extension MainTestVC: MainViewDelegate, KaraokeDelegateEx {
     func mainView(_ mainView: MainView, onAction: MainView.Action) {
         switch onAction {
         case .skip:
@@ -270,7 +270,7 @@ extension MainTestVC: MainViewDelegate, KaraokeDelegate {
         }
     }
     
-    func onKaraokeView(view: KaraokeView, didDragTo position: UInt) {
+    func onKaraokeViewEx(view: KaraokeViewEx, didDragTo position: UInt) {
         isSeeking = true
         mccManager.seek(position: position)
         updateLastProgressInMs_debug(progressInMs: position)

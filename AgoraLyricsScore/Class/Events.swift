@@ -7,17 +7,17 @@
 
 import Foundation
 
-@objc public protocol KaraokeDelegate: NSObjectProtocol {
+@objc public protocol KaraokeDelegateEx: NSObjectProtocol {
     /// 拖拽歌词结束后回调
     /// - Note: 当 `KaraokeConfig.lyricConfig.draggable == true` 且 用户进行拖动歌词时候 调用
     /// - Parameters:
-    ///   - view: KaraokeView
+    ///   - view: KaraokeViewEx
     ///   - position: 当前时间点 (ms)
-    @objc optional func onKaraokeView(view: KaraokeView, didDragTo position: UInt)
+    @objc optional func onKaraokeViewEx(view: KaraokeViewEx, didDragTo position: UInt)
 }
 
 /// 日志协议
-@objc public protocol ILogger {
+@objc public protocol ILoggerEx {
     /// 日志输出
     /// - Note: 在子线程执行
     /// - Parameters:
@@ -25,10 +25,10 @@ import Foundation
     ///   - tag: 标签
     ///   - time: 时间
     ///   - level: 等级
-    @objc func onLog(content: String, tag: String?, time: String, level: LoggerLevel)
+    @objc func onLog(content: String, tag: String?, time: String, level: LoggerLevelEx)
 }
 
-@objc public enum LoggerLevel: UInt8, CustomStringConvertible {
+@objc public enum LoggerLevelEx: UInt8, CustomStringConvertible {
     case debug, info, warning, error
     
     public var description: String {

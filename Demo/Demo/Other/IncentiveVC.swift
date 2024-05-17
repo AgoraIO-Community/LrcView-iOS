@@ -8,7 +8,7 @@
 import UIKit
 
 import ScoreEffectUI
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 
 class IncentiveVC: UIViewController {
 

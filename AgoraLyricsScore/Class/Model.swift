@@ -7,7 +7,7 @@
 
 import Foundation
 
-@objc public enum MusicType: Int, CustomStringConvertible {
+@objc public enum MusicTypeEx: Int, CustomStringConvertible {
     /// 快歌
     case fast = 1
     /// 慢歌
@@ -29,15 +29,15 @@ struct KrcPitchData: Codable {
     let duration: UInt
 }
 
-public class LyricModel: NSObject {
+public class LyricModelEx: NSObject {
     /// 歌曲名称
     @objc public var name: String
     /// 歌星名称
     @objc public var singer: String
     /// 歌曲类型
-    @objc public var type: MusicType
+    @objc public var type: MusicTypeEx
     /// 行信息
-    @objc public var lines: [LyricLineModel]
+    @objc public var lines: [LyricLineModelEx]
     /// 前奏结束时间
     @objc public var preludeEndPosition: UInt
     /// 歌词总时长 (ms)
@@ -49,8 +49,8 @@ public class LyricModel: NSObject {
     
     @objc public init(name: String,
                       singer: String,
-                      type: MusicType,
-                      lines: [LyricLineModel],
+                      type: MusicTypeEx,
+                      lines: [LyricLineModelEx],
                       preludeEndPosition: UInt,
                       duration: UInt,
                       hasPitch: Bool) {
@@ -98,7 +98,7 @@ public class LyricModel: NSObject {
     }
 }
 
-public class LyricLineModel: NSObject {
+public class LyricLineModelEx: NSObject {
     /// 开始时间 单位为毫秒
     @objc public var beginTime: UInt
     /// 总时长 (ms)
@@ -106,12 +106,12 @@ public class LyricLineModel: NSObject {
     /// 行内容
     @objc public var content: String
     /// 每行歌词的字信息
-    @objc public var tones: [LyricToneModel]
+    @objc public var tones: [LyricToneModelEx]
     
     @objc public init(beginTime: UInt,
                       duration: UInt,
                       content: String,
-                      tones: [LyricToneModel]) {
+                      tones: [LyricToneModelEx]) {
         self.beginTime = beginTime
         self.duration = duration
         self.content = content
@@ -119,19 +119,19 @@ public class LyricLineModel: NSObject {
     }
 }
 
-public class LyricToneModel: NSObject {
+public class LyricToneModelEx: NSObject {
     @objc public let beginTime: UInt
     @objc public let duration: UInt
     @objc public var word: String
     @objc public let pitch: Double
-    @objc public var lang: Lang
+    @objc public var lang: LangEx
     @objc public let pronounce: String
     
     @objc public init(beginTime: UInt,
                       duration: UInt,
                       word: String,
                       pitch: Double,
-                      lang: Lang,
+                      lang: LangEx,
                       pronounce: String) {
         self.beginTime = beginTime
         self.duration = duration
@@ -144,7 +144,7 @@ public class LyricToneModel: NSObject {
 
 
 
-@objc public enum Lang: Int {
+@objc public enum LangEx: Int {
     case zh = 1
     case en = 2
     case unknown = -1

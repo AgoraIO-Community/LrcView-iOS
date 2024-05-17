@@ -6,11 +6,11 @@
 //
 
 import UIKit
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 
 class ViewTestVC: UIViewController {
 
-    let karaokeView = KaraokeView()
+    let karaokeView = KaraokeViewEx()
     let tableview = UITableView(frame: .zero, style: .grouped)
     private var timer = GCDTimer()
     var list = [Section]()
@@ -79,7 +79,7 @@ class ViewTestVC: UIViewController {
         
 //        let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
 //        let data = try! Data(contentsOf: url)
-//        let model = KaraokeView.parseLyricData(data: data)!
+//        let model = KaraokeViewEx.parseLyricData(data: data)!
 //        karaokeView.setLyricData(data: model)
 //        karaokeView.setProgress(progress: 70 * 1000)
     }

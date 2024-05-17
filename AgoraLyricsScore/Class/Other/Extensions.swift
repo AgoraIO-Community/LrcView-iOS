@@ -19,13 +19,13 @@ extension String {
     }
 }
 
-extension LyricLineModel {
+extension LyricLineModelEx {
     var endTime: UInt {
         beginTime + duration
     }
 }
 
-extension LyricToneModel {
+extension LyricToneModelEx {
     var endTime: UInt {
         beginTime + duration
     }
@@ -34,7 +34,7 @@ extension LyricToneModel {
 extension Bundle {
     static var currentBundle: Bundle {
         let bundle = Bundle(for: AgoraLyricsScore.self)
-        let path = bundle.path(forResource: "AgoraLyricsScoreBundle", ofType: "bundle")
+        let path = bundle.path(forResource: "AgoraLyricsScoreBundleEx", ofType: "bundle")
         if path == nil {
             Log.error(error: "bundle not found path", tag: "Bundle")
         }

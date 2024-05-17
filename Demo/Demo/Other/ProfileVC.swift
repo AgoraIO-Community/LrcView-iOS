@@ -6,13 +6,13 @@
 //
 
 import Foundation
-import AgoraLyricsScore
+import AgoraLyricsScoreEx
 
 class ProfileVC: UIViewController {
-    let karaokeView = KaraokeView()
+    let karaokeView = KaraokeViewEx()
     var progress = 0
     private var timer = GCDTimer()
-    var model: LyricModel!
+    var model: LyricModelEx!
     
     override func viewDidLoad() {
         super.viewDidLoad()
