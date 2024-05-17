@@ -221,14 +221,14 @@ extension RTCManager: AgoraRtcEngineDelegate {
 }
 
 extension RTCManager: AgoraMusicContentCenterScoreEventDelegate {
-    func onPitch(_ songCode: Int, item: AgoraRawScoreData) {
-        print("== onPitch speakerPitch:\(item.speakerPitch) pitchScore:\(item.pitchScore) progressInMs:\(item.progressInMs)")
-        delegate?.onPitch(songCode, item: item)
+    func onPitch(_ songCode: Int, rawScoreData: AgoraRawScoreData) {
+        print("== onPitch speakerPitch:\(rawScoreData.speakerPitch) pitchScore:\(rawScoreData.pitchScore) progressInMs:\(rawScoreData.progressInMs)")
+        delegate?.onPitch(songCode, item: rawScoreData)
     }
     
-    func onLineScore(_ songCode: Int, value: AgoraCumulativeScoreData) {
-        print("== onLineScore \(value.description)")
-        delegate?.onLineScore(songCode, value: value)
+    func onLineScore(_ songCode: Int, lineScoreData: AgoraCumulativeScoreData) {
+        print("== onLineScore \(lineScoreData.description)")
+        delegate?.onLineScore(songCode, value: lineScoreData)
     }
     
     func onCumulativeScore(_ songCode: Int, value: AgoraCumulativeScoreData) {
