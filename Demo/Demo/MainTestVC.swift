@@ -15,11 +15,11 @@ class MainTestVC: UIViewController {
     private let mainView = MainView()
     /// MusicContentConter 管理实例
     private let mccManager = MCCManager()
-    fileprivate let lineScoreRecorder = LineScoreReacorder()
+    fileprivate let lineScoreRecorder = LineScoreRecorder()
     /// 进度进度校准和进度提供者
     private let progressProvider = ProgressProvider()
     private var songId: Int?
-    private var songIds = [89488966, 239038150]
+    private var songIds = [32259070, 89488966, 239038150]
     var lyricModel: LyricModelEx!
     let logTag = "MainTestVC"
     fileprivate var isSeeking = false
@@ -132,7 +132,7 @@ extension MainTestVC: MCCManagerDelegate {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             let model = KaraokeViewEx.parseLyricData(krcFileData: lyricData,
-                                                     pitchFileData: nil,
+                                                     pitchFileData: pitchData,
                                                      includeCopyrightSentence: false)
             lineScoreRecorder.setLyricData(data: model!)
             self.lyricModel = model
@@ -226,7 +226,7 @@ extension MainTestVC: MainViewDelegate, KaraokeDelegateEx {
         case .skip:
             Log.info(text: "skip", tag: self.logTag)
             
-            var position = lyricModel.preludeEndPosition - 1000
+            var position = lyricModel.preludeEndPosition
             if position > 1000 {
                 position -= 1000
             }
