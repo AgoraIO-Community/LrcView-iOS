@@ -21,7 +21,6 @@
 		26119D4B2BD79A9000530607 /* MainTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26119D4A2BD79A9000530607 /* MainTestVC.swift */; };
 		26119D4D2BD79B7100530607 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26119D4C2BD79B7100530607 /* MainView.swift */; };
 		261B74142BEF48AC0090AEF1 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261B74132BEF48AC0090AEF1 /* Log.swift */; };
-		263565412BD122160087B4CE /* ProgressProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565402BD122160087B4CE /* ProgressProvider.swift */; };
 		263565432BD124D90087B4CE /* MCCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565422BD124D90087B4CE /* MCCManager.swift */; };
 		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
@@ -36,6 +35,7 @@
 		2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2689ED472988FDE10012BC4D /* LyricLabelVC.swift */; };
 		269189C02A8F749100F2B03C /* MiniSizeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269189BF2A8F749100F2B03C /* MiniSizeVC.swift */; };
 		269F0F902BF308B500401BFE /* AccessProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269F0F8F2BF308B500401BFE /* AccessProvider.swift */; };
+		26BCEC902BFAFF1200E6C996 /* ProgressProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BCEC8F2BFAFF1200E6C996 /* ProgressProvider.swift */; };
 		26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */; };
 		26C5452429557D25009E0F37 /* LyricsTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452329557D25009E0F37 /* LyricsTestVC.swift */; };
 		26C5452C2955B2FE009E0F37 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5452B2955B2FE009E0F37 /* Config.swift */; };
@@ -68,7 +68,6 @@
 		26119D4A2BD79A9000530607 /* MainTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTestVC.swift; sourceTree = "<group>"; };
 		26119D4C2BD79B7100530607 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		261B74132BEF48AC0090AEF1 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
-		263565402BD122160087B4CE /* ProgressProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressProvider.swift; sourceTree = "<group>"; };
 		263565422BD124D90087B4CE /* MCCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCCManager.swift; sourceTree = "<group>"; };
 		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		2680184F2BF1F54800325584 /* MainTestVC+Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainTestVC+Debug.swift"; sourceTree = "<group>"; };
@@ -81,6 +80,7 @@
 		2689ED472988FDE10012BC4D /* LyricLabelVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricLabelVC.swift; sourceTree = "<group>"; };
 		269189BF2A8F749100F2B03C /* MiniSizeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniSizeVC.swift; sourceTree = "<group>"; };
 		269F0F8F2BF308B500401BFE /* AccessProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessProvider.swift; sourceTree = "<group>"; };
+		26BCEC8F2BFAFF1200E6C996 /* ProgressProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressProvider.swift; sourceTree = "<group>"; };
 		26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoLyricsTestVC.swift; sourceTree = "<group>"; };
 		26C5452329557D25009E0F37 /* LyricsTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsTestVC.swift; sourceTree = "<group>"; };
 		26C5452729559918009E0F37 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -168,8 +168,8 @@
 				2680184F2BF1F54800325584 /* MainTestVC+Debug.swift */,
 				26119D4C2BD79B7100530607 /* MainView.swift */,
 				263565422BD124D90087B4CE /* MCCManager.swift */,
-				263565402BD122160087B4CE /* ProgressProvider.swift */,
 				26C5452B2955B2FE009E0F37 /* Config.swift */,
+				26BCEC8F2BFAFF1200E6C996 /* ProgressProvider.swift */,
 				260942DC2952B5050022A50D /* Main.storyboard */,
 				260942DF2952B5060022A50D /* Assets.xcassets */,
 				260942E12952B5060022A50D /* LaunchScreen.storyboard */,
@@ -369,6 +369,7 @@
 				26E212002B2AF8AD00297136 /* DownloadView.swift in Sources */,
 				260942D72952B5050022A50D /* AppDelegate.swift in Sources */,
 				261B74142BEF48AC0090AEF1 /* Log.swift in Sources */,
+				26BCEC902BFAFF1200E6C996 /* ProgressProvider.swift in Sources */,
 				26C5452E2955B370009E0F37 /* AVPlayerTestVC.swift in Sources */,
 				2689ED3E298654C90012BC4D /* IncentiveVC.swift in Sources */,
 				260942D92952B5050022A50D /* SceneDelegate.swift in Sources */,
@@ -377,7 +378,6 @@
 				26119D4D2BD79B7100530607 /* MainView.swift in Sources */,
 				2602311E29C9DCDF0036F74A /* KTVView.swift in Sources */,
 				2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */,
-				263565412BD122160087B4CE /* ProgressProvider.swift in Sources */,
 				269189C02A8F749100F2B03C /* MiniSizeVC.swift in Sources */,
 				26E5BFBC29926F2D0051AF67 /* GCDTimer.swift in Sources */,
 				2689ED422987C8890012BC4D /* ParamSetVC.swift in Sources */,
@@ -533,7 +533,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -577,7 +577,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

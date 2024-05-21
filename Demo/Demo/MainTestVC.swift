@@ -15,16 +15,18 @@ class MainTestVC: UIViewController {
     private let mainView = MainView()
     /// MusicContentConter 管理实例
     private let mccManager = MCCManager()
+    fileprivate let lineScoreRecorder = LineScoreReacorder()
     /// 进度进度校准和进度提供者
     private let progressProvider = ProgressProvider()
-    private var songId: Int? = 239038150
-    private var songIds = [40289835, 239038150]
+    private var songId: Int?
+    private var songIds = [89488966, 239038150]
     var lyricModel: LyricModelEx!
     let logTag = "MainTestVC"
     fileprivate var isSeeking = false
     fileprivate var canUseParamsSet = false
     fileprivate var noLyric = false
     var isPause = false
+    var totalScore: UInt = 0
     /// 七里香 972295
     /// 明月几时有：239038150
     /// 十年 40289835
@@ -130,8 +132,9 @@ extension MainTestVC: MCCManagerDelegate {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             let model = KaraokeViewEx.parseLyricData(krcFileData: lyricData,
-                                                   pitchFileData: pitchData,
-                                                   includeCopyrightSentence: false)
+                                                     pitchFileData: nil,
+                                                     includeCopyrightSentence: false)
+            lineScoreRecorder.setLyricData(data: model!)
             self.lyricModel = model
             setLyricToView()
             if !self.noLyric {
@@ -190,11 +193,11 @@ extension MainTestVC: MCCManagerDelegate {
             return
         }
         let score = Int(value.linePitchScore)
-        let cumulativeScore = Int(value.cumulativeTotalLinePitchScores)
-        let totalScore = value.performedTotalLines * 100
+        totalScore = UInt(value.performedTotalLines * 100)
         mainView.lineScoreView.showScoreView(score: score)
         mainView.incentiveView.show(score: score)
-        mainView.gradeView.setScore(cumulativeScore: cumulativeScore,
+        let cumulativeScore = lineScoreRecorder.setLineScore(index: value.performedLineIndex, score: UInt(score))
+        mainView.gradeView.setScore(cumulativeScore: Int(cumulativeScore),
                                     totalScore: Int(totalScore))
 
     }
@@ -275,6 +278,9 @@ extension MainTestVC: MainViewDelegate, KaraokeDelegateEx {
         mccManager.seek(position: position)
         updateLastProgressInMs_debug(progressInMs: position)
         progressProvider.seek(position: position)
+        let cumulativeScore = lineScoreRecorder.seek(position: position)
+        mainView.gradeView.setScore(cumulativeScore: Int(cumulativeScore),
+                                    totalScore: Int(totalScore))
         isSeeking = false
     }
 }
