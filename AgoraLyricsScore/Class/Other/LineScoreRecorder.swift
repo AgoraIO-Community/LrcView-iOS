@@ -1,5 +1,5 @@
 //
-//  LineScoreReacorder.swift
+//  LineScoreRecorder.swift
 //  Demo
 //
 //  Created by ZYP on 2024/5/17.
@@ -8,7 +8,7 @@
 import Foundation
 
 
-@objc public class LineScoreReacorder: NSObject {
+@objc public class LineScoreRecorder: NSObject {
     var lineScoreDict = [UInt : LineScoreInfo]()
     let logTag = "LineScoreReacorder"
     
@@ -64,7 +64,7 @@ import Foundation
     }
 }
 
-extension LineScoreReacorder {
+extension LineScoreRecorder {
     class LineScoreInfo: CustomStringConvertible {
         let begin: UInt
         let end: UInt

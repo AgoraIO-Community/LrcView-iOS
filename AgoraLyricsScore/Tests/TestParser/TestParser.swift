@@ -137,7 +137,7 @@ class TestParser: XCTestCase {
     }
     
     func testLineScoreRecorder() {
-        let recoder = LineScoreReacorder()
+        let recoder = LineScoreRecorder()
         
         let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133", ofType: "krc")!))
         let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
