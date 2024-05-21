@@ -36,12 +36,8 @@ public class KRCParser {
                 }
                 else {
                     if line.contains(">"),  line.contains("<") {
-                        /** Fix no offset key in krc file **/
+                        /// no need to read offset in metadata, it was ignored
                         var offsetValue: UInt = 0
-                        if let offsetString = metadata["offset"],
-                           let offset = UInt(offsetString) {
-                            offsetValue = offset
-                        }
                         
                         if let lineModel = parseLine(line: line, offset: offsetValue) {
                             /* check line duration valid */
