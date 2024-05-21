@@ -40,7 +40,7 @@ class TestLyricsView: XCTestCase {
         XCTAssertNil(LyricMachine.calculateProgressRate(progress: 0, model: line, canScoring: true))
         XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: line.beginTime + 30, model: line, canScoring: true))
         XCTAssertNotNil(LyricMachine.calculateProgressRate(progress: line.beginTime + 60, model: line, canScoring: true))
-        XCTAssertEqual(LyricMachine.calculateProgressRate(progress: 26596+191, model: line, canScoring: true), 0.5)
+        XCTAssertEqual(LyricMachine.calculateProgressRate(progress: line.beginTime+540+199, model: line, canScoring: true), 0.5)
     }
 
 }

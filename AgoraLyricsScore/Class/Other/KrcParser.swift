@@ -15,8 +15,16 @@ public class KRCParser {
         var metadata: [String: String] = [:]
         var lineModels = [LyricLineModelEx]()
         
-        let lines = content.components(separatedBy: "\r\n")
-        for line in lines {
+        /** Fix KRC文件内容中，每一行的分隔符可能是"\n"，也可能是"\r\n"，所以需要判断分隔符 **/
+        var lineStrings = [String]()
+        if content.contains("\r\n") {
+            lineStrings = content.components(separatedBy: "\r\n")
+        }
+        else {
+            lineStrings = content.components(separatedBy: "\n")
+        }
+        
+        for line in lineStrings {
             /// 处理metadata部分：`[ti:星晴]`
             if line.hasPrefix("[") {
                 if let range = line.range(of: ":") {
@@ -28,9 +36,11 @@ public class KRCParser {
                 }
                 else {
                     if line.contains(">"),  line.contains("<") {
-                        guard let offsetString = metadata["offset"],
-                              let offsetValue = UInt(offsetString) else {
-                            return nil
+                        /** Fix no offset key in krc file **/
+                        var offsetValue: UInt = 0
+                        if let offsetString = metadata["offset"],
+                           let offset = UInt(offsetString) {
+                            offsetValue = offset
                         }
                         
                         if let lineModel = parseLine(line: line, offset: offsetValue) {

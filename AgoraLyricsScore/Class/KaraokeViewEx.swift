@@ -79,7 +79,7 @@ extension KaraokeViewEx {
     ///   - includeCopyrightSentence: 是否需要包含版本信息类型的句子
     /// - Returns: 歌词信息
     @objc public static func parseLyricData(krcFileData: Data,
-                                            pitchFileData: Data,
+                                            pitchFileData: Data?,
                                             includeCopyrightSentence: Bool = true) -> LyricModelEx? {
         let parser = Parser()
         return parser.parseLyricData(krcFileData: krcFileData,
