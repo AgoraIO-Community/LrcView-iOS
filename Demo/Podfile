@@ -8,10 +8,12 @@ target 'Demo' do
   
   pod "AgoraLyricsScore", "1.1.6"
   pod "AgoraLyricsScoreEx", :path => "../AgoraLyricsScoreEx.podspec", :testspecs => ['Tests']
+#  pod 'AgoraLyricsScoreEx', :git => 'https://github.com/AgoraIO-Community/LrcView-iOS.git', :tag => '2.0.0.131-beta-1'
   pod 'RTMTokenBuilder', "1.0.0"
   pod 'AgoraRtcEngine_iOS', :path => "/Volumes/T5/PodSpec/mccysd/AgoraRtcEngine_iOS.podspec"
   pod "Zip"
   pod "ScoreEffectUI"
   pod 'AgoraComponetLog', "0.0.2"
+  
 end
 

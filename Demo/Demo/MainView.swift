@@ -17,6 +17,7 @@ extension MainView {
         case set
         case change
         case quick
+        case changePlayMode
     }
 }
 
@@ -36,6 +37,7 @@ class MainView: UIView {
     private let quickButton = UIButton()
     private let changeButton = UIButton()
     private let pauseButton = UIButton()
+    private let changePlayModeButton = UIButton()
     private let label = UILabel()
     private let consoleView = ConsoleView()
     
@@ -60,12 +62,13 @@ class MainView: UIView {
         setButton.setTitle("设置参数", for: .normal)
         changeButton.setTitle("切歌", for: .normal)
         quickButton.setTitle("退出", for: .normal)
-        pauseButton.setTitle("暂停", for: .normal)
-        pauseButton.setTitle("继续", for: .selected)
+        pauseButton.setTitle("暂停/继续", for: .normal)
+        changePlayModeButton.setTitle("原唱伴奏切换", for: .normal)
         skipButton.backgroundColor = .red
         setButton.backgroundColor = .red
         changeButton.backgroundColor = .red
         quickButton.backgroundColor = .red
+        changePlayModeButton.backgroundColor = .red
         pauseButton.backgroundColor = .red
         label.textColor = .white
         label.backgroundColor = .red
@@ -79,6 +82,7 @@ class MainView: UIView {
         addSubview(changeButton)
         addSubview(quickButton)
         addSubview(pauseButton)
+        addSubview(changePlayModeButton)
         addSubview(lineScoreView)
         addSubview(label)
         addSubview(consoleView)
@@ -91,6 +95,7 @@ class MainView: UIView {
         changeButton.translatesAutoresizingMaskIntoConstraints = false
         quickButton.translatesAutoresizingMaskIntoConstraints = false
         pauseButton.translatesAutoresizingMaskIntoConstraints = false
+        changePlayModeButton.translatesAutoresizingMaskIntoConstraints = false
         lineScoreView.translatesAutoresizingMaskIntoConstraints = false
         label.translatesAutoresizingMaskIntoConstraints = false
         consoleView.translatesAutoresizingMaskIntoConstraints = false
@@ -128,6 +133,9 @@ class MainView: UIView {
         pauseButton.leftAnchor.constraint(equalTo: skipButton.leftAnchor).isActive = true
         pauseButton.topAnchor.constraint(equalTo: changeButton.bottomAnchor, constant: 30).isActive = true
         
+        changePlayModeButton.leftAnchor.constraint(equalTo: quickButton.leftAnchor).isActive = true
+        changePlayModeButton.topAnchor.constraint(equalTo: pauseButton.topAnchor).isActive = true
+        
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
@@ -143,6 +151,7 @@ class MainView: UIView {
         changeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         quickButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         pauseButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
+        changePlayModeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
     }
     
     func updateView(param: Param) {
@@ -193,6 +202,9 @@ class MainView: UIView {
             return
         case pauseButton:
             delegate?.mainView(self, onAction: .pause)
+            return
+        case changePlayModeButton:
+            delegate?.mainView(self, onAction: .changePlayMode)
             return
         default:
             break

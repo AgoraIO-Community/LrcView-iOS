@@ -23,6 +23,7 @@ class MCCManager: NSObject {
     private var mpk: AgoraMusicPlayerProtocolEx!
     weak var delegate: MCCManagerDelegate?
     var mccExService: AgoraMusicContentCenterEx!
+    private var playMode: AgoraMusicPlayMode = .accompany
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
@@ -197,6 +198,19 @@ class MCCManager: NSObject {
     func getMPKCurrentPosition() -> Int {
         return mpk.getPosition()
     }
+    
+    func resversePlayMode() {
+        let mode: AgoraMusicPlayMode = playMode == .accompany ? .original : .accompany
+        
+        let ret = mpk.setPlayMode(mode: mode)
+        if ret != 0 {
+            Log.errorText(text: "setPlayMode error \(ret)", tag: logTag)
+        }
+        else {
+            Log.info(text: "setPlayMode \(mode == .original ? "original" : "accompany") success", tag: logTag)
+            playMode = mode
+        }
+    }
 }
 
 extension MCCManager: AgoraRtcEngineDelegate {
@@ -304,7 +318,6 @@ extension MCCManager: AgoraRtcMediaPlayerDelegate {
                              didChangedTo state: AgoraMediaPlayerState,
                              error: AgoraMediaPlayerError) {
         if state == .openCompleted {
-            mpk.setPlayMode(mode: .original)
             Log.info(text: "openCompleted", tag: logTag)
             delegate?.onOpenMusic(self)
         }

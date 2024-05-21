@@ -19,12 +19,19 @@ class MainTestVC: UIViewController {
     /// 进度进度校准和进度提供者
     private let progressProvider = ProgressProvider()
     private var songId: Int?
-    private var songIds = [32259070, 89488966, 239038150]
+    /// 89488966 在你的身边
+    /// 32259070 奢香夫人
+    /// 40289835 十年
+    /// 239038150 明月几时有
+    private var songIds = [89488966, 32259070, 40289835, 239038150]
+    private var currentSongIndex = 0
     var lyricModel: LyricModelEx!
     let logTag = "MainTestVC"
     fileprivate var isSeeking = false
     fileprivate var canUseParamsSet = false
     fileprivate var noLyric = false
+    fileprivate var noPitchFile = false
+    /// 是否暂停
     var isPause = false
     var totalScore: UInt = 0
     /// 七里香 972295
@@ -107,6 +114,17 @@ class MainTestVC: UIViewController {
         alertVC.addAction(action)
         present(alertVC, animated: true, completion: nil)
     }
+    
+    
+    fileprivate func genNextSongId() -> Int {
+        if currentSongIndex == songIds.count - 1 {
+            currentSongIndex = 0
+        }
+        else {
+            currentSongIndex += 1
+        }
+        return songIds[currentSongIndex]
+    }
 }
 
 // MARK: - RTCManagerDelegate
@@ -129,10 +147,11 @@ extension MainTestVC: MCCManagerDelegate {
     }
     
     func onProloadMusic(_ manager: MCCManager, songId: Int, lyricData: Data, pitchData: Data) {
+        let needPitch = !noPitchFile
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             let model = KaraokeViewEx.parseLyricData(krcFileData: lyricData,
-                                                     pitchFileData: pitchData,
+                                                     pitchFileData: needPitch ? pitchData : nil,
                                                      includeCopyrightSentence: false)
             lineScoreRecorder.setLyricData(data: model!)
             self.lyricModel = model
@@ -259,7 +278,7 @@ extension MainTestVC: MainViewDelegate, KaraokeDelegateEx {
             mccManager.pauseScore()
             mccManager.stopMusic()
             resetView()
-            songId == songIds.last ? (songId = songIds.first) : (songId = songIds[songIds.firstIndex(of: songId!)! + 1])
+            songId = genNextSongId()
             mccManager.preload(songId: songId!)
             break
         case .quick:
@@ -270,6 +289,10 @@ extension MainTestVC: MainViewDelegate, KaraokeDelegateEx {
             progressProvider.stop()
             resetView()
             navigationController?.popViewController(animated: true)
+            break
+        case .changePlayMode:
+            mccManager.resversePlayMode()
+            break
         }
     }
     
@@ -287,9 +310,9 @@ extension MainTestVC: MainViewDelegate, KaraokeDelegateEx {
 
 // MARK: - ParamSetVCDelegate
 extension MainTestVC: ParamSetVCDelegate {
-    func didSetParam(param: Param, noLyric: Bool) {
+    func didSetParam(param: Param, noLyric: Bool, noPitchFile: Bool) {
         self.noLyric = noLyric
-        
+        self.noPitchFile = noPitchFile
         progressProvider.stop()
         mccManager.stopMusic()
         mccManager.pauseScore()

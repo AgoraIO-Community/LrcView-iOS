@@ -9,13 +9,14 @@ import UIKit
 import AgoraLyricsScoreEx
 
 protocol ParamSetVCDelegate: NSObjectProtocol {
-    func didSetParam(param: Param, noLyric: Bool)
+    func didSetParam(param: Param, noLyric: Bool, noPitchFile: Bool)
 }
 
 class ParamSetVC: UIViewController {
     let tableview = UITableView(frame: .zero, style: .grouped)
     let button = UIButton()
     let noLyricButton = UIButton()
+    let noPitchFileButton = UIButton()
     var list = [Section]()
     let param = Param.default
     weak var delegate: ParamSetVCDelegate?
@@ -65,12 +66,16 @@ class ParamSetVC: UIViewController {
         button.backgroundColor = .red
         noLyricButton.setTitle("确定(无歌词)", for: .normal)
         noLyricButton.backgroundColor = .red
+        noPitchFileButton.setTitle("不用pitch(无音高)", for: .normal)
+        noPitchFileButton.backgroundColor = .red
         view.addSubview(tableview)
         view.addSubview(button)
         view.addSubview(noLyricButton)
+        view.addSubview(noPitchFileButton)
         tableview.translatesAutoresizingMaskIntoConstraints = false
         button.translatesAutoresizingMaskIntoConstraints = false
         noLyricButton.translatesAutoresizingMaskIntoConstraints = false
+        noPitchFileButton.translatesAutoresizingMaskIntoConstraints = false
         
         tableview.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         tableview.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
@@ -82,11 +87,15 @@ class ParamSetVC: UIViewController {
         
         noLyricButton.topAnchor.constraint(equalTo: tableview.bottomAnchor, constant: 10).isActive = true
         noLyricButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 45 + 100).isActive = true
+        
+        noPitchFileButton.topAnchor.constraint(equalTo: tableview.bottomAnchor, constant: 10).isActive = true
+        noPitchFileButton.leftAnchor.constraint(equalTo: noLyricButton.rightAnchor, constant: 45).isActive = true
     }
     
     func commonInit() {
         button.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         noLyricButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
+        noPitchFileButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         tableview.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableview.dataSource = self
         tableview.delegate = self
@@ -94,14 +103,21 @@ class ParamSetVC: UIViewController {
     }
     
     @objc func buttonTap(_ sender: UIButton) {
-        if sender != noLyricButton {
-            delegate?.didSetParam(param: param, noLyric: false)
+        if sender == button {
+            delegate?.didSetParam(param: param, noLyric: false, noPitchFile: false)
             dismiss(animated: true)
             return
         }
+        if sender == noLyricButton {
+            delegate?.didSetParam(param: param, noLyric: true, noPitchFile: false)
+            dismiss(animated: true)
+        }
         
-        delegate?.didSetParam(param: param, noLyric: true)
-        dismiss(animated: true)
+        if sender == noPitchFileButton {
+            delegate?.didSetParam(param: param, noLyric: false, noPitchFile: true)
+            dismiss(animated: true)
+        }
+        
     }
     
     func configCell(indexPath: IndexPath, cell: UITableViewCell) {
