@@ -51,7 +51,8 @@ class ViewController: UIViewController {
                                             .init(title: "观众端"),
                                             .init(title: "主播端"),
                                             .init(title: "抢唱"),
-                                            .init(title: "miniSize")])]
+                                            .init(title: "miniSize")]),
+                Section(title: "Check", rows: [.init(title: "check Lyrics")])]
 
 //        list = [Section(title: "UI", rows: [.init(title: "View配置")])]
     }
@@ -176,6 +177,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 
                 return
             }
+        }
+        
+        if indexPath.section == 2 { /** check **/
+            let vc = SelectedLyricVC()
+            navigationController?.pushViewController(vc, animated: true)
+            return
         }
     }
 }

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2602311E29C9DCDF0036F74A /* KTVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2602311D29C9DCDF0036F74A /* KTVView.swift */; };
+		2605432C2BFCAB9E00F89FB6 /* LyricsFileCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269AE4F52BFC926C00498BE2 /* LyricsFileCheckView.swift */; };
+		2605432D2BFCABA100F89FB6 /* CheckLyricVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269AE4F72BFC99F100498BE2 /* CheckLyricVC.swift */; };
 		260942D72952B5050022A50D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260942D62952B5050022A50D /* AppDelegate.swift */; };
 		260942D92952B5050022A50D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260942D82952B5050022A50D /* SceneDelegate.swift */; };
 		260942DB2952B5050022A50D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260942DA2952B5050022A50D /* ViewController.swift */; };
@@ -21,6 +23,7 @@
 		26119D4B2BD79A9000530607 /* MainTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26119D4A2BD79A9000530607 /* MainTestVC.swift */; };
 		26119D4D2BD79B7100530607 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26119D4C2BD79B7100530607 /* MainView.swift */; };
 		261B74142BEF48AC0090AEF1 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 261B74132BEF48AC0090AEF1 /* Log.swift */; };
+		2633D5F52BFDE9E600F99C22 /* SelectedLyricVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2633D5F42BFDE9E600F99C22 /* SelectedLyricVC.swift */; };
 		263565432BD124D90087B4CE /* MCCManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 263565422BD124D90087B4CE /* MCCManager.swift */; };
 		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
@@ -68,6 +71,7 @@
 		26119D4A2BD79A9000530607 /* MainTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTestVC.swift; sourceTree = "<group>"; };
 		26119D4C2BD79B7100530607 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		261B74132BEF48AC0090AEF1 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		2633D5F42BFDE9E600F99C22 /* SelectedLyricVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedLyricVC.swift; sourceTree = "<group>"; };
 		263565422BD124D90087B4CE /* MCCManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCCManager.swift; sourceTree = "<group>"; };
 		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		2680184F2BF1F54800325584 /* MainTestVC+Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainTestVC+Debug.swift"; sourceTree = "<group>"; };
@@ -79,6 +83,8 @@
 		2689ED452988EA540012BC4D /* ParamSetVC+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParamSetVC+Info.swift"; sourceTree = "<group>"; };
 		2689ED472988FDE10012BC4D /* LyricLabelVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricLabelVC.swift; sourceTree = "<group>"; };
 		269189BF2A8F749100F2B03C /* MiniSizeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniSizeVC.swift; sourceTree = "<group>"; };
+		269AE4F52BFC926C00498BE2 /* LyricsFileCheckView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LyricsFileCheckView.swift; sourceTree = "<group>"; };
+		269AE4F72BFC99F100498BE2 /* CheckLyricVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckLyricVC.swift; sourceTree = "<group>"; };
 		269F0F8F2BF308B500401BFE /* AccessProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessProvider.swift; sourceTree = "<group>"; };
 		26BCEC8F2BFAFF1200E6C996 /* ProgressProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressProvider.swift; sourceTree = "<group>"; };
 		26C5451F29555085009E0F37 /* NoLyricsTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoLyricsTestVC.swift; sourceTree = "<group>"; };
@@ -170,6 +176,7 @@
 				263565422BD124D90087B4CE /* MCCManager.swift */,
 				26C5452B2955B2FE009E0F37 /* Config.swift */,
 				26BCEC8F2BFAFF1200E6C996 /* ProgressProvider.swift */,
+				269AE4F42BFC926C00498BE2 /* CheckLyric */,
 				260942DC2952B5050022A50D /* Main.storyboard */,
 				260942DF2952B5060022A50D /* Assets.xcassets */,
 				260942E12952B5060022A50D /* LaunchScreen.storyboard */,
@@ -221,6 +228,16 @@
 				269189BF2A8F749100F2B03C /* MiniSizeVC.swift */,
 			);
 			path = Other;
+			sourceTree = "<group>";
+		};
+		269AE4F42BFC926C00498BE2 /* CheckLyric */ = {
+			isa = PBXGroup;
+			children = (
+				2633D5F42BFDE9E600F99C22 /* SelectedLyricVC.swift */,
+				269AE4F72BFC99F100498BE2 /* CheckLyricVC.swift */,
+				269AE4F52BFC926C00498BE2 /* LyricsFileCheckView.swift */,
+			);
+			path = CheckLyric;
 			sourceTree = "<group>";
 		};
 		71C0091C9A3C4A9E26233CC8 /* Frameworks */ = {
@@ -362,10 +379,12 @@
 				26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */,
 				269F0F902BF308B500401BFE /* AccessProvider.swift in Sources */,
 				2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */,
+				2605432D2BFCABA100F89FB6 /* CheckLyricVC.swift in Sources */,
 				263565432BD124D90087B4CE /* MCCManager.swift in Sources */,
 				26119D4B2BD79A9000530607 /* MainTestVC.swift in Sources */,
 				268018502BF1F54800325584 /* MainTestVC+Debug.swift in Sources */,
 				26C5452C2955B2FE009E0F37 /* Config.swift in Sources */,
+				2605432C2BFCAB9E00F89FB6 /* LyricsFileCheckView.swift in Sources */,
 				26E212002B2AF8AD00297136 /* DownloadView.swift in Sources */,
 				260942D72952B5050022A50D /* AppDelegate.swift in Sources */,
 				261B74142BEF48AC0090AEF1 /* Log.swift in Sources */,
@@ -376,6 +395,7 @@
 				26C5452429557D25009E0F37 /* LyricsTestVC.swift in Sources */,
 				26E5BF7F299245E10051AF67 /* SearchVC.swift in Sources */,
 				26119D4D2BD79B7100530607 /* MainView.swift in Sources */,
+				2633D5F52BFDE9E600F99C22 /* SelectedLyricVC.swift in Sources */,
 				2602311E29C9DCDF0036F74A /* KTVView.swift in Sources */,
 				2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */,
 				269189C02A8F749100F2B03C /* MiniSizeVC.swift in Sources */,
