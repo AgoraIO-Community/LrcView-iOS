@@ -134,6 +134,7 @@ class TestParser: XCTestCase {
         XCTAssertNotNil(model)
         XCTAssertEqual(model?.lines.count ?? 0, 40)
         XCTAssertEqual(model!.lines.first!.content, "如果那两个字没有颤抖")
+        XCTAssertEqual(model?.copyrightSentenceLineCount ?? 0, 4)
     }
     
     func testIncludeCopyrightSentence2() {
@@ -145,6 +146,7 @@ class TestParser: XCTestCase {
         XCTAssertNotNil(model)
         XCTAssertEqual(model?.lines.count ?? 0, 50)
         XCTAssertEqual(model!.lines.first!.content, "安静地又说分开")
+        XCTAssertEqual(model?.copyrightSentenceLineCount ?? 0, 12)
         
         krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "5803512921786982975", ofType: "krc")!))
         pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "5803512921786982975.pitch", ofType: nil)!))
@@ -154,6 +156,7 @@ class TestParser: XCTestCase {
         XCTAssertNotNil(model)
         XCTAssertEqual(model?.lines.count ?? 0, 58)
         XCTAssertEqual(model!.lines.first!.content, "不知道")
+        XCTAssertEqual(model?.copyrightSentenceLineCount ?? 0, 7)
     }
     
     func testLineScoreRecorder() {

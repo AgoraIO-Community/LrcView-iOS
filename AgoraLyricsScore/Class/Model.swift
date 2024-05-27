@@ -46,6 +46,8 @@ public class LyricModelEx: NSObject {
     @objc public var hasPitch: Bool
 
     var pitchDatas: [KrcPitchData] = []
+    /// indicated the numbers of copyright's line be removed
+    @objc public var copyrightSentenceLineCount: UInt = 0
     
     @objc public init(name: String,
                       singer: String,

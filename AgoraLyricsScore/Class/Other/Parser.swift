@@ -43,6 +43,7 @@ class Parser {
             lyricModel.lines = lyricModel.lines.enumerated().filter({ (index, _) in
                 return index >= firstIndex
             }).map({ $0.element })
+            lyricModel.copyrightSentenceLineCount = UInt(firstIndex)
         }
         
         return lyricModel
