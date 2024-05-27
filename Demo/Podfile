@@ -14,5 +14,5 @@ target 'Demo' do
   pod 'AgoraRtcEngine_iOS', :path => "/Volumes/T5/PodSpec/mcc2xx/AgoraRtcEngine_iOS.podspec"
   pod "Zip"
   pod "ScoreEffectUI", :path => "../../ScoringEffectUI/ScoreEffectUI/ScoreEffectUI.podspec", :testspecs => ['Tests']
-  pod 'AgoraComponetLog'
+  pod 'AgoraComponetLog', '0.0.2'
 end
