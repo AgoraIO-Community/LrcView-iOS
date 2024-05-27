@@ -137,14 +137,23 @@ class TestParser: XCTestCase {
     }
     
     func testIncludeCopyrightSentence2() {
-        let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "3017502026609527683", ofType: "krc")!))
-        let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "3017502026609527683.pitch", ofType: nil)!))
-        let model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData,
+        var krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "3017502026609527683", ofType: "krc")!))
+        var pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "3017502026609527683.pitch", ofType: nil)!))
+        var model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData,
                                                  pitchFileData: pitchFileData,
                                                  includeCopyrightSentence: false)
         XCTAssertNotNil(model)
         XCTAssertEqual(model?.lines.count ?? 0, 50)
         XCTAssertEqual(model!.lines.first!.content, "安静地又说分开")
+        
+        krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "5803512921786982975", ofType: "krc")!))
+        pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "5803512921786982975.pitch", ofType: nil)!))
+        model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData,
+                                                 pitchFileData: pitchFileData,
+                                                 includeCopyrightSentence: false)
+        XCTAssertNotNil(model)
+        XCTAssertEqual(model?.lines.count ?? 0, 58)
+        XCTAssertEqual(model!.lines.first!.content, "不知道")
     }
     
     func testLineScoreRecorder() {
