@@ -76,7 +76,7 @@ class MainTestVC2: UIViewController {
 extension MainTestVC2: RTCManagerDelegate {
     func rtcManager(_ manager: RTCManager, didProloadMusicWithSongId: Int) {
         Log.debug(text: "== didProloadMusicWithSongId")
-        manager.getLyric(songId: songId)
+        manager.getLyricInfo(songId: songId)
     }
     
     func rtcManagerDidOpenMusic(_ manager: RTCManager) {
@@ -150,7 +150,6 @@ extension MainTestVC2: RTCManagerDelegate {
     }
     
     func onLyricInfo(_ songCode: Int, lyricInfo: AgoraLyricInfo) {
-        Log.debug(text: "== onLyricInfo")
         rtcManager.open(songId: songId)
         setLyricToView(lyricInfo: lyricInfo)
     }
