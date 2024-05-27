@@ -37,22 +37,30 @@ class Parser {
         lyricModel.preludeEndPosition = pitchModel.pitchDatas.first?.startTime ?? 0
         
         let firstPitchDataStartTime = pitchModel.pitchDatas.first?.startTime ?? 0
-        let firstPitchDataEndTime = firstPitchDataStartTime + (pitchModel.pitchDatas.first?.duration  ?? 0)
-        
         if !includeCopyrightSentence { /** 移除版权信息类型的句子 **/
-            /// find a actual start lineIndex
-            guard let firstIndex = lyricModel.lines.enumerated().first(where: { (_, element) in
-                return firstPitchDataStartTime <= element.endTime && firstPitchDataEndTime <= element.endTime
-            }).map({ $0.offset }) else {
-                Log.errorText(text: "no valid line", tag: logTag)
-                return lyricModel
-            }
-            
+            let lines = lyricModel.lines.map({ $0.beginTime })
+            let firstIndex = getMostCloseToFirstPitchIndex(lineBegins: lines, firstPitchStartTime: firstPitchDataStartTime)
             lyricModel.lines = lyricModel.lines.enumerated().filter({ (index, _) in
                 return index >= firstIndex
             }).map({ $0.element })
         }
         
         return lyricModel
+    }
+    
+    func getMostCloseToFirstPitchIndex(lineBegins: [UInt], firstPitchStartTime: UInt) -> Int {
+        /**
+            用firstPitchStartTime，和lineBegins中的每一个进行对比，找到lineBegins中距离firstPitchStartTime最近的那个index
+         **/
+        var minDiff = UInt.max
+        var firstMinIndex = 0
+        for (index, lineBegin) in lineBegins.enumerated() {
+            let diff = UInt(abs(Int32(lineBegin) - Int32(firstPitchStartTime)))
+            if diff < minDiff {
+                minDiff = diff
+                firstMinIndex = index
+            }
+        }
+        return firstMinIndex
     }
 }

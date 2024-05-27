@@ -18,7 +18,6 @@ class TestParser: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
-    
     func testKRCFile() {
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133", ofType: "krc")!)
         let data = try! Data(contentsOf: url)
@@ -63,7 +62,7 @@ class TestParser: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssert(model.pitchDatas.count  == 294)
+        XCTAssert(model.pitchDatas.count == 294)
         
         XCTAssert(model.pitchDatas.first!.duration == 241)
         XCTAssert(model.pitchDatas.first!.startTime == 15203)
@@ -126,7 +125,7 @@ class TestParser: XCTestCase {
         XCTAssertTrue(model.hasPitch == false)
     }
     
-    func testIncludeCopyrightSentence() {
+    func testIncludeCopyrightSentence1() {
         let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133", ofType: "krc")!))
         let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
         let model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData,
@@ -134,6 +133,18 @@ class TestParser: XCTestCase {
                                                  includeCopyrightSentence: false)
         XCTAssertNotNil(model)
         XCTAssertEqual(model?.lines.count ?? 0, 40)
+        XCTAssertEqual(model!.lines.first!.content, "如果那两个字没有颤抖")
+    }
+    
+    func testIncludeCopyrightSentence2() {
+        let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "3017502026609527683", ofType: "krc")!))
+        let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "3017502026609527683.pitch", ofType: nil)!))
+        let model = KaraokeViewEx.parseLyricData(krcFileData: krcFileData,
+                                                 pitchFileData: pitchFileData,
+                                                 includeCopyrightSentence: false)
+        XCTAssertNotNil(model)
+        XCTAssertEqual(model?.lines.count ?? 0, 50)
+        XCTAssertEqual(model!.lines.first!.content, "安静地又说分开")
     }
     
     func testLineScoreRecorder() {
