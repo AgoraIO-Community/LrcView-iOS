@@ -202,6 +202,10 @@ extension HostVC: AgoraRtcEngineDelegate {
 }
 
 extension HostVC: AgoraMusicContentCenterEventDelegate {
+    func onLyricInfo(_ requestId: String, songCode: Int, lyricInfo: AgoraLyricInfo, errorCode: AgoraMusicContentCenterStatusCode) {
+        
+    }
+    
     func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], errorCode: AgoraMusicContentCenterStatusCode) {
         
     }

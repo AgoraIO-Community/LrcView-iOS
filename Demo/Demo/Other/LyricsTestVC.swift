@@ -188,6 +188,14 @@ extension LyricsTestVC: AgoraRtcEngineDelegate {
 }
 
 extension LyricsTestVC: AgoraMusicContentCenterEventDelegate {
+    func onLyricInfo(_ requestId: String, songCode: Int, lyricInfo: AgoraLyricInfo, errorCode: AgoraMusicContentCenterStatusCode) {
+        
+    }
+    
+    func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
+        
+    }
+    
     func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], errorCode: AgoraMusicContentCenterStatusCode) {
         
     }
@@ -207,10 +215,6 @@ extension LyricsTestVC: AgoraMusicContentCenterEventDelegate {
             self?.mccPlay()
             self?.mpk.seek(toPosition: 16000)
         }
-    }
-    
-    func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
-        
     }
     
     func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, status: AgoraMusicContentCenterPreloadStatus, errorCode: AgoraMusicContentCenterStatusCode) {

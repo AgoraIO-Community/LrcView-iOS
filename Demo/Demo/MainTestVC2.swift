@@ -48,8 +48,8 @@ class MainTestVC2: UIViewController {
         progressProvider.delegate = self
     }
     
-    private func setLyricToView() {
-        let info = rtcManager.getLyricInfo(songId: songId)
+    func setLyricToView(lyricInfo: AgoraLyricInfo) {
+        let info = lyricInfo
         let lines = info.sentences.map({ LyricLineModel(beginTime: $0.begin, duration: $0.duration, content: $0.content, tones:$0.words.map({ LyricToneModel(beginTime: $0.begin, duration: $0.duration, word: $0.word, pitch: $0.refPitch, lang: .zh, pronounce: "") })) })
         let model = LyricModel(name: info.name,
                                singer: info.singer,
@@ -75,13 +75,14 @@ class MainTestVC2: UIViewController {
 // MARK: - RTCManagerDelegate
 extension MainTestVC2: RTCManagerDelegate {
     func rtcManager(_ manager: RTCManager, didProloadMusicWithSongId: Int) {
-        manager.open(songId: songId)
+        Log.debug(text: "== didProloadMusicWithSongId")
+        manager.getLyric(songId: songId)
     }
     
     func rtcManagerDidOpenMusic(_ manager: RTCManager) {
+        Log.debug(text: "== DidOpenMusic")
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            setLyricToView()
             manager.playMusic()
             manager.startScore(songId: songId)
             progressProvider.startTime()
@@ -127,15 +128,15 @@ extension MainTestVC2: RTCManagerDelegate {
         }
     }
     
-    func onLineScore(_ songCode: Int, value: AgoraCumulativeScoreData) {
+    func onLineScore(_ songCode: Int, value: AgoraLineScoreData) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
                 return
             }
             
-            let score = Int(value.performedLinePitchScore)
-            let cumulativeScore = Int(value.cumulativeTotalLinePitchScores)
-            let totalScore = value.performedTotalLines * 100
+            let score = Int(value.pitchScore)
+            let cumulativeScore = Int(value.cumulativePitchScore)
+            let totalScore = value.totalLines * 100
             mainView.lineScoreView.showScoreView(score: score)
             mainView.incentiveView.show(score: score)
             mainView.gradeView.setScore(cumulativeScore: cumulativeScore,
@@ -149,7 +150,9 @@ extension MainTestVC2: RTCManagerDelegate {
     }
     
     func onLyricInfo(_ songCode: Int, lyricInfo: AgoraLyricInfo) {
-        
+        Log.debug(text: "== onLyricInfo")
+        rtcManager.open(songId: songId)
+        setLyricToView(lyricInfo: lyricInfo)
     }
 }
 

@@ -89,6 +89,10 @@ extension SearchVC: AgoraMusicContentCenterEventDelegate {
         
     }
     
+    func onLyricInfo(_ requestId: String, songCode: Int, lyricInfo: AgoraLyricInfo, errorCode: AgoraMusicContentCenterStatusCode) {
+        
+    }
+    
     func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
         
     }

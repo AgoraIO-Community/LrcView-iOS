@@ -12,7 +12,7 @@ protocol RTCManagerDelegate: NSObjectProtocol {
     func rtcManagerDidOpenMusic(_ manager: RTCManager)
     func rtcManager(_ manager: RTCManager, didReceivePitch pitch: Double)
     func onPitch(_ songCode: Int, item: AgoraRawScoreData)
-    func onLineScore(_ songCode: Int, value: AgoraCumulativeScoreData)
+    func onLineScore(_ songCode: Int, value: AgoraLineScoreData)
     func onCumulativeScore(_ songCode: Int, value: AgoraCumulativeScoreData)
     func onLyricInfo(_ songCode: Int, lyricInfo: AgoraLyricInfo)
 }
@@ -139,10 +139,8 @@ class RTCManager: NSObject {
         return preludeEndPosition
     }
     
-    func getLyricInfo(songId: Int) -> AgoraLyricInfo {
-        let info = mcc.getLyricInfo(songCode: songId)
-        lyricInfo = info
-        return info
+    func getLyric(songId: Int) {
+        mcc.getLyric(songCode: songId, lyricType: 0)
     }
     
     func startScore(songId: Int) {
@@ -226,7 +224,7 @@ extension RTCManager: AgoraMusicContentCenterScoreEventDelegate {
         delegate?.onPitch(songCode, item: rawScoreData)
     }
     
-    func onLineScore(_ songCode: Int, lineScoreData: AgoraCumulativeScoreData) {
+    func onLineScore(_ songCode: Int, lineScoreData: AgoraLineScoreData) {
         print("== onLineScore \(lineScoreData.description)")
         delegate?.onLineScore(songCode, value: lineScoreData)
     }
@@ -243,6 +241,9 @@ extension RTCManager: AgoraMusicContentCenterScoreEventDelegate {
 }
 
 extension RTCManager: AgoraMusicContentCenterEventDelegate {
+    func onLyricInfo(_ requestId: String, songCode: Int, lyricInfo: AgoraLyricInfo, errorCode: AgoraMusicContentCenterStatusCode) {
+    }
+    
     func onMusicChartsResult(_ requestId: String,
                              result: [AgoraMusicChartInfo],
                              errorCode: AgoraMusicContentCenterStatusCode) {}
