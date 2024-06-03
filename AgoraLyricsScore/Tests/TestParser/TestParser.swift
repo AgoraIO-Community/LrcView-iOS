@@ -118,4 +118,146 @@ class TestParser: XCTestCase {
         XCTAssert(model.lines[0].tones[1].word  == "")
         XCTAssert(model.lines[0].tones[2].word  == "响")
     }
+    
+    func testKRCFile() {
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133", ofType: "krc")!)
+        let data = try! Data(contentsOf: url)
+        let p = KRCParser()
+        guard let model = p.parse(krcFileData: data) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count == 44)
+        XCTAssert(model.lines.first!.beginTime == 1067)
+        XCTAssert(model.name  == "十年")
+        XCTAssert(model.singer  == "陈奕迅")
+        XCTAssert(model.lyricsType  == .krc)
+        XCTAssertEqual(model.duration, 381601)
+        XCTAssert(model.preludeEndPosition  == 0)
+        XCTAssertTrue(model.hasPitch == false)
+    }
+    
+    func testKRCFile2() {
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "3017502026609527683", ofType: "krc")!)
+        let data = try! Data(contentsOf: url)
+        let p = KRCParser()
+        guard let model = p.parse(krcFileData: data) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count == 62)
+        XCTAssert(model.lines.first!.beginTime == 0)
+        XCTAssert(model.name  == "在你的身边")
+        XCTAssert(model.singer  == "盛哲")
+        XCTAssert(model.lyricsType  == .krc)
+        XCTAssertEqual(model.duration, 253637+3117)
+        XCTAssert(model.preludeEndPosition  == 0)
+        XCTAssertTrue(model.hasPitch == false)
+    }
+    
+    func testPitchParser() {
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!)
+        let data = try! Data(contentsOf: url)
+        let p = PitchParser()
+        guard let model = p.parse(fileContent: data)else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.pitchDatas.count == 294)
+        
+        XCTAssert(model.pitchDatas.first!.duration == 241)
+        XCTAssert(model.pitchDatas.first!.startTime == 15203)
+        XCTAssert(model.pitchDatas.first!.pitch == 50)
+        
+        XCTAssert(model.pitchDatas.last!.duration == 2907)
+        XCTAssert(model.pitchDatas.last!.startTime == 180203)
+        XCTAssert(model.pitchDatas.last!.pitch == 50)
+    }
+    
+    func testKrcPitchMerge() {
+        let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
+        
+        let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133", ofType: "krc")!))
+        
+        
+        let p = Parser()
+        guard let model = p.parseLyricData(data: krcFileData, pitchFileData: pitchFileData, includeCopyrightSentence: true) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count > 0)
+        XCTAssert(model.lines.first!.beginTime == 1067)
+        XCTAssert(model.name  == "十年")
+        XCTAssert(model.singer  == "陈奕迅")
+        XCTAssert(model.lyricsType  == .krcAndPitchs)
+        XCTAssertEqual(model.duration, 381601)
+        XCTAssert(model.preludeEndPosition  == 15203)
+        XCTAssertTrue(model.hasPitch == true)
+        
+        XCTAssert(model.pitchDatas.count  == 294)
+        XCTAssert(model.pitchDatas.first!.duration == 241)
+        XCTAssert(model.pitchDatas.first!.startTime == 15203)
+        XCTAssert(model.pitchDatas.first!.pitch == 50)
+        XCTAssert(model.pitchDatas.last!.duration == 2907)
+        XCTAssert(model.pitchDatas.last!.startTime == 180203)
+        XCTAssert(model.pitchDatas.last!.pitch == 50)
+    }
+    
+    func testKrcEmptyData() { /** EmptyData **/
+        let data = Data()
+        let model = KaraokeView.parseLyricData(lyricFileData: data, pitchFileData: data)
+        XCTAssertNil(model)
+    }
+    
+    func testKrcEmptyPitchData() { /** EmptyPitchData **/
+        let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133", ofType: "krc")!))
+        
+        guard let model = KaraokeView.parseLyricData(lyricFileData: krcFileData) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count == 44)
+        XCTAssert(model.lines.first!.beginTime == 1067)
+        XCTAssert(model.name  == "十年")
+        XCTAssert(model.singer  == "陈奕迅")
+        XCTAssert(model.lyricsType  == .krc)
+        XCTAssertEqual(model.duration, 381601)
+        XCTAssert(model.preludeEndPosition  == 0)
+        XCTAssertTrue(model.hasPitch == false)
+    }
+    
+    func testIncludeCopyrightSentence1() {
+        let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133", ofType: "krc")!))
+        let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))
+        let model = KaraokeView.parseLyricData(lyricFileData: krcFileData,
+                                               pitchFileData: pitchFileData,
+                                               includeCopyrightSentence: false)
+        XCTAssertNotNil(model)
+        XCTAssert(model!.lyricsType  == .krcAndPitchs)
+        XCTAssertEqual(model!.lines.count, 40)
+        XCTAssertEqual(model!.lines.first!.content, "如果那两个字没有颤抖")
+        XCTAssertEqual(model!.copyrightSentenceLineCount, 4)
+    }
+    
+    func testIncludeCopyrightSentence2() {
+        var krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "3017502026609527683", ofType: "krc")!))
+        var pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "3017502026609527683.pitch", ofType: nil)!))
+        var model = KaraokeView.parseLyricData(lyricFileData: krcFileData,
+                                               pitchFileData: pitchFileData,
+                                               includeCopyrightSentence: false)
+        XCTAssertNotNil(model)
+        XCTAssertEqual(model?.lines.count ?? 0, 50)
+        XCTAssertEqual(model!.lines.first!.content, "安静地又说分开")
+        XCTAssertEqual(model?.copyrightSentenceLineCount ?? 0, 12)
+        
+        krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "5803512921786982975", ofType: "krc")!))
+        pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "5803512921786982975.pitch", ofType: nil)!))
+        model = KaraokeView.parseLyricData(lyricFileData: krcFileData,
+                                           pitchFileData: pitchFileData,
+                                           includeCopyrightSentence: false)
+        XCTAssertNotNil(model)
+        XCTAssertEqual(model?.lines.count ?? 0, 58)
+        XCTAssertEqual(model!.lines.first!.content, "不知道")
+        XCTAssertEqual(model?.copyrightSentenceLineCount ?? 0, 7)
+    }
 }
