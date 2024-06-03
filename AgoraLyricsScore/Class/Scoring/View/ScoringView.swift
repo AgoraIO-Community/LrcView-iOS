@@ -41,7 +41,7 @@ public class ScoringView: UIView {
     var scoreLevel = 15 { didSet { updateUI() } }
     var scoreCompensationOffset = 0 { didSet { updateUI() } }
     
-    var progress: Int = 0 { didSet { updateProgress() } }
+    var progress: UInt = 0 { didSet { updateProgress() } }
     fileprivate let localPitchView = LocalPitchView()
     fileprivate let canvasView = ScoringCanvasView()
     /// use for debug only
@@ -88,7 +88,7 @@ public class ScoringView: UIView {
         scoringMachine.dragBegain()
     }
     
-    func dragDidEnd(position: Int) {
+    func dragDidEnd(position: UInt) {
         scoringMachine.dragDidEnd(position: position)
     }
     

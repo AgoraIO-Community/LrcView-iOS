@@ -40,7 +40,7 @@ class TestParser: XCTestCase {
         XCTAssert(model.lines.first!.beginTime == 18487)
         XCTAssert(model.name  == "十年 ")
         XCTAssert(model.singer  == "陈奕迅")
-        XCTAssert(model.type  == .fast)
+        XCTAssert(model.lyricsType  == .xml)
         XCTAssert(model.duration  == 186022)
         XCTAssert(model.preludeEndPosition  == 18487)
         XCTAssertTrue(model.hasPitch)

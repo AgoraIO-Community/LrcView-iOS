@@ -57,7 +57,7 @@ class LrcParser {
                     interval1 *= -1
                 }
                 
-                let line = LyricLineModel(beginTime: Int(interval1 * 1000),
+                let line = LyricLineModel(beginTime: UInt(interval1 * 1000),
                                           duration: 0,
                                           content: lrc,
                                           tones: [])
@@ -74,7 +74,7 @@ class LrcParser {
         
         let result = LyricModel(name: "unknow",
                                 singer: "unknow",
-                                type: .fast,
+                                lyricsType: .lrc,
                                 lines: lines,
                                 preludeEndPosition: preludeEndPosition,
                                 duration: 0,

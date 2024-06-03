@@ -12,7 +12,7 @@ class TestScoringVM: XCTestCase {
 
     func testCurrentIndexOfLine() throws {
         let vm = ScoringMachine()
-        let lineEndTimes = [1000, 2000, 3000]
+        let lineEndTimes: [UInt] = [1000, 2000, 3000]
         XCTAssertEqual(vm.findCurrentIndexOfLine(progress: 0, lineEndTimes: lineEndTimes), 0)
         XCTAssertEqual(vm.findCurrentIndexOfLine(progress: 999, lineEndTimes: lineEndTimes), 0)
         XCTAssertEqual(vm.findCurrentIndexOfLine(progress: 1000, lineEndTimes: lineEndTimes), 0)

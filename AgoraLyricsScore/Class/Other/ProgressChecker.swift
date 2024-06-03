@@ -13,8 +13,8 @@ protocol ProgressCheckerDelegate: NSObjectProtocol {
 
 /// check progress if pause
 class ProgressChecker: NSObject {
-    private var lastProgress = 0
-    private var progress = 0
+    private var lastProgress: UInt = 0
+    private var progress: UInt = 0
     private var isStart = false
     private let queue = DispatchQueue(label: "queue.progressChecker")
     weak var delegate: ProgressCheckerDelegate?
@@ -25,7 +25,7 @@ class ProgressChecker: NSObject {
     // MARK: - Internal
     
     /// progress input
-    func set(progress: Int) {
+    func set(progress: UInt) {
         queue.async { [weak self] in
             self?._set(progress: progress)
         }
@@ -43,7 +43,7 @@ class ProgressChecker: NSObject {
     
     // MARK: - Private
     
-    private func _set(progress: Int) {
+    private func _set(progress: UInt) {
         self.progress = progress
         _start()
     }

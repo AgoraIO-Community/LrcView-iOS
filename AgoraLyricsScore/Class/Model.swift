@@ -7,18 +7,28 @@
 
 import Foundation
 
-@objc public enum MusicType: Int, CustomStringConvertible {
-    /// 快歌
-    case fast = 1
-    /// 慢歌
-    case slow = 2
+struct KrcPitchData: Codable {
+    let pitch: Double
+    let startTime: UInt
+    let duration: UInt
+}
+
+@objc public enum LyricsType: Int8, CustomStringConvertible {
+    case xml = 1
+    case lrc = 2
+    case krc = 3
+    case krcAndPitchs = 4
     
     public var description: String {
         switch self {
-        case .fast:
-            return "fast"
-        default:
-            return "slow"
+        case .xml:
+            return "xml"
+        case .lrc:
+            return "lrc"
+        case .krc:
+            return "krc"
+        case .krcAndPitchs:
+            return "krcAndPitchs"
         }
     }
 }
@@ -28,27 +38,29 @@ public class LyricModel: NSObject {
     @objc public var name: String
     /// 歌星名称
     @objc public var singer: String
-    /// 歌曲类型
-    @objc public var type: MusicType
+    
+    @objc public var lyricsType: LyricsType
     /// 行信息
     @objc public var lines: [LyricLineModel]
     /// 前奏结束时间
-    @objc public var preludeEndPosition: Int
+    @objc public var preludeEndPosition: UInt
     /// 歌词总时长 (ms)
-    @objc public var duration: Int
+    @objc public var duration: UInt
     /// 是否有pitch值
     @objc public var hasPitch: Bool
     
+    var pitchDatas: [KrcPitchData] = []
+    
     @objc public init(name: String,
                       singer: String,
-                      type: MusicType,
+                      lyricsType: LyricsType,
                       lines: [LyricLineModel],
-                      preludeEndPosition: Int,
-                      duration: Int,
+                      preludeEndPosition: UInt,
+                      duration: UInt,
                       hasPitch: Bool) {
         self.name = name
         self.singer = singer
-        self.type = type
+        self.lyricsType = lyricsType
         self.lines = lines
         self.preludeEndPosition = preludeEndPosition
         self.duration = duration
@@ -61,7 +73,7 @@ public class LyricModel: NSObject {
     @objc public init(data: Data) throws {
         self.name = "name"
         self.singer = "singer"
-        self.type = .fast
+        self.lyricsType = .xml
         self.lines = []
         self.preludeEndPosition = 0
         self.duration = 0
@@ -71,7 +83,7 @@ public class LyricModel: NSObject {
     @objc public override init() {
         self.name = ""
         self.singer = ""
-        self.type = .fast
+        self.lyricsType = .xml
         self.lines = []
         self.preludeEndPosition = 0
         self.duration = 0
@@ -82,7 +94,7 @@ public class LyricModel: NSObject {
     @objc public override var description: String {
         let dict = ["name" : name,
                     "singer" : singer,
-                    "type" : type,
+                    "type" : lyricsType,
                     "preludeEndPosition" : preludeEndPosition,
                     "duration" : duration,
                     "hasPitch" : hasPitch] as [String : Any]
@@ -92,16 +104,16 @@ public class LyricModel: NSObject {
 
 public class LyricLineModel: NSObject {
     /// 开始时间 单位为毫秒
-    @objc public var beginTime: Int
+    @objc public var beginTime: UInt
     /// 总时长 (ms)
-    @objc public var duration: Int
+    @objc public var duration: UInt
     /// 行内容
     @objc public var content: String
     /// 每行歌词的字信息
     @objc public var tones: [LyricToneModel]
     
-    @objc public init(beginTime: Int,
-                      duration: Int,
+    @objc public init(beginTime: UInt,
+                      duration: UInt,
                       content: String,
                       tones: [LyricToneModel]) {
         self.beginTime = beginTime
@@ -112,15 +124,15 @@ public class LyricLineModel: NSObject {
 }
 
 public class LyricToneModel: NSObject {
-    @objc public let beginTime: Int
-    @objc public let duration: Int
+    @objc public let beginTime: UInt
+    @objc public let duration: UInt
     @objc public var word: String
     @objc public let pitch: Double
     @objc public var lang: Lang
     @objc public let pronounce: String
     
-    @objc public init(beginTime: Int,
-                      duration: Int,
+    @objc public init(beginTime: UInt,
+                      duration: UInt,
                       word: String,
                       pitch: Double,
                       lang: Lang,

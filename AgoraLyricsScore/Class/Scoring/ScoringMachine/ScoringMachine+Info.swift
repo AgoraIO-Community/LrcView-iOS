@@ -10,24 +10,24 @@ import Foundation
 extension ScoringMachine {
     class Info {
         /// 标准开始时间 （来源自歌词文件）
-        let beginTime: Int
+        let beginTime: UInt
         /// 标准时长 （来源自歌词文件）
-        let duration: Int
+        let duration: UInt
         /// 需要绘制的开始时间
-        let drawBeginTime: Int
+        let drawBeginTime: UInt
         /// 需要绘制的时长
-        var drawDuration: Int
+        var drawDuration: UInt
         let word: String
         let pitch: Double
         /// 是否句子中最后的一个字
         let isLastInLine: Bool
         
-        required init(beginTime: Int,
-                      duration: Int,
+        required init(beginTime: UInt,
+                      duration: UInt,
                       word: String,
                       pitch: Double,
-                      drawBeginTime: Int,
-                      drawDuration: Int,
+                      drawBeginTime: UInt,
+                      drawDuration: UInt,
                       isLastInLine: Bool) {
             self.beginTime = beginTime
             self.duration = duration
@@ -38,11 +38,11 @@ extension ScoringMachine {
             self.isLastInLine = isLastInLine
         }
         
-        var endTime: Int {
+        var endTime: UInt {
             beginTime + duration
         }
         
-        var drawEndTime: Int {
+        var drawEndTime: UInt {
             drawBeginTime + drawDuration
         }
         
@@ -66,7 +66,7 @@ extension ScoringMachine {
         /// 男女音调算法改变后的pitch
         let pitch: Double
         let hitedInfo: ScoringMachine.Info?
-        let progress: Int
+        let progress: UInt
     }
 }
 

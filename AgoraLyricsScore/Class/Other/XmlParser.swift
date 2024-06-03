@@ -11,6 +11,7 @@ class XmlParser: NSObject {
     fileprivate let logTag = "XmlParser"
     fileprivate var parserTypes: [ParserType] = []
     fileprivate var song: LyricModel!
+    fileprivate var parseFail = false
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
@@ -44,7 +45,7 @@ class XmlParser: NSObject {
             return nil
         }
         var hasPitch = false
-        var preludeEndPosition = -1
+        var preludeEndPosition: UInt = 0
         for line in song.lines {
             var content = ""
             for item in line.tones.enumerated() {
@@ -59,15 +60,23 @@ class XmlParser: NSObject {
                 if tone.pitch > 0 {
                     hasPitch = true
                 }
-                if preludeEndPosition == -1 {
+                if preludeEndPosition == 0 {
                     preludeEndPosition = tone.beginTime
                 }
                 content += tone.word
             }
             
-            let lineBeginTime = line.tones.first?.beginTime ?? -1
-            let lineEndTime = (line.tones.last?.duration ?? -1) + (line.tones.last?.beginTime ?? -1)
-            if lineBeginTime < 0 || lineEndTime < 0 || lineEndTime - lineBeginTime < 0 {
+            guard let lineBeginTime = line.tones.first?.beginTime,
+                  let lastToneDurationInLine = line.tones.last?.duration,
+                  let lastToneBeginTineInLine = line.tones.last?.beginTime else {
+                let text = "data error. lines is empty"
+                Log.error(error: text, tag: logTag)
+                return nil
+            }
+            
+            let lineEndTime = lastToneDurationInLine + lastToneBeginTineInLine
+            
+            if lineEndTime < lineBeginTime {
                 let text = "data error. lineBeginTime: \(lineBeginTime) lineEndTime: \(lineEndTime)"
                 Log.error(error: text, tag: logTag)
                 return nil
@@ -127,6 +136,9 @@ extension XmlParser: XMLParserDelegate {
                 namespaceURI _: String?,
                 qualifiedName _: String?,
                 attributes attributeDict: [String: String] = [:]) {
+        guard !parseFail else {
+            return
+        }
         switch elementName {
         case "song":
             song = LyricModel()
@@ -140,7 +152,7 @@ extension XmlParser: XMLParserDelegate {
             push(.type)
         case "sentence":
             push(.sentence)
-            let line = LyricLineModel(beginTime: -1, duration: -1, content: "", tones: [])
+            let line = LyricLineModel(beginTime: 0, duration: 0, content: "", tones: [])
             song.lines.append(line)
         case "tone":
             push(.tone)
@@ -148,14 +160,21 @@ extension XmlParser: XMLParserDelegate {
                 let beginValue = Double(attributeDict["begin"] ?? "0") ?? 0
                 let endValue = Double(attributeDict["end"] ?? "0") ?? 0
                 let pitchValue = Float(attributeDict["pitch"] ?? "0") ?? 0
-                let begin = Int(beginValue * 1000)
-                let end = Int(endValue * 1000)
+                let begin = UInt(beginValue * 1000)
+                var end = UInt(endValue * 1000)
                 let pitch = Double(pitchValue)
                 let pronounce = attributeDict["pronounce"] ?? ""
                 let langValue = Int(attributeDict["lang"] ?? "") ?? -1
                 let lang = Lang(rawValue: langValue)!
+                if begin > end {
+                    Log.errorText(text: "begin is gater than end, begin: \(begin) end: \(end)", tag: logTag)
+                    song = nil
+                    parseFail = true
+                    return
+                }
+                let duration: UInt = end - begin
                 let tone = LyricToneModel(beginTime: begin,
-                                          duration: end - begin,
+                                          duration: duration,
                                           word: "",
                                           pitch: pitch,
                                           lang: lang,
@@ -168,8 +187,8 @@ extension XmlParser: XMLParserDelegate {
             push(.overlap)
             let beginValue = Double(attributeDict["begin"] ?? "0") ?? 0
             let endValue = Double(attributeDict["end"] ?? "0") ?? 0
-            let begin = Int(beginValue * 1000)
-            let end = Int(endValue * 1000)
+            let begin = UInt(beginValue * 1000)
+            let end = UInt(endValue * 1000)
             let pitch: Double = 0
             let pronounce = ""
             let langValue = Int(attributeDict["lang"] ?? "") ?? -1
@@ -192,21 +211,10 @@ extension XmlParser: XMLParserDelegate {
             switch last {
             case .name:
                 song.name = string
-//                if song.name != nil {
-//                    song.name += string
-//                }
-//                else {
-//                    song.name = string
-//                }
             case .singer:
                 song.singer = string
             case .type:
-                if let value = Int(string) {
-                    song.type = MusicType(rawValue: value) ?? .fast
-                }
-                else {
-                    song.type = .fast
-                }
+                break
             case .word, .overlap:
                 if let tone = song.lines.last?.tones.last {
                     tone.word = tone.word + string

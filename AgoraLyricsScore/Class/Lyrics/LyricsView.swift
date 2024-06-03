@@ -9,7 +9,7 @@ import UIKit
 
 protocol LyricsViewDelegate: NSObjectProtocol {
     func onLyricsViewBegainDrag(view: LyricsView)
-    func onLyricsView(view: LyricsView, didDragTo position: Int)
+    func onLyricsView(view: LyricsView, didDragTo position: UInt)
 }
 
 public class LyricsView: UIView {
@@ -88,7 +88,7 @@ public class LyricsView: UIView {
         Log.info(text: "reset", tag: logTag)
     }
     
-    func setProgress(progress: Int) {
+    func setProgress(progress: UInt) {
         guard !isDragging else { return }
         lyricMachine.setProgress(progress: progress)
     }

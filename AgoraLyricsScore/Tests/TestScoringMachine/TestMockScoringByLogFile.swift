@@ -108,7 +108,7 @@ extension TestMockScoringByLogFile {
         vm.setLyricData(data: model)
         
         for item in items {
-            vm.setProgress(progress: Int(item.progress))
+            vm.setProgress(progress: UInt(item.progress))
             vm.setPitch(pitch: item.pitch!)
             usleep(15)
         }

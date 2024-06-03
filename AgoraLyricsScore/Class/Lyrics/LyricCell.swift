@@ -149,9 +149,9 @@ extension LyricCell {
         /// 进度 0-1
         var progressRate: Double
         /// 开始时间 单位为毫秒
-        let beginTime: Int
+        let beginTime: UInt
         /// 总时长 (ms)
-        let duration: Int
+        let duration: UInt
         /// 状态
         var status: Status
         
@@ -159,8 +159,8 @@ extension LyricCell {
         
         init(text: String,
              progressRate: Double,
-             beginTime: Int,
-             duration: Int,
+             beginTime: UInt,
+             duration: UInt,
              status: Status,
              tones: [LyricToneModel]) {
             self.text = text
@@ -179,7 +179,7 @@ extension LyricCell {
             self.status = status
         }
         
-        var endTime: Int {
+        var endTime: UInt {
             beginTime + duration
         }
     }

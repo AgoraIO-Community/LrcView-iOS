@@ -20,13 +20,13 @@ extension String {
 }
 
 extension LyricLineModel {
-    var endTime: Int {
+    var endTime: UInt {
         beginTime + duration
     }
 }
 
 extension LyricToneModel {
-    var endTime: Int {
+    var endTime: UInt {
         beginTime + duration
     }
 }

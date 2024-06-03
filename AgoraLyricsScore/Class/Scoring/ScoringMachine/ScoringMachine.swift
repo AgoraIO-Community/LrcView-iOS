@@ -21,10 +21,10 @@ class ScoringMachine {
     var scoreAlgorithm: IScoreAlgorithm = ScoreAlgorithm()
     weak var delegate: ScoringMachineDelegate?
     
-    fileprivate var progress: Int = 0
+    fileprivate var progress: UInt = 0
     fileprivate var widthPreMs: CGFloat { movingSpeedFactor / 1000 }
     fileprivate var dataList = [Info]()
-    fileprivate var lineEndTimes = [Int]()
+    fileprivate var lineEndTimes = [UInt]()
     fileprivate var currentVisiableInfos = [Info]()
     fileprivate var currentHighlightInfos = [Info]()
     fileprivate var maxPitch: Double = 0
@@ -51,7 +51,7 @@ class ScoringMachine {
         }
     }
     
-    func setProgress(progress: Int) {
+    func setProgress(progress: UInt) {
         Log.debug(text: "progress: \(progress)", tag: "progress")
         queue.async { [weak self] in
             self?._setProgress(progress: progress)
@@ -70,7 +70,7 @@ class ScoringMachine {
         }
     }
     
-    func dragDidEnd(position: Int) {
+    func dragDidEnd(position: UInt) {
         queue.async { [weak self] in
             self?._dragDidEnd(position: position)
         }
@@ -111,7 +111,7 @@ class ScoringMachine {
         handleProgress()
     }
     
-    private func _setProgress(progress: Int) {
+    private func _setProgress(progress: UInt) {
         guard !isDragging else { return }
         guard let model = lyricData, model.hasPitch else { return }
         Log.debug(text: "progress: \(progress)", tag: logTag)
@@ -212,7 +212,7 @@ class ScoringMachine {
         isDragging = true
     }
     
-    private func _dragDidEnd(position: Int) {
+    private func _dragDidEnd(position: UInt) {
         guard let index = findCurrentIndexOfLine(progress: position, lineEndTimes: lineEndTimes) else {
             return
         }
@@ -233,7 +233,7 @@ class ScoringMachine {
         isDragging = false
     }
     
-    private func resetToneScores(position: Int) {
+    private func resetToneScores(position: UInt) {
         guard let index = findCurrentIndexOfLine(progress: position, lineEndTimes: lineEndTimes) else {
             return
         }
