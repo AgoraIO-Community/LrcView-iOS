@@ -57,7 +57,7 @@ class TestEstimateScore: XCTestCase, ScoringMachineDelegate {
         vm = ScoringMachine()
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: xmlFileName, ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }

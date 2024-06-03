@@ -21,7 +21,7 @@ class TestParser: XCTestCase {
     func testLrcFile() throws { /** lrc normal **/
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "lrc", ofType: "lrc")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }
@@ -32,7 +32,7 @@ class TestParser: XCTestCase {
     func testXMLFile() throws { /** xml normal **/
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "745012", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }
@@ -48,7 +48,7 @@ class TestParser: XCTestCase {
     
     func testEmptyData() { /** EmptyData **/
         let data = Data()
-        let model = KaraokeView.parseLyricData(data: data)
+        let model = KaraokeView.parseLyricData(lyricFileData: data)
         XCTAssertNil(model)
     }
     
@@ -56,7 +56,7 @@ class TestParser: XCTestCase {
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "lrc", ofType: "lrc")!)
         var data = try! Data(contentsOf: url)
         data = data.subdata(in: 90...100)
-        let model = KaraokeView.parseLyricData(data: data)
+        let model = KaraokeView.parseLyricData(lyricFileData: data)
         XCTAssertNil(model)
     }
     
@@ -98,7 +98,7 @@ class TestParser: XCTestCase {
     func testOneline() throws { /** Oneline **/
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "810507-oneline", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }
@@ -109,7 +109,7 @@ class TestParser: XCTestCase {
     func testNoWordInTone() {
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "noWordInTone", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }

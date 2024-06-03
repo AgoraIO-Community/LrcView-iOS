@@ -26,7 +26,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
     func testAll() { /** test score 每个tone命中一次 **/
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }
@@ -49,7 +49,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
         testCaseNum = 1
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }

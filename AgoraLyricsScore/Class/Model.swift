@@ -49,6 +49,8 @@ public class LyricModel: NSObject {
     /// 是否有pitch值
     @objc public var hasPitch: Bool
     
+    @objc public var copyrightSentenceLineCount: UInt = 0
+    
     var pitchDatas: [KrcPitchData] = []
     
     @objc public init(name: String,
@@ -65,30 +67,6 @@ public class LyricModel: NSObject {
         self.preludeEndPosition = preludeEndPosition
         self.duration = duration
         self.hasPitch = hasPitch
-    }
-    
-    /// 解析歌词文件xml数据
-    /// - Parameter data: xml二进制数据
-    /// - Returns: 歌词信息
-    @objc public init(data: Data) throws {
-        self.name = "name"
-        self.singer = "singer"
-        self.lyricsType = .xml
-        self.lines = []
-        self.preludeEndPosition = 0
-        self.duration = 0
-        self.hasPitch = true
-    }
-    
-    @objc public override init() {
-        self.name = ""
-        self.singer = ""
-        self.lyricsType = .xml
-        self.lines = []
-        self.preludeEndPosition = 0
-        self.duration = 0
-        self.hasPitch = false
-        super.init()
     }
     
     @objc public override var description: String {

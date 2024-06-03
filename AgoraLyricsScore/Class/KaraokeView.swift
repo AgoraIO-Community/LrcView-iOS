@@ -72,12 +72,19 @@ public class KaraokeView: UIView {
 
 // MARK: - Public Method
 extension KaraokeView {
-    /// 解析歌词文件xml数据
-    /// - Parameter data: xml二进制数据
+    /// 解析歌词文件krc
+    /// - Parameters:
+    ///   - lyricFileData: 歌词文件的内容（xml、krc、lrc）
+    ///   - pitchFileData: pitch文件的内容
+    ///   - includeCopyrightSentence: 是否需要包含版本信息类型的句子(只在pitchFileData不为空，且krc类型歌词有效)
     /// - Returns: 歌词信息
-    @objc public static func parseLyricData(data: Data) -> LyricModel? {
+    @objc public static func parseLyricData(lyricFileData: Data,
+                                            pitchFileData: Data? = nil,
+                                            includeCopyrightSentence: Bool = true) -> LyricModel? {
         let parser = Parser()
-        return parser.parseLyricData(data: data)
+        return parser.parseLyricData(data: lyricFileData,
+                                     pitchFileData: pitchFileData,
+                                     includeCopyrightSentence: includeCopyrightSentence)
     }
     
     /// 设置歌词数据信息

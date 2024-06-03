@@ -141,7 +141,13 @@ extension XmlParser: XMLParserDelegate {
         }
         switch elementName {
         case "song":
-            song = LyricModel()
+            song = LyricModel(name: "",
+                              singer: "",
+                              lyricsType: .xml,
+                              lines: [],
+                              preludeEndPosition: 0,
+                              duration: 0,
+                              hasPitch: false)
         case "general":
             push(.general)
         case "name":
