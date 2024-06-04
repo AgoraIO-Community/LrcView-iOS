@@ -123,7 +123,10 @@ class ScoringMachineEx: ScoringMachineProtocol {
                                       hitedInfo: nil,
                                       progress: progressInMs)
             Log.debug(text: "_setPitch[0] porgress:\(progressInMs) speakerPitch:\(speakerPitch)", tag: logTag)
-            invokeScoringMachine(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
+            ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
+                                                            didUpdateCursor: y,
+                                                            showAnimation: false,
+                                                            debugInfo: debugInfo)
             return
         }
         
@@ -172,7 +175,10 @@ class ScoringMachineEx: ScoringMachineProtocol {
                                   hitedInfo: hitedInfo,
                                   progress: progressInMs)
         Log.debug(text: "_setPitch[2] porgress:\(progressInMs) speakerPitch:\(speakerPitch)", tag: logTag)
-        invokeScoringMachine(didUpdateCursor: yValue, showAnimation: showAnimation, debugInfo: debugInfo)
+        ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
+                                                        didUpdateCursor: yValue,
+                                                        showAnimation: showAnimation,
+                                                        debugInfo: debugInfo)
     }
     
     private func _dragBegain() {
@@ -208,6 +214,8 @@ class ScoringMachineEx: ScoringMachineProtocol {
                                                                                                maxPitch: maxPitch)
         currentVisiableInfos = visiableInfos
         currentHighlightInfos = highlightInfos
-        invokeScoringMachine(didUpdateDraw: visiableDrawInfos, highlightInfos: highlightDrawInfos)
+        ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
+                                                        didUpdateDraw: visiableDrawInfos,
+                                                        highlightInfos: highlightDrawInfos)
     }
 }
