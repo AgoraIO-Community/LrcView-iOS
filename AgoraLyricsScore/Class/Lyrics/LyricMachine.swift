@@ -52,12 +52,25 @@ class LyricMachine {
     
     private func _setLyricData(data: LyricModel?) {
         lyricData = data
-        dataList = data?.lines.map({ LyricCell.Model(text: $0.content,
-                                                     progressRate: 0,
-                                                     beginTime: $0.beginTime,
-                                                     duration: $0.duration,
-                                                     status: .normal,
-                                                     tones: $0.tones) }) ?? []
+        
+        guard let data = data else {
+            dataList = []
+            invokeLyricMachine(didSetLyricData: dataList)
+            isStart = true
+            Log.info(text: "_setLyricData nil", tag: logTag)
+            return
+        }
+        
+        let isKrcType = data.lyricsType == .krc || data.lyricsType == .krcAndPitchs
+        dataList = data.lines.map({ line in
+            let duration = isKrcType ? line.tones.map({ $0.duration }).reduce(0, +) : line.duration
+            return LyricCell.Model(text: line.content,
+                                   progressRate: 0,
+                                   beginTime: line.beginTime,
+                                   duration: duration,
+                                   status: .normal,
+                                   tones: line.tones)
+        })
         if let first = dataList.first { /** 默认高亮第一个 **/
             first.update(status: .selectedOrHighlighted)
         }

@@ -21,7 +21,7 @@ final class TestKaraokeView: XCTestCase, KaraokeDelegate {
             return
         }
         karaokeView.delegate = self
-        karaokeView.setLyricData(data: model)
+        karaokeView.setLyricData(data: model, usingInternalScoring: true)
         for time: UInt in 0...1001000 {
             karaokeView.setProgress(progress: time)
         }

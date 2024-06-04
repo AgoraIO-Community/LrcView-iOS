@@ -89,7 +89,8 @@ extension KaraokeView {
     
     /// 设置歌词数据信息
     /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `nil`.
-    @objc public func setLyricData(data: LyricModel?) {
+    /// - Parameter usingInternalScoring: 是否需要歌词组件内部计算打分, 当`data`为`nil`，此值忽略。
+    @objc public func setLyricData(data: LyricModel?, usingInternalScoring: Bool) {
         Log.info(text: "setLyricData \(data?.name ?? "nil")", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setLyricData not isMainThread ", tag: logTag)
@@ -106,7 +107,7 @@ extension KaraokeView {
         }
         
         lyricsView.setLyricData(data: data)
-        scoringView.setLyricData(data: data)
+        scoringView.setLyricData(data: data, usingInternalScoring: usingInternalScoring)
         isStart = true
     }
     
@@ -125,10 +126,13 @@ extension KaraokeView {
         scoringView.reset()
     }
     
-    /// 设置实时采集(mic)的Pitch
-    /// - Note: 可以从AgoraRTC回调方法 `- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine reportAudioVolumeIndicationOfSpeakers:(NSArray<AgoraRtcAudioVolumeInfo *> * _Nonnull)speakers totalVolume:(NSInteger)totalVolume`  获取
-    /// - Parameter pitch: 实时音调值
-    @objc public func setPitch(pitch: Double) {
+    /// 设置实时音高
+    /// - Note: 获取方式1. 从Agora RTC 回调方法`reportAudioVolumeIndicationOfSpeakers` 获取speakerPitch.
+    /// - Note: 获取方式2. 可以从AgoraContentCenterEx回调方法 `onPitch`[该回调频率是50ms/次] 获取speakerPitch.
+    /// - Parameter speakerPitch: 演唱者的实时音高值
+    /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）.方式1给`nil`.
+    @objc public func setPitch(speakerPitch: Double, progressInMs: UInt) {
+        let pitch  = speakerPitch
         Log.info(text: "p:\(pitch)", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setPitch not isMainThread ", tag: logTag)
@@ -143,7 +147,7 @@ extension KaraokeView {
         }
         if pitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
             pitchIsZeroCount = 0
-            scoringView.setPitch(pitch: pitch)
+            scoringView.setPitch(speakerPitch: speakerPitch, progressInMs: progressInMs)
         }
     }
     
@@ -159,18 +163,6 @@ extension KaraokeView {
         lyricsView.setProgress(progress: progress)
         scoringView.progress = progress
         progressChecker.set(progress: progress)
-    }
-    
-    /// 同时设置进度和Pitch (建议观众端使用)
-    /// - Parameters:
-    ///   - pitch: 实时音调值
-    ///   - progress: 歌曲进度 (ms)
-    @objc public func setPitch(pitch: Double, progress: UInt) {
-        if !Thread.isMainThread {
-            Log.error(error: "invoke setPitch(pitch, progress) not isMainThread ", tag: logTag)
-        }
-        setProgress(progress: progress)
-        setPitch(pitch: pitch)
     }
     
     /// 设置自定义分数计算对象

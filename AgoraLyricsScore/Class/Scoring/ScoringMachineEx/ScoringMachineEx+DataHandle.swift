@@ -1,46 +1,26 @@
 //
-//  ScoringMachine+DataHandle.swift
+//  ScoringMachineEx+DataHandle.swift.swift
 //  AgoraLyricsScore
 //
-//  Created by ZYP on 2023/2/2.
+//  Created by ZYP on 2024/6/3.
 //
 
 import Foundation
 
-extension ScoringMachine {
+extension ScoringMachineEx {
     /// 创建Scoring内部数据
-    ///   - shouldFixTime: 是否要修复时间异常问题
-    ///   - return: (行结束时间, 字模型)
-    static func createData(data: LyricModel, shouldFixTime: Bool = true) -> ([UInt], [Info]) {
+    static func createData(data: LyricModel) -> ([UInt], [Info]) {
         var array = [Info]()
-        var lineEndTimes = [UInt]()
-        var preEndTime: UInt = 0
-        for line in data.lines {
-            for tone in line.tones {
-                var beginTime = tone.beginTime
-                var duration = tone.duration
-                if shouldFixTime { /** 时间异常修复 **/
-                    if beginTime < preEndTime {
-                        /// 取出endTime文件原始值
-                        let endTime = tone.endTime
-                        beginTime = preEndTime
-                        duration = endTime - beginTime
-                    }
-                }
-                
-                let info = Info(beginTime: beginTime,
-                                duration: duration,
-                                word: tone.word,
-                                pitch: tone.pitch,
-                                drawBeginTime: tone.beginTime,
-                                drawDuration: tone.duration)
-                
-                preEndTime = tone.endTime
-                
-                array.append(info)
-            }
-            lineEndTimes.append(preEndTime)
+        for (index, pitchData) in data.pitchDatas.enumerated() {
+            let info = Info(beginTime: pitchData.startTime,
+                            duration: pitchData.duration,
+                            word: "\(index)",
+                            pitch: pitchData.pitch,
+                            drawBeginTime: pitchData.startTime,
+                            drawDuration: pitchData.duration)
+            array.append(info)
         }
+        let lineEndTimes = data.lines.map({ $0.endTime })
         return (lineEndTimes, array)
     }
     
@@ -153,7 +133,7 @@ extension ScoringMachine {
     /// 查找当前句子的索引
     /// - Parameters:
     /// - Returns: `nil` 表示不合法, ==`lineEndTimes.count` 表示最后一句已经结束
-    func findCurrentIndexOfLine(progress: UInt, lineEndTimes: [UInt]) -> Int? {
+    func findCurrentIndexOfLine(progress: Int, lineEndTimes: [Int]) -> Int? {
         if lineEndTimes.isEmpty {
             return nil
         }
@@ -166,7 +146,7 @@ extension ScoringMachine {
             return 0
         }
         
-        var lastEnd: UInt = 0
+        var lastEnd = 0
         for (offset, value) in lineEndTimes.enumerated() {
             if progress > lastEnd, progress <= value  {
                 return offset
@@ -193,21 +173,43 @@ extension ScoringMachine {
         return result
     }
     
-    /// 计算累计分数
-    /// - Parameters:
-    ///   - indexOfLine: 计算到此index 如：2, 会计算0,1,2的累加值
-    func calculatedCumulativeScore(indexOfLine: Int, lineScores: [Int]) -> Int {
-        var cumulativeScore = 0
-        for (offset, value) in lineScores.enumerated() {
-            if offset <= indexOfLine {
-                cumulativeScore += value
-            }
+    func calculateActualSpeakerPitch(speakerPitch: UInt8, refPitch: Double) -> Double {
+        guard speakerPitch != 0 else {
+            Log.errorText(text: "speakerPitch:\(speakerPitch)", tag: logTag)
+            fatalError("speakerPitch must > 0, <= 100")
         }
-        return cumulativeScore
+        
+        guard speakerPitch <= 100 else {
+            Log.errorText(text: "speakerPitch:\(speakerPitch)", tag: logTag)
+            fatalError("speakerPitch must > 0, <= 100")
+        }
+        
+        var actualspeakerPitch: Double = 0
+        switch speakerPitch {
+        case 1:
+            actualspeakerPitch = refPitch - 2
+            break
+        case 2:
+            actualspeakerPitch = refPitch - 1
+            break
+        case 3:
+            actualspeakerPitch = refPitch - 0
+            break
+        case 4:
+            actualspeakerPitch = refPitch + 1
+            break
+        case 5:
+            actualspeakerPitch = refPitch + 2
+            break
+        default: /** [6,100] */
+            actualspeakerPitch = Double(speakerPitch)
+            break
+        }
+        return actualspeakerPitch
     }
 }
 
-extension ScoringMachine { /** ui 位置 **/
+extension ScoringMachineEx { /** ui 位置 **/
     /// 计算音准线的位置
     func calculateDrawRect(progress: UInt,
                            info: Info,
@@ -235,6 +237,14 @@ extension ScoringMachine { /** ui 位置 **/
         return rect
     }
     
+    /// 根据`歌曲参考音高`计算`音准线view`的在父视图中的Y坐标
+    /// - Parameters:
+    ///   - pitch: 原唱歌曲的参考音高
+    ///   - viewHeight: 父视图的实际高度
+    ///   - minPitch: 对应歌曲音高中的最小值
+    ///   - maxPitch: 对应歌曲音高中的最大值
+    ///   - standardPitchStickViewHeight: `音准线view`的高度
+    /// - Returns:`音准线view`在父视图中的Y坐标值
     func calculatedY(pitch: Double,
                      viewHeight: CGFloat,
                      minPitch: Double,

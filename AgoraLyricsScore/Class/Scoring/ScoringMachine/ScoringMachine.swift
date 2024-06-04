@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ScoringMachine {
+class ScoringMachine: ScoringMachineProtocol {
     /// 游标的起始位置
     var defaultPitchCursorX: CGFloat = 100
     /// 音准线的高度
@@ -58,9 +58,10 @@ class ScoringMachine {
         }
     }
     
-    func setPitch(pitch: Double) {
+    func setPitch(speakerPitch: Double,
+                  progressInMs: UInt) {
         queue.async { [weak self] in
-            self?._setPitch(pitch: pitch)
+            self?._setPitch(pitch: speakerPitch)
         }
     }
     

@@ -109,7 +109,7 @@ extension TestMockScoringByLogFile {
         
         for item in items {
             vm.setProgress(progress: UInt(item.progress))
-            vm.setPitch(pitch: item.pitch!)
+            vm.setPitch(speakerPitch: item.pitch!, progressInMs: 0)
             usleep(15)
         }
         vm.setProgress(progress: 186022 + 1)
@@ -118,19 +118,19 @@ extension TestMockScoringByLogFile {
 }
 
 extension TestMockScoringByLogFile: ScoringMachineDelegate {
-    func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {
+    func sizeOfCanvasView(_ scoringMachine: ScoringMachineProtocol) -> CGSize {
         return .init(width: 380, height: 100)
     }
     
-    func scoringMachine(_ scoringMachine: ScoringMachine, didUpdateDraw standardInfos: [ScoringMachine.DrawInfo], highlightInfos: [ScoringMachine.DrawInfo]) {
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol, didUpdateDraw standardInfos: [ScoringMachine.DrawInfo], highlightInfos: [ScoringMachine.DrawInfo]) {
         
     }
     
-    func scoringMachine(_ scoringMachine: ScoringMachine, didUpdateCursor centerY: CGFloat, showAnimation: Bool, debugInfo: ScoringMachine.DebugInfo) {
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol, didUpdateCursor centerY: CGFloat, showAnimation: Bool, debugInfo: ScoringMachine.DebugInfo) {
         
     }
    
-    func scoringMachine(_ scoringMachine: ScoringMachine,
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol,
                         didFinishLineWith model: LyricLineModel,
                         score: Int,
                         cumulativeScore: Int,

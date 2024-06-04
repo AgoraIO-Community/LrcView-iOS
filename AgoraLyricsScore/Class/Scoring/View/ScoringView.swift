@@ -48,14 +48,15 @@ public class ScoringView: UIView {
     fileprivate let consoleView = ConsoleView()
     private var canvasViewHeightConstraint, localPitchViewWidthConstraint: NSLayoutConstraint!
     
-    fileprivate let scoringMachine = ScoringMachine()
+    fileprivate var scoringMachine: ScoringMachineProtocol!
+    fileprivate var usingInternalScoring = true
     weak var delegate: ScoringViewDelegate?
+    fileprivate let logTag = "ScoringView"
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
         updateUI()
-        scoringMachine.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -72,12 +73,29 @@ public class ScoringView: UIView {
         localPitchView.reset()
     }
     
-    func setLyricData(data: LyricModel?) {
+    func setLyricData(data: LyricModel?, usingInternalScoring: Bool) {
+        if usingInternalScoring {
+            Log.debug(text: "use ScoringMachine", tag: logTag)
+            scoringMachine = ScoringMachine()
+        }
+        else {
+            Log.debug(text: "use ScoringMachineEx", tag: logTag)
+            scoringMachine = ScoringMachineEx()
+        }
+        scoringMachine.defaultPitchCursorX = defaultPitchCursorX
+        scoringMachine.standardPitchStickViewHeight = standardPitchStickViewHeight
+        scoringMachine.movingSpeedFactor = movingSpeedFactor
+        scoringMachine.hitScoreThreshold = hitScoreThreshold
+        scoringMachine.scoreLevel = scoreLevel
+        scoringMachine.scoreCompensationOffset = scoreCompensationOffset
+        scoringMachine.delegate = self
         scoringMachine.setLyricData(data: data)
     }
     
-    func setPitch(pitch: Double) {
-        scoringMachine.setPitch(pitch: pitch)
+    func setPitch(speakerPitch: Double,
+                  progressInMs: UInt) {
+        scoringMachine.setPitch(speakerPitch: speakerPitch,
+                                progressInMs: progressInMs)
     }
     
     func setScoreAlgorithm(algorithm: IScoreAlgorithm) {
@@ -140,13 +158,6 @@ public class ScoringView: UIView {
         localPitchViewWidthConstraint.constant = width
         canvasViewHeightConstraint.constant = viewHeight
         
-        scoringMachine.defaultPitchCursorX = defaultPitchCursorX
-        scoringMachine.standardPitchStickViewHeight = standardPitchStickViewHeight
-        scoringMachine.movingSpeedFactor = movingSpeedFactor
-        scoringMachine.hitScoreThreshold = hitScoreThreshold
-        scoringMachine.scoreLevel = scoreLevel
-        scoringMachine.scoreCompensationOffset = scoreCompensationOffset
-        
         delegate?.scoringViewShouldUpdateViewLayout(view: self)
         
         if showDebugView {
@@ -167,21 +178,21 @@ public class ScoringView: UIView {
 
 // MARK: - ScoringMachineDelegate
 extension ScoringView: ScoringMachineDelegate {
-    func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {
+    func sizeOfCanvasView(_ scoringMachine: ScoringMachineProtocol) -> CGSize {
         return canvasView.bounds.size
     }
     
-    func scoringMachine(_ scoringMachine: ScoringMachine,
-                   didUpdateDraw standardInfos: [ScoringMachine.DrawInfo],
-                   highlightInfos: [ScoringMachine.DrawInfo]) {
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol,
+                        didUpdateDraw standardInfos: [ScoringMachineDrawInfo],
+                        highlightInfos: [ScoringMachineDrawInfo]) {
         canvasView.draw(standardInfos: standardInfos,
                         highlightInfos: highlightInfos)
     }
     
-    func scoringMachine(_ scoringMachine: ScoringMachine,
-                   didUpdateCursor centerY: CGFloat,
-                   showAnimation: Bool,
-                   debugInfo: ScoringMachine.DebugInfo) {
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol,
+                        didUpdateCursor centerY: CGFloat,
+                        showAnimation: Bool,
+                        debugInfo: ScoringMachineDebugInfo) {
         localPitchView.setIndicatedViewY(y: centerY)
         showAnimation ? localPitchView.startEmitter() : localPitchView.stopEmitter()
         if showDebugView {
@@ -190,12 +201,12 @@ extension ScoringView: ScoringMachineDelegate {
         }
     }
     
-    func scoringMachine(_ scoringMachine: ScoringMachine,
-                   didFinishLineWith model: LyricLineModel,
-                   score: Int,
-                   cumulativeScore: Int,
-                   lineIndex: Int,
-                   lineCount: Int) {
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol,
+                        didFinishLineWith model: LyricLineModel,
+                        score: Int,
+                        cumulativeScore: Int,
+                        lineIndex: Int,
+                        lineCount: Int) {
         delegate?.scoringView(self,
                               didFinishLineWith: model,
                               score: score,

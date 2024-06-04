@@ -7,29 +7,6 @@
 
 import Foundation
 
-protocol ScoringMachineDelegate: NSObjectProtocol {
-    /// 获取渲染视图的尺寸
-    func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize
-    
-    /// 更新渲染信息
-    func scoringMachine(_ scoringMachine: ScoringMachine,
-                        didUpdateDraw standardInfos: [ScoringMachine.DrawInfo],
-                        highlightInfos: [ScoringMachine.DrawInfo])
-    /// 更新游标位置
-    func scoringMachine(_ scoringMachine: ScoringMachine,
-                        didUpdateCursor centerY: CGFloat,
-                        showAnimation: Bool,
-                        debugInfo: ScoringMachine.DebugInfo)
-    
-    /// 更新句子分数
-    func scoringMachine(_ scoringMachine: ScoringMachine,
-                        didFinishLineWith model: LyricLineModel,
-                        score: Int,
-                        cumulativeScore: Int,
-                        lineIndex: Int,
-                        lineCount: Int)
-}
-
 extension ScoringMachine { /** invoke **/
     func invokeScoringMachine(didUpdateDraw standardInfos: [ScoringMachine.DrawInfo],
                               highlightInfos: [ScoringMachine.DrawInfo]) {
