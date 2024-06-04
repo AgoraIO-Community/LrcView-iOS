@@ -37,8 +37,8 @@ class AVPlayerTestVC: UIViewController {
     
     func commonInit() {
         let data = try! Data(contentsOf: URL(fileURLWithPath: lrcUrl))
-        let model = KaraokeView.parseLyricData(data: data)!
-        karaokeView.setLyricData(data: model)
+        let model = KaraokeView.parseLyricData(lyricFileData: data)!
+        karaokeView.setLyricData(data: model, usingInternalScoring: true)
         initAudioPlayer(url:URL(fileURLWithPath: songUrl))
         let ret = audioPlayer!.play()
         print("play ret \(ret)")
@@ -51,7 +51,7 @@ class AVPlayerTestVC: UIViewController {
                                          queue: .main) { [weak self](_, time) in
             guard let self = self else { return }
             if let currentTime = self.audioPlayer?.currentTime {
-                self.karaokeView.setProgress(progress: Int(currentTime * 1000) )
+                self.karaokeView.setProgress(progress: UInt(currentTime) * 1000)
             }
         }
     }

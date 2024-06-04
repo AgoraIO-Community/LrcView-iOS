@@ -231,7 +231,7 @@ class MiniSizeVC: UIViewController {
         print("== openMedia success")
     }
     
-    var last = 0
+    var last: UInt = 0
     func mccPlay() {
         let ret = mpk.play()
         if ret != 0 {
@@ -252,8 +252,8 @@ class MiniSizeVC: UIViewController {
             
             var current = self.last
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
-                current = self.mpk.getPosition()
-                let data = self.createData(time: current + 20)
+                current = UInt(self.mpk.getPosition())
+                let data = self.createData(time: Int(current) + 20)
                 self.sendData(data: data)
             }
             current += 20
@@ -263,7 +263,7 @@ class MiniSizeVC: UIViewController {
             if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
                 time -= 250
             }
-            self.karaokeView.setProgress(progress: current )
+            self.karaokeView.setProgress(progress: UInt(current) )
         }
     }
     
@@ -277,7 +277,7 @@ class MiniSizeVC: UIViewController {
         case skipButton:
             if let data = lyricModel {
                 let toPosition = max(data.preludeEndPosition - 2000, 0)
-                mpk.seek(toPosition: toPosition)
+                mpk.seek(toPosition: Int(toPosition))
             }
             return
         case setButton:
@@ -371,7 +371,6 @@ class MiniSizeVC: UIViewController {
         karaokeView.lyricsView.firstToneHintViewStyle.backgroundColor = param.lyric.firstToneHintViewStyle.backgroundColor
         karaokeView.lyricsView.firstToneHintViewStyle.size = param.lyric.firstToneHintViewStyle.size
         karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = param.lyric.firstToneHintViewStyle.bottomMargin
-        karaokeView.lyricsView.maxWidth = param.lyric.maxWidth
         karaokeView.lyricsView.draggable = param.lyric.draggable
         
         karaokeView.scoringView.particleEffectHidden = param.scoring.particleEffectHidden
@@ -408,7 +407,7 @@ extension MiniSizeVC: AgoraRtcEngineDelegate {
         }
         if let pitch = speakers.last?.voicePitch {
             DispatchQueue.main.async { [weak self] in
-                self?.karaokeView.setPitch(pitch: pitch)
+                self?.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
             }
         }
     }
@@ -491,10 +490,10 @@ extension MiniSizeVC: AgoraRtcMediaPlayerDelegate {
 }
 
 extension MiniSizeVC: KaraokeDelegate {
-    func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
+    func onKaraokeView(view: KaraokeView, didDragTo position: UInt) {
         /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
         self.last = position + 250
-        mpk.seek(toPosition: position)
+        mpk.seek(toPosition: Int(position))
         cumulativeScore = view.scoringView.getCumulativeScore()
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lyricModel.lines.count * 100)
     }
@@ -533,20 +532,20 @@ extension MiniSizeVC: LyricsFileDownloaderDelegate {
     
     func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
         if let data = fileData {
-            let model = KaraokeView.parseLyricData(data: data)!
+            let model = KaraokeView.parseLyricData(lyricFileData: data)!
             self.lyricModel = model
             if !self.noLyric {
                 let canScoring = model.hasPitch
                 if canScoring { /** xml **/
-                    self.karaokeView.setLyricData(data: model)
+                    self.karaokeView.setLyricData(data: model, usingInternalScoring: true)
                     self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
                 }
                 else {/** lrc **/
-                    self.karaokeView.setLyricData(data: model)
+                    self.karaokeView.setLyricData(data: model, usingInternalScoring: true)
                 }
             }
             else {
-                self.karaokeView.setLyricData(data: nil)
+                self.karaokeView.setLyricData(data: nil, usingInternalScoring: true)
                 self.gradeView.isHidden = true
             }
             self.mccPlay()

@@ -37,7 +37,7 @@ class MainTestVC: UIViewController {
     var mpk: AgoraMusicPlayerProtocol!
     var pitchInvokeDuration:CFAbsoluteTime = 0
 //    var song = Item(code: 6246262727283870, isXML: false)
-    var song = Item(code: 6625526603329280, isXML: true)
+    var song = Item(code: 6625526605291650, isXML: true)
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
@@ -166,9 +166,9 @@ class MainTestVC: UIViewController {
         quickButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         pauseButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         cumulativeScore = 0
-        token = TokenBuilder.buildToken(Config.mccAppId,
-                                        appCertificate: Config.mccCertificate,
-                                        userUuid: "\(Config.mccUid)")
+        token = TokenBuilder.buildRtmToken2(Config.mccAppId,
+                                            appCertificate: Config.mccCertificate,
+                                            userUuid: "\(Config.mccUid)")
         initEngine()
         joinChannel()
         initMCC()
@@ -214,6 +214,7 @@ class MainTestVC: UIViewController {
         config.mccUid = Config.mccUid
         config.token = token
         config.appId = Config.mccAppId
+        print("config.mccUid:\(Config.mccUid) token:\(token!) Config.mccAppId:\(Config.mccAppId)" )
         mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
         mcc.register(self)
         mpk = mcc.createMusicPlayer(delegate: self)
@@ -237,7 +238,7 @@ class MainTestVC: UIViewController {
         print("== openMedia success")
     }
     
-    var last = 0
+    var last: UInt = 0
     func mccPlay() {
         let ret = mpk.play()
         if ret != 0 {
@@ -258,8 +259,8 @@ class MainTestVC: UIViewController {
             
             var current = self.last
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
-                current = self.mpk.getPosition()
-                let data = self.createData(time: current + 20)
+                current = UInt(self.mpk.getPosition())
+                let data = self.createData(time: Int(current) + 20)
                 self.sendData(data: data)
             }
             current += 20
@@ -269,7 +270,7 @@ class MainTestVC: UIViewController {
             if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
                 time -= 250
             }
-            self.karaokeView.setProgress(progress: current )
+            self.karaokeView.setProgress(progress: current)
         }
     }
     
@@ -283,7 +284,7 @@ class MainTestVC: UIViewController {
         case skipButton:
             if let data = lyricModel {
                 let toPosition = max(data.preludeEndPosition - 2000, 0)
-                mpk.seek(toPosition: toPosition)
+                mpk.seek(toPosition: Int(toPosition))
             }
             return
         case setButton:
@@ -388,7 +389,6 @@ class MainTestVC: UIViewController {
         karaokeView.lyricsView.firstToneHintViewStyle.backgroundColor = param.lyric.firstToneHintViewStyle.backgroundColor
         karaokeView.lyricsView.firstToneHintViewStyle.size = param.lyric.firstToneHintViewStyle.size
         karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = param.lyric.firstToneHintViewStyle.bottomMargin
-        karaokeView.lyricsView.maxWidth = param.lyric.maxWidth
         karaokeView.lyricsView.draggable = param.lyric.draggable
         
         karaokeView.scoringView.particleEffectHidden = param.scoring.particleEffectHidden
@@ -430,7 +430,7 @@ extension MainTestVC: AgoraRtcEngineDelegate {
 //            pitchInvokeDuration = startTime
 //            print("gap:[\(gap.keep3)] \(pitch)")
             label.text = "\(pitch)"
-            karaokeView.setPitch(pitch: pitch)
+            karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
 //            }
         }
     }
@@ -502,10 +502,12 @@ extension MainTestVC: AgoraMusicContentCenterEventDelegate {
         
         if status == .error {
             print("onPreLoadEvent percent:\(percent) status:\(status.rawValue) lyricUrl:\(lyricUrl ?? "null")")
+            if errorCode == .errorPermissionAndResource {
+                print("歌曲下架")
+            }
         }
     }
 }
-
 
 extension MainTestVC: AgoraRtcMediaPlayerDelegate {
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
@@ -519,10 +521,10 @@ extension MainTestVC: AgoraRtcMediaPlayerDelegate {
 }
 
 extension MainTestVC: KaraokeDelegate {
-    func onKaraokeView(view: KaraokeView, didDragTo position: Int) {
+    func onKaraokeView(view: KaraokeView, didDragTo position: UInt) {
         /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
         self.last = position + 250
-        mpk.seek(toPosition: position)
+        mpk.seek(toPosition: Int(position))
         cumulativeScore = view.scoringView.getCumulativeScore()
         gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lyricModel.lines.count * 100)
     }
@@ -547,21 +549,21 @@ extension MainTestVC: LyricsFileDownloaderDelegate {
     
     func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
         if let data = fileData {
-            let model = KaraokeView.parseLyricData(data: data)!
+            let model = KaraokeView.parseLyricData(lyricFileData: data)!
             lyricModel = model
             print("linesCount:\(model.lines.count) songCode:\(self.song.code)")
             if !self.noLyric {
                 let canScoring = model.hasPitch
                 if canScoring { /** xml **/
-                    self.karaokeView.setLyricData(data: model)
+                    self.karaokeView.setLyricData(data: model, usingInternalScoring: true)
                     self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
                 }
                 else {/** lrc **/
-                    self.karaokeView.setLyricData(data: model)
+                    self.karaokeView.setLyricData(data: model, usingInternalScoring: true)
                 }
             }
             else {
-                self.karaokeView.setLyricData(data: nil)
+                self.karaokeView.setLyricData(data: nil, usingInternalScoring: true)
                 self.gradeView.isHidden = true
             }
             self.mccPlay()

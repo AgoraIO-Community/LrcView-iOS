@@ -164,19 +164,16 @@ class ParamSetVC: UIViewController {
             if indexPath.row == 9 { /** lyricsView.lyricLineSpacing **/
                 cell.detailTextLabel?.text = "\(param.lyric.lyricLineSpacing)"
             }
-            if indexPath.row == 10 { /** lyricsView.maxWidth **/
-                cell.detailTextLabel?.text = "\(param.lyric.maxWidth)"
-            }
-            if indexPath.row == 11 { /** param.lyric.draggable **/
+            if indexPath.row == 10 { /** param.lyric.draggable **/
                 cell.detailTextLabel?.text = param.lyric.draggable ? "true" : "false"
             }
-            if indexPath.row == 12 {
+            if indexPath.row == 11 {
                 cell.detailTextLabel?.text = param.lyric.noLyricTipsText
             }
-            if indexPath.row == 13 {
+            if indexPath.row == 12 {
                 cell.backgroundColor = param.lyric.noLyricTipsColor
             }
-            if indexPath.row == 14 {
+            if indexPath.row == 13 {
                 cell.detailTextLabel?.text = "字体"
                 cell.detailTextLabel?.font = param.lyric.noLyricTipsFont
             }
@@ -291,19 +288,16 @@ class ParamSetVC: UIViewController {
             if indexPath.row == 9 { /** lyricsView.lyricLineSpacing **/
                 param.lyric.lyricLineSpacing = genValue(current: param.lyric.lyricLineSpacing, ops: [0, 5, 10, 15, 20])
             }
-            if indexPath.row == 10 { /** lyricsView.maxWidth **/
-                param.lyric.maxWidth = genValue(current: param.lyric.maxWidth, ops: [30, 100, 220, UIScreen.main.bounds.width-30])
-            }
-            if indexPath.row == 11 { /** param.lyric.draggable **/
+            if indexPath.row == 10 { /** param.lyric.draggable **/
                 param.lyric.draggable = !param.lyric.draggable
             }
-            if indexPath.row == 12 {
+            if indexPath.row == 11 {
                 param.lyric.noLyricTipsText = "\(Int.random(in: 0...100))"
             }
-            if indexPath.row == 13 {
+            if indexPath.row == 12 {
                 param.lyric.noLyricTipsColor = .random
             }
-            if indexPath.row == 14 {
+            if indexPath.row == 13 {
                 param.lyric.noLyricTipsFont = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
             }
         }

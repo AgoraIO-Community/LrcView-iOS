@@ -92,7 +92,7 @@ class AudienceVC: UIViewController {
             if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
                 time -= 250
             }
-            self.ktvView.karaokeView.setProgress(progress: current )
+            self.ktvView.karaokeView.setProgress(progress: UInt(current))
         }
     }
 }
@@ -154,7 +154,7 @@ extension AudienceVC: AgoraRtcEngineDelegate {
                 
                 if dict["type"] as! Int == 1 {
                     if let pitch = dict["pitch"] as? Double {
-                        ktvView.karaokeView.setPitch(pitch: pitch)
+                        ktvView.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
                     }
                 }
             }
@@ -184,9 +184,9 @@ extension AudienceVC: LyricsFileDownloaderDelegate {
     
     func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
         if let data = fileData {
-            let model = KaraokeView.parseLyricData(data: data)!
+            let model = KaraokeView.parseLyricData(lyricFileData: data)!
             self.lyricModel = model
-            self.ktvView.karaokeView.setLyricData(data: model)
+            self.ktvView.karaokeView.setLyricData(data: model, usingInternalScoring: true)
             self.ktvView.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
         }
         else {

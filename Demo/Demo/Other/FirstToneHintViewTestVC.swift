@@ -13,16 +13,16 @@ class FirstToneHintViewTestVC: UIViewController {
 
     let karaokeView = KaraokeView()
     private var timer = GCDTimer()
-    var progress = 0
+    var progress: UInt = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        let model = KaraokeView.parseLyricData(data: data)!
+        let model = KaraokeView.parseLyricData(lyricFileData: data)!
         model.preludeEndPosition = 6 * 1000
-        karaokeView.setLyricData(data: model)
+        karaokeView.setLyricData(data: model, usingInternalScoring: true)
     }
     
     func setupUI() {

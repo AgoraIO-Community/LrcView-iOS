@@ -32,8 +32,7 @@ class ViewTestVC: UIViewController {
                                                     .init(title: "高亮的歌词填充颜色 （命中）"),
                                                     .init(title: "正常歌词文字大小"),
                                                     .init(title: "高亮歌词文字大小"),
-                                                    .init(title: "歌词上下间距"),
-                                                    .init(title: "歌词最大宽度"),]),
+                                                    .init(title: "歌词上下间距")]),
                 Section(title: "ScoringView", rows: [.init(title: "评分视图高度"),
                                                      .init(title: "渲染视图到顶部的间距"),
                                                      .init(title: "游标的起始位置"),
@@ -79,8 +78,8 @@ class ViewTestVC: UIViewController {
         
         let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        let model = KaraokeView.parseLyricData(data: data)!
-        karaokeView.setLyricData(data: model)
+        let model = KaraokeView.parseLyricData(lyricFileData: data)!
+        karaokeView.setLyricData(data: model, usingInternalScoring: true)
         karaokeView.setProgress(progress: 70 * 1000)
     }
     
@@ -158,11 +157,6 @@ extension ViewTestVC: UITableViewDelegate, UITableViewDataSource {
             }
             if indexPath.row == 6 { /** lyricsView.textHighlightFontSize **/
                 karaokeView.lyricsView.lyricLineSpacing = CGFloat.random(in: 5...50)
-                reset()
-                return
-            }
-            if indexPath.row == 7 { /** lyricsView.maxWidth **/
-                karaokeView.lyricsView.maxWidth = CGFloat.random(in: 100...350)
                 reset()
                 return
             }

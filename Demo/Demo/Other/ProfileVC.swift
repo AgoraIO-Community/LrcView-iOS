@@ -10,7 +10,7 @@ import AgoraLyricsScore
 
 class ProfileVC: UIViewController {
     let karaokeView = KaraokeView()
-    var progress = 0
+    var progress: UInt = 0
     private var timer = GCDTimer()
     var model: LyricModel!
     
@@ -34,8 +34,8 @@ class ProfileVC: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        model = KaraokeView.parseLyricData(data: data)!
-        karaokeView.setLyricData(data: model)
+        model = KaraokeView.parseLyricData(lyricFileData: data)!
+        karaokeView.setLyricData(data: model, usingInternalScoring: true)
         var count = 0
         timer.scheduledMillisecondsTimer(withName: "ProfileVC", countDown: 1000000, milliseconds: 20, queue: .main) { [weak self](_, time) in
             guard let self = self else { return }
@@ -51,7 +51,7 @@ class ProfileVC: UIViewController {
             count += 1
             if count == 3 {
                 count = 0
-                self.karaokeView.setPitch(pitch: Double.random(in: 87...300))
+                self.karaokeView.setPitch(speakerPitch: Double.random(in: 87...300), progressInMs: 0)
             }
             
         }

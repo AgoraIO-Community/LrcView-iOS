@@ -126,7 +126,7 @@ class LyricsTestVC: UIViewController {
         print("== openMedia success")
     }
     
-    var last = 0
+    var last: UInt = 0
     func mccPlay() {
         let ret = mpk.play()
         if ret != 0 {
@@ -145,7 +145,7 @@ class LyricsTestVC: UIViewController {
             
             var current = self.last
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
-                current = self.mpk.getPosition()
+                current = UInt(self.mpk.getPosition())
             }
             
             current += 10
@@ -182,7 +182,7 @@ extension LyricsTestVC: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
         if let pitch = speakers.last?.voicePitch {
-            karaokeView.setPitch(pitch: pitch)
+            karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
         }
     }
 }
@@ -200,9 +200,9 @@ extension LyricsTestVC: AgoraMusicContentCenterEventDelegate {
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl!)")
         let url = URL(fileURLWithPath: Bundle.main.path(forResource: "745012", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        let model = KaraokeView.parseLyricData(data: data)!
+        let model = KaraokeView.parseLyricData(lyricFileData: data)!
         DispatchQueue.main.async { [weak self] in
-            self?.karaokeView.setLyricData(data: model)
+            self?.karaokeView.setLyricData(data: model, usingInternalScoring: true)
             self?.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
             self?.mccPlay()
             self?.mpk.seek(toPosition: 16000)

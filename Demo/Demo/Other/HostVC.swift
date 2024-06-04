@@ -106,7 +106,7 @@ class HostVC: UIViewController {
         print("== openMedia success")
     }
     
-    var last = 0
+    var last: UInt = 0
     func mccPlay() {
         let ret = mpk.play()
         if ret != 0 {
@@ -128,7 +128,7 @@ class HostVC: UIViewController {
             
             var current = self.last
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
-                current = self.mpk.getPosition()
+                current = UInt(self.mpk.getPosition())
                 let url = self.lyricUrl ?? ""
                 self.packageNum += 1
                 let dict: [String : Any] = ["type": 0, "url": url, "time": current, "packageNum" : self.packageNum]
@@ -196,7 +196,7 @@ extension HostVC: AgoraRtcEngineDelegate {
             let dict: [String : Any] = ["type": 1, "pitch": pitch, "packageNum" : self.packageNum]
             let data = self.createData(dic: dict)
             sendData(data: data)
-            ktvView.karaokeView.setPitch(pitch: pitch)
+            ktvView.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
         }
     }
 }
@@ -276,14 +276,14 @@ extension HostVC: LyricsFileDownloaderDelegate {
     
     func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
         if let data = fileData {
-            let model = KaraokeView.parseLyricData(data: data)!
+            let model = KaraokeView.parseLyricData(lyricFileData: data)!
             self.lyricModel = model
-            self.ktvView.karaokeView.setLyricData(data: model)
+            self.ktvView.karaokeView.setLyricData(data: model, usingInternalScoring: true)
             self.ktvView.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
             self.mccPlay()
             /// auto skip
             let toPosition = max(model.preludeEndPosition - 2000, 0)
-            self.mpk.seek(toPosition: toPosition)
+            self.mpk.seek(toPosition: Int(toPosition))
         }
         else {
             print("fect fail")
