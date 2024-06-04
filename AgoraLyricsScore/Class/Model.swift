@@ -17,7 +17,6 @@ struct KrcPitchData: Codable {
     case xml = 1
     case lrc = 2
     case krc = 3
-    case krcAndPitchs = 4
     
     public var description: String {
         switch self {
@@ -27,8 +26,6 @@ struct KrcPitchData: Codable {
             return "lrc"
         case .krc:
             return "krc"
-        case .krcAndPitchs:
-            return "krcAndPitchs"
         }
     }
 }

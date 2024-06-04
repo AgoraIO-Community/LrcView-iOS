@@ -61,7 +61,7 @@ class LyricMachine {
             return
         }
         
-        let isKrcType = data.lyricsType == .krc || data.lyricsType == .krcAndPitchs
+        let isKrcType = data.lyricsType == .krc || data.lyricsType == .krc
         dataList = data.lines.map({ line in
             let duration = isKrcType ? line.tones.map({ $0.duration }).reduce(0, +) : line.duration
             return LyricCell.Model(text: line.content,

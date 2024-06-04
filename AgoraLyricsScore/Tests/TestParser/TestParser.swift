@@ -189,7 +189,7 @@ class TestParser: XCTestCase {
         XCTAssert(model.lines.first!.beginTime == 1067)
         XCTAssert(model.name  == "十年")
         XCTAssert(model.singer  == "陈奕迅")
-        XCTAssert(model.lyricsType  == .krcAndPitchs)
+        XCTAssert(model.lyricsType  == .krc)
         XCTAssertEqual(model.duration, 381601)
         XCTAssert(model.preludeEndPosition  == 15203)
         XCTAssertTrue(model.hasPitch == true)
@@ -233,7 +233,7 @@ class TestParser: XCTestCase {
                                                pitchFileData: pitchFileData,
                                                includeCopyrightSentence: false)
         XCTAssertNotNil(model)
-        XCTAssert(model!.lyricsType  == .krcAndPitchs)
+        XCTAssert(model!.lyricsType  == .krc)
         XCTAssertEqual(model!.lines.count, 40)
         XCTAssertEqual(model!.lines.first!.content, "如果那两个字没有颤抖")
         XCTAssertEqual(model!.copyrightSentenceLineCount, 4)

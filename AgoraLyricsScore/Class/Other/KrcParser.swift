@@ -31,7 +31,7 @@ class KRCParser {
             return nil
         }
         
-        lyricModel.lyricsType = .krcAndPitchs
+        lyricModel.lyricsType = .krc
         lyricModel.pitchDatas = pitchModel.pitchDatas
         lyricModel.hasPitch = !pitchModel.pitchDatas.isEmpty
         lyricModel.preludeEndPosition = pitchModel.pitchDatas.first?.startTime ?? 0
