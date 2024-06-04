@@ -133,7 +133,7 @@ extension KaraokeView {
     /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）.方式1给`nil`.
     @objc public func setPitch(speakerPitch: Double, progressInMs: UInt) {
         let pitch  = speakerPitch
-        Log.info(text: "p:\(pitch)", tag: logTag)
+//        Log.info(text: "Pitch:\(pitch)", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setPitch not isMainThread ", tag: logTag)
         }
@@ -307,9 +307,9 @@ extension KaraokeView: ProgressCheckerDelegate {
 // MARK: -- Log
 extension KaraokeView {
     func logProgressIfNeed(progress: UInt) {
-        let gap = progress - lastProgress
+        let gap = abs(Int32(progress) - Int32(lastProgress))
         if progressPrintCount < progressPrintCountMax, gap > 20 {
-            let text = "setProgress:\(progress) last:\(lastProgress) gap:\(progress-lastProgress)"
+            let text = "setProgress:\(progress) last:\(lastProgress) gap:\(gap)"
             Log.warning(text: text, tag: logTag)
             progressPrintCount += 1
         }

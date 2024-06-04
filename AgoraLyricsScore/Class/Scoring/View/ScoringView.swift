@@ -74,13 +74,19 @@ public class ScoringView: UIView {
     }
     
     func setLyricData(data: LyricModel?, usingInternalScoring: Bool) {
-        if usingInternalScoring {
-            Log.debug(text: "use ScoringMachine", tag: logTag)
+        if data == nil {
+            Log.debug(text: "use ScoringMachine, data is nil", tag: logTag)
             scoringMachine = ScoringMachine()
         }
         else {
-            Log.debug(text: "use ScoringMachineEx", tag: logTag)
-            scoringMachine = ScoringMachineEx()
+            if usingInternalScoring {
+                Log.debug(text: "use ScoringMachine", tag: logTag)
+                scoringMachine = ScoringMachine()
+            }
+            else {
+                Log.debug(text: "use ScoringMachineEx", tag: logTag)
+                scoringMachine = ScoringMachineEx()
+            }
         }
         scoringMachine.defaultPitchCursorX = defaultPitchCursorX
         scoringMachine.standardPitchStickViewHeight = standardPitchStickViewHeight
@@ -111,7 +117,7 @@ public class ScoringView: UIView {
     }
     
     func reset() {
-        scoringMachine.reset()
+        scoringMachine?.reset()
         localPitchView.reset()
         canvasView.reset()
     }

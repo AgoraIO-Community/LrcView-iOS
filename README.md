@@ -18,7 +18,7 @@ karaokeView.delegate = self
 ```swift
 let url = URL(fileURLWithPath: filePath)
 let data = try! Data(contentsOf: url)
-let model = KaraokeView.parseLyricData(data: data)
+let model = KaraokeView.parseLyricData(lyricFileData: data)
 karaokeView.setLyricData(data: model)
 ```
 
