@@ -172,41 +172,6 @@ extension ScoringMachine {
         }
         return result
     }
-    
-    func calculateActualSpeakerPitch(speakerPitch: UInt8, refPitch: Double) -> Double {
-        guard speakerPitch != 0 else {
-            Log.errorText(text: "speakerPitch:\(speakerPitch)", tag: logTag)
-            fatalError("speakerPitch must > 0, <= 100")
-        }
-        
-        guard speakerPitch <= 100 else {
-            Log.errorText(text: "speakerPitch:\(speakerPitch)", tag: logTag)
-            fatalError("speakerPitch must > 0, <= 100")
-        }
-        
-        var actualspeakerPitch: Double = 0
-        switch speakerPitch {
-        case 1:
-            actualspeakerPitch = refPitch - 2
-            break
-        case 2:
-            actualspeakerPitch = refPitch - 1
-            break
-        case 3:
-            actualspeakerPitch = refPitch - 0
-            break
-        case 4:
-            actualspeakerPitch = refPitch + 1
-            break
-        case 5:
-            actualspeakerPitch = refPitch + 2
-            break
-        default: /** [6,100] */
-            actualspeakerPitch = Double(speakerPitch)
-            break
-        }
-        return actualspeakerPitch
-    }
 }
 
 extension ScoringMachine { /** ui 位置 **/

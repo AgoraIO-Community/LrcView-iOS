@@ -131,8 +131,8 @@ class ScoringMachine {
             return
         }
         
-        /// 计算出真实的speakerPitch
-        let actualspeakerPitch = calculateActualSpeakerPitch(speakerPitch: speakerPitch, refPitch: hitedInfo.pitch)
+        /// speakerPitch
+        let actualspeakerPitch = Double(speakerPitch)
         
         /// 着色、动画开启与否
         let showAnimation = speakerPitch <= 5

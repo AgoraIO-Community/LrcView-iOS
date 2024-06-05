@@ -142,15 +142,6 @@ class TestScoringVM: XCTestCase {
         XCTAssertEqual(vm.getHitedInfo(progress: 73066, currentVisiableInfos: infos)!.pitch, 50)
     }
     
-    func testCalculateActualSpeakerPitch() {
-        let vm = ScoringMachine()
-        XCTAssertEqual(vm.calculateActualSpeakerPitch(speakerPitch: 1, refPitch: 50), 50-2)
-        XCTAssertEqual(vm.calculateActualSpeakerPitch(speakerPitch: 2, refPitch: 50), 50-1)
-        XCTAssertEqual(vm.calculateActualSpeakerPitch(speakerPitch: 3, refPitch: 50), 50)
-        XCTAssertEqual(vm.calculateActualSpeakerPitch(speakerPitch: 4, refPitch: 50), 50+1)
-        XCTAssertEqual(vm.calculateActualSpeakerPitch(speakerPitch: 5, refPitch: 50), 50+2)
-    }
-    
     func testPerformanceExample() throws {
         
     }
