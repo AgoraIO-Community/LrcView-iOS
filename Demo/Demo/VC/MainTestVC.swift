@@ -1,8 +1,8 @@
 //
-//  QiangChangVC.swift
+//  MainTestController.swift
 //  Demo
 //
-//  Created by ZYP on 2023/4/17.
+//  Created by ZYP on 2023/1/30.
 //
 
 import UIKit
@@ -10,11 +10,18 @@ import AgoraRtcKit
 import RTMTokenBuilder
 import AgoraLyricsScore
 import ScoreEffectUI
+import os
 
-class QiangChangVC: UIViewController {
+extension MainTestVC {
+    struct Item {
+        let code: Int
+        let isXML: Bool
+    }
+}
+
+class MainTestVC: UIViewController {
     let lyricsFileDownloader = LyricsFileDownloader()
-    typealias Item = MainTestVC.Item
-    let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger()])
+    let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger(), FileLogger()])
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()
@@ -23,38 +30,42 @@ class QiangChangVC: UIViewController {
     let quickButton = UIButton()
     let changeButton = UIButton()
     let pauseButton = UIButton()
+    let label = UILabel()
     var agoraKit: AgoraRtcEngineKit!
     var token: String!
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
-    //    var song = Item(code: 6246262727283870, isXML: false)
+    var pitchInvokeDuration:CFAbsoluteTime = 0
+//    var song = Item(code: 6246262727283870, isXML: false)
     var song = Item(code: 6625526605291650, isXML: true)
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
     /// 6768817613736320
+//    var songs = [Item(code: 6246262727283870, isXML: false),
+//                 Item(code: 6654550250051940, isXML: true),
+//                 Item(code: 6775664001035810, isXML: true),
+//                 Item(code: 6625526610023560, isXML: true),
+//                 Item(code: 6625526603296890, isXML: true),
+//                 /** xml 不打分 **/
+//                 Item(code: 6315145508122860, isXML: true)]
     
-    /**
-     6625526610904700
-     6625526682724250
-     6625526768489850
-     6625526632642710
-     6625526963633750
-     6625526832790400
-     */
-    
-    var songs = [Item(code: 6246262727283870, isXML: false),
-                 Item(code: 6625526605291650, isXML: true),
-                 Item(code: 6775664001035810, isXML: true),
-                 Item(code: 6625526610023560, isXML: true),
-                 Item(code: 6625526603296890, isXML: true)]
+    var songs = [/// 爱情转移
+        Item(code: 6246262727282860, isXML: true),
+        /// 说爱你
+        Item(code: 6654550221757560, isXML: true),
+        /// 江南
+        Item(code: 6246262727300580, isXML: true),
+        /// 容易受伤的女人
+        Item(code: 6625526608670440, isXML: true)]
+//    var songs = [Item(code: 6246262727282120, isXML: true),
+//                 Item(code: 6625526603472520, isXML: true)]
     var currentSongIndex = 0
     private var timer = GCDTimer()
     var cumulativeScore = 0
     var lyricModel: LyricModel!
     var noLyric = false
     var isPause = false
-    var preTime: UInt = 20000
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,7 +85,7 @@ class QiangChangVC: UIViewController {
         karaokeView.lyricsView.draggable = true
         
         skipButton.setTitle("跳过前奏", for: .normal)
-        setButton.setTitle("点歌", for: .normal)
+        setButton.setTitle("设置参数", for: .normal)
         changeButton.setTitle("切歌", for: .normal)
         quickButton.setTitle("退出", for: .normal)
         pauseButton.setTitle("暂停", for: .normal)
@@ -84,6 +95,8 @@ class QiangChangVC: UIViewController {
         changeButton.backgroundColor = .red
         quickButton.backgroundColor = .red
         pauseButton.backgroundColor = .red
+        label.textColor = .white
+        label.backgroundColor = .red
         
         view.backgroundColor = .black
         view.addSubview(karaokeView)
@@ -95,6 +108,7 @@ class QiangChangVC: UIViewController {
         view.addSubview(quickButton)
         view.addSubview(pauseButton)
         view.addSubview(lineScoreView)
+        view.addSubview(label)
         
         karaokeView.translatesAutoresizingMaskIntoConstraints = false
         gradeView.translatesAutoresizingMaskIntoConstraints = false
@@ -105,6 +119,7 @@ class QiangChangVC: UIViewController {
         quickButton.translatesAutoresizingMaskIntoConstraints = false
         pauseButton.translatesAutoresizingMaskIntoConstraints = false
         lineScoreView.translatesAutoresizingMaskIntoConstraints = false
+        label.translatesAutoresizingMaskIntoConstraints = false
         
         karaokeView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         karaokeView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
@@ -138,6 +153,9 @@ class QiangChangVC: UIViewController {
         
         pauseButton.leftAnchor.constraint(equalTo: skipButton.leftAnchor).isActive = true
         pauseButton.topAnchor.constraint(equalTo: changeButton.bottomAnchor, constant: 30).isActive = true
+        
+        label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        label.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
     func commonInit() {
@@ -148,9 +166,9 @@ class QiangChangVC: UIViewController {
         quickButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         pauseButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         cumulativeScore = 0
-        token = TokenBuilder.buildToken(Config.mccAppId,
-                                        appCertificate: Config.mccCertificate,
-                                        userUuid: "\(Config.mccUid)")
+        token = TokenBuilder.buildRtmToken2(Config.mccAppId,
+                                            appCertificate: Config.mccCertificate,
+                                            userUuid: "\(Config.mccUid)")
         initEngine()
         joinChannel()
         initMCC()
@@ -164,6 +182,8 @@ class QiangChangVC: UIViewController {
         config.audioScenario = .chorus
         config.channelProfile = .liveBroadcasting
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: config, delegate: self)
+        agoraKit.setParameters("{\"rtc.debug.enable\": true}")
+        agoraKit.setParameters("{\"che.audio.apm_dump\": true}")
     }
     
     func joinChannel() { /** 目的：发布mic流、接收音频流 **/
@@ -194,13 +214,13 @@ class QiangChangVC: UIViewController {
         config.mccUid = Config.mccUid
         config.token = token
         config.appId = Config.mccAppId
+        print("config.mccUid:\(Config.mccUid) token:\(token!) Config.mccAppId:\(Config.mccAppId)" )
         mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
         mcc.register(self)
         mpk = mcc.createMusicPlayer(delegate: self)
     }
     
     func mccPreload() {
-        mcc.getMusicCharts()
         let ret = mcc.preload(songCode: song.code, jsonOption: nil)
         if ret != 0 {
             print("preload error \(ret)")
@@ -227,11 +247,11 @@ class QiangChangVC: UIViewController {
         }
         print("== play success")
         self.last = 0
-        timer.scheduledMillisecondsTimer(withName: "QiangChangVC",
+        timer.scheduledMillisecondsTimer(withName: "MainTestVC",
                                          countDown: 1000000,
                                          milliseconds: 20,
                                          queue: .main) { [weak self](_, time) in
-            
+
             guard let self = self else { return }
             if self.isPause {
                 return
@@ -244,13 +264,13 @@ class QiangChangVC: UIViewController {
                 self.sendData(data: data)
             }
             current += 20
-            
+
             self.last = current
             var time = current
             if time > 250 { /** 进度提前250ms, 第一个句子的第一个字得到更好匹配 **/
                 time -= 250
             }
-            self.karaokeView.setProgress(progress: current + self.preTime)
+            self.karaokeView.setProgress(progress: current)
         }
     }
     
@@ -268,7 +288,10 @@ class QiangChangVC: UIViewController {
             }
             return
         case setButton:
-            mcc.getMusicCollection(musicChartId: 1, page: 0, pageSize: 10, jsonOption: nil)
+            let vc = ParamSetVC()
+            vc.delegate = self
+            vc.modalPresentationStyle = .pageSheet
+            present(vc, animated: true)
             return
         case changeButton:
             isPause = false
@@ -325,13 +348,13 @@ class QiangChangVC: UIViewController {
             break
         }
     }
-    
     func sendData(data: Data) {
         if streamId > 0 {
             agoraKit.sendStreamMessage(streamId, data: data)
         }
     }
     
+    ///
     func createData(time: Int) -> Data {
         /// 把time包装json格式
         let dic = ["time": time]
@@ -382,7 +405,7 @@ class QiangChangVC: UIViewController {
     }
 }
 
-extension QiangChangVC: AgoraRtcEngineDelegate {
+extension MainTestVC: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOccurError errorCode: AgoraErrorCode) {
         print("didOccurError \(errorCode)")
     }
@@ -401,25 +424,31 @@ extension QiangChangVC: AgoraRtcEngineDelegate {
             return
         }
         if let pitch = speakers.last?.voicePitch {
+//            DispatchQueue.main.async { [weak self] in
+//            let startTime = CFAbsoluteTimeGetCurrent()
+//            let gap = startTime - pitchInvokeDuration
+//            pitchInvokeDuration = startTime
+//            print("gap:[\(gap.keep3)] \(pitch)")
+            label.text = "\(pitch)"
             karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
+//            }
         }
     }
 }
 
-extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
+extension Double {
+    var keep3: Double {
+        return Double(Darwin.round(self * 1000)/1000)
+    }
+}
+
+extension MainTestVC: AgoraMusicContentCenterEventDelegate {
     func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], errorCode: AgoraMusicContentCenterStatusCode) {
         
     }
     
     func onMusicCollectionResult(_ requestId: String, result: AgoraMusicCollection, errorCode: AgoraMusicContentCenterStatusCode) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return}
-            let songs = result.musicList.map({ SongListVC.Song(name: $0.name, singer: $0.singer, code: $0.songCode, highStartTime: 0, highEndTime: 0) })
-            let vc = SongListVC()
-            vc.songs = songs
-            vc.delegate = self
-            self.present(vc, animated: true)
-        }
+        
     }
     
     func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
@@ -428,23 +457,23 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
         }
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
-        //        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
-        //        DispatchQueue.main.async {
-        //            let url = URL(fileURLWithPath: filePath)
-        //            let data = try! Data(contentsOf: url)
-        //            let model = KaraokeView.parseLyricData(data: data)!
-        //            self.lyricModel = model
-        //            if !self.noLyric {
-        //                self.karaokeView.setLyricData(data: model)
-        //                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-        //                self.gradeView.isHidden = false
-        //            }
-        //            else {
-        //                self.karaokeView.setLyricData(data: nil)
-        //                self.gradeView.isHidden = true
-        //            }
-        //            self.mccPlay()
-        //        }
+//        let filePath = Bundle.main.path(forResource: "146807", ofType: "xml")!
+//        DispatchQueue.main.async {
+//            let url = URL(fileURLWithPath: filePath)
+//            let data = try! Data(contentsOf: url)
+//            let model = KaraokeView.parseLyricData(data: data)!
+//            self.lyricModel = model
+//            if !self.noLyric {
+//                self.karaokeView.setLyricData(data: model)
+//                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+//                self.gradeView.isHidden = false
+//            }
+//            else {
+//                self.karaokeView.setLyricData(data: nil)
+//                self.gradeView.isHidden = true
+//            }
+//            self.mccPlay()
+//        }
         
         if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
             DispatchQueue.main.async { [weak self] in
@@ -465,9 +494,6 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
     }
     
     func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, status: AgoraMusicContentCenterPreloadStatus, errorCode: AgoraMusicContentCenterStatusCode) {
-        guard let lyricUrl = lyricUrl else {
-            return
-        }
         print("== onPreLoadEvent \(status.rawValue) ")
         if status == .OK { /** preload 成功 **/
             print("== preload ok")
@@ -475,13 +501,15 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
         }
         
         if status == .error {
-            print("onPreLoadEvent percent:\(percent) status:\(status.rawValue) lyricUrl:\(lyricUrl)")
+            print("onPreLoadEvent percent:\(percent) status:\(status.rawValue) lyricUrl:\(lyricUrl ?? "null")")
+            if errorCode == .errorPermissionAndResource {
+                print("歌曲下架")
+            }
         }
     }
 }
 
-
-extension QiangChangVC: AgoraRtcMediaPlayerDelegate {
+extension MainTestVC: AgoraRtcMediaPlayerDelegate {
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
         if state == .openCompleted {
             print("=== openCompleted")
@@ -492,7 +520,7 @@ extension QiangChangVC: AgoraRtcMediaPlayerDelegate {
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo position: Int) {}
 }
 
-extension QiangChangVC: KaraokeDelegate {
+extension MainTestVC: KaraokeDelegate {
     func onKaraokeView(view: KaraokeView, didDragTo position: UInt) {
         /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
         self.last = position + 250
@@ -514,27 +542,7 @@ extension QiangChangVC: KaraokeDelegate {
     }
 }
 
-extension QiangChangVC: ParamSetVCDelegate {
-    func didSetParam(param: Param, noLyric: Bool) {
-        self.noLyric = noLyric
-        mpk.stop()
-        timer.destoryTimer(withName: "QiangChangVC")
-        self.last = 0
-        karaokeView.reset()
-        incentiveView.reset()
-        gradeView.reset()
-        updateView(param: param)
-        mccPreload()
-    }
-}
-
-extension QiangChangVC: SongListVCDelegate {
-    func songListVCDidSelectedSong(song: SongListVC.Song) {
-        
-    }
-}
-
-extension QiangChangVC: LyricsFileDownloaderDelegate {
+extension MainTestVC: LyricsFileDownloaderDelegate {
     func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {
         
     }
@@ -542,7 +550,8 @@ extension QiangChangVC: LyricsFileDownloaderDelegate {
     func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
         if let data = fileData {
             let model = KaraokeView.parseLyricData(lyricFileData: data)!
-            self.lyricModel = model
+            lyricModel = model
+            print("linesCount:\(model.lines.count) songCode:\(self.song.code)")
             if !self.noLyric {
                 let canScoring = model.hasPitch
                 if canScoring { /** xml **/
@@ -562,5 +571,19 @@ extension QiangChangVC: LyricsFileDownloaderDelegate {
         else {
             print("fect fail")
         }
+    }
+}
+
+extension MainTestVC: ParamSetVCDelegate {
+    func didSetParam(param: Param, noLyric: Bool, noPitchFile: Bool) {
+        self.noLyric = noLyric
+        mpk.stop()
+        timer.destoryTimer(withName: "MainTestVC")
+        self.last = 0
+        karaokeView.reset()
+        incentiveView.reset()
+        gradeView.reset()
+        updateView(param: param)
+        mccPreload()
     }
 }

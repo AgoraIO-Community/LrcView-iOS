@@ -512,7 +512,7 @@ extension MiniSizeVC: KaraokeDelegate {
 }
 
 extension MiniSizeVC: ParamSetVCDelegate {
-    func didSetParam(param: Param, noLyric: Bool) {
+    func didSetParam(param: Param, noLyric: Bool, noPitchFile: Bool) {
         self.noLyric = noLyric
         mpk.stop()
         timer.destoryTimer(withName: "MainTestVC")
