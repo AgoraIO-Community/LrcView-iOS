@@ -9,7 +9,7 @@ import Foundation
 
 @objc public class LineScoreRecorder: NSObject {
     var lineScoreDict = [UInt : LineScoreInfo]()
-    let logTag = "LineScoreReacorder"
+    let logTag = "LineScoreReacorder>>>>"
     
     @objc public func setLyricData(data: LyricModel) {
         lineScoreDict = [UInt : LineScoreInfo]()
@@ -34,7 +34,7 @@ import Foundation
             return calcluateCumulativeScore()
         }
         info.score = score
-        Log.info(text: "setLineScore x(\(index)), score: \(score)", tag: logTag)
+        Log.info(text: "setLineScore index:(\(index)), score: \(score)", tag: logTag)
         Log.info(text: "\(lineScoreDict.sorted(by:{ $0.key < $1.key}).map({ "i:\($0.key) s:\($0.value.score)" }))", tag: logTag)
         return calcluateCumulativeScore()
     }
@@ -43,6 +43,7 @@ import Foundation
     /// - Parameter position: current position
     /// - Returns: CumulativeScore
     @objc public func seek(position: UInt) -> UInt {
+        Log.info(text: "seek position:\(position)", tag: logTag)
         for index in 0..<lineScoreDict.count {
             let info = lineScoreDict[UInt(index)]!
             if info.begin >= position {
@@ -59,6 +60,7 @@ import Foundation
         for (_, linscore) in lineScoreDict {
             score += linscore.score
         }
+        Log.info(text: "calcluateCumulativeScore:\(score)")
         return score
     }
 }

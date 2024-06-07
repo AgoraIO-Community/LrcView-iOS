@@ -132,6 +132,7 @@ extension KaraokeView {
     /// - Parameter speakerPitch: 演唱者的实时音高值
     /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）.方式1给`nil`.
     @objc public func setPitch(speakerPitch: Double, progressInMs: UInt) {
+        guard scoringEnabled else { return }
         let pitch  = speakerPitch
 //        Log.info(text: "Pitch:\(pitch)", tag: logTag)
         if !Thread.isMainThread {
@@ -155,13 +156,16 @@ extension KaraokeView {
     /// - Note: 可以获取播放器的当前进度进行设置
     /// - Parameter progress: 歌曲进度 (ms)
     @objc public func setProgress(progress: UInt) {
+        
         if !Thread.isMainThread {
             Log.error(error: "invoke setProgress not isMainThread ", tag: logTag)
         }
         guard isStart else { return }
         logProgressIfNeed(progress: progress)
         lyricsView.setProgress(progress: progress)
-        scoringView.progress = progress
+        if scoringEnabled {
+            scoringView.progress = progress
+        }
         progressChecker.set(progress: progress)
     }
     

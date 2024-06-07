@@ -14,7 +14,7 @@ class MainTestVCEx: UIViewController {
     /// 主视图
     private let mainView = MainView()
     /// MusicContentConter 管理实例
-    private let mccManager = MCCManager()
+    private let mccManager = MccManagerEx()
     fileprivate let lineScoreRecorder = LineScoreRecorder()
     /// 进度进度校准和进度提供者
     private let progressProvider = ProgressProvider()
@@ -128,8 +128,8 @@ class MainTestVCEx: UIViewController {
 }
 
 // MARK: - RTCManagerDelegate
-extension MainTestVCEx: MCCManagerDelegate {
-    func onMccExInitialize(_ manager: MCCManager) {
+extension MainTestVCEx: MccManagerDelegateEx {
+    func onMccExInitialize(_ manager: MccManagerEx) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
                 return
@@ -146,7 +146,7 @@ extension MainTestVCEx: MCCManagerDelegate {
         }
     }
     
-    func onProloadMusic(_ manager: MCCManager, songId: Int, lyricData: Data, pitchData: Data) {
+    func onProloadMusic(_ manager: MccManagerEx, songId: Int, lyricData: Data, pitchData: Data) {
         let needPitch = !noPitchFile
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -165,11 +165,11 @@ extension MainTestVCEx: MCCManagerDelegate {
         }
     }
     
-    func onMccExScoreStart(_ manager: MCCManager) {
+    func onMccExScoreStart(_ manager: MccManagerEx) {
         manager.open(songId: songId!)
     }
     
-    func onOpenMusic(_ manager: MCCManager) {
+    func onOpenMusic(_ manager: MccManagerEx) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             canUseParamsSet = true

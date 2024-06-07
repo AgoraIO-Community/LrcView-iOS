@@ -141,11 +141,10 @@ class ScoringMachineEx: ScoringMachineProtocol {
             return
         }
         
-        /// 计算出真实的speakerPitch
-        let actualspeakerPitch = calculateActualSpeakerPitch(speakerPitch: speakerPitch, refPitch: hitedInfo.pitch)
+        let actualSpeakerPitch = Double(speakerPitch)
         
         /// 着色、动画开启与否
-        let showAnimation = speakerPitch <= 5
+        let showAnimation = abs(Int32(speakerPitch) - Int32(hitedInfo.pitch)) <= 5
         
         /** 2.update HighlightInfos **/
         if showAnimation {
@@ -157,11 +156,11 @@ class ScoringMachineEx: ScoringMachineProtocol {
         
         /** 3.calculated ui info **/
         
-        if actualspeakerPitch > maxPitch {
-            Log.errorText(text: "actualspeakerPitch > maxPitch, \(actualspeakerPitch)", tag: logTag)
+        if actualSpeakerPitch > maxPitch {
+            Log.errorText(text: "actualspeakerPitch > maxPitch, \(actualSpeakerPitch)", tag: logTag)
         }
         
-        let y = calculatedY(pitch: showAnimation ? hitedInfo.pitch : actualspeakerPitch,
+        let y = calculatedY(pitch: showAnimation ? hitedInfo.pitch : actualSpeakerPitch,
                             viewHeight: canvasViewSize.height,
                             minPitch: minPitch,
                             maxPitch: maxPitch,

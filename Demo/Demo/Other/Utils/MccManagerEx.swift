@@ -9,27 +9,26 @@ import RTMTokenBuilder
 import AgoraMccExService
 
 protocol MCCManagerDelegate: NSObjectProtocol {
-    func onMccExInitialize(_ manager: MCCManager)
-    func onProloadMusic(_ manager: MCCManager, songId: Int, lyricData: Data, pitchData: Data)
-    func onOpenMusic(_ manager: MCCManager)
-    func onMccExScoreStart(_ manager: MCCManager)
+    func onMccExInitialize(_ manager: MccManagerEx)
+    func onProloadMusic(_ manager: MccManagerEx, songId: Int, lyricData: Data, pitchData: Data)
+    func onOpenMusic(_ manager: MccManagerEx)
+    func onMccExScoreStart(_ manager: MccManagerEx)
     func onPitch(_ songCode: Int, data: AgoraRawScoreData)
     func onLineScore(_ songCode: Int, value: AgoraLineScoreData)
 }
 
-class MCCManager: NSObject {
+class MccManagerEx: NSObject {
     fileprivate let logTag = "MCCManager"
     private var agoraKit: AgoraRtcEngineKit!
-    private var mpk: AgoraMusicPlayerProtocolEx!
+    private var mpkEx: AgoraMusicPlayerProtocolEx!
     weak var delegate: MCCManagerDelegate?
     var mccEx: AgoraMusicContentCenterEx!
-    var mcc: AgoraMusicContentCenter!
     private var playMode: AgoraMusicPlayMode = .accompany
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
         agoraKit?.disableAudio()
-        mccEx?.destroyMusicPlayer(mpk)
+        mccEx?.destroyMusicPlayer(mpkEx)
         AgoraMusicContentCenterEx.destroy()
         AgoraRtcEngineKit.destroy()
     }
@@ -89,22 +88,10 @@ class MCCManager: NSObject {
         mccEx.setScoreLevel(.level1)
     }
     
-    func initMcc(token: String) {
-        Log.info(text: "initMcc", tag: logTag)
-        let config = AgoraMusicContentCenterConfig()
-        config.rtcEngine = agoraKit
-        config.mccUid = Config.mccUid
-        config.token = token
-        config.appId = Config.mccAppId
-        mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
-        mcc.register(self)
-        mpk = mcc.createMusicPlayer(delegate: self)
-    }
-    
     func createMusicPlayer() {
         Log.info(text: "createMusicPlayer", tag: logTag)
-        mpk = mccEx.createMusicPlayer(with: self)
-        if mpk == nil {
+        mpkEx = mccEx.createMusicPlayer(with: self)
+        if mpkEx == nil {
             Log.errorText(text: "mpk is nil", tag: logTag)
             fatalError()
         }
@@ -130,7 +117,7 @@ class MCCManager: NSObject {
     }
     
     func open(songId: Int) {
-        let ret = mpk.openMedia(songCode: songId, startPos: 0)
+        let ret = mpkEx.openMedia(songCode: songId, startPos: 0)
         if ret != 0 {
             Log.errorText(text: "openMedia error \(ret)", tag: logTag)
             return
@@ -139,7 +126,7 @@ class MCCManager: NSObject {
     }
     
     func playMusic() {
-        let ret = mpk.play()
+        let ret = mpkEx.play()
         if ret != 0 {
             Log.errorText(text: "playMusic error \(ret)", tag: logTag)
         }
@@ -149,7 +136,7 @@ class MCCManager: NSObject {
     }
     
     func pauseMusic() {
-        let ret = mpk.pause()
+        let ret = mpkEx.pause()
         if ret != 0 {
             Log.errorText(text: "pauseMusic error \(ret)", tag: logTag)
         }
@@ -159,7 +146,7 @@ class MCCManager: NSObject {
     }
     
     func resumeMusic() {
-        let ret = mpk.resume()
+        let ret = mpkEx.resume()
         if ret != 0 {
             Log.errorText(text: "resumeMusic error \(ret)", tag: logTag)
         }
@@ -169,7 +156,7 @@ class MCCManager: NSObject {
     }
     
     func stopMusic() {
-        let ret = mpk.stop()
+        let ret = mpkEx.stop()
         if ret != 0 {
             Log.errorText(text: "stop error \(ret)", tag: logTag)
         }
@@ -180,7 +167,7 @@ class MCCManager: NSObject {
     /// 跳过前奏
     func seek(position: UInt) {
         Log.info(text: "seek \(Int(position))", tag: logTag)
-        mpk.seek(toPosition: Int(position))
+        mpkEx.seek(toPosition: Int(position))
     }
     
     func startScore(songId: Int) {
@@ -209,13 +196,13 @@ class MCCManager: NSObject {
     }
     
     func getMPKCurrentPosition() -> Int {
-        return mpk.getPosition()
+        return mpkEx.getPosition()
     }
     
     func resversePlayMode() {
         let mode: AgoraMusicPlayMode = playMode == .accompany ? .original : .accompany
         
-        let ret = mpk.setPlayMode(mode: mode)
+        let ret = mpkEx.setPlayMode(mode: mode)
         if ret != 0 {
             Log.errorText(text: "setPlayMode error \(ret)", tag: logTag)
         }
@@ -226,7 +213,7 @@ class MCCManager: NSObject {
     }
 }
 
-extension MCCManager: AgoraRtcEngineDelegate {
+extension MccManagerEx: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit,
                    didOccurError errorCode: AgoraErrorCode) {
         Log.debug(text: "didOccurError \(errorCode)", tag: self.logTag)
@@ -247,7 +234,7 @@ extension MCCManager: AgoraRtcEngineDelegate {
 }
 
 // MARK: - AgoraMusicContentCenterEventDelegate
-extension MCCManager: AgoraMusicContentCenterEventDelegate {
+extension MccManagerEx: AgoraMusicContentCenterEventDelegate {
     func onMusicChartsResult(_ requestId: String,
                              result: [AgoraMusicChartInfo],
                              errorCode: AgoraMusicContentCenterStatusCode) {
@@ -285,7 +272,7 @@ extension MCCManager: AgoraMusicContentCenterEventDelegate {
 }
 
 // MARK: - AgoraMusicContentCenterExEventDelegate
-extension MCCManager: AgoraMusicContentCenterExEventDelegate {
+extension MccManagerEx: AgoraMusicContentCenterExEventDelegate {
     func onInitializeResult(_ state: AgoraMusicContentCenterExState,
                             reason: AgoraMusicContentCenterExStateReason) {
         Log.info(text: "[MccEx]: onInitializeResult: \(state.rawValue) reason: \(reason.rawValue)", tag: self.logTag)
@@ -343,7 +330,7 @@ extension MCCManager: AgoraMusicContentCenterExEventDelegate {
                        reason: AgoraMusicContentCenterExStateReason) {}
 }
 
-extension MCCManager: AgoraMusicContentCenterExScoreEventDelegate {
+extension MccManagerEx: AgoraMusicContentCenterExScoreEventDelegate {
     func onPitch(_ songCode: Int, data: AgoraRawScoreData) {
         Log.info(text: "[MccEx]: onPitch: \(songCode) progressInMs: \(data.progressInMs) speakerPitch: \(data.speakerPitch) pitchScore: \(data.pitchScore)", tag: self.logTag)
         DispatchQueue.main.async { [weak self] in
@@ -365,7 +352,7 @@ extension MCCManager: AgoraMusicContentCenterExScoreEventDelegate {
     }
 }
 
-extension MCCManager: AgoraRtcMediaPlayerDelegate {
+extension MccManagerEx: AgoraRtcMediaPlayerDelegate {
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol,
                              didChangedTo state: AgoraMediaPlayerState,
                              error: AgoraMediaPlayerError) {
