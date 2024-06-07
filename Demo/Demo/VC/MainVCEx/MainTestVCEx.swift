@@ -9,6 +9,7 @@ import UIKit
 import AgoraLyricsScore
 import AgoraRtcKit
 import AgoraMccExService
+import SVProgressHUD
 
 class MainTestVCEx: UIViewController {
     /// 主视图
@@ -40,6 +41,11 @@ class MainTestVCEx: UIViewController {
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
+        mccManager.pauseScore()
+        mccManager.stopMusic()
+        mccManager.leaveChannel()
+        progressProvider.stop()
+        resetView()
     }
     
     override func viewDidLoad() {
@@ -152,7 +158,7 @@ extension MainTestVCEx: MccManagerDelegateEx {
             guard let self = self else { return }
             let model = KaraokeView.parseLyricData(lyricFileData: lyricData,
                                                    pitchFileData: needPitch ? pitchData : nil,
-                                                   includeCopyrightSentence: false)
+                                                   includeCopyrightSentence: true)
             lineScoreRecorder.setLyricData(data: model!)
             self.lyricModel = model
             setLyricToView()
@@ -218,7 +224,7 @@ extension MainTestVCEx: MccManagerDelegateEx {
         let cumulativeScore = lineScoreRecorder.setLineScore(index: value.performedLineIndex, score: UInt(score))
         mainView.gradeView.setScore(cumulativeScore: Int(cumulativeScore),
                                     totalScore: Int(totalScore))
-
+        SVProgressHUD.showInfo(withStatus: "index:\(value.performedLineIndex)")
     }
 }
 
@@ -282,12 +288,7 @@ extension MainTestVCEx: MainViewDelegate, KaraokeDelegate {
             mccManager.preload(songId: songId!)
             break
         case .quick:
-            Log.info(text: "change", tag: self.logTag)
-            mccManager.pauseScore()
-            mccManager.stopMusic()
-            mccManager.leaveChannel()
-            progressProvider.stop()
-            resetView()
+            Log.info(text: "quick", tag: self.logTag)
             navigationController?.popViewController(animated: true)
             break
         case .changePlayMode:

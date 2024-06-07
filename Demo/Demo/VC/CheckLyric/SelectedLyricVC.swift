@@ -10,7 +10,7 @@ import AgoraMccExService
 import AgoraLyricsScore
 
 class SelectedLyricVC: UIViewController {
-    private let mccManager = MCCManager()
+    private let mccManager = MccManagerEx()
     let textField = UITextField()
     let confirmButton = UIButton()
     let logTag = "SelectedLyricVC"
@@ -103,8 +103,8 @@ class SelectedLyricVC: UIViewController {
     }
 }
 // MARK: - RTCManagerDelegate
-extension SelectedLyricVC: MCCManagerDelegate {
-    func onMccExInitialize(_ manager: MCCManager) {
+extension SelectedLyricVC: MccManagerDelegateEx {
+    func onMccExInitialize(_ manager: MccManagerEx) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
                 return
@@ -114,7 +114,7 @@ extension SelectedLyricVC: MCCManagerDelegate {
         }
     }
     
-    func onProloadMusic(_ manager: MCCManager, songId: Int, lyricData: Data, pitchData: Data) {
+    func onProloadMusic(_ manager: MccManagerEx, songId: Int, lyricData: Data, pitchData: Data) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             guard let text = textField.text,
@@ -127,8 +127,8 @@ extension SelectedLyricVC: MCCManagerDelegate {
         }
     }
     
-    func onMccExScoreStart(_ manager: MCCManager) {}
-    func onOpenMusic(_ manager: MCCManager) {}
+    func onMccExScoreStart(_ manager: MccManagerEx) {}
+    func onOpenMusic(_ manager: MccManagerEx) {}
     func onPitch(_ songCode: Int, data: AgoraRawScoreData) {}
     func onLineScore(_ songCode: Int, value: AgoraLineScoreData) {}
 }

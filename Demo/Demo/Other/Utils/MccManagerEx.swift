@@ -8,7 +8,7 @@ import AgoraRtcKit
 import RTMTokenBuilder
 import AgoraMccExService
 
-protocol MCCManagerDelegate: NSObjectProtocol {
+protocol MccManagerDelegateEx: NSObjectProtocol {
     func onMccExInitialize(_ manager: MccManagerEx)
     func onProloadMusic(_ manager: MccManagerEx, songId: Int, lyricData: Data, pitchData: Data)
     func onOpenMusic(_ manager: MccManagerEx)
@@ -18,16 +18,17 @@ protocol MCCManagerDelegate: NSObjectProtocol {
 }
 
 class MccManagerEx: NSObject {
-    fileprivate let logTag = "MCCManager"
+    fileprivate let logTag = "MCCManagerEx"
     private var agoraKit: AgoraRtcEngineKit!
     private var mpkEx: AgoraMusicPlayerProtocolEx!
-    weak var delegate: MCCManagerDelegate?
+    weak var delegate: MccManagerDelegateEx?
     var mccEx: AgoraMusicContentCenterEx!
     private var playMode: AgoraMusicPlayMode = .accompany
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
         agoraKit?.disableAudio()
+        mccEx?.stopScore()
         mccEx?.destroyMusicPlayer(mpkEx)
         AgoraMusicContentCenterEx.destroy()
         AgoraRtcEngineKit.destroy()
@@ -342,7 +343,7 @@ extension MccManagerEx: AgoraMusicContentCenterExScoreEventDelegate {
     }
     
     func onLineScore(_ songCode: Int, value: AgoraLineScoreData) {
-        Log.info(text: "[MccEx]: onLineScore: \(songCode) progressInMs: \(value.progressInMs) performedLineIndex: \(value.performedLineIndex) linePitchScore:\(value.linePitchScore) performedTotalLines: \(value.performedTotalLines) cumulativeTotalLinePitchScores: \(value.cumulativeTotalLinePitchScores)", tag: self.logTag)
+        Log.info(text: "[MccEx>>>>]: onLineScore: \(songCode) progressInMs: \(value.progressInMs) performedLineIndex: \(value.performedLineIndex) linePitchScore:\(value.linePitchScore) performedTotalLines: \(value.performedTotalLines) cumulativeTotalLinePitchScores: \(value.cumulativeTotalLinePitchScores)", tag: self.logTag)
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
                 return
