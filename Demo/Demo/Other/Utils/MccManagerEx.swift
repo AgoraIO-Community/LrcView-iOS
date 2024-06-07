@@ -10,7 +10,12 @@ import AgoraMccExService
 
 protocol MccManagerDelegateEx: NSObjectProtocol {
     func onMccExInitialize(_ manager: MccManagerEx)
-    func onProloadMusic(_ manager: MccManagerEx, songId: Int, lyricData: Data, pitchData: Data)
+    func onPreloadMusic(_ manager: MccManagerEx,
+                        songId: Int,
+                        lyricData: Data,
+                        pitchData: Data,
+                        percent: Int,
+                        errMsg: String?)
     func onOpenMusic(_ manager: MccManagerEx)
     func onMccExScoreStart(_ manager: MccManagerEx)
     func onPitch(_ songCode: Int, data: AgoraRawScoreData)
@@ -315,7 +320,13 @@ extension MccManagerEx: AgoraMusicContentCenterExEventDelegate {
             
             let lyricData = try! Data(contentsOf: URL(fileURLWithPath: lyricPath))
             let pitchData = try! Data(contentsOf: URL(fileURLWithPath: pitchPath))
-            delegate?.onProloadMusic(self, songId: songCode, lyricData: lyricData, pitchData: pitchData)
+            let errMsg = state != .preloadOK ? "preload state:\(state.rawValue) error:\(reason.rawValue)" : nil
+            delegate?.onPreloadMusic(self,
+                                     songId: songCode,
+                                     lyricData: lyricData,
+                                     pitchData: pitchData,
+                                     percent: percent,
+                                     errMsg: errMsg)
         }
     }
     

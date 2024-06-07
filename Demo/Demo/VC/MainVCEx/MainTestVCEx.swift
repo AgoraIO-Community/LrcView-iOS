@@ -20,12 +20,8 @@ class MainTestVCEx: UIViewController {
     /// 进度进度校准和进度提供者
     private let progressProvider = ProgressProvider()
     private var songId: Int?
-    /// 89488966 在你的身边
-    /// 32259070 奢香夫人
-    /// 40289835 十年
-    /// 239038150 明月几时有
-    private var songIds = [89488966, 32259070, 40289835, 239038150]
-    private var currentSongIndex = 0
+    private var songIds = [Int]()
+    private let songSourceProvider = SongSourceProvider(sourceType: .useForMcc)
     var lyricModel: LyricModel!
     let logTag = "MainTestVCEx"
     fileprivate var isSeeking = false
@@ -92,6 +88,7 @@ class MainTestVCEx: UIViewController {
         mainView.karaokeView.delegate = self
         mccManager.delegate = self
         progressProvider.delegate = self
+        songIds = songSourceProvider.songs.map({ $0.id })
     }
     
     private func setLyricToView() {
@@ -121,16 +118,6 @@ class MainTestVCEx: UIViewController {
         present(alertVC, animated: true, completion: nil)
     }
     
-    
-    fileprivate func genNextSongId() -> Int {
-        if currentSongIndex == songIds.count - 1 {
-            currentSongIndex = 0
-        }
-        else {
-            currentSongIndex += 1
-        }
-        return songIds[currentSongIndex]
-    }
 }
 
 // MARK: - RTCManagerDelegate
@@ -152,7 +139,12 @@ extension MainTestVCEx: MccManagerDelegateEx {
         }
     }
     
-    func onProloadMusic(_ manager: MccManagerEx, songId: Int, lyricData: Data, pitchData: Data) {
+    func onPreloadMusic(_ manager: MccManagerEx,
+                        songId: Int,
+                        lyricData: Data,
+                        pitchData: Data,
+                        percent: Int,
+                        errMsg: String?) {
         let needPitch = !noPitchFile
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -284,7 +276,7 @@ extension MainTestVCEx: MainViewDelegate, KaraokeDelegate {
             mccManager.pauseScore()
             mccManager.stopMusic()
             resetView()
-            songId = genNextSongId()
+            songId = songIds[songSourceProvider.genNextIndex()]
             mccManager.preload(songId: songId!)
             break
         case .quick:

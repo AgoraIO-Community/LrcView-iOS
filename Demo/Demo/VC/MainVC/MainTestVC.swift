@@ -23,7 +23,7 @@ class MainTestVC: UIViewController {
     let lyricsFileDownloader = LyricsFileDownloader()
     let mainView = MainView(frame: .zero)
     let mccManager = MccManager()
-    private let songSourceProvider = SongSourceProvider()
+    private let songSourceProvider = SongSourceProvider(sourceType: .useForMcc)
     private let progressProvider = ProgressProvider()
     var song: Song!
     var currentSongIndex = 0
@@ -32,6 +32,7 @@ class MainTestVC: UIViewController {
     var lyricModel: LyricModel!
     var noLyric = false
     var isPause = false
+    var lyricFileType: AgoraMusicContentCenter.LyricFileType = .xml
     fileprivate let logTag = "MainTestVC"
     
     override func viewDidLoad() {
@@ -175,7 +176,7 @@ extension MainTestVC: MccManagerDelegate {
             return
         }
         
-        manager.getLrc(songCode: songId, lyricType: .xml)
+        manager.getLrc(songCode: songId, lyricType: lyricFileType)
     }
     
     func onLyricResult(url: String) {
@@ -234,6 +235,7 @@ extension MainTestVC: ProgressProviderDelegate {
 extension MainTestVC: ParamSetVCDelegate {
     func didSetParam(param: Param, noLyric: Bool, noPitchFile: Bool) {
         self.noLyric = noLyric
+        lyricFileType = param.otherConfig.lyricFileType
         mccManager.stopMusic()
         progressProvider.stop()
         resetView()

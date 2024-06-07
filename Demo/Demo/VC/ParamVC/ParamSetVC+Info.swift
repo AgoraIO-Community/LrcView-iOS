@@ -7,6 +7,7 @@
 
 import UIKit
 import AgoraLyricsScore
+import AgoraRtcKit
 
 struct Section {
     let title: String
@@ -23,6 +24,7 @@ class Param {
     let karaoke = KaraokeViewParam()
     let lyric = LyricViewParam()
     let scoring = ScoringViewParam()
+    let otherConfig = OtherConfigParam()
 }
 
 class KaraokeViewParam {
@@ -91,6 +93,10 @@ class ScoringViewParam {
     var hitScoreThreshold: Float = 0.7
     /// use for debug only
     var showDebugView = false
+}
+
+class OtherConfigParam {
+    var lyricFileType: AgoraMusicContentCenter.LyricFileType = .xml
 }
 
 extension UIColor {

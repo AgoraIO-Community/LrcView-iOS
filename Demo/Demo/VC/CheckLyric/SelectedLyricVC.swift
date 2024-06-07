@@ -114,7 +114,12 @@ extension SelectedLyricVC: MccManagerDelegateEx {
         }
     }
     
-    func onProloadMusic(_ manager: MccManagerEx, songId: Int, lyricData: Data, pitchData: Data) {
+    func onPreloadMusic(_ manager: MccManagerEx,
+                        songId: Int,
+                        lyricData: Data,
+                        pitchData: Data,
+                        percent: Int,
+                        errMsg: String?) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             guard let text = textField.text,

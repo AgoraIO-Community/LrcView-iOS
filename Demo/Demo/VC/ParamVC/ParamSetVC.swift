@@ -61,6 +61,7 @@ class ParamSetVC: UIViewController {
                                                  .init(title: "打分容忍度 范围：0-1"),
                                                  .init(title: "showDebugView"),
                 ]),
+                Section(title: "非歌词组件配置", rows: [.init(title: "歌词类型")]),
         ]
     }
     
@@ -246,6 +247,12 @@ class ParamSetVC: UIViewController {
                 cell.detailTextLabel?.text = "\(param.scoring.showDebugView)"
             }
         }
+        
+        if indexPath.section == 3 {
+            if indexPath.row == 0 {
+                cell.detailTextLabel?.text = param.otherConfig.lyricFileType.description
+            }
+        }
     }
     
     func update(indexPath: IndexPath) {
@@ -375,6 +382,12 @@ class ParamSetVC: UIViewController {
             /// showDebugView
             if indexPath.row == 10 {
                 param.scoring.showDebugView = !param.scoring.showDebugView
+            }
+        }
+        
+        if indexPath.section == 3 {
+            if indexPath.row == 0 {
+                param.otherConfig.lyricFileType = param.otherConfig.lyricFileType == .xml ? .lrc : .xml
             }
         }
     }

@@ -6,6 +6,7 @@
 //
 
 import AgoraRtcKit
+import AgoraMccExService
 
 extension Double {
     var keep3: Double {
@@ -14,9 +15,13 @@ extension Double {
 }
 
 extension AgoraMusicContentCenter {
-    enum LyricFileType: Int {
+    enum LyricFileType: Int, CustomStringConvertible {
         case xml = 0
         case lrc = 1
+        
+        var description: String {
+            return self == .xml ? "xml" : "lrc"
+        }
     }
 }
 
@@ -31,6 +36,68 @@ extension AgoraMusicContentCenterPreloadStatus: CustomStringConvertible {
             return "preloading"
         case .removeCache:
             return "removeCache"
+        @unknown default:
+            fatalError()
+        }
+    }
+}
+
+extension AgoraMusicContentCenterExState: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .initialized:
+            return "initialized"
+        case .initializeFailed:
+            return "initializeFailed"
+        case .preloadOK:
+            return "preloadOK"
+        case .preloadError:
+            return "preloadError"
+        case .preloading:
+            return "preloading"
+        case .preloadRemoveCache:
+            return "preloadRemoveCache"
+        case .startScoreCompleted:
+            return "startScoreCompleted"
+        case .startScoreFailed:
+            return "startScoreFailed"
+        @unknown default:
+            fatalError()
+        }
+    }
+}
+
+extension AgoraMusicContentCenterExStateReason: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .OK:
+            return "OK"
+        case .error:
+            return "error"
+        case .errorInvalidSignature:
+            return "errorInvalidSignature"
+        case .errorHttpInternalError:
+            return "errorHttpInternalError"
+        case .ysdErrorLyricError:
+            return "ysdErrorLyricError"
+        case .ysdErrorPtsError:
+            return "ysdErrorPtsError"
+        case .ysdErrorParamError:
+            return "ysdErrorParamError"
+        case .ysdErrorTokenError:
+            return "ysdErrorTokenError"
+        case .ysdErrorPitchError:
+            return "ysdErrorPitchError"
+        case .ysdErrorNetworkError:
+            return "ysdErrorNetworkError"
+        case .ysdErrorRequestError:
+            return "ysdErrorRequestError"
+        case .ysdErrorPrivilegeError:
+            return "ysdErrorPrivilegeError"
+        case .ysdErrorNoActivateError:
+            return "ysdErrorNoActivateError"
+        case .ysdErrorRepeatRequestError:
+            return "ysdErrorRepeatRequestError"
         @unknown default:
             fatalError()
         }
