@@ -2,9 +2,9 @@
 
 ## 介绍
 
-支持XML歌词解析, LRC歌词解析, 解决了多行歌词进度渲染的问题, 评分根据人声实时计算评分
+支持XML/LRC/KRC歌词解析,  可选择根据人声实时计算评分。
 
-## 使用方法
+## 使用方式1: 配合AograMusicContentCenter
 
 #### 1.初始化
 
@@ -218,7 +218,15 @@ karaokeView.reset()
 }
 ```
 
-<br/>
+
+
+## 使用方式2: 配合AograMusicContentCenterEx
+
+关于AograMusicContentCenterEx的集成，可以参考demo代码文件：`MccManagerEx.swift`
+
+关于歌词组件`KaraokeView`可以参考demo代码文件：`MainView.swift`和`MainTestVC.swift`
+
+
 
 ## 集成方式
 
