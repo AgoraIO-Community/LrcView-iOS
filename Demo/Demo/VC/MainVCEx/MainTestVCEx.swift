@@ -21,7 +21,7 @@ class MainTestVCEx: UIViewController {
     private let progressProvider = ProgressProvider()
     private var songId: Int?
     private var songIds = [Int]()
-    private let songSourceProvider = SongSourceProvider(sourceType: .useForMcc)
+    private let songSourceProvider = SongSourceProvider(sourceType: .useForMccEx)
     var lyricModel: LyricModel!
     let logTag = "MainTestVCEx"
     fileprivate var isSeeking = false
@@ -213,10 +213,11 @@ extension MainTestVCEx: MccManagerDelegateEx {
         totalScore = UInt(value.performedTotalLines * 100)
         mainView.lineScoreView.showScoreView(score: score)
         mainView.incentiveView.show(score: score)
-        let cumulativeScore = lineScoreRecorder.setLineScore(index: value.performedLineIndex, score: UInt(score))
+        let cumulativeScore = lineScoreRecorder.setLineScore(index: value.performedLineIndex - 1, score: UInt(score))
         mainView.gradeView.setScore(cumulativeScore: Int(cumulativeScore),
                                     totalScore: Int(totalScore))
-        SVProgressHUD.showInfo(withStatus: "index:\(value.performedLineIndex)")
+        SVProgressHUD.setOffsetFromCenter(.init(horizontal: 0, vertical: 1 * (view.bounds.height/2 - 60)))
+        SVProgressHUD.showInfo(withStatus: "i:\(value.performedLineIndex - 1) s:\(score)")
     }
 }
 

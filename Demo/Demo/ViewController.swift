@@ -54,7 +54,8 @@ class ViewController: UIViewController {
                                             .init(title: "LyricLabel测试"),
                                             .init(title: "OC"),
                                             .init(title: "profile"),
-                                            .init(title: "下载")])]
+                                            .init(title: "下载")]),
+                Section(title: "验证", rows: [.init(title: "krc查看")])]
     }
 }
 
@@ -185,6 +186,14 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             
             if indexPath.row == 10 { /** 下载 **/
                 let vc = DownloadVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+        }
+        
+        if indexPath.section == 3 {
+            if indexPath.row == 0 {
+                let vc = SelectedLyricVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }

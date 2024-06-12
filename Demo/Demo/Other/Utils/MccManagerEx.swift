@@ -119,6 +119,7 @@ class MccManagerEx: NSObject {
         let musicId = "\(songId)"
         let jsonOption = "{\"format\":{\"highPart\":0}}"
         let songCode = mcc.getInternalSongCode(musicId, jsonOption: jsonOption)
+        Log.info(text: "getInternalSongCode songId:\(songId) -> \(songCode)", tag: logTag)
         return songCode
     }
     
@@ -288,7 +289,7 @@ extension MccManagerEx: AgoraMusicContentCenterExEventDelegate {
     }
     
     func onStartScoreResult(_ songCode: Int, state: AgoraMusicContentCenterExState, reason: AgoraMusicContentCenterExStateReason) {
-        Log.info(text: "[MccEx]: onStartScoreResult: \(songCode) state: \(state.rawValue) reason: \(reason.rawValue)", tag: self.logTag)
+        Log.info(text: "[MccEx]: onStartScoreResult: \(songCode) state: \(state.description) reason: \(reason.description)", tag: self.logTag)
         delegate?.onMccExScoreStart(self)
     }
     

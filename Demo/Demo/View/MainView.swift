@@ -157,6 +157,8 @@ class MainView: UIView {
         karaokeView.backgroundImage = param.karaoke.backgroundImage
         karaokeView.scoringEnabled = param.karaoke.scoringEnabled
         karaokeView.spacing = param.karaoke.spacing
+        karaokeView.setScoreLevel(level: param.karaoke.scoreLevel)
+        karaokeView.setScoreCompensationOffset(offset: param.karaoke.scoreCompensationOffset)
         
         karaokeView.lyricsView.lyricLineSpacing = param.lyric.lyricLineSpacing
         karaokeView.lyricsView.noLyricTipsColor = param.lyric.noLyricTipsColor

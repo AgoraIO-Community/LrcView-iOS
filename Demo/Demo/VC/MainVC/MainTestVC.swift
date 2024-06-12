@@ -144,7 +144,7 @@ extension MainTestVC: KaraokeDelegate, MainViewDelegate {
     
     func onKaraokeView(view: KaraokeView, didDragTo position: UInt) {
         /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
-        progressProvider.seek(position: position)
+        progressProvider.seek(position: position + 250)
         mccManager.seek(position: position)
         cumulativeScore = view.scoringView.getCumulativeScore()
         mainView.gradeView.setScore(cumulativeScore: cumulativeScore,
