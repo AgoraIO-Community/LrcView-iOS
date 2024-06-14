@@ -135,7 +135,7 @@ class ScoringMachine {
         let actualspeakerPitch = Double(speakerPitch)
         
         /// 着色、动画开启与否
-        let showAnimation = speakerPitch <= 5
+        let showAnimation = abs(Int32(speakerPitch) - Int32(hitedInfo.pitch)) <= 5
         
         /** 2.update HighlightInfos **/
         if showAnimation {
