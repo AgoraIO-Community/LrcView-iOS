@@ -226,6 +226,20 @@ class TestParser: XCTestCase {
         XCTAssertTrue(model.hasPitch == false)
     }
     
+    func testLryType() {
+        let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "8141335308133421388", ofType: "krc")!))
+        
+        guard let model = KaraokeView.parseLyricData(lyricFileData: krcFileData) else {
+            XCTFail()
+            return
+        }
+        
+        XCTAssert(model.lyricsType  == .krc)
+        XCTAssert(model.lines.count == 86)
+        XCTAssert(model.name  == "热烈的少年 (是热烈)")
+        XCTAssert(model.lines[1].beginTime == 737)
+    }
+    
     func testIncludeCopyrightSentence1() {
         let krcFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133", ofType: "krc")!))
         let pitchFileData = try! Data(contentsOf: URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!))

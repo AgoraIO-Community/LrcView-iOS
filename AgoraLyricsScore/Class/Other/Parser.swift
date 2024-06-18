@@ -58,7 +58,8 @@ class Parser {
         }
         
         // 检测KRC格式的特征，通常是特定的标签如[id:$xxxxxxxx]
-        if string.contains("[id:") {
+        let krcPattern = "\\[(\\w+):([^]]*)]"
+        if let _ = string.range(of: krcPattern, options: .regularExpression) {
             return .krc
         }
         
