@@ -57,7 +57,13 @@ class Parser {
             return .lrc
         }
         
-        // 检测KRC格式的特征，通常是特定的标签如[id:$xxxxxxxx]
+        /// enhance lrc:[00:50.677]<00:50.677>走<00:50.956>走
+        let enhanceLrcPattern = "\\[\\d{2}:\\d{2}\\.\\d{2,3}\\]\\<\\d{2}:\\d{2}\\.\\d{2,3}\\>"
+        if let _ = string.range(of: enhanceLrcPattern, options: .regularExpression) {
+            return .lrc
+        }
+        
+        // 检测KRC格式的特征
         let krcPattern = "\\[(\\w+):([^]]*)]"
         if let _ = string.range(of: krcPattern, options: .regularExpression) {
             return .krc
