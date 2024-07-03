@@ -51,7 +51,7 @@ class KRCParser {
     
     func parse(krcFileData: Data) -> LyricModel? {
         let content = String(data: krcFileData, encoding: .utf8)!
-        var metadata: [String: String] = [:]
+        var metadata: [String : String] = [:]
         var lineModels = [LyricLineModel]()
         
         /** Fix KRC文件内容中，每一行的分隔符可能是"\n"，也可能是"\r\n"，所以需要判断分隔符 **/
@@ -75,8 +75,7 @@ class KRCParser {
                 }
                 else {
                     if line.contains(">"),  line.contains("<") {
-                        /// no need to read offset in metadata, it was ignored
-                        var offsetValue: UInt = 0
+                        let offsetValue: UInt = UInt(metadata["offset"] ?? "0") ?? 0
                         
                         if let lineModel = parseLine(line: line, offset: offsetValue) {
                             /* check line duration valid */
@@ -95,7 +94,6 @@ class KRCParser {
                 
             }
         }
-        
         return LyricModel(name: metadata["ti"] ?? "unknowName",
                           singer: metadata["ar"] ?? "unknowSinger",
                           lyricsType: .krc,
