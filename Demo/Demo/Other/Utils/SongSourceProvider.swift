@@ -31,7 +31,9 @@ class SongSourceProvider {
                 Song(name: "容易受伤的女人", id: 6625526608670440)
             ]
         case .useForMccEx:
-            self.songs = [Song(name: "在你的身边", id: 89488966),
+            self.songs = [Song(name: "offset test", id: 32183724),
+                          Song(name: "绿光", id: 32133593),
+                          Song(name: "在你的身边", id: 89488966),
                           Song(name: "奢香夫人", id: 32259070),
                           Song(name: "十年", id: 40289835),
                           Song(name: "明月几时有", id: 239038150)]
