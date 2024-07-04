@@ -134,6 +134,7 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
         }
         if currentTestingCaseNum == 11, fileData != nil {
             let fileName = FileCache().findFiles(inDirectory: .cacheFolderPath()).first?.path.fileName
+            let _ = KaraokeView.parseLyricData(lyricFileData: fileData!)
             XCTAssertEqual(fileName, "10.lrc")
             XCTAssertEqual(fileData!.count, 2304)
             expNormalLRCLocal.fulfill()

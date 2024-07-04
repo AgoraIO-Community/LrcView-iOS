@@ -104,9 +104,9 @@ public class LyricsFileDownloader: NSObject {
     // MARK: - Private Method - 0
     func fetchFromLocal(urlString: String) -> Data? {
         /** check if Exist **/
-        let fileName = urlString.fileName.components(separatedBy: ".").first ?? ""
-        if let xmlPath = FileCache.cacheFileExists(with: fileName + ".xml") {
-            let url = URL(fileURLWithPath: xmlPath)
+        let fileName = urlString.fileName
+        if let path = FileCache.cacheFileExists(with: fileName) {
+            let url = URL(fileURLWithPath: path)
             let data = try? Data(contentsOf: url)
             return data
         }
