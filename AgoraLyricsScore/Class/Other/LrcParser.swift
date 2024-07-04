@@ -76,7 +76,13 @@ class LrcParser {
                                           tones: tones)
                 if let lastLine = lines.last { /** 把上一句的时间补齐 **/
                     let gap: UInt = 1 /** 句间的空隙默认为1ms **/
-                    lastLine.duration = line.beginTime - lastLine.beginTime - gap
+                    if line.beginTime > lastLine.beginTime {
+                        lastLine.duration = line.beginTime - lastLine.beginTime - gap
+                    }
+                    else {
+                        Log.errorText(text: "calculate duration error, line.beginTime:\(line.beginTime), lastLine.beginTime:\(lastLine.beginTime), in content `\(line)`, matchesArray.count:\(matchesArray.count)", tag: logTag)
+                        lastLine.duration = 0
+                    }
                     if isEnhancedFormat {
                         if !lastLine.tones.isEmpty {
                             let duration = line.beginTime - lastLine.tones.last!.beginTime - gap

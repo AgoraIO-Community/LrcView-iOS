@@ -293,12 +293,11 @@ class TestParser: XCTestCase {
             XCTFail()
             return
         }
-//        XCTAssert(model.lines.count == 8)
-//        XCTAssert(model.lines.first!.content == "他们总是说我有时不会怎么讲话")
-//        XCTAssertTrue(model.lines[0].tones[0].beginTime == 18 * 1000 + 912)
-//        /// <04:51.526>大[04:53.964]
-//        XCTAssert(model.lines[6].tones[11].duration == (4 * 60 * 1000 + 53 * 1000 + 964) - (4 * 60 * 1000 + 51 * 1000 + 526) - 1) /** gap was 1 ms between lines **/
-//        XCTAssertEqual(model.hasPitch, false)
+        XCTAssert(model.lines.count == 52)
+        XCTAssert(model.lines.first!.content == "apologiz")
+        XCTAssertTrue(model.lines[0].tones[0].beginTime == 4 * 1000 + 841)
+        XCTAssert(model.lines[7].tones[12].duration == (54 * 1000 + 578) - (54 * 1000 + 56) - 1) /** gap was 1 ms between lines **/
+        XCTAssertEqual(model.hasPitch, false)
         XCTAssertTrue(model.lyricsType == .lrc)
     }
     

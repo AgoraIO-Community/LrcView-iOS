@@ -12,8 +12,10 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
     var lyricsFileDownloader: LyricsFileDownloader!
     let expNormalXMLSucess = XCTestExpectation(description: "test TestDownload NormalXMLSucess")
     let expNormalXMLProgress = XCTestExpectation(description: "test TestDownload expNormalXMLProgress")
+    let expNormalXMLLocal = XCTestExpectation(description: "test TestDownload expNormalXML Local")
     let expNormalLRCSucess = XCTestExpectation(description: "test TestDownload NormalLRCSucess")
     let expNormalLRCProgress = XCTestExpectation(description: "test TestDownload expNormalLRCProgress")
+    let expNormalLRCLocal = XCTestExpectation(description: "test TestDownload expNormalLRCLocal")
     let expUrlRepeatFail = XCTestExpectation(description: "test TestDownload UrlRepeatFail")
     let expSame1 = XCTestExpectation(description: "test TestDownload expSame1")
     let expSame2 = XCTestExpectation(description: "test TestDownload expSame2")
@@ -50,10 +52,14 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
         let urlString = urlStrings.first!
         let _ = lyricsFileDownloader.download(urlString: urlString)
         wait(for: [expNormalXMLSucess, expNormalXMLProgress], timeout: 10)
+        
+        currentTestingCaseNum = 1
+        let _ = lyricsFileDownloader.download(urlString: urlString)
+        wait(for: [expNormalXMLLocal], timeout: 3)
     }
     
     func testNormalLRCSucess() throws {
-        currentTestingCaseNum = 1
+        currentTestingCaseNum = 10
         Downloader.requestTimeoutInterval = 9
         lyricsFileDownloader = LyricsFileDownloader()
         lyricsFileDownloader.delegate = self
@@ -62,10 +68,15 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
         let urlString = urlStrings.last!
         let _ = lyricsFileDownloader.download(urlString: urlString)
         wait(for: [expNormalLRCSucess, expNormalLRCProgress], timeout: 10)
+        
+        /// test local
+        currentTestingCaseNum = 11
+        let _ = lyricsFileDownloader.download(urlString: urlString)
+        wait(for: [expNormalLRCLocal], timeout: 2)
     }
     
     func testUrlRepeatFail() throws {
-        currentTestingCaseNum = 2
+        currentTestingCaseNum = 20
         Downloader.requestTimeoutInterval = 8
         lyricsFileDownloader = LyricsFileDownloader()
         lyricsFileDownloader.delegate = self
@@ -75,23 +86,12 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
         let _ = lyricsFileDownloader.download(urlString: urlString)
         let _ = lyricsFileDownloader.download(urlString: urlString)
         wait(for: [expUrlRepeatFail], timeout: 10)
-        
-        let requestId = lyricsFileDownloader.download(urlString: urlString)
-        if requestId < 0 {
-            /// download fail
-            return
-        }
-        
-        /// save the requestId
-        var saveRequestId = requestId
-        
-        
     }
     
     let sempSame = DispatchSemaphore(value: 0)
     var isTestSamePart1Success = false
     func testSame() { /** 测试相同的的url下载 **/
-        currentTestingCaseNum = 3
+        currentTestingCaseNum = 30
         Downloader.requestTimeoutInterval = 5
         lyricsFileDownloader = LyricsFileDownloader()
         lyricsFileDownloader.delegate = self
@@ -111,7 +111,7 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
         if currentTestingCaseNum == 0 {
             expNormalXMLProgress.fulfill()
         }
-        if currentTestingCaseNum == 1 {
+        if currentTestingCaseNum == 10 {
             expNormalLRCProgress.fulfill()
         }
     }
@@ -120,17 +120,28 @@ final class TestDownload: XCTestCase, LyricsFileDownloaderDelegate {
                                        fileData: Data?,
                                        error: DownloadError?) {
         if currentTestingCaseNum == 0, fileData != nil {
+            XCTAssertEqual(fileData!.count, 42964)
             expNormalXMLSucess.fulfill()
         }
         if currentTestingCaseNum == 1, fileData != nil {
+            expNormalXMLLocal.fulfill()
+        }
+        if currentTestingCaseNum == 10, fileData != nil {
             let fileName = FileCache().findFiles(inDirectory: .cacheFolderPath()).first?.path.fileName
             XCTAssertEqual(fileName, "10.lrc")
+            XCTAssertEqual(fileData!.count, 2304)
             expNormalLRCSucess.fulfill()
         }
-        if currentTestingCaseNum == 2, error != nil, error!.domainType == .repeatDownloading {
+        if currentTestingCaseNum == 11, fileData != nil {
+            let fileName = FileCache().findFiles(inDirectory: .cacheFolderPath()).first?.path.fileName
+            XCTAssertEqual(fileName, "10.lrc")
+            XCTAssertEqual(fileData!.count, 2304)
+            expNormalLRCLocal.fulfill()
+        }
+        if currentTestingCaseNum == 20, error != nil, error!.domainType == .repeatDownloading {
             expUrlRepeatFail.fulfill()
         }
-        if currentTestingCaseNum == 3 {
+        if currentTestingCaseNum == 30 {
             if error == nil {
                 if isTestSamePart1Success {
                     expSame2.fulfill()
