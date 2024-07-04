@@ -100,13 +100,13 @@ class LrcParser {
         guard lines.count != 0, let preludeEndPosition = lines.first?.beginTime else {
             return nil
         }
-        
+        let duration: UInt = lines.last?.endTime ?? 0
         let result = LyricModel(name: "unknow",
                                 singer: "unknow",
                                 lyricsType: .lrc,
                                 lines: lines,
                                 preludeEndPosition: preludeEndPosition,
-                                duration: 0,
+                                duration: duration,
                                 hasPitch: false)
         return result
     }
