@@ -45,10 +45,6 @@ extension AgoraMusicContentCenterPreloadStatus: CustomStringConvertible {
 extension AgoraMusicContentCenterExState: CustomStringConvertible {
     public var description: String {
         switch self {
-        case .initialized:
-            return "initialized"
-        case .initializeFailed:
-            return "initializeFailed"
         case .preloadOK:
             return "preloadOK"
         case .preloadError:
@@ -57,47 +53,14 @@ extension AgoraMusicContentCenterExState: CustomStringConvertible {
             return "preloading"
         case .preloadRemoveCache:
             return "preloadRemoveCache"
-        case .startScoreCompleted:
-            return "startScoreCompleted"
+        case .initializeFailed:
+            return "initializeFailed"
+        case .initialized:
+            return "initialized"
         case .startScoreFailed:
             return "startScoreFailed"
-        @unknown default:
-            fatalError()
-        }
-    }
-}
-
-extension AgoraMusicContentCenterExStateReason: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .OK:
-            return "OK"
-        case .error:
-            return "error"
-        case .errorInvalidSignature:
-            return "errorInvalidSignature"
-        case .errorHttpInternalError:
-            return "errorHttpInternalError"
-        case .ysdErrorLyricError:
-            return "ysdErrorLyricError"
-        case .ysdErrorPtsError:
-            return "ysdErrorPtsError"
-        case .ysdErrorParamError:
-            return "ysdErrorParamError"
-        case .ysdErrorTokenError:
-            return "ysdErrorTokenError"
-        case .ysdErrorPitchError:
-            return "ysdErrorPitchError"
-        case .ysdErrorNetworkError:
-            return "ysdErrorNetworkError"
-        case .ysdErrorRequestError:
-            return "ysdErrorRequestError"
-        case .ysdErrorPrivilegeError:
-            return "ysdErrorPrivilegeError"
-        case .ysdErrorNoActivateError:
-            return "ysdErrorNoActivateError"
-        case .ysdErrorRepeatRequestError:
-            return "ysdErrorRepeatRequestError"
+        case .startScoreCompleted:
+            return "startScoreCompleted"
         @unknown default:
             fatalError()
         }
@@ -123,6 +86,43 @@ extension AgoraMusicContentCenterStatusCode: CustomStringConvertible {
             return "errorHttpInternalError"
         case .errorMusicDecryption:
             return "errorMusicDecryption"
+        @unknown default:
+            fatalError()
+        }
+    }
+}
+
+extension AgoraMusicContentCenterExStateReason: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .OK:
+            return "OK"
+        case .error:
+            return "error"
+        case .errorInvalidSignature:
+            return "errorInvalidSignature"
+        case .errorHttpInternalError:
+            return "errorHttpInternalError"
+        case .ysdErrorLyricError:
+            return "ysdErrorLyricError"
+        case .ysdErrorPtsError:
+            return "ysdErrorPtsError"
+        case .ysdErrorParamError:
+            return "ysdErrorParamError"
+        case .ysdErrorPitchError:
+            return "ysdErrorPitchError"
+        case .ysdErrorTokenError:
+            return "ysdErrorTokenError"
+        case .ysdErrorNetworkError:
+            return "ysdErrorNetworkError"
+        case .ysdErrorRequestError:
+            return "ysdErrorRequestError"
+        case .ysdErrorPrivilegeError:
+            return "ysdErrorPrivilegeError"
+        case .ysdErrorNoActivateError:
+            return "ysdErrorNoActivateError"
+        case .ysdErrorRepeatRequestError:
+            return "ysdErrorRepeatRequestError"
         @unknown default:
             fatalError()
         }

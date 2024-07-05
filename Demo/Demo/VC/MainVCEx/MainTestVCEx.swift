@@ -176,7 +176,7 @@ extension MainTestVCEx: MccManagerDelegateEx {
         }
     }
     
-    func onPitch(_ songCode: Int, data: AgoraRawScoreData) {
+    func onPitch(_ songCode: Int, data: AgoraRawScoreDataEx) {
         guard !isSeeking else {
             return
         }
@@ -205,7 +205,7 @@ extension MainTestVCEx: MccManagerDelegateEx {
                                       progressInMs: UInt(data.progressInMs))
     }
 
-    func onLineScore(_ songCode: Int, value: AgoraLineScoreData) {
+    func onLineScore(_ songCode: Int, value: AgoraLineScoreDataEx) {
         guard !noLyric else {
             return
         }

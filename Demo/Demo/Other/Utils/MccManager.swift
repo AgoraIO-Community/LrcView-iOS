@@ -86,11 +86,13 @@ class MccManager: NSObject {
         let token = TokenBuilder.buildRtmToken2(Config.mccAppId,
                                                 appCertificate: Config.mccCertificate,
                                                 userUuid: "\(Config.mccUid)")
+        Log.info(text: "mcc token: \(token)", tag: logTag)
         let config = AgoraMusicContentCenterConfig()
         config.rtcEngine = agoraKit
         config.mccUid = Config.mccUid
         config.token = token
         config.appId = Config.mccAppId
+        config.mccDomain = Config.testTag
         mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
         mcc.register(self)
         mpk = mcc.createMusicPlayer(delegate: self)
@@ -220,6 +222,10 @@ extension MccManager: AgoraRtcEngineDelegate {
 }
 
 extension MccManager: AgoraMusicContentCenterEventDelegate {
+    func onLyricInfo(_ requestId: String, songCode: Int, lyricInfo: AgoraLyricInfo?, errorCode: AgoraMusicContentCenterStatusCode) {
+        
+    }
+    
     func onPreLoadEvent(_ requestId: String,
                         songCode: Int,
                         percent: Int,

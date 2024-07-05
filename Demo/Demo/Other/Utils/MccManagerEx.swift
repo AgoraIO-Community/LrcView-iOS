@@ -18,8 +18,8 @@ protocol MccManagerDelegateEx: NSObjectProtocol {
                         errMsg: String?)
     func onOpenMusic(_ manager: MccManagerEx)
     func onMccExScoreStart(_ manager: MccManagerEx)
-    func onPitch(_ songCode: Int, data: AgoraRawScoreData)
-    func onLineScore(_ songCode: Int, value: AgoraLineScoreData)
+    func onPitch(_ songCode: Int, data: AgoraRawScoreDataEx)
+    func onLineScore(_ songCode: Int, value: AgoraLineScoreDataEx)
 }
 
 class MccManagerEx: NSObject {
@@ -28,7 +28,7 @@ class MccManagerEx: NSObject {
     private var mpkEx: AgoraMusicPlayerProtocolEx!
     weak var delegate: MccManagerDelegateEx?
     var mccEx: AgoraMusicContentCenterEx!
-    private var playMode: AgoraMusicPlayMode = .accompany
+    private var playMode: AgoraMusicPlayModeEx = .accompany
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
@@ -207,7 +207,7 @@ class MccManagerEx: NSObject {
     }
     
     func resversePlayMode() {
-        let mode: AgoraMusicPlayMode = playMode == .accompany ? .original : .accompany
+        let mode: AgoraMusicPlayModeEx = playMode == .accompany ? .original : .accompany
         
         let ret = mpkEx.setPlayMode(mode: mode)
         if ret != 0 {
@@ -237,44 +237,6 @@ extension MccManagerEx: AgoraRtcEngineDelegate {
                    withUid uid: UInt,
                    elapsed: Int) {
         Log.debug(text: "didJoinChannel withUid \(uid)", tag: self.logTag)
-    }
-}
-
-// MARK: - AgoraMusicContentCenterEventDelegate
-extension MccManagerEx: AgoraMusicContentCenterEventDelegate {
-    func onMusicChartsResult(_ requestId: String,
-                             result: [AgoraMusicChartInfo],
-                             errorCode: AgoraMusicContentCenterStatusCode) {
-        
-    }
-    
-    func onMusicCollectionResult(_ requestId: String,
-                                 result: AgoraMusicCollection,
-                                 errorCode: AgoraMusicContentCenterStatusCode) {
-        
-    }
-    
-    func onLyricResult(_ requestId: String,
-                       songCode: Int,
-                       lyricUrl: String?,
-                       errorCode: AgoraMusicContentCenterStatusCode) {
-        
-    }
-    
-    func onSongSimpleInfoResult(_ requestId: String,
-                                songCode: Int,
-                                simpleInfo: String?,
-                                errorCode: AgoraMusicContentCenterStatusCode) {
-        
-    }
-    
-    func onPreLoadEvent(_ requestId: String,
-                        songCode: Int,
-                        percent: Int,
-                        lyricUrl: String?,
-                        status: AgoraMusicContentCenterPreloadStatus,
-                        errorCode: AgoraMusicContentCenterStatusCode) {
-        
     }
 }
 
@@ -344,7 +306,7 @@ extension MccManagerEx: AgoraMusicContentCenterExEventDelegate {
 }
 
 extension MccManagerEx: AgoraMusicContentCenterExScoreEventDelegate {
-    func onPitch(_ songCode: Int, data: AgoraRawScoreData) {
+    func onPitch(_ songCode: Int, data: AgoraRawScoreDataEx) {
         Log.info(text: "[MccEx]: onPitch: \(songCode) progressInMs: \(data.progressInMs) speakerPitch: \(data.speakerPitch) pitchScore: \(data.pitchScore)", tag: self.logTag)
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
@@ -354,7 +316,7 @@ extension MccManagerEx: AgoraMusicContentCenterExScoreEventDelegate {
         }
     }
     
-    func onLineScore(_ songCode: Int, value: AgoraLineScoreData) {
+    func onLineScore(_ songCode: Int, value: AgoraLineScoreDataEx) {
         Log.info(text: "[MccEx>>>>]: onLineScore: \(songCode) progressInMs: \(value.progressInMs) performedLineIndex: \(value.performedLineIndex) linePitchScore:\(value.linePitchScore) performedTotalLines: \(value.performedTotalLines) cumulativeTotalLinePitchScores: \(value.cumulativeTotalLinePitchScores)", tag: self.logTag)
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
