@@ -157,15 +157,30 @@ extension MainTestVC: KaraokeDelegate, MainViewDelegate {
                        cumulativeScore: Int,
                        lineIndex: Int,
                        lineCount: Int) {
-        mainView.lineScoreView.showScoreView(score: score)
-        self.cumulativeScore = cumulativeScore
-        mainView.gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lineCount * 100)
-        mainView.incentiveView.show(score: score)
     }
 }
 
 // MARK: - MccManagerDelegate
 extension MainTestVC: MccManagerDelegate {
+    func onLyricInfo(lyricInfo: AgoraLyricInfo?) {
+        if let info = lyricInfo {
+            let model = LyricModel.instanceByMccLyricInfo(info: info)
+            lyricModel = model
+            setLyricToView()
+        }
+    }
+    
+    func onPitch(rawScoreData: AgoraRawScoreData) {
+        mainView.karaokeView.setPitch(speakerPitch: Double(rawScoreData.pitchScore), progressInMs: rawScoreData.progressInMs)
+    }
+    
+    func onLineScore(lineScoreData: AgoraLineScoreData) {
+        mainView.lineScoreView.showScoreView(score: Int(lineScoreData.pitchScore))
+        self.cumulativeScore = Int(lineScoreData.cumulativePitchScore)
+        mainView.gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: Int(lineScoreData.totalLines) * 100)
+        mainView.incentiveView.show(score: Int(lineScoreData.pitchScore))
+    }
+    
     func onJoinedChannel(_ manager: MccManager) {
         
     }
@@ -189,7 +204,7 @@ extension MainTestVC: MccManagerDelegate {
     }
     
     func onPitch(_ manager: MccManager, pitch: Double) {
-        mainView.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
+        
     }
 }
 

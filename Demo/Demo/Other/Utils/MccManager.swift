@@ -15,6 +15,9 @@ protocol MccManagerDelegate: NSObjectProtocol {
     func onOpenMusic(_ manager: MccManager)
     func onPitch(_ manager: MccManager, pitch: Double)
     func onLyricResult(url: String)
+    func onPitch(rawScoreData: AgoraRawScoreData)
+    func onLineScore(lineScoreData: AgoraLineScoreData)
+    func onLyricInfo(lyricInfo: AgoraLyricInfo?)
 }
 
 class MccManager: NSObject {
@@ -93,6 +96,7 @@ class MccManager: NSObject {
         config.token = token
         config.appId = Config.mccAppId
         config.mccDomain = Config.testTag
+        config.scoreEventDelegate = self
         mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
         mcc.register(self)
         mpk = mcc.createMusicPlayer(delegate: self)
@@ -223,7 +227,14 @@ extension MccManager: AgoraRtcEngineDelegate {
 
 extension MccManager: AgoraMusicContentCenterEventDelegate {
     func onLyricInfo(_ requestId: String, songCode: Int, lyricInfo: AgoraLyricInfo?, errorCode: AgoraMusicContentCenterStatusCode) {
+        if errorCode != .OK {
+            Log.debug(text: "onLyricInfo requestId:\(requestId) songCode:\(songCode) errorCode:\(errorCode)", tag: logTag)
+            return
+        }
         
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.onLyricInfo(lyricInfo: lyricInfo)
+        }
     }
     
     func onPreLoadEvent(_ requestId: String,
@@ -264,6 +275,20 @@ extension MccManager: AgoraMusicContentCenterEventDelegate {
         Log.info(text: "onLyricResult requestId:\(requestId) songCode:\(songCode) lyricUrl:\(lyricUrl ?? "null") errorCode:\(errorCode)", tag: logTag)
         if errorCode == .OK, let url = lyricUrl {
             delegate?.onLyricResult(url: url)
+        }
+    }
+}
+
+extension MccManager: AgoraMusicContentCenterScoreEventDelegate {
+    func onPitch(_ songCode: Int, rawScoreData: AgoraRawScoreData) {
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.onPitch(rawScoreData: rawScoreData)
+        }
+    }
+    
+    func onLineScore(_ songCode: Int, lineScoreData: AgoraLineScoreData) {
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.onLineScore(lineScoreData: lineScoreData)
         }
     }
 }
