@@ -132,61 +132,33 @@ class LrcParser {
     }
     
     func parseLineStringOfEnhancedFormat(_ string: String) -> [LyricToneModel] {
-        let pattern = "\\<(\\d{2}):(\\d{2})\\.(\\d{3})\\>([^\\<]+)"
-        var lyrics: [LyricToneModel] = []
-        if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
-            let matches = regex.matches(in: string, options: [], range: NSRange(location: 0, length: string.utf16.count))
-            for i in 0..<matches.count {
-                let match = matches[i]
-                let scanner = Scanner(string: string)
-                scanner.scanLocation = match.range.location
-                scanner.scanString("<", into: nil)
-                var beginHour = 0, beginMinute = 0, beginSecond = 0
-                scanner.scanInt(&beginHour)
-                scanner.scanString(":", into: nil)
-                scanner.scanInt(&beginMinute)
-                scanner.scanString(".", into: nil)
-                scanner.scanInt(&beginSecond)
-                scanner.scanString(">", into: nil)
-                var word: NSString?
-                scanner.scanUpTo("<", into: &word)
-                
-                let beginTime = (UInt(beginHour) * 60 + UInt(beginMinute)) * 1000 + UInt(beginSecond)
-                
-                var endTime: UInt = 0
-                if i < matches.count - 1 {
-                    let nextMatch = matches[i + 1]
-                    let nextScanner = Scanner(string: string)
-                    nextScanner.scanLocation = nextMatch.range.location
-                    nextScanner.scanString("<", into: nil)
-                    var endHour = 0, endMinute = 0, endSecond = 0
-                    nextScanner.scanInt(&endHour)
-                    nextScanner.scanString(":", into: nil)
-                    nextScanner.scanInt(&endMinute)
-                    nextScanner.scanString(".", into: nil)
-                    nextScanner.scanInt(&endSecond)
-                    
-                    endTime = UInt((endHour * 60 + endMinute) * 1000 + endSecond)
-                } else {
-                    endTime = UInt(beginTime) // assume the last word lasts for zero second
-                }
-                
-                let duration = UInt(endTime) - UInt(beginTime)
-                
-                if let word = word as String? {
-                    let lyric = LyricToneModel(beginTime: beginTime,
-                                               duration: duration,
-                                               word: word,
-                                               pitch: 0,
-                                               lang: .unknown,
-                                               pronounce: "")
-                    
-                    
-                    lyrics.append(lyric)
-                }
+        var toneModels = [LyricToneModel]()
+        
+        /// "[00:53.011]<00:53.011> Why<00:53.011> hh" ==>  ["00:53.011> Why", "00:53.011> hh"]
+        let strs = string.components(separatedBy: "<").filter({ $0.contains(">") })
+        for str in strs {
+            /// "00:53.011> Why"
+            let components = str.components(separatedBy: ">")
+            let beginTime = parseTime(components[0])
+            let text = components[1]
+            let toneModel = LyricToneModel(beginTime: beginTime,
+                                           duration: 0,
+                                           word: text,
+                                           pitch: 0,
+                                           lang: .unknown,
+                                           pronounce: "")
+            
+            /// 计算上一个的duration
+            if !toneModels.isEmpty {
+                let lastToneModel = toneModels.last!
+                let duration = toneModel.beginTime - lastToneModel.beginTime
+                lastToneModel.duration = duration
             }
+            
+            toneModels.append(toneModel)
         }
-        return lyrics
+        
+        return toneModels
     }
     
     func parseTime(_ string: String) -> UInt {
