@@ -58,7 +58,7 @@ public class KaraokeView: UIView {
     }
     
     /// Not Public, Please use `init(frame, loggers)`
-    override init(frame: CGRect) {
+    private override init(frame: CGRect) {
         super.init(frame: frame)
         Log.debug(text: "version \(versionName)", tag: logTag)
         setupUI()
@@ -72,11 +72,11 @@ public class KaraokeView: UIView {
 
 // MARK: - Public Method
 extension KaraokeView {
-    /// 解析歌词文件krc
+    /// 解析歌词文件
     /// - Parameters:
     ///   - lyricFileData: 歌词文件的内容（xml、krc、lrc）
     ///   - pitchFileData: pitch文件的内容
-    ///   - includeCopyrightSentence: 是否需要包含版本信息类型的句子(只在pitchFileData不为空，且krc类型歌词有效)
+    ///   - includeCopyrightSentence: 句子是否需要包含版本信息(只在pitchFileData不为空，且krc类型歌词有效)
     /// - Returns: 歌词信息
     @objc public static func parseLyricData(lyricFileData: Data,
                                             pitchFileData: Data? = nil,
@@ -130,11 +130,11 @@ extension KaraokeView {
     /// - Note: 获取方式1. 从Agora RTC 回调方法`reportAudioVolumeIndicationOfSpeakers` 获取speakerPitch.
     /// - Note: 获取方式2. 可以从AgoraContentCenterEx回调方法 `onPitch`[该回调频率是50ms/次] 获取speakerPitch.
     /// - Parameter speakerPitch: 演唱者的实时音高值
-    /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）.方式1给`nil`.
+    /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）.方式1给0.
     @objc public func setPitch(speakerPitch: Double, progressInMs: UInt) {
         guard scoringEnabled else { return }
         let pitch  = speakerPitch
-//        Log.info(text: "Pitch:\(pitch)", tag: logTag)
+        // Log.info(text: "Pitch:\(pitch)", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setPitch not isMainThread ", tag: logTag)
         }
