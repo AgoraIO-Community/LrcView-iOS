@@ -36,7 +36,7 @@ extension MainTestVCEx { /** for debug **/
     }
     
     // 打印非法的speakerPitch
-    func logNInvalidSpeakPitch_debug(data: AgoraRawScoreData) {
+    func logNInvalidSpeakPitch_debug(data: AgoraRawScoreDataEx) {
         if (data.speakerPitch < 0) {
             Log.errorText(text: "speakerPitch less than 0, \(data.speakerPitch)", tag: self.logTag)
         }

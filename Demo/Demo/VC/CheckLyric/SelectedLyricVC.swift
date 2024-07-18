@@ -134,7 +134,7 @@ extension SelectedLyricVC: MccManagerDelegateEx {
     
     func onMccExScoreStart(_ manager: MccManagerEx) {}
     func onOpenMusic(_ manager: MccManagerEx) {}
-    func onPitch(_ songCode: Int, data: AgoraRawScoreData) {}
-    func onLineScore(_ songCode: Int, value: AgoraLineScoreData) {}
+    func onPitch(_ songCode: Int, data: AgoraRawScoreDataEx) {}
+    func onLineScore(_ songCode: Int, value: AgoraLineScoreDataEx) {}
 }
 
