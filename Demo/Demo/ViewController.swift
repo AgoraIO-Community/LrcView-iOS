@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     }
 
     func setupUI() {
+        title = "AgoraLyricsScore"
         view.addSubview(tableview)
         tableview.translatesAutoresizingMaskIntoConstraints = false
 
@@ -37,8 +38,13 @@ class ViewController: UIViewController {
     }
 
     func createData() {
-        list = [Section(title: "UI", rows: [.init(title: "View配置")]),
-                Section(title: "体验", rows: [.init(title: "FirstToneHintView"),
+        list = [Section(title: "集成", rows: [.init(title: "内置打分"),
+                                            .init(title: "外置打分（Ex）")]),
+                Section(title: "体验", rows: [.init(title: "观众端"),
+                                            .init(title: "主播端"),
+                                            .init(title: "抢唱"),
+                                            .init(title: "miniSize")]),
+                Section(title: "模块", rows: [.init(title: "FirstToneHintView"),
                                             .init(title: "纯音乐"),
                                             .init(title: "歌词显示 mcc"),
                                             .init(title: "用AVPlayer测试"),
@@ -48,13 +54,8 @@ class ViewController: UIViewController {
                                             .init(title: "LyricLabel测试"),
                                             .init(title: "OC"),
                                             .init(title: "profile"),
-                                            .init(title: "观众端"),
-                                            .init(title: "主播端"),
-                                            .init(title: "抢唱"),
-                                            .init(title: "miniSize"),
-                                            .init(title: "下载")])]
-
-//        list = [Section(title: "UI", rows: [.init(title: "View配置")])]
+                                            .init(title: "下载")]),
+                Section(title: "验证", rows: [.init(title: "krc查看")])]
     }
 }
 
@@ -82,13 +83,47 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        if indexPath.section == 0 { /** UI配置测试 **/
-            let vc = MainTestVC()
-            navigationController?.pushViewController(vc, animated: true)
-            return
+        if indexPath.section == 0 { /** 集成测试 **/
+            if indexPath.row == 0 {
+                let vc = MainTestVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            if indexPath.row == 1 {
+                let vc = MainTestVCEx()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+        }
+        
+        if indexPath.section == 1 { /** 场景测试 **/
+            if indexPath.row == 0 { /** 观众端 **/
+                let vc = AudienceVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 1 { /** 主播端 **/
+                let vc = HostVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 2 { /** 抢唱 **/
+                let vc = QiangChangVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            
+            if indexPath.row == 3 { /** mini size 小视图 **/
+                let vc = MiniSizeVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
         }
 
-        if indexPath.section == 1 {
+        if indexPath.section == 2 { /** 模块测试 **/
             if indexPath.row == 0 { /** 等待视图 **/
                 let vc = FirstToneHintViewTestVC()
                 navigationController?.pushViewController(vc, animated: true)
@@ -149,32 +184,16 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             
-            if indexPath.row == 10 { /** 观众端 **/
-                let vc = AudienceVC()
-                navigationController?.pushViewController(vc, animated: true)
-                return
-            }
-            
-            if indexPath.row == 11 { /** 主播端 **/
-                let vc = HostVC()
-                navigationController?.pushViewController(vc, animated: true)
-                return
-            }
-            
-            if indexPath.row == 12 { /** 抢唱 **/
-                let vc = QiangChangVC()
-                navigationController?.pushViewController(vc, animated: true)
-                return
-            }
-            
-            if indexPath.row == 13 { /** mini size 小视图 **/
-                let vc = MiniSizeVC()
-                navigationController?.pushViewController(vc, animated: true)
-                return
-            }
-            
-            if indexPath.row == 14 { /** 下载 **/
+            if indexPath.row == 10 { /** 下载 **/
                 let vc = DownloadVC()
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+        }
+        
+        if indexPath.section == 3 {
+            if indexPath.row == 0 {
+                let vc = SelectedLyricVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }

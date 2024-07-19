@@ -2,9 +2,9 @@
 
 ## 介绍
 
-支持XML歌词解析, LRC歌词解析, 解决了多行歌词进度渲染的问题, 评分根据人声实时计算评分
+支持XML/LRC/KRC歌词解析,  可选择根据人声实时计算评分。
 
-## 使用方法
+## 使用方式1: 配合AograMusicContentCenter
 
 #### 1.初始化
 
@@ -18,8 +18,8 @@ karaokeView.delegate = self
 ```swift
 let url = URL(fileURLWithPath: filePath)
 let data = try! Data(contentsOf: url)
-let model = KaraokeView.parseLyricData(data: data)
-karaokeView.setLyricData(data: model)
+let model = KaraokeView.parseLyricData(lyricFileData: data, pitchFileData:nil, includeCopyrightSentence:true)
+karaokeView.setLyricData(data: model, usingInternalScoring: true)
 ```
 
 
@@ -31,7 +31,7 @@ karaokeView.setProgress(progress: progress)
 #### 4.设置演唱者音调
 
 ```swift
-karaokeView.setPitch(pitch: pitch)
+karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
 ```
 
 #### 5.重置
@@ -66,33 +66,35 @@ karaokeView.reset()
 @objc public let lyricsView = LyricsView()
 @objc public let scoringView = ScoringView()
 
-/// 解析歌词文件xml数据
-/// - Parameter data: xml二进制数据
+/// 解析歌词文件
+/// - Parameters:
+///   - lyricFileData: 歌词文件的内容（xml、krc、lrc）
+///   - pitchFileData: pitch文件的内容
+///   - includeCopyrightSentence: 句子是否需要包含版本信息(只在pitchFileData不为空，且krc类型歌词有效)
 /// - Returns: 歌词信息
-@objc public static func parseLyricData(data: Data) -> LyricModel?
+@objc public static func parseLyricData(lyricFileData: Data,
+                                        pitchFileData: Data? = nil,
+                             includeCopyrightSentence: Bool = true) -> LyricModel?
 
 /// 设置歌词数据信息
-/// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `.empty`.
-@objc public func setLyricData(data: LyricModel?)
+/// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `nil`.
+/// - Parameter usingInternalScoring: 是否需要歌词组件内部计算打分, 当`data`为`nil`，此值忽略。
+@objc public func setLyricData(data: LyricModel?, usingInternalScoring: Bool)
 
 /// 重置, 歌曲停止、切歌需要调用
 @objc public func reset()
 
-/// 设置实时采集(mic)的Pitch
-/// - Note: 可以从AgoraRTC回调方法 `- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine reportAudioVolumeIndicationOfSpeakers:(NSArray<AgoraRtcAudioVolumeInfo *> * _Nonnull)speakers totalVolume:(NSInteger)totalVolume`  获取
-/// - Parameter pitch: 实时音调值
-@objc public func setPitch(pitch: Double) 
+/// 设置实时音高
+/// - Note: 获取方式1. 从Agora RTC 回调方法`reportAudioVolumeIndicationOfSpeakers` 获取speakerPitch.
+/// - Note: 获取方式2. 可以从AgoraContentCenterEx回调方法 `onPitch`[该回调频率是50ms/次] 获取speakerPitch.
+/// - Parameter speakerPitch: 演唱者的实时音高值
+/// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）.方式1给0.
+@objc public func setPitch(speakerPitch: Double, progressInMs: UInt)
 
 /// 设置当前歌曲的进度
 /// - Note: 可以获取播放器的当前进度进行设置
 /// - Parameter progress: 歌曲进度 (ms)
 @objc public func setProgress(progress: Int)
-
-/// 同时设置进度和Pitch (建议观众端使用)
-/// - Parameters:
-///   - pitch: 实时音调值
-///   - progress: 歌曲进度 (ms)
-@objc public func setPitch(pitch: Double, progress: Int)
 
 /// 设置自定义分数计算对象
 /// - Note: 如果不调用此方法，则内部使用默认计分规则
@@ -218,7 +220,15 @@ karaokeView.reset()
 }
 ```
 
-<br/>
+
+
+## 使用方式2: 配合AograMusicContentCenterEx
+
+关于AograMusicContentCenterEx的集成，可以参考demo代码文件：`MccManagerEx.swift`
+
+关于歌词组件`KaraokeView`可以参考demo代码文件：`MainView.swift`和`MainTestVC.swift`
+
+
 
 ## 集成方式
 
@@ -226,5 +236,5 @@ karaokeView.reset()
 
 
 ```ruby
-pod 'AgoraLyricsScore', '~> 1.1.6'"
+pod 'AgoraLyricsScore', '~> 2.2.0'"
 ```

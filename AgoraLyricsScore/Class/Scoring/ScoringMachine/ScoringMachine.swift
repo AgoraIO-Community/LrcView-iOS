@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ScoringMachine {
+class ScoringMachine: ScoringMachineProtocol {
     /// 游标的起始位置
     var defaultPitchCursorX: CGFloat = 100
     /// 音准线的高度
@@ -21,10 +21,10 @@ class ScoringMachine {
     var scoreAlgorithm: IScoreAlgorithm = ScoreAlgorithm()
     weak var delegate: ScoringMachineDelegate?
     
-    fileprivate var progress: Int = 0
+    fileprivate var progress: UInt = 0
     fileprivate var widthPreMs: CGFloat { movingSpeedFactor / 1000 }
     fileprivate var dataList = [Info]()
-    fileprivate var lineEndTimes = [Int]()
+    fileprivate var lineEndTimes = [UInt]()
     fileprivate var currentVisiableInfos = [Info]()
     fileprivate var currentHighlightInfos = [Info]()
     fileprivate var maxPitch: Double = 0
@@ -51,16 +51,17 @@ class ScoringMachine {
         }
     }
     
-    func setProgress(progress: Int) {
+    func setProgress(progress: UInt) {
         Log.debug(text: "progress: \(progress)", tag: "progress")
         queue.async { [weak self] in
             self?._setProgress(progress: progress)
         }
     }
     
-    func setPitch(pitch: Double) {
+    func setPitch(speakerPitch: Double,
+                  progressInMs: UInt) {
         queue.async { [weak self] in
-            self?._setPitch(pitch: pitch)
+            self?._setPitch(pitch: speakerPitch)
         }
     }
     
@@ -70,7 +71,7 @@ class ScoringMachine {
         }
     }
     
-    func dragDidEnd(position: Int) {
+    func dragDidEnd(position: UInt) {
         queue.async { [weak self] in
             self?._dragDidEnd(position: position)
         }
@@ -111,7 +112,7 @@ class ScoringMachine {
         handleProgress()
     }
     
-    private func _setProgress(progress: Int) {
+    private func _setProgress(progress: UInt) {
         guard !isDragging else { return }
         guard let model = lyricData, model.hasPitch else { return }
         Log.debug(text: "progress: \(progress)", tag: logTag)
@@ -129,7 +130,10 @@ class ScoringMachine {
                                       pitch: pitch,
                                       hitedInfo: nil,
                                       progress: progress)
-            invokeScoringMachine(didUpdateCursor: y, showAnimation: false, debugInfo: debugInfo)
+            ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
+                                                            didUpdateCursor: y,
+                                                            showAnimation: false,
+                                                            debugInfo: debugInfo)
             return
         }
         
@@ -150,7 +154,10 @@ class ScoringMachine {
                                       pitch: pitch,
                                       hitedInfo: nil,
                                       progress: progress)
-            invokeScoringMachine(didUpdateCursor: yValue, showAnimation: false, debugInfo: debugInfo)
+            ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
+                                                            didUpdateCursor: yValue,
+                                                            showAnimation: false,
+                                                            debugInfo: debugInfo)
             return
         }
         
@@ -205,14 +212,17 @@ class ScoringMachine {
                                   pitch: voicePitch,
                                   hitedInfo: hitedInfo,
                                   progress: progress)
-        invokeScoringMachine(didUpdateCursor: yValue, showAnimation: showAnimation, debugInfo: debugInfo)
+        ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
+                                                        didUpdateCursor: yValue,
+                                                        showAnimation: showAnimation,
+                                                        debugInfo: debugInfo)
     }
     
     private func _dragBegain() {
         isDragging = true
     }
     
-    private func _dragDidEnd(position: Int) {
+    private func _dragDidEnd(position: UInt) {
         guard let index = findCurrentIndexOfLine(progress: position, lineEndTimes: lineEndTimes) else {
             return
         }
@@ -233,7 +243,7 @@ class ScoringMachine {
         isDragging = false
     }
     
-    private func resetToneScores(position: Int) {
+    private func resetToneScores(position: UInt) {
         guard let index = findCurrentIndexOfLine(progress: position, lineEndTimes: lineEndTimes) else {
             return
         }
@@ -277,7 +287,9 @@ class ScoringMachine {
                                                                                                maxPitch: maxPitch)
         currentVisiableInfos = visiableInfos
         currentHighlightInfos = highlightInfos
-        invokeScoringMachine(didUpdateDraw: visiableDrawInfos, highlightInfos: highlightDrawInfos)
+        ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
+                                                        didUpdateDraw: visiableDrawInfos,
+                                                        highlightInfos: highlightDrawInfos)
         guard let index = findCurrentIndexOfLine(progress: progress, lineEndTimes: lineEndTimes)  else {
             return
         }
@@ -301,11 +313,12 @@ class ScoringMachine {
         cumulativeScore = calculatedCumulativeScore(indexOfLine: indexOfLineEnd,
                                                     lineScores: lineScores)
         Log.debug(text: "score didLineEnd indexOfLineEnd: \(indexOfLineEnd) \(lineScore) \(lineScores) cumulativeScore:\(cumulativeScore)", tag: logTag)
-        invokeScoringMachine(didFinishLineWith: data.lines[indexOfLineEnd],
-                             score: lineScore,
-                             cumulativeScore: cumulativeScore,
-                             lineIndex: indexOfLineEnd,
-                             lineCount: data.lines.count)
+        ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
+                                                        didFinishLineWith: data.lines[indexOfLineEnd],
+                                                        score: lineScore,
+                                                        cumulativeScore: cumulativeScore,
+                                                        lineIndex: indexOfLineEnd,
+                                                        lineCount: data.lines.count)
         let nextIndex = indexOfLineEnd + 1
         if nextIndex < data.lines.count {
             toneScores = data.lines[nextIndex].tones.map({ ToneScoreModel(tone: $0, score: 0) })

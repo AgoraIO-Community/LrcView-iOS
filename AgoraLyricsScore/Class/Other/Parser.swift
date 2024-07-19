@@ -9,27 +9,81 @@ import Foundation
 
 class Parser {
     private let logTag = "Parser"
-    func parseLyricData(data: Data) -> LyricModel? {
+    func parseLyricData(data: Data,
+                        pitchFileData: Data? = nil,
+                        lyricOffset: Int,
+                        includeCopyrightSentence: Bool = false) -> LyricModel? {
         guard data.count > 0 else {
             Log.errorText(text: "data.count == 0", tag: logTag)
             return nil
         }
         
-        guard let string = String(data: data, encoding: .utf8) else {
-            Log.errorText(text: "can not verified file type", tag: logTag)
-            return nil
-        }
+        let format = detectLyricFormat(from: data)
         
-        if string.first == "<" { /** XML格式 **/
+        switch format {
+        case .krc:
+            let parser = KRCParser()
+            return parser.parse(krcFileData: data,
+                                pitchFileData: pitchFileData,
+                                lyricOffset: lyricOffset,
+                                includeCopyrightSentence: includeCopyrightSentence)
+        case .xml:
             let parser = XmlParser()
             return parser.parseLyricData(data: data)
-        }
-        
-        if string.first == "[" { /** LRC格式 **/
+        case .lrc:
             let parser = LrcParser()
             return parser.parseLyricData(data: data)
+        case .unknown:
+            Log.errorText(text: "unknow file type", tag: logTag)
+            return nil
+        }
+    }
+
+    enum LyricFormat {
+        case lrc
+        case krc
+        case xml
+        case unknown
+    }
+
+    func detectLyricFormat(from data: Data) -> LyricFormat {
+        // 将Data类型转换为String
+        guard let string = String(data: data, encoding: .utf8) else {
+            return .unknown
         }
         
-        fatalError("unknow file type")
+        // 检测LRC格式的特征，通常是时间戳和歌词行
+        // 正则表达式匹配LRC格式的时间戳
+        let lrcPattern = "\\[\\d{2}:\\d{2}\\.\\d{2}\\]"
+        if let _ = string.range(of: lrcPattern, options: .regularExpression) {
+            return .lrc
+        }
+        
+        /// enhance lrc:[00:50.677]<00:50.677>走<00:50.956>走
+        let enhanceLrcPattern = "\\[\\d{2}:\\d{2}\\.\\d{2,3}\\]\\<\\d{2}:\\d{2}\\.\\d{2,3}\\>"
+        if let _ = string.range(of: enhanceLrcPattern, options: .regularExpression) {
+            return .lrc
+        }
+        
+        // 检测KRC格式的特征
+        let krcPattern = "\\[(\\w+):([^]]*)]"
+        if let _ = string.range(of: krcPattern, options: .regularExpression) {
+            return .krc
+        }
+        
+        // 检测XML格式的特征，即XML的开始标签
+        if string.contains("<?xml") {
+            return .xml
+        }
+        
+        /// 无文件头的xml
+        if string.contains("<song>"), string.contains("<paragraph>") {
+            return .xml
+        }
+        
+        // 如果没有匹配的特征，返回unknown
+        return .unknown
     }
+    
+    
 }

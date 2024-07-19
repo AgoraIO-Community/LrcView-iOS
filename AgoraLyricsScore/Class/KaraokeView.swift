@@ -36,7 +36,7 @@ public class KaraokeView: UIView {
     fileprivate var isStart = false
     fileprivate let logTag = "KaraokeView"
     /// use for debug
-    fileprivate var lastProgress = 0
+    fileprivate var lastProgress: UInt = 0
     fileprivate var progressPrintCount = 0
     fileprivate var progressPrintCountMax = 80
     
@@ -58,7 +58,7 @@ public class KaraokeView: UIView {
     }
     
     /// Not Public, Please use `init(frame, loggers)`
-    override init(frame: CGRect) {
+    private override init(frame: CGRect) {
         super.init(frame: frame)
         Log.debug(text: "version \(versionName)", tag: logTag)
         setupUI()
@@ -72,17 +72,27 @@ public class KaraokeView: UIView {
 
 // MARK: - Public Method
 extension KaraokeView {
-    /// 解析歌词文件xml数据
-    /// - Parameter data: xml二进制数据
+    /// 解析歌词文件
+    /// - Parameters:
+    ///   - lyricFileData: 歌词文件的内容（xml、krc、lrc）
+    ///   - pitchFileData: pitch文件的内容
+    ///   - includeCopyrightSentence: 句子是否需要包含版本信息(只在pitchFileData不为空，且krc类型歌词有效)
     /// - Returns: 歌词信息
-    @objc public static func parseLyricData(data: Data) -> LyricModel? {
+    @objc public static func parseLyricData(lyricFileData: Data,
+                                            pitchFileData: Data? = nil,
+                                            lyricOffset: Int = 0,
+                                            includeCopyrightSentence: Bool = true) -> LyricModel? {
         let parser = Parser()
-        return parser.parseLyricData(data: data)
+        return parser.parseLyricData(data: lyricFileData,
+                                     pitchFileData: pitchFileData,
+                                     lyricOffset: lyricOffset,
+                                     includeCopyrightSentence: includeCopyrightSentence)
     }
     
     /// 设置歌词数据信息
     /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `nil`.
-    @objc public func setLyricData(data: LyricModel?) {
+    /// - Parameter usingInternalScoring: 是否需要歌词组件内部计算打分, 当`data`为`nil`，此值忽略。
+    @objc public func setLyricData(data: LyricModel?, usingInternalScoring: Bool) {
         Log.info(text: "setLyricData \(data?.name ?? "nil")", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setLyricData not isMainThread ", tag: logTag)
@@ -99,7 +109,7 @@ extension KaraokeView {
         }
         
         lyricsView.setLyricData(data: data)
-        scoringView.setLyricData(data: data)
+        scoringView.setLyricData(data: data, usingInternalScoring: usingInternalScoring)
         isStart = true
     }
     
@@ -118,11 +128,15 @@ extension KaraokeView {
         scoringView.reset()
     }
     
-    /// 设置实时采集(mic)的Pitch
-    /// - Note: 可以从AgoraRTC回调方法 `- (void)rtcEngine:(AgoraRtcEngineKit * _Nonnull)engine reportAudioVolumeIndicationOfSpeakers:(NSArray<AgoraRtcAudioVolumeInfo *> * _Nonnull)speakers totalVolume:(NSInteger)totalVolume`  获取
-    /// - Parameter pitch: 实时音调值
-    @objc public func setPitch(pitch: Double) {
-        Log.info(text: "p:\(pitch)", tag: logTag)
+    /// 设置实时音高
+    /// - Note: 获取方式1. 从Agora RTC 回调方法`reportAudioVolumeIndicationOfSpeakers` 获取speakerPitch.
+    /// - Note: 获取方式2. 可以从AgoraContentCenterEx回调方法 `onPitch`[该回调频率是50ms/次] 获取speakerPitch.
+    /// - Parameter speakerPitch: 演唱者的实时音高值
+    /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）.方式1给0.
+    @objc public func setPitch(speakerPitch: Double, progressInMs: UInt) {
+        guard scoringEnabled else { return }
+        let pitch  = speakerPitch
+        // Log.info(text: "Pitch:\(pitch)", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setPitch not isMainThread ", tag: logTag)
         }
@@ -136,34 +150,25 @@ extension KaraokeView {
         }
         if pitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
             pitchIsZeroCount = 0
-            scoringView.setPitch(pitch: pitch)
+            scoringView.setPitch(speakerPitch: speakerPitch, progressInMs: progressInMs)
         }
     }
     
     /// 设置当前歌曲的进度
     /// - Note: 可以获取播放器的当前进度进行设置
     /// - Parameter progress: 歌曲进度 (ms)
-    @objc public func setProgress(progress: Int) {
+    @objc public func setProgress(progress: UInt) {
+        
         if !Thread.isMainThread {
             Log.error(error: "invoke setProgress not isMainThread ", tag: logTag)
         }
         guard isStart else { return }
         logProgressIfNeed(progress: progress)
         lyricsView.setProgress(progress: progress)
-        scoringView.progress = progress
-        progressChecker.set(progress: progress)
-    }
-    
-    /// 同时设置进度和Pitch (建议观众端使用)
-    /// - Parameters:
-    ///   - pitch: 实时音调值
-    ///   - progress: 歌曲进度 (ms)
-    @objc public func setPitch(pitch: Double, progress: Int) {
-        if !Thread.isMainThread {
-            Log.error(error: "invoke setPitch(pitch, progress) not isMainThread ", tag: logTag)
+        if scoringEnabled {
+            scoringView.progress = progress
         }
-        setProgress(progress: progress)
-        setPitch(pitch: pitch)
+        progressChecker.set(progress: progress)
     }
     
     /// 设置自定义分数计算对象
@@ -269,7 +274,7 @@ extension KaraokeView: LyricsViewDelegate {
         scoringView.dragBegain()
     }
     
-    func onLyricsView(view: LyricsView, didDragTo position: Int) {
+    func onLyricsView(view: LyricsView, didDragTo position: UInt) {
         Log.debug(text: "=== didDragTo \(position)", tag: "drag")
         scoringView.dragDidEnd(position: position)
         delegate?.onKaraokeView?(view: self, didDragTo: position)
@@ -307,10 +312,10 @@ extension KaraokeView: ProgressCheckerDelegate {
 
 // MARK: -- Log
 extension KaraokeView {
-    func logProgressIfNeed(progress: Int) {
-        let gap = progress - lastProgress
+    func logProgressIfNeed(progress: UInt) {
+        let gap = abs(Int32(progress) - Int32(lastProgress))
         if progressPrintCount < progressPrintCountMax, gap > 20 {
-            let text = "setProgress:\(progress) last:\(lastProgress) gap:\(progress-lastProgress)"
+            let text = "setProgress:\(progress) last:\(lastProgress) gap:\(gap)"
             Log.warning(text: text, tag: logTag)
             progressPrintCount += 1
         }

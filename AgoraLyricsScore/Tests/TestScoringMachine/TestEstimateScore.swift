@@ -57,7 +57,7 @@ class TestEstimateScore: XCTestCase, ScoringMachineDelegate {
         vm = ScoringMachine()
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: xmlFileName, ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }
@@ -76,7 +76,7 @@ class TestEstimateScore: XCTestCase, ScoringMachineDelegate {
             if index % 50 == 0, index > 0 {
                 if i < pitchs.count {
                     let pitch = pitchs[i]
-                    vm.setPitch(pitch: pitch)
+                    vm.setPitch(speakerPitch: pitch, progressInMs: 0)
                     i += 1
                 }
             }
@@ -95,19 +95,19 @@ class TestEstimateScore: XCTestCase, ScoringMachineDelegate {
         }
     }
 
-    func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {
+    func sizeOfCanvasView(_ scoringMachine: ScoringMachineProtocol) -> CGSize {
         return .init(width: 380, height: 100)
     }
     
-    func scoringMachine(_ scoringMachine: ScoringMachine, didUpdateDraw standardInfos: [ScoringMachine.DrawInfo], highlightInfos: [ScoringMachine.DrawInfo]) {
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol, didUpdateDraw standardInfos: [ScoringMachine.DrawInfo], highlightInfos: [ScoringMachine.DrawInfo]) {
         
     }
     
-    func scoringMachine(_ scoringMachine: ScoringMachine, didUpdateCursor centerY: CGFloat, showAnimation: Bool, debugInfo: ScoringMachine.DebugInfo) {
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol, didUpdateCursor centerY: CGFloat, showAnimation: Bool, debugInfo: ScoringMachine.DebugInfo) {
         
     }
    
-    func scoringMachine(_ scoringMachine: ScoringMachine,
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol,
                         didFinishLineWith model: LyricLineModel,
                         score: Int,
                         cumulativeScore: Int,

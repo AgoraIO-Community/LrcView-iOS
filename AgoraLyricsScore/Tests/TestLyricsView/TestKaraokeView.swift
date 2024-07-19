@@ -16,13 +16,13 @@ final class TestKaraokeView: XCTestCase, KaraokeDelegate {
         karaokeView = KaraokeView(frame: .init(x: 0, y: 0, width: 350, height: 400),loggers:[ConsoleLogger()])
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "testissue60022", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }
         karaokeView.delegate = self
-        karaokeView.setLyricData(data: model)
-        for time in 0...1001000 {
+        karaokeView.setLyricData(data: model, usingInternalScoring: true)
+        for time: UInt in 0...1001000 {
             karaokeView.setProgress(progress: time)
         }
         sleep(1)
