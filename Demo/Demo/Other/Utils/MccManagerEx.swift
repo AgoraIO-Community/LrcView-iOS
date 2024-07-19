@@ -119,7 +119,7 @@ class MccManagerEx: NSObject {
     func getInternalSongCode(songId: Int) -> Int {
         guard let mcc = mccEx else { return 0 }
         let musicId = "\(songId)"
-        let jsonOption = "{\"format\":{\"highPart\":1}}"
+        let jsonOption = "{\"format\":{\"highPart\":0}}"
         let songCode = mcc.getInternalSongCode(musicId, jsonOption: jsonOption)
         Log.info(text: "getInternalSongCode songId:\(songId) -> \(songCode)", tag: logTag)
         return songCode
