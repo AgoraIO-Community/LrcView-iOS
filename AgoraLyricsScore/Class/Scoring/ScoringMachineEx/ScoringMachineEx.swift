@@ -137,7 +137,7 @@ class ScoringMachineEx: ScoringMachineProtocol {
                                       pitch: Double(speakerPitch),
                                       hitedInfo: nil,
                                       progress: progressInMs)
-            Log.debug(text: "_setPitch[1] porgress:\(progressInMs) speakerPitch:\(speakerPitch)", tag: logTag)
+            Log.debug(text: "_setPitch[1] progressInMs:\(progressInMs) speakerPitch:\(speakerPitch) progress:\(progress)", tag: logTag)
             return
         }
         

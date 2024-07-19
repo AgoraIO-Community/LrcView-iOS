@@ -65,7 +65,7 @@ class TestParser: XCTestCase {
         let data = try! Data(contentsOf: url)
 
         let parser = Parser()
-        let model = parser.parseLyricData(data: data)
+        let model = parser.parseLyricData(data: data, lyricOffset: 0)
         XCTAssertNil(model)
     }
     
@@ -74,7 +74,7 @@ class TestParser: XCTestCase {
         let data = try! Data(contentsOf: url)
 
         let parser = Parser()
-        let model = parser.parseLyricData(data: data)
+        let model = parser.parseLyricData(data: data, lyricOffset: 0)
         XCTAssertNotNil(model)
         
         let infos = ScoringMachine.createData(data: model!)
@@ -123,16 +123,16 @@ class TestParser: XCTestCase {
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133", ofType: "krc")!)
         let data = try! Data(contentsOf: url)
         let p = KRCParser()
-        guard let model = p.parse(krcFileData: data) else {
+        guard let model = p.parse(krcFileData: data, lyricOffset: 10) else {
             XCTFail()
             return
         }
         XCTAssert(model.lines.count == 44)
-        XCTAssert(model.lines.first!.beginTime == 1067)
+        XCTAssert(model.lines.first!.beginTime == 1067 + 10)
         XCTAssert(model.name  == "十年")
         XCTAssert(model.singer  == "陈奕迅")
         XCTAssert(model.lyricsType  == .krc)
-        XCTAssertEqual(model.duration, 381601)
+        XCTAssertEqual(model.duration, 381601 + 10)
         XCTAssert(model.preludeEndPosition  == 0)
         XCTAssertTrue(model.hasPitch == false)
     }
@@ -141,7 +141,7 @@ class TestParser: XCTestCase {
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "3017502026609527683", ofType: "krc")!)
         let data = try! Data(contentsOf: url)
         let p = KRCParser()
-        guard let model = p.parse(krcFileData: data) else {
+        guard let model = p.parse(krcFileData: data, lyricOffset: 0) else {
             XCTFail()
             return
         }
@@ -181,7 +181,7 @@ class TestParser: XCTestCase {
         
         
         let p = Parser()
-        guard let model = p.parseLyricData(data: krcFileData, pitchFileData: pitchFileData, includeCopyrightSentence: true) else {
+        guard let model = p.parseLyricData(data: krcFileData, pitchFileData: pitchFileData, lyricOffset: 0, includeCopyrightSentence: true) else {
             XCTFail()
             return
         }
