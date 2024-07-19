@@ -15,6 +15,8 @@ protocol MccManagerDelegateEx: NSObjectProtocol {
                         lyricData: Data,
                         pitchData: Data,
                         percent: Int,
+                        lyricOffset: Int,
+                        songOffsetBegin: Int,
                         errMsg: String?)
     func onOpenMusic(_ manager: MccManagerEx)
     func onMccExScoreStart(_ manager: MccManagerEx)
@@ -117,7 +119,7 @@ class MccManagerEx: NSObject {
     func getInternalSongCode(songId: Int) -> Int {
         guard let mcc = mccEx else { return 0 }
         let musicId = "\(songId)"
-        let jsonOption = "{\"format\":{\"highPart\":0}}"
+        let jsonOption = "{\"format\":{\"highPart\":1}}"
         let songCode = mcc.getInternalSongCode(musicId, jsonOption: jsonOption)
         Log.info(text: "getInternalSongCode songId:\(songId) -> \(songCode)", tag: logTag)
         return songCode
@@ -306,6 +308,8 @@ extension MccManagerEx: AgoraMusicContentCenterExEventDelegate {
                                      lyricData: lyricData,
                                      pitchData: pitchData,
                                      percent: percent,
+                                     lyricOffset: lyricOffset,
+                                     songOffsetBegin: songOffsetBegin,
                                      errMsg: errMsg)
         }
     }

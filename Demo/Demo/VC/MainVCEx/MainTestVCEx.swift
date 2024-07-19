@@ -31,6 +31,7 @@ class MainTestVCEx: UIViewController {
     /// 是否暂停
     var isPause = false
     var totalScore: UInt = 0
+    var songOffsetBegin: Int = 0
     /// 七里香 972295
     /// 明月几时有：239038150
     /// 十年 40289835
@@ -144,12 +145,16 @@ extension MainTestVCEx: MccManagerDelegateEx {
                         lyricData: Data,
                         pitchData: Data,
                         percent: Int,
+                        lyricOffset: Int,
+                        songOffsetBegin: Int,
                         errMsg: String?) {
         let needPitch = !noPitchFile
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            self.songOffsetBegin = songOffsetBegin
             let model = KaraokeView.parseLyricData(lyricFileData: lyricData,
                                                    pitchFileData: needPitch ? pitchData : nil,
+                                                   lyricOffset: lyricOffset,
                                                    includeCopyrightSentence: true)
             lineScoreRecorder.setLyricData(data: model!)
             self.lyricModel = model
@@ -233,7 +238,7 @@ extension MainTestVCEx: ProgressProviderDelegate {
     }
     
     func progressProvider(_ provider: ProgressProvider, didUpdate progressInMs: UInt) {
-        mainView.karaokeView.setProgress(progress: progressInMs)
+        mainView.karaokeView.setProgress(progress: progressInMs + UInt(songOffsetBegin))
     }
 }
 
