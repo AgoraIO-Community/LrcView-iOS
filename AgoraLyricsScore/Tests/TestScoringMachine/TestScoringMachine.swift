@@ -12,7 +12,7 @@ class TestScoringVM: XCTestCase {
 
     func testCurrentIndexOfLine() throws {
         let vm = ScoringMachine()
-        let lineEndTimes = [1000, 2000, 3000]
+        let lineEndTimes: [UInt] = [1000, 2000, 3000]
         XCTAssertEqual(vm.findCurrentIndexOfLine(progress: 0, lineEndTimes: lineEndTimes), 0)
         XCTAssertEqual(vm.findCurrentIndexOfLine(progress: 999, lineEndTimes: lineEndTimes), 0)
         XCTAssertEqual(vm.findCurrentIndexOfLine(progress: 1000, lineEndTimes: lineEndTimes), 0)
@@ -114,7 +114,7 @@ class TestScoringVM: XCTestCase {
     func testHit() {
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }
@@ -131,7 +131,7 @@ class TestScoringVM: XCTestCase {
     func testPerformanceExample() throws {
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }

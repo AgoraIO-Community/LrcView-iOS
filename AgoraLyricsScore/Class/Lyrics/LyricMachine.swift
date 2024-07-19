@@ -11,7 +11,7 @@ class LyricMachine {
     weak var delegate: LyricMachineDelegate?
     fileprivate var lyricData: LyricModel?
     fileprivate var dataList = [LyricCell.Model]()
-    fileprivate var progress: Int = 0
+    fileprivate var progress: UInt = 0
     fileprivate var currentIndex = 0
     fileprivate var ignoreAnimationAfterDrag = false
     fileprivate var isStart = false
@@ -26,7 +26,7 @@ class LyricMachine {
         }
     }
     
-    func setProgress(progress: Int) {
+    func setProgress(progress: UInt) {
         queue.async { [weak self] in
             self?._setProgress(progress: progress)
         }
@@ -52,12 +52,25 @@ class LyricMachine {
     
     private func _setLyricData(data: LyricModel?) {
         lyricData = data
-        dataList = data?.lines.map({ LyricCell.Model(text: $0.content,
-                                                     progressRate: 0,
-                                                     beginTime: $0.beginTime,
-                                                     duration: $0.duration,
-                                                     status: .normal,
-                                                     tones: $0.tones) }) ?? []
+        
+        guard let data = data else {
+            dataList = []
+            invokeLyricMachine(didSetLyricData: dataList)
+            isStart = true
+            Log.info(text: "_setLyricData nil", tag: logTag)
+            return
+        }
+        
+        let isKrcType = data.lyricsType == .krc
+        dataList = data.lines.map({ line in
+            let duration = isKrcType ? line.tones.map({ $0.duration }).reduce(0, +) : line.duration
+            return LyricCell.Model(text: line.content,
+                                   progressRate: 0,
+                                   beginTime: line.beginTime,
+                                   duration: duration,
+                                   status: .normal,
+                                   tones: line.tones)
+        })
         if let first = dataList.first { /** 默认高亮第一个 **/
             first.update(status: .selectedOrHighlighted)
         }
@@ -66,9 +79,9 @@ class LyricMachine {
         Log.info(text: "_setLyricData", tag: logTag)
     }
     
-    private func _setProgress(progress: Int) {
+    private func _setProgress(progress: UInt) {
         guard let data = lyricData else { return }
-        let remainingTime = data.preludeEndPosition - progress
+        let remainingTime = Int(data.preludeEndPosition) - Int(progress)
         invokeLyricMachine(didUpdate: remainingTime)
         
         if currentIndex < dataList.count {
@@ -145,7 +158,7 @@ extension LyricMachine {
     /// - Parameters:
     ///   - canScoring: 是否可以打分（数据源是lrc格式不可打分）
     /// - Returns: `nil` 表示无法计算, 其他： [0, 1]
-    static func calculateProgressRate(progress: Int,
+    static func calculateProgressRate(progress: UInt,
                                       model: LyricCell.Model,
                                       canScoring: Bool) -> Double? {
         if canScoring {

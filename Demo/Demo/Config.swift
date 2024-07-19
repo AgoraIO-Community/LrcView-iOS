@@ -8,12 +8,20 @@
 import Foundation
 
 struct Config {
+    
     static let channelId = "DRMTest001"
     static let hostUid: UInt = 1
     static let audioUid: UInt = 2
     static let playerUid: Int = 100
     static let mccUid: Int = 333
+    
     static let rtcAppId = <#rtcAppId without Token#>
     static let mccAppId = <#mccAppId#>
     static let mccCertificate = <#mccCertificate#>
+    
+    /// ysd important vars
+    static let pid = <#pid#>
+    static let pKey = <#pKey#>
+    static var token: String? = nil
+    static var userId: String? = nil
 }

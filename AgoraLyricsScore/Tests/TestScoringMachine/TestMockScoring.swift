@@ -26,7 +26,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
     func testAll() { /** test score 每个tone命中一次 **/
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }
@@ -39,7 +39,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
             for tone in line.tones {
                 let time = tone.beginTime + tone.duration/2
                 vm.setProgress(progress: time)
-                vm.setPitch(pitch: tone.pitch - 1)
+                vm.setPitch(speakerPitch: tone.pitch - 1, progressInMs: 0)
             }
         }
         wait(for: [exp], timeout: 3)
@@ -49,7 +49,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
         testCaseNum = 1
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "825003", ofType: "xml")!)
         let data = try! Data(contentsOf: url)
-        guard let model = KaraokeView.parseLyricData(data: data) else {
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
             XCTFail()
             return
         }
@@ -66,7 +66,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
             vm.setProgress(progress: time)
             if gap == 40 {
                 gap = 0
-                vm.setPitch(pitch: 50)
+                vm.setPitch(speakerPitch: 50, progressInMs: 0)
             }
             gap += 20
             time += 20
@@ -75,19 +75,19 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
         wait(for: [exp2], timeout: 10)
     }
 
-    func sizeOfCanvasView(_ scoringMachine: ScoringMachine) -> CGSize {
+    func sizeOfCanvasView(_ scoringMachine: ScoringMachineProtocol) -> CGSize {
         return .init(width: 380, height: 100)
     }
     
-    func scoringMachine(_ scoringMachine: ScoringMachine, didUpdateDraw standardInfos: [ScoringMachine.DrawInfo], highlightInfos: [ScoringMachine.DrawInfo]) {
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol, didUpdateDraw standardInfos: [ScoringMachine.DrawInfo], highlightInfos: [ScoringMachine.DrawInfo]) {
         
     }
     
-    func scoringMachine(_ scoringMachine: ScoringMachine, didUpdateCursor centerY: CGFloat, showAnimation: Bool, debugInfo: ScoringMachine.DebugInfo) {
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol, didUpdateCursor centerY: CGFloat, showAnimation: Bool, debugInfo: ScoringMachine.DebugInfo) {
         
     }
    
-    func scoringMachine(_ scoringMachine: ScoringMachine,
+    func scoringMachine(_ scoringMachine: ScoringMachineProtocol,
                         didFinishLineWith model: LyricLineModel,
                         score: Int,
                         cumulativeScore: Int,
