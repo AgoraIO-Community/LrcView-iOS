@@ -11,6 +11,7 @@ class Parser {
     private let logTag = "Parser"
     func parseLyricData(data: Data,
                         pitchFileData: Data? = nil,
+                        lyricOffset: Int,
                         includeCopyrightSentence: Bool = false) -> LyricModel? {
         guard data.count > 0 else {
             Log.errorText(text: "data.count == 0", tag: logTag)
@@ -24,6 +25,7 @@ class Parser {
             let parser = KRCParser()
             return parser.parse(krcFileData: data,
                                 pitchFileData: pitchFileData,
+                                lyricOffset: lyricOffset,
                                 includeCopyrightSentence: includeCopyrightSentence)
         case .xml:
             let parser = XmlParser()

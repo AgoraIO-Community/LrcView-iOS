@@ -12,13 +12,14 @@ class KRCParser {
     
     func parse(krcFileData: Data,
                pitchFileData: Data?,
+               lyricOffset: Int,
                includeCopyrightSentence: Bool = true) -> LyricModel? {
         guard krcFileData.count > 0 else {
             Log.errorText(text: "krcFileData.count == 0", tag: logTag)
             return nil
         }
         
-        guard let lyricModel = parse(krcFileData: krcFileData) else {
+        guard let lyricModel = parse(krcFileData: krcFileData, lyricOffset: lyricOffset) else {
             return nil
         }
         
@@ -49,7 +50,7 @@ class KRCParser {
         return lyricModel
     }
     
-    func parse(krcFileData: Data) -> LyricModel? {
+    func parse(krcFileData: Data, lyricOffset: Int) -> LyricModel? {
         let content = String(data: krcFileData, encoding: .utf8)!
         var metadata: [String : String] = [:]
         var lineModels = [LyricLineModel]()
@@ -75,7 +76,7 @@ class KRCParser {
                 }
                 else {
                     if line.contains(">"),  line.contains("<") {
-                        let offsetValue: UInt = UInt(metadata["offset"] ?? "0") ?? 0
+                        let offsetValue: UInt = UInt(lyricOffset)
                         
                         if let lineModel = parseLine(line: line, offset: offsetValue) {
                             /* check line duration valid */

@@ -80,10 +80,12 @@ extension KaraokeView {
     /// - Returns: 歌词信息
     @objc public static func parseLyricData(lyricFileData: Data,
                                             pitchFileData: Data? = nil,
+                                            lyricOffset: Int = 0,
                                             includeCopyrightSentence: Bool = true) -> LyricModel? {
         let parser = Parser()
         return parser.parseLyricData(data: lyricFileData,
                                      pitchFileData: pitchFileData,
+                                     lyricOffset: lyricOffset,
                                      includeCopyrightSentence: includeCopyrightSentence)
     }
     
