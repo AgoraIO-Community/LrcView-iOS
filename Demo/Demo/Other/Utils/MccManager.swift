@@ -220,6 +220,10 @@ extension MccManager: AgoraRtcEngineDelegate {
 }
 
 extension MccManager: AgoraMusicContentCenterEventDelegate {
+    func onLyricInfo(_ requestId: String, songCode: Int, lyricInfo: AgoraLyricInfo?, errorCode: AgoraMusicContentCenterStatusCode) {
+        
+    }
+    
     func onPreLoadEvent(_ requestId: String,
                         songCode: Int,
                         percent: Int,

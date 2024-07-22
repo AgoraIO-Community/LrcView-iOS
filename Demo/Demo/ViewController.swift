@@ -90,8 +90,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             if indexPath.row == 1 {
-                let vc = MainTestVCEx()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = MainTestVCEx()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
             
@@ -193,8 +193,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         if indexPath.section == 3 {
             if indexPath.row == 0 {
-                let vc = SelectedLyricVC()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = SelectedLyricVC()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
         }

@@ -33,7 +33,7 @@ class MainTestVC: UIViewController {
     var noLyric = false
     var isPause = false
     var lyricFileType: AgoraMusicContentCenter.LyricFileType = .xml
-    fileprivate let logTag = "MainTestVC"
+    var logTag = "MainTestVC"
     
     override func viewDidLoad() {
         super.viewDidLoad()

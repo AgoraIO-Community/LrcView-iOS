@@ -81,6 +81,10 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension SearchVC: AgoraMusicContentCenterEventDelegate {
+    func onLyricInfo(_ requestId: String, songCode: Int, lyricInfo: AgoraLyricInfo?, errorCode: AgoraMusicContentCenterStatusCode) {
+        
+    }
+    
     func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], errorCode: AgoraMusicContentCenterStatusCode) {
         
     }
