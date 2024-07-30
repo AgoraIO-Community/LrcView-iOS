@@ -91,6 +91,9 @@ class MccManager: NSObject {
         config.mccUid = Config.mccUid
         config.token = token
         config.appId = Config.mccAppId
+        if let mccDomain = Config.mccDomain {
+            config.mccDomain = mccDomain
+        }
         mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
         mcc.register(self)
         mpk = mcc.createMusicPlayer(delegate: self)
@@ -229,7 +232,7 @@ extension MccManager: AgoraMusicContentCenterEventDelegate {
         Log.debug(text: "onPreLoadEvent requestId:\(requestId) songCode:\(songCode) status:\(status) percent:\(percent) lyricUrl:\(lyricUrl ?? "nil") errorCode:\(errorCode)", tag: logTag)
         if status == .OK { /** preload 成功 **/
             Log.info(text: "preload ok", tag: logTag)
-            delegate?.onPreloadMusic(self, songId: songCode, errorMsg: nil)
+            invokeOnPreloadMusic(self, songId: songId, errorMsg: nil)
         }
         
         if status == .error {
@@ -237,7 +240,7 @@ extension MccManager: AgoraMusicContentCenterEventDelegate {
             if errorCode == .errorPermissionAndResource {
                 Log.errorText(text: "歌曲下架")
             }
-            delegate?.onPreloadMusic(self, songId: songCode, errorMsg: "preload error")
+            invokeOnPreloadMusic(self, songId: songCode, errorMsg: "preload error")
         }
     }
     
@@ -271,4 +274,17 @@ extension MccManager: AgoraRtcMediaPlayerDelegate {
     }
     
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo position: Int) {}
+}
+
+extension MccManager {
+    func invokeOnPreloadMusic(_ manager: MccManager, songId: Int, errorMsg: String?) {
+        if Thread.isMainThread {
+            self.delegate?.onPreloadMusic(manager, songId: songId, errorMsg: errorMsg)
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.delegate?.onPreloadMusic(manager, songId: songId, errorMsg: errorMsg)
+        }
+    }
 }
