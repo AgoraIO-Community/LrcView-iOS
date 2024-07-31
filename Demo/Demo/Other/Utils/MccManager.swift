@@ -148,6 +148,7 @@ class MccManager: NSObject {
         else {
             Log.info(text: "resumeMusic success", tag: logTag)
         }
+        isPause = false
     }
     
     func stopMusic() {
