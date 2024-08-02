@@ -428,24 +428,6 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
         }
         print("=== onLyricResult requestId:\(requestId) lyricUrl:\(lyricUrl)")
         
-        //        let filePath = Bundle.main.path(forResource: "745012", ofType: "xml")!
-        //        DispatchQueue.main.async {
-        //            let url = URL(fileURLWithPath: filePath)
-        //            let data = try! Data(contentsOf: url)
-        //            let model = KaraokeView.parseLyricData(data: data)!
-        //            self.lyricModel = model
-        //            if !self.noLyric {
-        //                self.karaokeView.setLyricData(data: model)
-        //                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-        //                self.gradeView.isHidden = false
-        //            }
-        //            else {
-        //                self.karaokeView.setLyricData(data: nil)
-        //                self.gradeView.isHidden = true
-        //            }
-        //            self.mccPlay()
-        //        }
-        
         if lyricUrl.isEmpty { /** 网络偶问题导致的为空 **/
             DispatchQueue.main.async { [weak self] in
                 self?.title = "无歌词地址"
