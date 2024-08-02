@@ -38,8 +38,9 @@ class ViewController: UIViewController {
     }
 
     func createData() {
-        list = [Section(title: "集成", rows: [.init(title: "内置打分"),
-                                            .init(title: "外置打分（Ex）")]),
+        list = [Section(title: "集成", rows: [.init(title: "内置打分(old mcc)"),
+                                            .init(title: "外置打分（mcc Ex）"),
+                                            .init(title: "外置打分（mcc muti level）")]),
                 Section(title: "体验", rows: [.init(title: "观众端"),
                                             .init(title: "主播端"),
                                             .init(title: "抢唱"),
@@ -94,7 +95,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 //                navigationController?.pushViewController(vc, animated: true)
                 return
             }
-            
+            if indexPath.row == 2 {
+                let vc = MainVCMuti()
+                navigationController?.pushViewController(vc, animated: true)
+            }
         }
         
         if indexPath.section == 1 { /** 场景测试 **/

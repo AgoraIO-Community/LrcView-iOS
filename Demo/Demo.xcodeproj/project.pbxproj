@@ -20,6 +20,9 @@
 		2609430129530FCC0022A50D /* lrc.lrc in Resources */ = {isa = PBXBuildFile; fileRef = 2609430029530FCC0022A50D /* lrc.lrc */; };
 		260A43402985378B00C2DB5D /* 123602.xml in Resources */ = {isa = PBXBuildFile; fileRef = 260A433F2985378B00C2DB5D /* 123602.xml */; };
 		26105FE52966787A00712EDA /* EmitterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26105FE42966787A00712EDA /* EmitterVC.swift */; };
+		2639A42F2C5C8A8700B78920 /* MainVCMuti.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2639A42E2C5C8A8700B78920 /* MainVCMuti.swift */; };
+		2639A4312C5C8AC300B78920 /* MccManagerMuti.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2639A4302C5C8AC300B78920 /* MccManagerMuti.swift */; };
+		2639A4332C5C8C6100B78920 /* Extensions+Muti.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2639A4322C5C8C6100B78920 /* Extensions+Muti.swift */; };
 		2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2643DDB729ACCB9600018224 /* ProfileVC.swift */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
 		266717BC2C100EB100C88D79 /* AccessProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266717BB2C100EB100C88D79 /* AccessProvider.swift */; };
@@ -73,6 +76,9 @@
 		2609430029530FCC0022A50D /* lrc.lrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lrc.lrc; sourceTree = "<group>"; };
 		260A433F2985378B00C2DB5D /* 123602.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 123602.xml; sourceTree = "<group>"; };
 		26105FE42966787A00712EDA /* EmitterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitterVC.swift; sourceTree = "<group>"; };
+		2639A42E2C5C8A8700B78920 /* MainVCMuti.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVCMuti.swift; sourceTree = "<group>"; };
+		2639A4302C5C8AC300B78920 /* MccManagerMuti.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MccManagerMuti.swift; sourceTree = "<group>"; };
+		2639A4322C5C8C6100B78920 /* Extensions+Muti.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Muti.swift"; sourceTree = "<group>"; };
 		2643DDB729ACCB9600018224 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		266717B92C100E7000C88D79 /* MccManagerEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MccManagerEx.swift; sourceTree = "<group>"; };
 		266717BB2C100EB100C88D79 /* AccessProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessProvider.swift; sourceTree = "<group>"; };
@@ -196,8 +202,17 @@
 				266717C62C1013A800C88D79 /* Utils */,
 				26C762AF2C0F0DF9008560BC /* Log */,
 				267691802C1056CE00886DC8 /* Extensions.swift */,
+				2639A4322C5C8C6100B78920 /* Extensions+Muti.swift */,
 			);
 			path = Other;
+			sourceTree = "<group>";
+		};
+		2639A42D2C5C8A5200B78920 /* MainVCMuti */ = {
+			isa = PBXGroup;
+			children = (
+				2639A42E2C5C8A8700B78920 /* MainVCMuti.swift */,
+			);
+			path = MainVCMuti;
 			sourceTree = "<group>";
 		};
 		266717BF2C10102A00C88D79 /* MainVCEx */ = {
@@ -217,6 +232,7 @@
 				266717B92C100E7000C88D79 /* MccManagerEx.swift */,
 				2676917D2C1049BE00886DC8 /* MccManager.swift */,
 				26EAD6A62C118C2700D3C2CE /* SongSourceProvider.swift */,
+				2639A4302C5C8AC300B78920 /* MccManagerMuti.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -249,6 +265,7 @@
 		26C762B52C0F0E05008560BC /* VC */ = {
 			isa = PBXGroup;
 			children = (
+				2639A42D2C5C8A5200B78920 /* MainVCMuti */,
 				2676917F2C1055F500886DC8 /* MainVC */,
 				266717BF2C10102A00C88D79 /* MainVCEx */,
 				26C762B72C0F0E7C008560BC /* ParamVC */,
@@ -430,6 +447,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				266717BC2C100EB100C88D79 /* AccessProvider.swift in Sources */,
+				2639A4312C5C8AC300B78920 /* MccManagerMuti.swift in Sources */,
 				260942DB2952B5050022A50D /* ViewController.swift in Sources */,
 				26C5452029555085009E0F37 /* NoLyricsTestVC.swift in Sources */,
 				2689ED482988FDE10012BC4D /* LyricLabelVC.swift in Sources */,
@@ -462,7 +480,9 @@
 				26105FE52966787A00712EDA /* EmitterVC.swift in Sources */,
 				26D01F9A2977D7F500B9D31A /* ScoreAniVC.swift in Sources */,
 				267691812C1056CE00886DC8 /* Extensions.swift in Sources */,
+				2639A4332C5C8C6100B78920 /* Extensions+Muti.swift in Sources */,
 				2602312029CAD3630036F74A /* HostVC.swift in Sources */,
+				2639A42F2C5C8A8700B78920 /* MainVCMuti.swift in Sources */,
 				2689ED462988EA540012BC4D /* ParamSetVC+Info.swift in Sources */,
 				2682B05B2954535E005285B9 /* FirstToneHintViewTestVC.swift in Sources */,
 				260942ED2952BD4C0022A50D /* ViewTestVC.swift in Sources */,
