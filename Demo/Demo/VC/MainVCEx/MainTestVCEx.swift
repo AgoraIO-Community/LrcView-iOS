@@ -248,7 +248,7 @@ extension MainTestVCEx: MainViewDelegate, KaraokeDelegate {
         switch onAction {
         case .skip:
             Log.info(text: "skip", tag: self.logTag)
-            
+            if lyricModel == nil { return }
             var position = lyricModel.preludeEndPosition
             if position > 1000 {
                 position -= 1000
