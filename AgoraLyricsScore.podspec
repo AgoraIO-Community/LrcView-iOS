@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
   spec.swift_versions = "5.0"
   spec.requires_arc  = true
   spec.dependency 'AgoraComponetLog'
-  spec.dependency 'Zip'
+  spec.dependency 'Zip', '2.1.2'
   spec.resource_bundles = {
     'AgoraLyricsScoreBundle' => ['AgoraLyricsScore/Resources/*.xcassets']
   }

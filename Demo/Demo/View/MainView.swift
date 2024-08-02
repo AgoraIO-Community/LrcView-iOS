@@ -174,7 +174,8 @@ class MainView: UIView {
         karaokeView.lyricsView.firstToneHintViewStyle.size = param.lyric.firstToneHintViewStyle.size
         karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = param.lyric.firstToneHintViewStyle.bottomMargin
         karaokeView.lyricsView.draggable = param.lyric.draggable
-        
+        karaokeView.setScoreLevel(level: param.karaoke.scoreLevel)
+        karaokeView.setScoreCompensationOffset(offset: param.karaoke.scoreCompensationOffset)
         karaokeView.scoringView.particleEffectHidden = param.scoring.particleEffectHidden
         karaokeView.scoringView.emitterImages = param.scoring.emitterImages
         karaokeView.scoringView.standardPitchStickViewHighlightColor = param.scoring.standardPitchStickViewHighlightColor
