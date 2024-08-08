@@ -24,7 +24,10 @@ extension ScoringMachine {
                         /// 取出endTime文件原始值
                         let endTime = tone.endTime
                         beginTime = preEndTime
-                        duration = endTime - beginTime
+                        duration = endTime >= beginTime ? endTime - beginTime : 0
+                        if endTime < beginTime {
+                            Log.errorText(text: "Song name:\(data.name), this file has time error, it will impact the logic in scoring, please check it. beginTime:\(beginTime) endTime:\(endTime)", tag: "ScoringMachine.createData")
+                        }
                     }
                 }
                 
