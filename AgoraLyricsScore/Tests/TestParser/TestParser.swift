@@ -29,6 +29,17 @@ class TestParser: XCTestCase {
         XCTAssert(model.lines.first!.content.contains("什么是幸福"))
     }
     
+    func testLrcFile2() throws { /** lrc normal **/
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "CJhd625070", ofType: "lrc")!)
+        let data = try! Data(contentsOf: url)
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count > 0)
+        XCTAssert(model.lines.first!.content.contains("他想知道那是谁"))
+    }
+    
     func testXMLFile() throws { /** xml normal **/
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "745012", ofType: "xml")!)
         let data = try! Data(contentsOf: url)

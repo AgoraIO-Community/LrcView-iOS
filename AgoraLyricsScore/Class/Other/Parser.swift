@@ -54,7 +54,7 @@ class Parser {
         
         // 检测LRC格式的特征，通常是时间戳和歌词行
         // 正则表达式匹配LRC格式的时间戳
-        let lrcPattern = "\\[\\d{2}:\\d{2}\\.\\d{2}\\]"
+        let lrcPattern = "\\[\\d{2}:\\d{2}\\.\\d{2,3}\\]"
         if let _ = string.range(of: lrcPattern, options: .regularExpression) {
             return .lrc
         }
