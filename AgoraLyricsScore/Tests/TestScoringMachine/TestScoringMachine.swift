@@ -141,4 +141,17 @@ class TestScoringVM: XCTestCase {
             let _ = vm.getHitedInfo(progress: 242000, currentVisiableInfos: infos)
         }
     }
+    
+    func testNoCrashWhenEndTimeGatterThanBeginTime() {
+        /// 872957.xml 此文件中 97.316处，有异常。修复导致 crash
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "872957", ofType: "xml")!)
+        let data = try! Data(contentsOf: url)
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
+            XCTFail()
+            return
+        }
+        let vm = ScoringMachine()
+        let (_, infos) = ScoringMachine.createData(data: model)
+        XCTAssertTrue(!infos.isEmpty)
+    }
 }
