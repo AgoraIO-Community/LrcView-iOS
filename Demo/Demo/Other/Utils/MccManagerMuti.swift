@@ -60,6 +60,7 @@ class MccManagerMuti: NSObject {
     }
     
     func joinChannel() { /** 目的：发布mic流、接收音频流 **/
+        agoraKit.enableAudioVolumeIndication(50, smooth: 3, reportVad: true)
         let option = AgoraRtcChannelMediaOptions()
         option.clientRoleType = .broadcaster
         agoraKit.enableAudio()
@@ -202,6 +203,10 @@ class MccManagerMuti: NSObject {
             Log.errorText(text: "selectAudioTrack error \(ret)", tag: logTag)
         }
     }
+    
+    func updateVoicePitch(pitch: Int) {
+        mcc.updateVoicePitch(pitch: pitch)
+    }
 }
 
 extension MccManagerMuti {
@@ -233,6 +238,9 @@ extension MccManagerMuti: AgoraRtcEngineDelegate {
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
+        if let voicePitch = speakers.last?.voicePitch {
+            updateVoicePitch(pitch: Int(voicePitch))
+        }
     }
 }
 

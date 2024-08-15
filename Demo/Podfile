@@ -15,6 +15,6 @@ target 'Demo' do
 #  pod 'AgoraMccExService', :path => "/Volumes/T5/PodSpec/AgoraMccExService/AgoraMccExService.podspec"
   pod "Zip"
   pod "ScoreEffectUI", :path => "../../ScoringEffectUI/ScoreEffectUI/ScoreEffectUI.podspec", :testspecs => ['Tests']
-  pod 'AgoraComponetLog'
+  pod 'AgoraComponetLog', :path => "/Volumes/T5/公司项目/AgoraComponetLog/AgoraComponetLog/AgoraComponetLog_Local.podspec", :testspecs => ['Tests']
   pod 'SVProgressHUD'
 end
