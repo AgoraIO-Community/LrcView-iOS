@@ -59,13 +59,13 @@ class Downloader: NSObject {
             request.cachePolicy = .reloadIgnoringLocalCacheData
             request.timeoutInterval = Downloader.requestTimeoutInterval
             // session会话
-            downloadSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+            self.downloadSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
             // 创建下载任务
             let downloadTask = self.downloadSession?.dataTask(with: request)
             // 开始下载
             downloadTask?.resume()
             // 当前运行循环
-            downloadLoop = CFRunLoopGetCurrent()
+            self.downloadLoop = CFRunLoopGetCurrent()
             CFRunLoopRun()
         }
         

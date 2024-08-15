@@ -34,11 +34,11 @@
     sView.topSpaces = 70;
     
     GradeView *gview = [[GradeView alloc] initWithFrame:CGRectMake(15, 110, UIScreen.mainScreen.bounds.size.width - 30, 50)];
-    [gview setTitleWithTitle:@"123"];
+    [gview setTitleWithTitle:@"123" customCumulativeScoreText:@""];
 
     [self.view addSubview:gview];
     [self.view layoutIfNeeded];
-    [gview setScoreWithCumulativeScore:1110 totalScore:4000];
+    [gview setScoreWithCumulativeScore:0 totalScore:0 customCumulativeScoreText:0];
     
     karaokeView.lyricsView.firstToneHintViewStyle.size = 15;
     karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = 25;
