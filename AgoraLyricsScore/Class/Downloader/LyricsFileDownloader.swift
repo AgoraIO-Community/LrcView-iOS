@@ -70,7 +70,7 @@ public class LyricsFileDownloader: NSObject {
             }
             Log.info(text: "requestId:\(requestId) start work", tag: self.logTag)
             if self.requestIdDict.count >= self.maxConcurrentRequestCount {
-                let logText = "request(\(requestId) was enqueued in waittingTaskQueue, current num of requesting task is \(requestIdDict.count)"
+                let logText = "request(\(requestId) was enqueued in waittingTaskQueue, current num of requesting task is \(self.requestIdDict.count)"
                 Log.info(text: logText, tag: self.logTag)
                 let taskInfo = TaskInfo(requestId: requestId, urlString: urlString)
                 self.waittingTaskQueue.enqueue(taskInfo)
