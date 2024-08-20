@@ -56,7 +56,7 @@ public class LyricsFileDownloader: NSObject {
                 guard let self = self else {
                     return
                 }
-                invokeOnLyricsFileDownloadCompleted(requestId: requestId,
+                self.invokeOnLyricsFileDownloadCompleted(requestId: requestId,
                                                     fileData: fileData,
                                                     error: nil)
             }
@@ -68,16 +68,16 @@ public class LyricsFileDownloader: NSObject {
             guard let self = self else {
                 return
             }
-            Log.info(text: "requestId:\(requestId) start work", tag: logTag)
-            if requestIdDict.count >= maxConcurrentRequestCount {
+            Log.info(text: "requestId:\(requestId) start work", tag: self.logTag)
+            if self.requestIdDict.count >= self.maxConcurrentRequestCount {
                 let logText = "request(\(requestId) was enqueued in waittingTaskQueue, current num of requesting task is \(requestIdDict.count)"
-                Log.info(text: logText, tag: logTag)
+                Log.info(text: logText, tag: self.logTag)
                 let taskInfo = TaskInfo(requestId: requestId, urlString: urlString)
-                waittingTaskQueue.enqueue(taskInfo)
+                self.waittingTaskQueue.enqueue(taskInfo)
             }
             else {
-                _addRequest(id: requestId, urlString: urlString)
-                _startDownload(requestId: requestId, urlString: urlString)
+                self._addRequest(id: requestId, urlString: urlString)
+                self._startDownload(requestId: requestId, urlString: urlString)
             }
         }
         
@@ -91,8 +91,8 @@ public class LyricsFileDownloader: NSObject {
             guard let self = self else {
                 return
             }
-            _cancelDownload(requestId: requestId)
-            _resumeTaskIfNeeded()
+            self._cancelDownload(requestId: requestId)
+            self._resumeTaskIfNeeded()
         }
     }
     
@@ -104,9 +104,9 @@ public class LyricsFileDownloader: NSObject {
     // MARK: - Private Method - 0
     func fetchFromLocal(urlString: String) -> Data? {
         /** check if Exist **/
-        let fileName = urlString.fileName
-        if let path = FileCache.cacheFileExists(with: fileName) {
-            let url = URL(fileURLWithPath: path)
+        let fileName = urlString.fileName.components(separatedBy: ".").first ?? ""
+        if let xmlPath = FileCache.cacheFileExists(with: fileName + ".xml") {
+            let url = URL(fileURLWithPath: xmlPath)
             let data = try? Data(contentsOf: url)
             return data
         }
@@ -124,7 +124,7 @@ public class LyricsFileDownloader: NSObject {
             guard let self = self else {
                 return
             }
-            invokeOnLyricsFileDownloadProgress(requestId: requestId, progress: progress)
+            self.invokeOnLyricsFileDownloadProgress(requestId: requestId, progress: progress)
         } completion: { [weak self](filePath) in
             guard let self = self else {
                 return
@@ -134,13 +134,13 @@ public class LyricsFileDownloader: NSObject {
                 var data: Data?
                 do {
                     data = try Data(contentsOf: url)
-                    removeRequest(id: requestId)
-                    resumeTaskIfNeeded()
+                    self.removeRequest(id: requestId)
+                    self.resumeTaskIfNeeded()
                 } catch let error {
                     let logText = "get data from [\(url.path)] failed: \(error.localizedDescription)"
-                    Log.errorText(text: logText, tag: logTag)
+                    Log.errorText(text: logText, tag: self.logTag)
                     let e = DownloadError(domainType: .general, error: error as NSError)
-                    invokeOnLyricsFileDownloadCompleted(requestId: requestId,
+                    self.invokeOnLyricsFileDownloadCompleted(requestId: requestId,
                                                         fileData: nil,
                                                         error: e)
                 }
@@ -148,31 +148,31 @@ public class LyricsFileDownloader: NSObject {
                 do {
                     FileManager.createDirectoryIfNeeded(atPath: .cacheFolderPath())
                     if FileManager.default.fileExists(atPath: filePath) {
-                        Log.debug(text: "file exist: \(filePath)")
+                        Log.debug(text: "file exist: \(filePath)", tag: self.logTag)
                     }
                     try FileManager.default.copyItem(atPath: filePath, toPath: .cacheFolderPath() + "/" + url.lastPathComponent)
-                    Log.debug(text: "ready to removeItem: \(filePath)")
+                    Log.debug(text: "ready to removeItem: \(filePath)", tag: self.logTag)
                     try FileManager.default.removeItem(atPath: filePath)
                 } catch let error {
                     let logText = "get data from [\(url.path)] failed: \(error.localizedDescription)"
-                    Log.errorText(text: logText, tag: logTag)
+                    Log.errorText(text: logText, tag: self.logTag)
                 }
                 
-                invokeOnLyricsFileDownloadCompleted(requestId: requestId,
+                self.invokeOnLyricsFileDownloadCompleted(requestId: requestId,
                                                     fileData: data,
                                                     error: nil)
                 return
             }
             
             /** xml type **/
-            unzip(filePath: filePath, requestId: requestId)
+            self.unzip(filePath: filePath, requestId: requestId)
         } fail: { [weak self](error) in
             guard let self = self else {
                 return
             }
-            removeRequest(id: requestId)
-            resumeTaskIfNeeded()
-            invokeOnLyricsFileDownloadCompleted(requestId: requestId, fileData: nil, error: error)
+            self.removeRequest(id: requestId)
+            self.resumeTaskIfNeeded()
+            self.invokeOnLyricsFileDownloadCompleted(requestId: requestId, fileData: nil, error: error)
         }
     }
     
@@ -203,7 +203,7 @@ public class LyricsFileDownloader: NSObject {
             guard let self = self else {
                 return
             }
-            _unzip(filePath: filePath, requestId: requestId)
+            self._unzip(filePath: filePath, requestId: requestId)
         }
     }
     
@@ -244,7 +244,7 @@ public class LyricsFileDownloader: NSObject {
             guard let self = self else {
                 return
             }
-            _addRequest(id: id, urlString: urlString)
+            self._addRequest(id: id, urlString: urlString)
         }
     }
     
@@ -253,7 +253,7 @@ public class LyricsFileDownloader: NSObject {
             guard let self = self else {
                 return
             }
-            _removeRequest(id: id)
+            self._removeRequest(id: id)
         }
     }
     
@@ -270,7 +270,7 @@ public class LyricsFileDownloader: NSObject {
             guard let self = self else {
                 return
             }
-            _resumeTaskIfNeeded()
+            self._resumeTaskIfNeeded()
         }
     }
     
