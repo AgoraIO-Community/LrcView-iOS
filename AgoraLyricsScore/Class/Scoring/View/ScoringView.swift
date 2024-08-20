@@ -99,9 +99,11 @@ public class ScoringView: UIView {
     }
     
     func setPitch(speakerPitch: Double,
-                  progressInMs: UInt) {
+                  progressInMs: UInt,
+                  score: UInt) {
         scoringMachine.setPitch(speakerPitch: speakerPitch,
-                                progressInMs: progressInMs)
+                                progressInMs: progressInMs,
+                                score: score)
     }
     
     func setScoreAlgorithm(algorithm: IScoreAlgorithm) {

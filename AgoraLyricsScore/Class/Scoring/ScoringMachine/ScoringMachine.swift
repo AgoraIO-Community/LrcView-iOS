@@ -59,7 +59,8 @@ class ScoringMachine: ScoringMachineProtocol {
     }
     
     func setPitch(speakerPitch: Double,
-                  progressInMs: UInt) {
+                  progressInMs: UInt,
+                  score: UInt) {
         queue.async { [weak self] in
             self?._setPitch(pitch: speakerPitch)
         }

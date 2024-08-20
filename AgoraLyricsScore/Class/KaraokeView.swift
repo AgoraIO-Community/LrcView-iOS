@@ -129,11 +129,13 @@ extension KaraokeView {
     }
     
     /// 设置实时音高
-    /// - Note: 获取方式1. 从Agora RTC 回调方法`reportAudioVolumeIndicationOfSpeakers` 获取speakerPitch.
-    /// - Note: 获取方式2. 可以从AgoraContentCenterEx回调方法 `onPitch`[该回调频率是50ms/次] 获取speakerPitch.
-    /// - Parameter speakerPitch: 演唱者的实时音高值
+    /// - Note: 获取方式1，从Agora RTC 回调方法`reportAudioVolumeIndicationOfSpeakers` 获取speakerPitch。
+    /// - Note: 获取方式2，可以从AgoraContentCenterEx回调方法 `onPitch`[该回调频率是50ms/次] 获取speakerPitch。
+    /// - note: 获取方式3，从mcc `OnPitch` 获取speakerPitch和score。
+    /// - Parameter speakerPitch: 演唱者的实时音高值。
     /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）.方式1给0.
-    @objc public func setPitch(speakerPitch: Double, progressInMs: UInt) {
+    /// - Parameter progressInMs: 当前得分。方式1、2给0。
+    @objc public func setPitch(speakerPitch: Double, progressInMs: UInt, score: UInt) {
         guard scoringEnabled else { return }
         let pitch  = speakerPitch
         // Log.info(text: "Pitch:\(pitch)", tag: logTag)
@@ -150,7 +152,7 @@ extension KaraokeView {
         }
         if pitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
             pitchIsZeroCount = 0
-            scoringView.setPitch(speakerPitch: speakerPitch, progressInMs: progressInMs)
+            scoringView.setPitch(speakerPitch: speakerPitch, progressInMs: progressInMs, score: score)
         }
     }
     
