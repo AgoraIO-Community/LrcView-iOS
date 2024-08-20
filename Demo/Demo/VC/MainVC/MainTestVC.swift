@@ -189,7 +189,7 @@ extension MainTestVC: MccManagerDelegate {
     }
     
     func onPitch(_ manager: MccManager, pitch: Double) {
-        mainView.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
+        mainView.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0, score: 0)
     }
 }
 

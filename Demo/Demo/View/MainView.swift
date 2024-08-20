@@ -57,8 +57,9 @@ class MainView: UIView {
         karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
         karaokeView.scoringView.viewHeight = 100
         karaokeView.scoringView.topSpaces = 80
-        karaokeView.lyricsView.showDebugView = false
+        karaokeView.lyricsView.showDebugView = true
         karaokeView.lyricsView.draggable = true
+        karaokeView.scoringView.showDebugView = true
         
         skipButton.setTitle("跳过前奏", for: .normal)
         setButton.setTitle("设置参数", for: .normal)

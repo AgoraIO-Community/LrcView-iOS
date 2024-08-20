@@ -182,7 +182,7 @@ extension LyricsTestVC: AgoraRtcEngineDelegate {
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
         if let pitch = speakers.last?.voicePitch {
-            karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
+            karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0, score: 0)
         }
     }
 }

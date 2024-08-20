@@ -154,7 +154,7 @@ extension AudienceVC: AgoraRtcEngineDelegate {
                 
                 if dict["type"] as! Int == 1 {
                     if let pitch = dict["pitch"] as? Double {
-                        ktvView.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
+                        ktvView.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0, score: 0)
                     }
                 }
             }

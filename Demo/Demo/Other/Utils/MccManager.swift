@@ -90,6 +90,9 @@ class MccManager: NSObject {
         config.rtcEngine = agoraKit
         config.mccUid = Config.mccUid
         config.token = token
+        if let mccDomain = Config.mccDomain {
+            config.mccDomain = mccDomain
+        }
         config.appId = Config.mccAppId
         mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
         mcc.register(self)

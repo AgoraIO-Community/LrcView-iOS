@@ -196,7 +196,7 @@ extension HostVC: AgoraRtcEngineDelegate {
             let dict: [String : Any] = ["type": 1, "pitch": pitch, "packageNum" : self.packageNum]
             let data = self.createData(dic: dict)
             sendData(data: data)
-            ktvView.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
+            ktvView.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0, score: 0)
         }
     }
 }

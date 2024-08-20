@@ -51,7 +51,7 @@ class ProfileVC: UIViewController {
             count += 1
             if count == 3 {
                 count = 0
-                self.karaokeView.setPitch(speakerPitch: Double.random(in: 87...300), progressInMs: 0)
+                self.karaokeView.setPitch(speakerPitch: Double.random(in: 87...300), progressInMs: 0, score: 0)
             }
             
         }

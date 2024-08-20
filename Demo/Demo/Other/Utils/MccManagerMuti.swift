@@ -185,6 +185,12 @@ class MccManagerMuti: NSObject {
     func seek(position: UInt) {
         Log.info(text: "seek \(Int(position))", tag: logTag)
         mpk.seek(toPosition: Int(position))
+        
+        
+    }
+    
+    func getCumulativeScoreData() -> AgoraCumulativeScoreData {
+        return mcc.getCumulativeScoreData()
     }
     
     func getMPKCurrentPosition() -> Int {

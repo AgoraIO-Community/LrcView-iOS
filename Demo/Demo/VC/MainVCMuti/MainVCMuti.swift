@@ -73,15 +73,15 @@ class MainVCMuti: UIViewController {
         if !self.noLyric {
             let canScoring = model.hasPitch
             if canScoring { /** xml **/
-                self.mainView.karaokeView.setLyricData(data: model, usingInternalScoring: true)
+                self.mainView.karaokeView.setLyricData(data: model, usingInternalScoring: false)
                 self.mainView.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
             }
             else {/** lrc **/
-                self.mainView.karaokeView.setLyricData(data: model, usingInternalScoring: true)
+                self.mainView.karaokeView.setLyricData(data: model, usingInternalScoring: false)
             }
         }
         else { /** no Lyric **/
-            self.mainView.karaokeView.setLyricData(data: nil, usingInternalScoring: true)
+            self.mainView.karaokeView.setLyricData(data: nil, usingInternalScoring: false)
             self.mainView.gradeView.isHidden = true
         }
     }
@@ -146,7 +146,7 @@ extension MainVCMuti: KaraokeDelegate, MainViewDelegate {
         /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
         progressProvider.seek(position: position + 250)
         mccManager.seek(position: position)
-        cumulativeScore = view.scoringView.getCumulativeScore()
+        cumulativeScore = Int(mccManager.getCumulativeScoreData().cumulativePitchScore)
         mainView.gradeView.setScore(cumulativeScore: cumulativeScore,
                                     totalScore: lyricModel.lines.count * 100)
     }
@@ -194,7 +194,13 @@ extension MainVCMuti: MccManagerMutiDelegate {
     }
     
     func onPitch(rawScoreData: AgoraRawScoreData) {
-        mainView.karaokeView.setPitch(speakerPitch: Double(rawScoreData.pitchScore), progressInMs: rawScoreData.progressInMs)
+        var positionAfterDelay = rawScoreData.progressInMs
+        if rawScoreData.progressInMs > 250 {
+            positionAfterDelay = rawScoreData.progressInMs - 250
+        }
+        mainView.karaokeView.setPitch(speakerPitch: Double(rawScoreData.speakerPitch),
+                                      progressInMs: positionAfterDelay,
+                                      score: UInt(rawScoreData.pitchScore))
     }
     
     func onLineScore(lineScoreData: AgoraLineScoreData) {
