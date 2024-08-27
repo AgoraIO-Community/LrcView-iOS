@@ -16,7 +16,7 @@ class ScoringMachine: ScoringMachineProtocol {
     var movingSpeedFactor: CGFloat = 120
     /// 打分容忍度 范围：0-1
     var hitScoreThreshold: Float = 0.7
-    var scoreLevel = 10
+    var scoreLevel = 15
     var scoreCompensationOffset = 0
     var scoreAlgorithm: IScoreAlgorithm = ScoreAlgorithm()
     weak var delegate: ScoringMachineDelegate?
@@ -165,7 +165,6 @@ class ScoringMachine: ScoringMachineProtocol {
         let voicePitch = voiceChanger.handlePitch(stdPitch: hitedInfo.pitch,
                                                   voicePitch: pitch,
                                                   stdMaxPitch: maxPitch)
-        Log.debug(text: "pitch: \(pitch) after: \(voicePitch) stdPitch:\(hitedInfo.pitch)", tag: logTag)
         
         /** 3.calculted score **/
         let score = ToneCalculator.calculedScore(voicePitch: voicePitch,
@@ -189,6 +188,9 @@ class ScoringMachine: ScoringMachineProtocol {
             }
         }
         
+        Log.debug(text: "->>> target:\(hitedInfo.word) progress:\(progress) pitch: \(pitch) after: \(voicePitch) stdPitch:\(hitedInfo.pitch) score:\(score) scoreLevel:\(scoreLevel) scoreCompensationOffset:\(scoreCompensationOffset)", tag: logTag)
+        Log.debug(text: "->>> toneScores:\(toneScores.map({ "avg:\($0.score), details:\($0.scores)" }))", tag: logTag)
+        
         /** 5.update HighlightInfos **/
         if score >= hitScoreThreshold * 100 {
             currentHighlightInfos = makeHighlightInfos(progress: progress,
@@ -196,7 +198,7 @@ class ScoringMachine: ScoringMachineProtocol {
                                                        currentVisiableInfos: currentVisiableInfos,
                                                        currentHighlightInfos: currentHighlightInfos)
         }
-        Log.debug(text: "progress:\(progress) score: \(score) pitch: \(pitch) after: \(voicePitch) stdPitch:\(hitedInfo.pitch)", tag: logTag)
+        
         /** 6.calculated ui info **/
         let showAnimation = score >= hitScoreThreshold * 100
         let y = calculatedY(pitch: voicePitch,
@@ -312,7 +314,7 @@ class ScoringMachine: ScoringMachineProtocol {
         
         cumulativeScore = calculatedCumulativeScore(indexOfLine: indexOfLineEnd,
                                                     lineScores: lineScores)
-        Log.debug(text: "score didLineEnd indexOfLineEnd: \(indexOfLineEnd) \(lineScore) \(lineScores) cumulativeScore:\(cumulativeScore)", tag: logTag)
+        Log.debug(text: "->>> score didLineEnd indexOfLineEnd: \(indexOfLineEnd) \(lineScore) \(lineScores) cumulativeScore:\(cumulativeScore)", tag: logTag)
         ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
                                                         didFinishLineWith: data.lines[indexOfLineEnd],
                                                         score: lineScore,
