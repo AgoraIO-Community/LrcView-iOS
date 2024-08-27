@@ -12,43 +12,49 @@ import XCTest
 class TestEstimateScore: XCTestCase, ScoringMachineDelegate {
     var vm: ScoringMachine!
     var fileName = ""
+    let expBad1_A = XCTestExpectation(description: "Bad1_A")
     
-    func testBad1_A() {
-        fileName = "qilixiang_bad1_50ms_pitch"
-        goTest(fileName: fileName, xmlFileName: "660250")
+    override func setUpWithError() throws {
+//        Log.setLoggers(loggers: [ConsoleLogger()])
     }
     
-    func testGood1_A() {
+    func testBad1_A() { /** cumulativeScore:1943 **/
+        fileName = "qilixiang_bad1_50ms_pitch"
+        goTest(fileName: fileName, xmlFileName: "660250")
+        wait(for: [expBad1_A], timeout: 3)
+    }
+    
+    func testGood1_A() { /// cumulativeScore:1726
         fileName = "qilixiang_good1_50ms_pitch"
         goTest(fileName: fileName, xmlFileName: "660250")
     }
     
-    func testGood2_A() {
+    func testGood2_A() { /// cumulativeScore:626
         fileName = "qilixiang_good2_50ms_pitch"
         goTest(fileName: fileName, xmlFileName: "660250")
     }
     
-    func testGood3_A() {
+    func testGood3_A() { /// cumulativeScore:2283
         fileName = "qilixiang_good3_50ms_pitch"
         goTest(fileName: fileName, xmlFileName: "660250")
     }
     
-    func testGood4_A() {
+    func testGood4_A() { /// cumulativeScore:2110
         fileName = "qilixiang_good4_50ms_pitch"
         goTest(fileName: fileName, xmlFileName: "660250")
     }
     
-    func testBad1_B() {
+    func testBad1_B() { /// cumulativeScore:2953
         fileName = "houlai_bad1_50ms_pitch"
         goTest(fileName: fileName, xmlFileName: "900318")
     }
     
-    func testGood1_B() {
+    func testGood1_B() { /// cumulativeScore:4454
         fileName = "houlai_good1_50ms_pitch"
         goTest(fileName: fileName, xmlFileName: "900318")
     }
     
-    func testGood2_B() {
+    func testGood2_B() { /// cumulativeScore:4535
         fileName = "houlai_good2_50ms_pitch"
         goTest(fileName: fileName, xmlFileName: "900318")
     }
@@ -118,6 +124,9 @@ class TestEstimateScore: XCTestCase, ScoringMachineDelegate {
         }
         print("didFinishLineWith score[\(lineIndex)]: \(score) \(model.content)")
         if lineIndex == 48 {
+            if cumulativeScore == 1943 {
+                expBad1_A.fulfill()
+            }
             print("cumulativeScore:\(cumulativeScore)")
             print("---------\(fileName)  end ----------\n")
         }
