@@ -25,7 +25,7 @@ class SelectedLyricVC: UIViewController {
     private func setupUI() {
         title = "init..."
         view.backgroundColor = .white
-        textField.text = "\(547332004)"
+        textField.text = "\(32182792)"
         textField.placeholder = "请输入歌曲id"
         textField.borderStyle = .roundedRect
         view.addSubview(textField)
@@ -129,7 +129,10 @@ extension SelectedLyricVC: MccManagerDelegateEx {
                 return
             }
             title = "load ok"
-            let vc = CheckLyricVC(krcFileData: lyricData, pitchFileData: pitchData, songId: songId)
+            let vc = CheckLyricVC(krcFileData: lyricData,
+                                  pitchFileData: pitchData,
+                                  songId: songId,
+                                  lyricOffset: lyricOffset)
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

@@ -15,11 +15,13 @@ class CheckLyricVC: UIViewController {
     let krcFileData: Data
     let pitchFileData: Data
     let songId: Int
+    let lyricOffset: Int
     
-    init(krcFileData: Data, pitchFileData: Data, songId: Int) {
+    init(krcFileData: Data, pitchFileData: Data, songId: Int, lyricOffset: Int) {
         self.krcFileData = krcFileData
         self.pitchFileData = pitchFileData
         self.songId = songId
+        self.lyricOffset = lyricOffset
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -52,7 +54,7 @@ class CheckLyricVC: UIViewController {
     
     private func loadLyrics() {
         guard let model = KaraokeView.parseLyricData(lyricFileData: krcFileData,
-                                                     pitchFileData: pitchFileData) else {
+                                                     pitchFileData: pitchFileData, lyricOffset: lyricOffset) else {
             fatalError("can not get a model")
         }
         
