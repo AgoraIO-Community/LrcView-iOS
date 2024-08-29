@@ -83,7 +83,7 @@ class LyricMachine {
         guard let data = lyricData else { return }
         let remainingTime = Int(data.preludeEndPosition) - Int(progress)
         invokeLyricMachine(didUpdate: remainingTime)
-        
+        let scrollByWord = data.lyricsType == .xml || data.lyricsType == .krc
         if currentIndex < dataList.count {
             if let item = dataList.enumerated().first(where: { progress < $0.element.endTime }) { /** 找出第一个要高亮的 **/
                 let newCurrentIndex = item.offset
@@ -104,7 +104,7 @@ class LyricMachine {
                     if progress > item.element.beginTime, progress <= item.element.endTime { /** 计算比例 **/
                         progressRate = LyricMachine.calculateProgressRate(progress: progress,
                                                                           model: item.element,
-                                                                          canScoring: data.hasPitch) ?? current.progressRate
+                                                                          scrollByWord: scrollByWord) ?? current.progressRate
                     }
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
@@ -124,7 +124,7 @@ class LyricMachine {
                     let current = dataList[currentIndex]
                     let progressRate: Double = LyricMachine.calculateProgressRate(progress: progress,
                                                                                   model: item.element,
-                                                                                  canScoring: data.hasPitch) ?? current.progressRate
+                                                                                  scrollByWord: scrollByWord) ?? current.progressRate
                     current.update(progressRate: progressRate)
                     let indexPath = IndexPath(row: currentIndex, section: 0)
                     invokeLyricMachine(didUpdateLineAt: indexPath)
@@ -156,12 +156,12 @@ class LyricMachine {
 extension LyricMachine {
     /// 计算句子的进度
     /// - Parameters:
-    ///   - canScoring: 是否可以打分（数据源是lrc格式不可打分）
+    ///   - scrollByWord: 是否可以打分（数据源是lrc格式不可打分）
     /// - Returns: `nil` 表示无法计算, 其他： [0, 1]
     static func calculateProgressRate(progress: UInt,
                                       model: LyricCell.Model,
-                                      canScoring: Bool) -> Double? {
-        if canScoring {
+                                      scrollByWord: Bool) -> Double? {
+        if scrollByWord {
             let toneCount = model.tones.filter({ $0.word.isEmpty == false }).count
             for (index, tone) in model.tones.enumerated() {
                 if progress >= tone.beginTime, progress <= tone.beginTime + tone.duration {
@@ -173,8 +173,7 @@ extension LyricMachine {
             return nil
         }
         else {
-            let progressRate = Double(progress - model.beginTime) / Double(model.duration)
-            return progressRate
+            return 1
         }
     }
 }
