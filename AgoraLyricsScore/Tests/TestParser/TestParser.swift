@@ -139,11 +139,11 @@ class TestParser: XCTestCase {
             return
         }
         XCTAssert(model.lines.count == 44)
-        XCTAssert(model.lines.first!.beginTime == 1067 + 10)
+        XCTAssert(model.lines.first!.beginTime == 1067 - 10)
         XCTAssert(model.name  == "十年")
         XCTAssert(model.singer  == "陈奕迅")
         XCTAssert(model.lyricsType  == .krc)
-        XCTAssertEqual(model.duration, 381601 + 10)
+        XCTAssertEqual(model.duration, 381601 - 10)
         XCTAssert(model.preludeEndPosition  == 0)
         XCTAssertTrue(model.hasPitch == false)
     }
