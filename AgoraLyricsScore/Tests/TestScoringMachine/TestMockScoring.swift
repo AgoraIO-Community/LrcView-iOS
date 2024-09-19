@@ -39,7 +39,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
             for tone in line.tones {
                 let time = tone.beginTime + tone.duration/2
                 vm.setProgress(progress: time)
-                vm.setPitch(speakerPitch: tone.pitch - 1, progressInMs: 0)
+                vm.setPitch(speakerPitch: tone.pitch - 1, progressInMs: 0, score: 0)
             }
         }
         wait(for: [exp], timeout: 3)
@@ -66,7 +66,7 @@ class TestMockScoring: XCTestCase, ScoringMachineDelegate {
             vm.setProgress(progress: time)
             if gap == 40 {
                 gap = 0
-                vm.setPitch(speakerPitch: 50, progressInMs: 0)
+                vm.setPitch(speakerPitch: 50, progressInMs: 0, score: 0)
             }
             gap += 20
             time += 20

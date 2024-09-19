@@ -109,7 +109,7 @@ extension TestMockScoringByLogFile {
         
         for item in items {
             vm.setProgress(progress: UInt(item.progress))
-            vm.setPitch(speakerPitch: item.pitch!, progressInMs: 0)
+            vm.setPitch(speakerPitch: item.pitch!, progressInMs: 0, score: 0)
             usleep(15)
         }
         vm.setProgress(progress: 186022 + 1)
