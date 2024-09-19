@@ -27,7 +27,8 @@ protocol ScoringMachineProtocol {
     func setLyricData(data: LyricModel?)
     func setProgress(progress: UInt)
     func setPitch(speakerPitch: Double,
-                  progressInMs: UInt)
+                  progressInMs: UInt,
+                  score: UInt)
     func dragBegain()
     func dragDidEnd(position: UInt)
     func getCumulativeScore() -> Int

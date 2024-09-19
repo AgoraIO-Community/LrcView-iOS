@@ -55,10 +55,12 @@ class ScoringMachineEx: ScoringMachineProtocol {
     }
     
     func setPitch(speakerPitch: Double,
-                  progressInMs: UInt) {
+                  progressInMs: UInt,
+                  score: UInt) {
         queue.async { [weak self] in
-            self?._setPitch(speakerPitch: UInt8(speakerPitch),
-                            progressInMs: progressInMs)
+            self?._setPitch(speakerPitch: speakerPitch,
+                            progressInMs: progressInMs,
+                            score: score)
         }
     }
     
@@ -91,7 +93,7 @@ class ScoringMachineEx: ScoringMachineProtocol {
     private func _setLyricData(lyricData: LyricModel, size: CGSize) {
         canvasViewSize = size
         self.lyricData = lyricData
-        let (lineEnds, infos) = ScoringMachineEx.createData(data: lyricData)
+        let (lineEnds, infos) = lyricData.pitchDatas.isEmpty ? ScoringMachine.createData(data: lyricData) : ScoringMachineEx.createData(data: lyricData)
         dataList = infos
         lineEndTimes = lineEnds
         let (_, max) = makeMinMaxPitch(dataList: dataList)
@@ -111,15 +113,16 @@ class ScoringMachineEx: ScoringMachineProtocol {
     /// _setPitch
     /// - Parameters:
     ///   - speakerPitch: 0-100
-    private func _setPitch(speakerPitch: UInt8,
-                           progressInMs: UInt) {
+    private func _setPitch(speakerPitch: Double,
+                           progressInMs: UInt,
+                           score: UInt) {
         guard !isDragging else { return }
         guard let model = lyricData, model.hasPitch else { return }
         
         if speakerPitch <= 0 {
             let y = canvasViewSize.height
             let debugInfo = DebugInfo(originalPitch: -1.0,
-                                      pitch: Double(speakerPitch),
+                                      pitch: speakerPitch,
                                       hitedInfo: nil,
                                       progress: progressInMs)
             Log.debug(text: "_setPitch[0] porgress:\(progressInMs) speakerPitch:\(speakerPitch)", tag: logTag)
@@ -133,18 +136,20 @@ class ScoringMachineEx: ScoringMachineProtocol {
         /** 1.get hitedInfo **/
         guard let hitedInfo = getHitedInfo(progress: progressInMs,
                                            currentVisiableInfos: currentVisiableInfos) else {
-            let debugInfo = DebugInfo(originalPitch: -1,
-                                      pitch: Double(speakerPitch),
-                                      hitedInfo: nil,
-                                      progress: progressInMs)
             Log.debug(text: "_setPitch[1] progressInMs:\(progressInMs) speakerPitch:\(speakerPitch) progress:\(progress)", tag: logTag)
             return
         }
         
-        let actualSpeakerPitch = Double(speakerPitch)
+        let actualSpeakerPitch = speakerPitch
         
         /// 着色、动画开启与否
-        let showAnimation = abs(Int32(speakerPitch) - Int32(hitedInfo.pitch)) <= 5
+        var showAnimation = false
+        if model.pitchDatas.isEmpty {
+            showAnimation = score >= UInt(hitScoreThreshold * 100)
+        }
+        else {
+            showAnimation = abs(Int32(speakerPitch) - Int32(hitedInfo.pitch)) <= 5
+        }
         
         /** 2.update HighlightInfos **/
         if showAnimation {
@@ -170,7 +175,7 @@ class ScoringMachineEx: ScoringMachineProtocol {
         }
         let yValue = (y != nil) ? y! : (canvasViewSize.height >= 0 ? canvasViewSize.height : 0)
         let debugInfo = DebugInfo(originalPitch: hitedInfo.pitch,
-                                  pitch: Double(speakerPitch),
+                                  pitch: speakerPitch,
                                   hitedInfo: hitedInfo,
                                   progress: progressInMs)
         Log.debug(text: "_setPitch[2] porgress:\(progressInMs) speakerPitch:\(speakerPitch)", tag: logTag)
