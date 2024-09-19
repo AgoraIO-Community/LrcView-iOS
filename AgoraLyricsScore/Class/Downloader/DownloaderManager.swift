@@ -46,7 +46,7 @@ class DownloaderManager: NSObject {
             guard let self = self else {
                 return
             }
-            downloadCache.removeValue(forkey: url.absoluteString)
+            self.downloadCache.removeValue(forkey: url.absoluteString)
             completion(filePath)
         }, fail: fail)
     }
