@@ -15,6 +15,8 @@ struct Config {
     static let playerUid: Int = 100
     static let mccUid: Int = 333
     
+    static let mccDomain: String? = nil
+    
     static let rtcAppId = <#rtcAppId without Token#>
     static let mccAppId = <#mccAppId#>
     static let mccCertificate = <#mccCertificate#>
@@ -24,4 +26,7 @@ struct Config {
     static let pKey = <#pKey#>
     static var token: String? = nil
     static var userId: String? = nil
+    
+    /// ysd test vars
+    static static let accessUrl = <#access url#>
 }

@@ -6,166 +6,195 @@
 //
 import AgoraRtcKit
 import RTMTokenBuilder
-import AgoraMccExService
 
-protocol MccManagerDelegateEx: NSObjectProtocol {
-    func onMccExInitialize(_ manager: MccManagerEx)
+protocol MccManagerExDelegate: NSObjectProtocol {
     func onPreloadMusic(_ manager: MccManagerEx,
                         songId: Int,
+                        percent: Int,
                         lyricData: Data,
                         pitchData: Data,
-                        percent: Int,
                         lyricOffset: Int,
                         songOffsetBegin: Int,
-                        errMsg: String?)
+                        errorMsg: String?)
     func onOpenMusic(_ manager: MccManagerEx)
+    func onLyricResult(url: String)
     func onMccExScoreStart(_ manager: MccManagerEx)
-    func onPitch(_ songCode: Int, data: AgoraRawScoreDataEx)
-    func onLineScore(_ songCode: Int, value: AgoraLineScoreDataEx)
+    func onPitch(_ manager: MccManagerEx, rawScoreData: AgoraRawScoreData)
+    func onLineScore(_ songCode: Int, lineScoreData: AgoraLineScoreData)
 }
 
 class MccManagerEx: NSObject {
-    fileprivate let logTag = "MCCManagerEx"
+    fileprivate let logTag = "MccManagerEx"
     private var agoraKit: AgoraRtcEngineKit!
-    private var mpkEx: AgoraMusicPlayerProtocolEx!
-    weak var delegate: MccManagerDelegateEx?
-    var mccEx: AgoraMusicContentCenterEx!
-    private var playMode: AgoraMusicPlayModeEx = .accompany
+    private var mpk: AgoraMusicPlayerProtocol!
+    weak var delegate: MccManagerExDelegate?
+    var mcc: AgoraMusicContentCenter!
+    fileprivate var songId: Int = 0
+    fileprivate var isPause = false
+    /// 1是原唱，0是伴奏，默认1
+    fileprivate var audioTrackIndex: Int32 = 0
+    private var lastPitchTime: CFAbsoluteTime = 0
+    
+    /// only for test
+    private var enableLogPitchTime = false
+    /// only for test
+    private var enableAudioDump = false
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
-        agoraKit?.disableAudio()
-        mccEx?.stopScore()
-        mccEx?.destroyMusicPlayer(mpkEx)
-        AgoraMusicContentCenterEx.destroy()
-        AgoraRtcEngineKit.destroy()
+        agoraKit.disableAudio()
+        mpk.stop()
+        mcc.register(nil)
+        agoraKit.leaveChannel()
+        agoraKit.destroyMediaPlayer(mpk)
     }
     
-    func initRtcEngine() {
-        Log.info(text: "initRtcEngine", tag: logTag)
+    func initEngine() {
+        Log.debug(text: "initEngine", tag: logTag)
         let config = AgoraRtcEngineConfig()
         config.appId = Config.rtcAppId
         config.audioScenario = .chorus
         config.channelProfile = .liveBroadcasting
         agoraKit = AgoraRtcEngineKit.sharedEngine(with: config, delegate: self)
+        if enableAudioDump {
+            agoraKit.setParameters("{\"rtc.debug.enable\": true}")
+            agoraKit.setParameters("{\"che.audio.apm_dump\": true}")
+        }
     }
     
     func joinChannel() { /** 目的：发布mic流、接收音频流 **/
-        Log.info(text: "joinChannel", tag: logTag)
+        Log.debug(text: "joinChannel", tag: logTag)
+        agoraKit.enableAudioVolumeIndication(50, smooth: 3, reportVad: true)
         let option = AgoraRtcChannelMediaOptions()
         option.clientRoleType = .broadcaster
         agoraKit.enableAudio()
-        agoraKit.disableVideo()
         agoraKit.setClientRole(.broadcaster)
         let ret = agoraKit.joinChannel(byToken: nil,
                                        channelId: Config.channelId,
                                        uid: Config.hostUid,
                                        mediaOptions: option)
-        Log.info(text: "joinChannel ret \(ret)", tag: logTag)
+        print("joinChannel ret \(ret)")
     }
     
     func leaveChannel() {
         agoraKit.leaveChannel()
     }
     
-    func initMccEx(pid: String, pKey: String, token: String, userId: String) {
-        Log.info(text: "initMccEx", tag: logTag)
+    var streamId: Int = 0
+    func createDataStream() {
+        let config = AgoraDataStreamConfig()
+        config.syncWithAudio = false
+        config.ordered = false
+        let ret = agoraKit.createDataStream(&streamId, config: config)
+        print("createDataStream ret \(ret)")
+    }
+    
+    func initMCC(pid: String,
+                 pKey: String,
+                 token: String,
+                 userId: String) {
+        Log.debug(text: "initMCC", tag: logTag)
+        let config = AgoraMusicContentCenterConfig()
+        config.rtcEngine = agoraKit
+        config.eventDelegate = self
+        config.scoreEventDelegate = self
+        mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
+        
         let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
-        let pid = pid
-        let pKey = pKey
-        let token = token
-        let userId = userId
-        let vendorConfig = AgoraYSDVendorConfigure(appId: pid,
-                                                   appKey: pKey,
-                                                   token: token,
-                                                   userId: userId,
-                                                   deviceId: deviceId,
-                                                   urlTokenExpireTime: 15*60,
-                                                   chargeMode: .once)
-        let config = AgoraMusicContentCenterExConfiguration.init(rtcEngine: agoraKit,
-                                                                 vendorConfigure: vendorConfig,
-                                                                 enableLog: true,
-                                                                 enableSaveLogToFile: true,
-                                                                 logFilePath: "",
-                                                                 maxCacheSize: 50,
-                                                                 eventDelegate: self,
-                                                                 scoreEventDelegate: self,
-                                                                 audioFrameDelegate: nil)
-        mccEx = AgoraMusicContentCenterEx.sharedInstance()
-        mccEx?.initialize(config)
-        mccEx.setScoreLevel(.level1)
+        let dict = ["appId" : pid,
+                    "appKey": pKey,
+                    "token": token,
+                    "userId": userId,
+                    "deviceId": deviceId,
+                    "urlTokenExpireTime": 15*60,
+                    "chargeMode": 2] as [String : Any]
+        let jsonData = try? JSONSerialization.data(withJSONObject: dict, options: [])
+        let jsonStr = String(data: jsonData!, encoding: .utf8)!
+        mcc.addVendor(vendorId: .vendor2, jsonVendorConfig: jsonStr)
+        
+        mpk = mcc.createMusicPlayer(delegate: self)
     }
     
-    func createMusicPlayer() {
-        Log.info(text: "createMusicPlayer", tag: logTag)
-        mpkEx = mccEx.createMusicPlayer(with: self)
-        if mpkEx == nil {
-            Log.errorText(text: "mpk is nil", tag: logTag)
-            fatalError()
-        }
+    func preload(songCode: String) {
+        Log.info(text: "preload songCode:\(songCode)", tag: logTag)
+        
+        let internalSongCode = mcc.getInternalSongCode(vendorId: .vendor2, songCode: songCode, jsonOption: nil)
+        Log.info(text: "internalSongCode:\(internalSongCode)", tag: logTag)
+        
+        let _ = mcc.preload(internalSongCode: internalSongCode)
+        self.songId = internalSongCode
     }
     
-    func preload(songId: Int) {
-        Log.info(text: "preload \(songId)", tag: logTag)
-        let ret = mccEx.preload(songId)
-        if ret == nil {
-            Log.errorText(text: "preload error", tag: logTag)
-        }
-        else {
-            Log.info(text: "preload invoke success", tag: logTag)
-        }
+    func getLrc(songCode: Int, lyricType: AgoraMusicContentCenter.LyricFileType) {
+        let requestId = mcc.getLyric(internalSongCode: songCode, lyricType: lyricType.rawValue)
+        Log.debug(text: "mccGetLrc requestId:\(requestId)", tag: logTag)
     }
     
-    func getInternalSongCode(songId: Int) -> Int {
-        guard let mcc = mccEx else { return 0 }
-        let musicId = "\(songId)"
-        let jsonOption = "{\"format\":{\"highPart\":0}}"
-        let songCode = mcc.getInternalSongCode(musicId, jsonOption: jsonOption)
-        Log.info(text: "getInternalSongCode songId:\(songId) -> \(songCode)", tag: logTag)
-        return songCode
-    }
-    
-    func open(songId: Int) {
-        let ret = mpkEx.openMedia(songCode: songId, startPos: 0)
+    func openMusic() {
+        let ret = mpk.openMedia(songCode: songId, startPos: 0)
         if ret != 0 {
             Log.errorText(text: "openMedia error \(ret)", tag: logTag)
             return
         }
-        Log.info(text: "open success", tag: logTag)
+        Log.info(text: "openMedia success")
+    }
+    
+    func startScore() {
+        let ret = mcc.startScore(internalSongCode: songId)
+        if ret != 0 {
+            Log.errorText(text: "startScore error \(ret)", tag: logTag)
+            return
+        }
+        Log.info(text: "startScore success", tag: logTag)
+    }
+    
+    func pauseScore() {
+        mcc.stopScore()
+    }
+    
+    func resumeScore() {
+        let ret = mcc.resumeScore()
+        if ret != 0 {
+            Log.errorText(text: "resumeScore error \(ret)", tag: logTag)
+            return
+        }
+        Log.info(text: "resumeScore success", tag: logTag)
     }
     
     func playMusic() {
-        let ret = mpkEx.play()
+        let ret = mpk.play()
         if ret != 0 {
-            Log.errorText(text: "playMusic error \(ret)", tag: logTag)
+            Log.errorText(text: "play error \(ret)", tag: logTag)
+            return
         }
-        else {
-            Log.info(text: "playMusic success", tag: logTag)
-        }
+        isPause = false
+        Log.info(text: "play success", tag: logTag)
     }
     
     func pauseMusic() {
-        let ret = mpkEx.pause()
+        let ret = mpk.pause()
         if ret != 0 {
             Log.errorText(text: "pauseMusic error \(ret)", tag: logTag)
         }
         else {
+            isPause = true
             Log.info(text: "pauseMusic success", tag: logTag)
         }
     }
     
     func resumeMusic() {
-        let ret = mpkEx.resume()
+        let ret = mpk.resume()
         if ret != 0 {
             Log.errorText(text: "resumeMusic error \(ret)", tag: logTag)
         }
         else {
             Log.info(text: "resumeMusic success", tag: logTag)
         }
+        isPause = false
     }
     
     func stopMusic() {
-        let ret = mpkEx.stop()
+        let ret = mpk.stop()
         if ret != 0 {
             Log.errorText(text: "stop error \(ret)", tag: logTag)
         }
@@ -173,204 +202,211 @@ class MccManagerEx: NSObject {
             Log.info(text: "stop success", tag: logTag)
         }
     }
-    /// 跳过前奏
+    
     func seek(position: UInt) {
         Log.info(text: "seek \(Int(position))", tag: logTag)
-        mpkEx.seek(toPosition: Int(position))
+        mpk.seek(toPosition: Int(position))
     }
     
-    func startScore(songId: Int) {
-        let ret = mccEx.startScore(songId)
-        if ret != 0 {
-            Log.errorText(text: "startScore error \(ret)", tag: logTag)
-        }
-        else {
-            Log.info(text: "startScore success", tag: logTag)
-        }
-    }
-    
-    func pauseScore() {
-        mccEx.pauseScore()
-        Log.info(text: "pauseScore success", tag: logTag)
-    }
-    
-    func resumeScore() {
-        mccEx.resumeScore()
-        Log.info(text: "resumeScore success", tag: logTag)
-    }
-    
-    func setScoreLevel(level: AgoraYSDScoreHardLevel) {
-        mccEx.setScoreLevel(level)
-        Log.info(text: "setScoreLevel \(level.rawValue)", tag: logTag)
+    func getCumulativeScoreData() -> AgoraCumulativeScoreData {
+        return mcc.getCumulativeScoreData()
     }
     
     func getMPKCurrentPosition() -> Int {
-        return mpkEx.getPosition()
+        return mpk.getPosition()
     }
     
     func resversePlayMode() {
-        let mode: AgoraMusicPlayModeEx = playMode == .accompany ? .original : .accompany
-        
-        let ret = mpkEx.setPlayMode(mode: mode)
-        if ret != 0 {
-            Log.errorText(text: "setPlayMode error \(ret)", tag: logTag)
+        let index: Int32 = audioTrackIndex == 1 ? 0 : 1
+        let ret = mpk.selectAudioTrack(index)
+        if ret == 0 {
+            audioTrackIndex = index
+            let text = index == 1 ? "原唱" : "伴唱"
+            Log.info(text: "原唱伴奏切换：\(text)", tag: logTag)
         }
         else {
-            Log.info(text: "setPlayMode \(mode == .original ? "original" : "accompany") success", tag: logTag)
-            playMode = mode
+            Log.errorText(text: "selectAudioTrack error \(ret)", tag: logTag)
+        }
+    }
+}
+
+extension MccManagerEx {
+    private func logPitchTime(pitch: CFAbsoluteTime) {
+        let currentTime = CFAbsoluteTimeGetCurrent()
+        let gap = currentTime - lastPitchTime
+        lastPitchTime = currentTime
+        if gap > 50 {
+            Log.errorText(text: "gap:[\(gap.keep3)] \(pitch)")
         }
     }
 }
 
 extension MccManagerEx: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit,
-                   didOccurError errorCode: AgoraErrorCode) {
-        Log.debug(text: "didOccurError \(errorCode)", tag: self.logTag)
-    }
-    
-    func rtcEngine(_ engine: AgoraRtcEngineKit,
-                   didJoinedOfUid uid: UInt,
-                   elapsed: Int) {
-        Log.debug(text: "didJoinedOfUid \(uid)", tag: self.logTag)
-    }
-    
-    func rtcEngine(_ engine: AgoraRtcEngineKit,
                    didJoinChannel channel: String,
                    withUid uid: UInt,
                    elapsed: Int) {
-        Log.debug(text: "didJoinChannel withUid \(uid)", tag: self.logTag)
+        Log.info(text: "didJoinChannel \(uid)", tag: logTag)
+    }
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didOccurError errorCode: AgoraErrorCode) {
+        Log.errorText(text:"didOccurError \(errorCode)", tag: logTag)
+    }
+    
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
+        Log.info(text: "didJoinedOfUid \(uid)", tag: logTag)
+        createDataStream()
     }
 }
 
-// MARK: - AgoraMusicContentCenterEventDelegate
 extension MccManagerEx: AgoraMusicContentCenterEventDelegate {
-    func onMusicChartsResult(_ requestId: String,
-                             result: [AgoraMusicChartInfo],
-                             errorCode: AgoraMusicContentCenterStatusCode) {
-        
-    }
-    
-    func onMusicCollectionResult(_ requestId: String,
-                                 result: AgoraMusicCollection,
-                                 errorCode: AgoraMusicContentCenterStatusCode) {
-        
-    }
-    
-    func onLyricResult(_ requestId: String,
-                       songCode: Int,
-                       lyricUrl: String?,
-                       errorCode: AgoraMusicContentCenterStatusCode) {
-        
-    }
-    
-    func onSongSimpleInfoResult(_ requestId: String,
-                                songCode: Int,
-                                simpleInfo: String?,
-                                errorCode: AgoraMusicContentCenterStatusCode) {
-        
-    }
-    
-    func onPreLoadEvent(_ requestId: String,
-                        songCode: Int,
-                        percent: Int,
-                        lyricUrl: String?,
-                        status: AgoraMusicContentCenterPreloadStatus,
-                        errorCode: AgoraMusicContentCenterStatusCode) {
-        
-    }
-}
-
-// MARK: - AgoraMusicContentCenterExEventDelegate
-extension MccManagerEx: AgoraMusicContentCenterExEventDelegate {
-    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricPath: String?, pitchPath: String?, songOffsetBegin: Int, songOffsetEnd: Int, lyricOffset: Int, state: AgoraMusicContentCenterExState, reason: AgoraMusicContentCenterExStateReason) {
-        Log.info(text: "[MccEx]: onPreLoadEvent: \(requestId) songCode: \(songCode) percent: \(percent) lyricPath: \(lyricPath ?? "") pitchPath: \(pitchPath ?? "") state: \(state.rawValue) state: \(state.rawValue)", tag: self.logTag)
-        
-        if state == .preloading {
-            Log.debug(text: "preloading \(percent)", tag: logTag)
-        }
-        if state == .preloadOK {
-            Log.info(text: "preload success", tag: logTag)
-            guard let lyricPath = lyricPath else {
-                Log.errorText(text: "lyricPath is nil", tag: logTag)
-                return
-            }
-            
-            guard let pitchPath = pitchPath else {
-                Log.errorText(text: "pitchPath is nil", tag: logTag)
-                return
-            }
-            
-            let lyricData = try! Data(contentsOf: URL(fileURLWithPath: lyricPath))
-            let pitchData = try! Data(contentsOf: URL(fileURLWithPath: pitchPath))
-            let errMsg = state != .preloadOK ? "preload state:\(state.rawValue) error:\(reason.rawValue)" : nil
-            delegate?.onPreloadMusic(self,
-                                     songId: songCode,
-                                     lyricData: lyricData,
-                                     pitchData: pitchData,
-                                     percent: percent,
-                                     lyricOffset: lyricOffset,
-                                     songOffsetBegin: songOffsetBegin,
-                                     errMsg: errMsg)
-        }
-    }
-    
-    func onLyricResult(_ requestId: String, songCode: Int, lyricPath: String?, songOffsetBegin: Int, songOffsetEnd: Int, lyricOffset: Int, reason: AgoraMusicContentCenterExStateReason) {
-        Log.info(text: "[MccEx]: onLyricResult: \(requestId) songCode: \(songCode) lyricPath: \(lyricPath ?? "") reason: \(reason.rawValue)", tag: self.logTag)
-    }
-    
-    func onInitializeResult(_ state: AgoraMusicContentCenterExState,
-                            reason: AgoraMusicContentCenterExStateReason) {
-        Log.info(text: "[MccEx]: onInitializeResult: \(state.rawValue) reason: \(reason.rawValue)", tag: self.logTag)
-        if state == .initialized, reason == .OK {
-            delegate?.onMccExInitialize(self)
-        }
-    }
-    
-    func onStartScoreResult(_ songCode: Int, state: AgoraMusicContentCenterExState, reason: AgoraMusicContentCenterExStateReason) {
-        Log.info(text: "[MccEx]: onStartScoreResult: \(songCode) state: \(state.description) reason: \(reason.description)", tag: self.logTag)
+    func onStartScoreResult(_ internalSongCode: Int,
+                            state: AgoraMusicContentCenterState,
+                            errorCode: AgoraMusicContentCenterStatusCode) {
         delegate?.onMccExScoreStart(self)
     }
     
-    func onPitchResult(_ requestId: String,
-                       songCode: Int,
-                       pitchPath: String?,
-                       songOffsetBegin offsetBegin: Int,
-                       songOffsetEnd offsetEnd: Int,
-                       reason: AgoraMusicContentCenterExStateReason) {}
-}
-
-extension MccManagerEx: AgoraMusicContentCenterExScoreEventDelegate {
-    func onPitch(_ songCode: Int, data: AgoraRawScoreDataEx) {
-        Log.info(text: "[MccEx]: onPitch: \(songCode) progressInMs: \(data.progressInMs) speakerPitch: \(data.speakerPitch) pitchScore: \(data.pitchScore)", tag: self.logTag)
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                return
+    func onPreLoadEvent(_ requestId: String,
+                        internalSongCode: Int,
+                        percent: Int,
+                        payload: String?,
+                        state: AgoraMusicContentCenterState,
+                        errorCode: AgoraMusicContentCenterStatusCode) {
+        Log.debug(text: "onPreLoadEvent requestId:\(requestId) internalSongCode:\(internalSongCode) status:\(state) percent:\(percent) payload:\(payload ?? "nil") errorCode:\(errorCode)", tag: logTag)
+        
+        if state == .preloadOK, let jsonString = payload {
+            Log.info(text: "preload ok", tag: logTag)
+            if let jsonData = jsonString.data(using: .utf8) {
+                do {
+                    let dict = try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as! [String: Any]
+                    if let lyricPath = dict["lyricPath"] as? String,
+                       let pitchPath = dict["pitchPath"] as? String,
+                       let songOffsetBegin = dict["songOffsetBegin"] as? Int,
+                       let lyricOffset = dict["lyricOffset"] as? Int,
+                       let songOffsetEnd = dict["songOffsetEnd"] as? Int {
+                        Log.debug(text: "lyricPath:\(lyricPath) pitchPath:\(pitchPath) songOffsetBegin:\(songOffsetBegin) lyricOffset:\(lyricOffset) songOffsetEnd:\(songOffsetEnd)", tag: logTag)
+                        
+                        let lyricData = try Data(contentsOf: URL(fileURLWithPath: lyricPath))
+                        let pitchData = try Data(contentsOf: URL(fileURLWithPath: pitchPath))
+                        delegate?.onPreloadMusic(self,
+                                                 songId: internalSongCode,
+                                                 percent: percent,
+                                                 lyricData: lyricData,
+                                                 pitchData: pitchData,
+                                                 lyricOffset: lyricOffset,
+                                                 songOffsetBegin: songOffsetBegin,
+                                                 errorMsg: nil)
+                    }
+                }
+                catch {
+                    Log.errorText(text: "payload json解析失败", tag: logTag)
+                }
             }
-            delegate?.onPitch(songCode, data: data)
+        }
+        
+        if state == .preloadFailed {
+            Log.errorText(text: "onPreLoadEvent percent:\(percent) status:\(state.rawValue) lyricUrl:\(payload ?? "null")", tag: logTag)
+            if errorCode == .errorPermissionAndResource {
+                Log.errorText(text: "歌曲下架")
+            }
+            delegate?.onPreloadMusic(self,
+                                     songId: internalSongCode,
+                                     percent: 0,
+                                     lyricData: Data(),
+                                     pitchData: Data(),
+                                     lyricOffset: 0,
+                                     songOffsetBegin: 0,
+                                     errorMsg: "preload error")
         }
     }
     
-    func onLineScore(_ songCode: Int, value: AgoraLineScoreDataEx) {
-        Log.info(text: "[MccEx>>>>]: onLineScore: \(songCode) progressInMs: \(value.progressInMs) performedLineIndex: \(value.performedLineIndex) linePitchScore:\(value.linePitchScore) performedTotalLines: \(value.performedTotalLines) cumulativeTotalLinePitchScores: \(value.cumulativeTotalLinePitchScores)", tag: self.logTag)
+    func onMusicChartsResult(_ requestId: String,
+                             result: [AgoraMusicChartInfo],
+                             errorCode: AgoraMusicContentCenterStatusCode) {}
+    func onMusicCollectionResult(_ requestId: String,
+                                 result: AgoraMusicCollection,
+                                 errorCode: AgoraMusicContentCenterStatusCode) {}
+    func onSongSimpleInfoResult(_ requestId: String,
+                                songCode: Int,
+                                simpleInfo: String?,
+                                errorCode: AgoraMusicContentCenterStatusCode) {}
+    func onLyricResult(_ requestId: String,
+                       internalSongCode: Int,
+                       payload: String?,
+                       errorCode: AgoraMusicContentCenterStatusCode) {
+        Log.info(text: "onLyricResult requestId:\(requestId) internalSongCode:\(internalSongCode) payload:\(payload ?? "null") errorCode:\(errorCode)", tag: logTag)
+        if errorCode == .OK, let jsonString = payload {
+            if let jsonData = jsonString.data(using: .utf8) {
+                do {
+                    let dict = try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as! [String: Any]
+                    if let lyricUrl = dict["lyricUrl"] as? String {
+                        Log.debug(text: "lyricUrl:\(lyricUrl)", tag: logTag)
+                        delegate?.onLyricResult(url: lyricUrl)
+                    }
+                }
+                catch {
+                    Log.errorText(text: "payload json解析失败", tag: logTag)
+                }
+            }
+        }
+    }
+}
+
+extension MccManagerEx: AgoraMusicContentCenterScoreEventDelegate {
+    func onPitch(_ songCode: Int, rawScoreData: AgoraRawScoreData) {
+//        Log.debug(text: "onPitch:\(rawScoreData.speakerPitch)", tag: logTag)
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
                 return
             }
-            delegate?.onLineScore(songCode, value: value)
+            self.delegate?.onPitch(self, rawScoreData: rawScoreData)
+        }
+    }
+    
+    func onLineScore(_ songCode: Int, lineScoreData: AgoraLineScoreData) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.delegate?.onLineScore(songCode, lineScoreData: lineScoreData)
         }
     }
 }
 
 extension MccManagerEx: AgoraRtcMediaPlayerDelegate {
-    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol,
-                             didChangedTo state: AgoraMediaPlayerState,
-                             error: AgoraMediaPlayerError) {
+    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
         if state == .openCompleted {
             Log.info(text: "openCompleted", tag: logTag)
             delegate?.onOpenMusic(self)
         }
     }
     
-    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol,
-                             didChangedTo position: Int) {}
+    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo position: Int) {}
+}
+
+extension MccManagerEx {
+    func invokeOnPreloadMusic(_ manager: MccManagerEx, songId: Int, percent: Int, lyricData: Data, pitchData: Data, lyricOffset: Int, songOffsetBegin: Int, errorMsg: String?) {
+        if Thread.isMainThread {
+            self.delegate?.onPreloadMusic(manager,
+                                          songId: songId,
+                                          percent: percent,
+                                          lyricData: lyricData,
+                                          pitchData: pitchData,
+                                          lyricOffset: lyricOffset,
+                                          songOffsetBegin: songOffsetBegin,
+                                          errorMsg: errorMsg)
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.delegate?.onPreloadMusic(manager,
+                                          songId: songId,
+                                          percent: percent,
+                                          lyricData: lyricData,
+                                          pitchData: pitchData,
+                                          lyricOffset: lyricOffset,
+                                          songOffsetBegin: songOffsetBegin,
+                                          errorMsg: errorMsg)
+        }
+    }
 }

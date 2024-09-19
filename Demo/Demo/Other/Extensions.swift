@@ -6,7 +6,6 @@
 //
 
 import AgoraRtcKit
-import AgoraMccExService
 
 extension Double {
     var keep3: Double {
@@ -25,84 +24,92 @@ extension AgoraMusicContentCenter {
     }
 }
 
-extension AgoraMusicContentCenterPreloadStatus: CustomStringConvertible {
+extension AgoraMusicContentCenterState: CustomStringConvertible {
     public var description: String {
         switch self {
-        case .OK:
+        case .preloadOK:
             return "OK"
-        case .error:
+        case .preloadFailed:
             return "error"
         case .preloading:
             return "preloading"
-        case .removeCache:
-            return "removeCache"
-        @unknown default:
-            fatalError()
-        }
-    }
-}
-
-extension AgoraMusicContentCenterExState: CustomStringConvertible {
-    public var description: String {
-        switch self {
+        case .preloadRemoved:
+            return "preloadRemoved"
         case .initialized:
             return "initialized"
         case .initializeFailed:
             return "initializeFailed"
-        case .preloadOK:
-            return "preloadOK"
-        case .preloadError:
-            return "preloadError"
-        case .preloading:
-            return "preloading"
-        case .preloadRemoveCache:
-            return "preloadRemoveCache"
         case .startScoreCompleted:
             return "startScoreCompleted"
         case .startScoreFailed:
             return "startScoreFailed"
         @unknown default:
-            fatalError()
+            return "AgoraMusicContentCenterState unknown: \(rawValue)"
         }
     }
 }
 
-extension AgoraMusicContentCenterExStateReason: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .OK:
-            return "OK"
-        case .error:
-            return "error"
-        case .errorInvalidSignature:
-            return "errorInvalidSignature"
-        case .errorHttpInternalError:
-            return "errorHttpInternalError"
-        case .ysdErrorLyricError:
-            return "ysdErrorLyricError"
-        case .ysdErrorPtsError:
-            return "ysdErrorPtsError"
-        case .ysdErrorParamError:
-            return "ysdErrorParamError"
-        case .ysdErrorTokenError:
-            return "ysdErrorTokenError"
-        case .ysdErrorPitchError:
-            return "ysdErrorPitchError"
-        case .ysdErrorNetworkError:
-            return "ysdErrorNetworkError"
-        case .ysdErrorRequestError:
-            return "ysdErrorRequestError"
-        case .ysdErrorPrivilegeError:
-            return "ysdErrorPrivilegeError"
-        case .ysdErrorNoActivateError:
-            return "ysdErrorNoActivateError"
-        case .ysdErrorRepeatRequestError:
-            return "ysdErrorRepeatRequestError"
-        @unknown default:
-            fatalError()
-        }
-    }
-}
+//extension AgoraMusicContentCenterExState: CustomStringConvertible {
+//    public var description: String {
+//        switch self {
+//        case .initialized:
+//            return "initialized"
+//        case .initializeFailed:
+//            return "initializeFailed"
+//        case .preloadOK:
+//            return "preloadOK"
+//        case .preloadError:
+//            return "preloadError"
+//        case .preloading:
+//            return "preloading"
+//        case .preloadRemoveCache:
+//            return "preloadRemoveCache"
+//        case .startScoreCompleted:
+//            return "startScoreCompleted"
+//        case .startScoreFailed:
+//            return "startScoreFailed"
+//        @unknown default:
+//            fatalError()
+//        }
+//    }
+//}
+//
+//extension AgoraMusicContentCenterExStateReason: CustomStringConvertible {
+//    public var description: String {
+//        switch self {
+//        case .OK:
+//            return "OK"
+//        case .error:
+//            return "error"
+//        case .errorInvalidSignature:
+//            return "errorInvalidSignature"
+//        case .errorHttpInternalError:
+//            return "errorHttpInternalError"
+//        case .ysdErrorLyricError:
+//            return "ysdErrorLyricError"
+//        case .ysdErrorPtsError:
+//            return "ysdErrorPtsError"
+//        case .ysdErrorParamError:
+//            return "ysdErrorParamError"
+//        case .ysdErrorTokenError:
+//            return "ysdErrorTokenError"
+//        case .ysdErrorPitchError:
+//            return "ysdErrorPitchError"
+//        case .ysdErrorNetworkError:
+//            return "ysdErrorNetworkError"
+//        case .ysdErrorRequestError:
+//            return "ysdErrorRequestError"
+//        case .ysdErrorPrivilegeError:
+//            return "ysdErrorPrivilegeError"
+//        case .ysdErrorNoActivateError:
+//            return "ysdErrorNoActivateError"
+//        case .ysdErrorRepeatRequestError:
+//            return "ysdErrorRepeatRequestError"
+//        @unknown default:
+//            fatalError()
+//        }
+//    }
+//}
 
 extension AgoraMusicContentCenterStatusCode: CustomStringConvertible {
     public var description: String {

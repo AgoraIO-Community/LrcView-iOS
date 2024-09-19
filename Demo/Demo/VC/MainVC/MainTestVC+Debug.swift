@@ -1,31 +1,31 @@
 //
-//  MainTestVCEx+Debug.swift
+//  MainTestVC+Debug.swift
 //  Demo
 //
-//  Created by ZYP on 2024/5/13.
+//  Created by ZYP on 2024/9/24.
 //
 
 import Foundation
 
-extension MainTestVCEx { /** for debug **/
+extension MainTestVC { /** for debug **/
     static var lastProgressInMs: UInt = 0
     static var lastPitchTime: CFAbsoluteTime = 0
     
     func updateLastProgressInMs_debug(progressInMs: UInt) {
-        MainTestVCEx.lastProgressInMs = progressInMs
+        MainTestVC.lastProgressInMs = progressInMs
     }
     
     func calculateProgressGap_debug(progressInMs: UInt) -> Int {
-        let progressGap = Int(progressInMs) - Int(MainTestVCEx.lastProgressInMs)
-        MainTestVCEx.lastProgressInMs = progressInMs
+        let progressGap = Int(progressInMs) - Int(MainTestVC.lastProgressInMs)
+        MainTestVC.lastProgressInMs = progressInMs
         return progressGap
     }
     
     /// 打印onPitch回调间隔
     func logOnPitchInvokeGap_debug() {
         let startTime = CFAbsoluteTimeGetCurrent()
-        let gap = startTime - MainTestVCEx.lastPitchTime
-        MainTestVCEx.lastPitchTime = startTime
+        let gap = startTime - MainTestVC.lastPitchTime
+        MainTestVC.lastPitchTime = startTime
         if (gap > 0.1) {
             Log.warning(text: "OnPitch invoke gap \(gap)", tag: self.logTag)
         }

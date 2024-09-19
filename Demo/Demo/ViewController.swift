@@ -99,26 +99,26 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         if indexPath.section == 1 { /** 场景测试 **/
             if indexPath.row == 0 { /** 观众端 **/
-                let vc = AudienceVC()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = AudienceVC()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
             
             if indexPath.row == 1 { /** 主播端 **/
-                let vc = HostVC()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = HostVC()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
             
             if indexPath.row == 2 { /** 抢唱 **/
-                let vc = QiangChangVC()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = QiangChangVC()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
             
             if indexPath.row == 3 { /** mini size 小视图 **/
-                let vc = MiniSizeVC()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = MiniSizeVC()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
         }
@@ -137,8 +137,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             if indexPath.row == 2 { /** 歌词显示 **/
-                let vc = LyricsTestVC()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = LyricsTestVC()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
 
@@ -173,8 +173,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             if indexPath.row == 8 { /** oc测试 **/
-                let vc = OCVC()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = OCVC()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
             
@@ -193,8 +193,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         if indexPath.section == 3 {
             if indexPath.row == 0 {
-                let vc = SelectedLyricVC()
-                navigationController?.pushViewController(vc, animated: true)
+//                let vc = SelectedLyricVC()
+//                navigationController?.pushViewController(vc, animated: true)
                 return
             }
         }

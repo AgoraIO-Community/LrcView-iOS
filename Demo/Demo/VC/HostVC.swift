@@ -63,14 +63,14 @@ class HostVC: UIViewController {
     }
     
     func initMCC() {
-        let config = AgoraMusicContentCenterConfig()
-        config.rtcEngine = agoraKit
-        config.mccUid = Config.mccUid
-        config.token = token
-        config.appId = Config.mccAppId
-        mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
-        mcc.register(self)
-        mpk = mcc.createMusicPlayer(delegate: self)
+//        let config = AgoraMusicContentCenterConfig()
+//        config.rtcEngine = agoraKit
+//        config.mccUid = Config.mccUid
+//        config.token = token
+//        config.appId = Config.mccAppId
+//        mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
+//        mcc.register(self)
+//        mpk = mcc.createMusicPlayer(delegate: self)
     }
     
     func joinChannel() {
@@ -147,7 +147,7 @@ class HostVC: UIViewController {
     }
     
     func mccGetLrc() {
-        let requestId = mcc.getLyric(songCode: song.code, lyricType: song.isXML ? 0 : 1)
+        let requestId = mcc.getLyric(internalSongCode: song.code, lyricType: song.isXML ? 0 : 1)
         print("== mccGetLrc requestId:\(requestId)")
     }
 
@@ -196,12 +196,16 @@ extension HostVC: AgoraRtcEngineDelegate {
             let dict: [String : Any] = ["type": 1, "pitch": pitch, "packageNum" : self.packageNum]
             let data = self.createData(dic: dict)
             sendData(data: data)
-            ktvView.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
+            ktvView.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0, score: 0)
         }
     }
 }
 
 extension HostVC: AgoraMusicContentCenterEventDelegate {
+    func onStartScoreResult(_ internalSongCode: Int, state: AgoraMusicContentCenterState, errorCode: AgoraMusicContentCenterStatusCode) {
+        
+    }
+    
     func onMusicChartsResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: [AgoraMusicChartInfo]) {
         
     }
@@ -214,7 +218,7 @@ extension HostVC: AgoraMusicContentCenterEventDelegate {
         
     }
     
-    func onPreLoadEvent(_ songCode: Int, percent: Int, status: AgoraMusicContentCenterPreloadStatus, msg: String, lyricUrl: String) {
+    func onPreLoadEvent(_ songCode: Int, percent: Int, status: AgoraMusicContentCenterState, msg: String, lyricUrl: String) {
         
     }
     
@@ -226,7 +230,7 @@ extension HostVC: AgoraMusicContentCenterEventDelegate {
         
     }
     
-    func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onLyricResult(_ requestId: String, internalSongCode songCode: Int, payload lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
         guard let lyricUrl = lyricUrl else {
             return
         }
@@ -250,7 +254,7 @@ extension HostVC: AgoraMusicContentCenterEventDelegate {
         
     }
     
-    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, status: AgoraMusicContentCenterPreloadStatus, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onPreLoadEvent(_ requestId: String, internalSongCode: Int, percent: Int, payload: String?, state: AgoraMusicContentCenterState, errorCode: AgoraMusicContentCenterStatusCode) {
         print("== onPreLoadEvent \(status.rawValue) ")
         if status == .OK { /** preload 成功 **/
             print("== preload ok")
@@ -258,7 +262,7 @@ extension HostVC: AgoraMusicContentCenterEventDelegate {
         }
         
         if status == .error {
-            print("onPreLoadEvent percent:\(percent) status:\(status.rawValue) lyricUrl:\(lyricUrl)")
+            print("onPreLoadEvent percent:\(percent) status:\(status.rawValue) lyricUrl:\(lyricUrl ?? "nil")")
         }
     }
 }

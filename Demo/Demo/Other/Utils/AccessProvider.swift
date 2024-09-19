@@ -13,8 +13,7 @@ class AccessProvider {
     static var userId: String?
     static var token: String?
     
-    static func fetchAccessData(completed: @escaping AccessBlock) {
-        let url = ""
+    static func fetchAccessData(url: String, completed: @escaping AccessBlock) {
         let session = URLSession.shared
         let task = session.dataTask(with: URL(string: url)!) { (data, response, error) in
             

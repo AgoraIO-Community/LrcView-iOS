@@ -138,7 +138,6 @@ extension KaraokeView {
     @objc public func setPitch(speakerPitch: Double, progressInMs: UInt, score: UInt) {
         guard scoringEnabled else { return }
         let pitch  = speakerPitch
-        // Log.info(text: "Pitch:\(pitch)", tag: logTag)
         if !Thread.isMainThread {
             Log.error(error: "invoke setPitch not isMainThread ", tag: logTag)
         }

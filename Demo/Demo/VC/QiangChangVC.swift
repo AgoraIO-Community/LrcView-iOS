@@ -401,7 +401,7 @@ extension QiangChangVC: AgoraRtcEngineDelegate {
             return
         }
         if let pitch = speakers.last?.voicePitch {
-            karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
+            karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0, score: 0)
         }
     }
 }

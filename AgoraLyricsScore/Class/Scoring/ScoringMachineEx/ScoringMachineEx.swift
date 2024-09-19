@@ -178,7 +178,7 @@ class ScoringMachineEx: ScoringMachineProtocol {
                                   pitch: speakerPitch,
                                   hitedInfo: hitedInfo,
                                   progress: progressInMs)
-        Log.debug(text: "_setPitch[2] porgress:\(progressInMs) speakerPitch:\(speakerPitch)", tag: logTag)
+        Log.debug(text: "_setPitch[2] porgress:\(progressInMs) speakerPitch:\(speakerPitch) yValue:\(yValue)", tag: logTag)
         ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
                                                         didUpdateCursor: yValue,
                                                         showAnimation: showAnimation,

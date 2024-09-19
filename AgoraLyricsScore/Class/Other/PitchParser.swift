@@ -13,6 +13,7 @@ class PitchParser {
     func parse(fileContent data: Data) -> PitchModel? {
         /// 把data转成PitchParser
         guard !data.isEmpty else {
+            Log.errorText(text: "PitchParser.parse fail, data is empty", tag: logTag)
             return nil
         }
         

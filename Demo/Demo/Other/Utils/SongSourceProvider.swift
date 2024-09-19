@@ -22,7 +22,7 @@ class SongSourceProvider {
     init(sourceType: SourceType) {
         self.sourceType = sourceType
         switch sourceType {
-        case .useForMcc:
+        case .useForDefaultVendor:
             self.songs = [
                 Song(name: "十年", id: 6625526605291650),
                 Song(name: "爱情转移", id: 6246262727282860),
@@ -30,9 +30,8 @@ class SongSourceProvider {
                 Song(name: "江南", id: 6246262727300580),
                 Song(name: "容易受伤的女人", id: 6625526608670440)
             ]
-        case .useForMccEx:
-            self.songs = [Song(name: "offset test", id: 32183724),
-                          Song(name: "绿光", id: 32133593),
+        case .useForVendor2:
+            self.songs = [Song(name: "绿光", id: 32133593),
                           Song(name: "在你的身边", id: 89488966),
                           Song(name: "奢香夫人", id: 32259070),
                           Song(name: "十年", id: 40289835),
@@ -60,7 +59,9 @@ class SongSourceProvider {
 
 extension SongSourceProvider {
     enum SourceType {
-        case useForMcc
-        case useForMccEx
+        /// yjx
+        case useForDefaultVendor
+        /// ysd
+        case useForVendor2
     }
 }

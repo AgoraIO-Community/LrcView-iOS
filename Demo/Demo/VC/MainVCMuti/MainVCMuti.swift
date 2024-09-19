@@ -1,8 +1,8 @@
 //
-//  MainTestController.swift
+//  MainVCMuti.swift
 //  Demo
 //
-//  Created by ZYP on 2023/1/30.
+//  Created by ZYP on 2024/8/2.
 //
 
 import UIKit
@@ -12,27 +12,28 @@ import AgoraLyricsScore
 import ScoreEffectUI
 import SVProgressHUD
 
-extension MainTestVC {
+extension MainVCMuti {
     struct Item {
         let code: Int
         let isXML: Bool
     }
 }
 
-class MainTestVC: UIViewController {
+class MainVCMuti: UIViewController {
     let lyricsFileDownloader = LyricsFileDownloader()
     let mainView = MainView(frame: .zero)
-    let mccManager = MccManager()
-    private let songSourceProvider = SongSourceProvider(sourceType: .useForDefaultVendor)
+    let mccManager = MccManagerMuti()
+    private let songSourceProvider = SongSourceProvider(sourceType: .useForMcc)
     private let progressProvider = ProgressProvider()
     var song: Song!
+    var currentSongIndex = 0
+    private var timer = GCDTimer()
     var cumulativeScore = 0
     var lyricModel: LyricModel!
     var noLyric = false
     var isPause = false
     var lyricFileType: AgoraMusicContentCenter.LyricFileType = .xml
-    fileprivate let progressDelay: UInt = 0
-    let logTag = "MainTestVC"
+    fileprivate let logTag = "MainVCMuti"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,7 +64,7 @@ class MainTestVC: UIViewController {
         mccManager.initEngine()
         mccManager.joinChannel()
         mccManager.initMCC()
-        mccManager.preload(songCode: "\(song.id)")
+        mccManager.preload(songCode: song.id)
     }
     
     private func setLyricToView() {
@@ -94,7 +95,7 @@ class MainTestVC: UIViewController {
 }
 
 // MARK: - KaraokeDelegate, MainViewDelegate
-extension MainTestVC: KaraokeDelegate, MainViewDelegate {
+extension MainVCMuti: KaraokeDelegate, MainViewDelegate {
     func mainView(_ mainView: MainView, onAction: MainView.Action) {
         switch onAction {
         case .skip:
@@ -129,7 +130,7 @@ extension MainTestVC: KaraokeDelegate, MainViewDelegate {
             mccManager.stopMusic()
             resetView()
             song = songSourceProvider.getNextSong()
-            mccManager.preload(songCode: "\(song.id)")
+            mccManager.preload(songCode: song.id)
             break
         case .quick:
             Log.info(text: "quick", tag: self.logTag)
@@ -143,56 +144,76 @@ extension MainTestVC: KaraokeDelegate, MainViewDelegate {
     
     func onKaraokeView(view: KaraokeView, didDragTo position: UInt) {
         /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
-        progressProvider.seek(position: position + progressDelay)
+        progressProvider.seek(position: position + 250)
         mccManager.seek(position: position)
-        let cumulativeScoreData = mccManager.getCumulativeScoreData()
-        cumulativeScore = Int(cumulativeScoreData.cumulativePitchScore)
+        cumulativeScore = Int(mccManager.getCumulativeScoreData().cumulativePitchScore)
         mainView.gradeView.setScore(cumulativeScore: cumulativeScore,
                                     totalScore: lyricModel.lines.count * 100)
+    }
+    
+    func onKaraokeView(view: KaraokeView,
+                       didFinishLineWith model: LyricLineModel,
+                       score: Int,
+                       cumulativeScore: Int,
+                       lineIndex: Int,
+                       lineCount: Int) {
     }
 }
 
 // MARK: - MccManagerDelegate
-extension MainTestVC: MccManagerDelegate {
-    func onPreloadMusic(_ manager: MccManager, songId: Int, lyricsUrl: String, errorMsg: String?) {
+extension MainVCMuti: MccManagerMutiDelegate {
+    func onLyricResult(url: String) {
+        let _ = lyricsFileDownloader.download(urlString: url)
+    }
+    
+    func onJoinedChannel(_ manager: MccManagerMuti) {
+        
+    }
+    
+    func onPreloadMusic(_ manager: MccManagerMuti, songId: Int, errorMsg: String?) {
         if let msg = errorMsg {
             SVProgressHUD.showError(withStatus: "preload: \(msg)")
             return
         }
-        let _ = lyricsFileDownloader.download(urlString: lyricsUrl)
-    }
-    
-    func onLyricResult(url: String) {
         
+        manager.getLrc(songCode: songId, lyricType: lyricFileType)
     }
     
-    func onMccExScoreStart(_ manager: MccManager) {
-        
-    }
-    
-    func onOpenMusic(_ manager: MccManager) {
-        progressProvider.start()
+    func onOpenMusic(_ manager: MccManagerMuti) {
         manager.playMusic()
         manager.startScore()
+        progressProvider.start()
     }
     
-    func onPitch(_ manager: MccManager, rawScoreData: AgoraRawScoreData) {
-        // logOnPitchInvokeGap_debug()
+    func onLyricInfo(lyricInfo: AgoraLyricInfo?) {
+        if let info = lyricInfo {
+            let model = LyricModel.instanceByMccLyricInfo(info: info)
+            lyricModel = model
+            setLyricToView()
+        }
+    }
+    
+    func onPitch(rawScoreData: AgoraRawScoreData) {
+        var positionAfterDelay = rawScoreData.progressInMs
+        if rawScoreData.progressInMs > 250 {
+            positionAfterDelay = rawScoreData.progressInMs - 250
+        }
         mainView.karaokeView.setPitch(speakerPitch: Double(rawScoreData.speakerPitch),
-                                      progressInMs: rawScoreData.progressInMs,
+                                      progressInMs: positionAfterDelay,
                                       score: UInt(rawScoreData.pitchScore))
     }
     
-    func onLineScore(_ songCode: Int, lineScoreData: AgoraLineScoreData) {
+    func onLineScore(lineScoreData: AgoraLineScoreData) {
         mainView.lineScoreView.showScoreView(score: Int(lineScoreData.pitchScore))
         self.cumulativeScore = Int(lineScoreData.cumulativePitchScore)
         mainView.gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: Int(lineScoreData.totalLines) * 100)
         mainView.incentiveView.show(score: Int(lineScoreData.pitchScore))
     }
+    
 }
 
 // MARK: - LyricsFileDownloaderDelegate
-extension MainTestVC: LyricsFileDownloaderDelegate {
+extension MainVCMuti: LyricsFileDownloaderDelegate {
     func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
         if let data = fileData {
             let model = KaraokeView.parseLyricData(lyricFileData: data)!
@@ -209,7 +230,7 @@ extension MainTestVC: LyricsFileDownloaderDelegate {
 }
 
 // MARK: - ProgressProviderDelegate
-extension MainTestVC: ProgressProviderDelegate {
+extension MainVCMuti: ProgressProviderDelegate {
     func progressProviderGetPlayerPosition(_ provider: ProgressProvider) -> UInt? {
         let value = mccManager.getMPKCurrentPosition()
         if value < 0 { return nil }
@@ -218,8 +239,8 @@ extension MainTestVC: ProgressProviderDelegate {
     
     func progressProvider(_ provider: ProgressProvider, didUpdate progressInMs: UInt) {
         var positionAfterDelay = progressInMs
-        if progressInMs > progressDelay {
-            positionAfterDelay = progressInMs - progressDelay
+        if progressInMs > 250 {
+            positionAfterDelay = progressInMs - 250
         }
         mainView.karaokeView.setProgress(progress: positionAfterDelay)
     }
@@ -230,7 +251,7 @@ extension MainTestVC: ProgressProviderDelegate {
 }
 
 // MARK: - ParamSetVCDelegate
-extension MainTestVC: ParamSetVCDelegate {
+extension MainVCMuti: ParamSetVCDelegate {
     func didSetParam(param: Param, noLyric: Bool, noPitchFile: Bool) {
         self.noLyric = noLyric
         lyricFileType = param.otherConfig.lyricFileType
@@ -238,6 +259,6 @@ extension MainTestVC: ParamSetVCDelegate {
         progressProvider.stop()
         resetView()
         mainView.updateView(param: param)
-        mccManager.preload(songCode: "\(song.id)")
+        mccManager.preload(songCode: song.id)
     }
 }

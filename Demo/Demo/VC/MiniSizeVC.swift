@@ -407,7 +407,7 @@ extension MiniSizeVC: AgoraRtcEngineDelegate {
         }
         if let pitch = speakers.last?.voicePitch {
             DispatchQueue.main.async { [weak self] in
-                self?.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0)
+                self?.karaokeView.setPitch(speakerPitch: pitch, progressInMs: 0, score: 0)
             }
         }
     }

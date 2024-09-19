@@ -8,33 +8,27 @@
 import UIKit
 import AgoraLyricsScore
 import AgoraRtcKit
-import AgoraMccExService
 import SVProgressHUD
 
 class MainTestVCEx: UIViewController {
-    /// 主视图
     private let mainView = MainView()
-    /// MusicContentConter 管理实例
     private let mccManager = MccManagerEx()
+    /// 用于记录每行的得分（拖拽歌词用到）
     fileprivate let lineScoreRecorder = LineScoreRecorder()
     /// 进度进度校准和进度提供者
     private let progressProvider = ProgressProvider()
+    private let songSourceProvider = SongSourceProvider(sourceType: .useForVendor2)
     private var songId: Int?
     private var songIds = [Int]()
-    private let songSourceProvider = SongSourceProvider(sourceType: .useForMccEx)
-    var lyricModel: LyricModel!
+    fileprivate var lyricModel: LyricModel!
     let logTag = "MainTestVCEx"
     fileprivate var isSeeking = false
     fileprivate var canUseParamsSet = false
     fileprivate var noLyric = false
     fileprivate var noPitchFile = false
-    /// 是否暂停
     var isPause = false
     var totalScore: UInt = 0
     var songOffsetBegin: Int = 0
-    /// 七里香 972295
-    /// 明月几时有：239038150
-    /// 十年 40289835
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
@@ -51,12 +45,13 @@ class MainTestVCEx: UIViewController {
         commonInit()
         
         if let token = Config.token, let userId = Config.userId {
-            mccManager.initRtcEngine()
+            mccManager.initEngine()
             mccManager.joinChannel()
-            mccManager.initMccEx(pid: Config.pid,
+            mccManager.initMCC(pid: Config.pid,
                                  pKey: Config.pKey,
                                  token: token,
                                  userId: userId)
+            mccManager.preload(songCode: "\(songIds.first!)")
         }
         else {
             AccessProvider.fetchAccessData { [weak self](userId, token, errorMsg) in
@@ -66,14 +61,16 @@ class MainTestVCEx: UIViewController {
                     showAlertVC()
                     return
                 }
-                mccManager.initRtcEngine()
+                mccManager.initEngine()
                 mccManager.joinChannel()
-                self.mccManager.initMccEx(pid: Config.pid,
-                                          pKey: Config.pKey,
-                                          token: token,
-                                          userId: userId)
+                self.mccManager.initMCC(pid: Config.pid,
+                                        pKey: Config.pKey,
+                                        token: token,
+                                        userId: userId)
+                self.mccManager.preload(songCode: "\(self.songIds.first!)")
             }
         }
+        
     }
     
     private func setupUI() {
@@ -122,32 +119,15 @@ class MainTestVCEx: UIViewController {
 }
 
 // MARK: - RTCManagerDelegate
-extension MainTestVCEx: MccManagerDelegateEx {
-    func onMccExInitialize(_ manager: MccManagerEx) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            songIds = songIds.map({ [weak self] in
-                guard let self = self else {
-                    return $0
-                }
-                return self.mccManager.getInternalSongCode(songId: $0)
-            })
-            songId = songIds.first
-            mccManager.createMusicPlayer()
-            mccManager.preload(songId: songId!)
-        }
-    }
-    
+extension MainTestVCEx: MccManagerExDelegate {
     func onPreloadMusic(_ manager: MccManagerEx,
                         songId: Int,
+                        percent: Int,
                         lyricData: Data,
                         pitchData: Data,
-                        percent: Int,
                         lyricOffset: Int,
                         songOffsetBegin: Int,
-                        errMsg: String?) {
+                        errorMsg: String?) {
         let needPitch = !noPitchFile
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -160,16 +140,18 @@ extension MainTestVCEx: MccManagerDelegateEx {
             self.lyricModel = model
             setLyricToView()
             if !self.noLyric {
-                manager.startScore(songId: songId)
+                manager.startScore()
             }
             else {
-                manager.open(songId: songId)
+                manager.openMusic()
             }
         }
     }
     
+    func onLyricResult(url: String) {}
+    
     func onMccExScoreStart(_ manager: MccManagerEx) {
-        manager.open(songId: songId!)
+        manager.openMusic()
     }
     
     func onOpenMusic(_ manager: MccManagerEx) {
@@ -181,23 +163,23 @@ extension MainTestVCEx: MccManagerDelegateEx {
         }
     }
     
-    func onPitch(_ songCode: Int, data: AgoraRawScoreDataEx) {
+    func onPitch(_ manager: MccManagerEx, rawScoreData: AgoraRawScoreData) {
         guard !isSeeking else {
             return
         }
-        let progressGap = calculateProgressGap_debug(progressInMs: data.progressInMs)
-        var displayText = "speakerPitch:\(data.speakerPitch) \npitchScore:\(data.pitchScore) \nprogressInMs:\(data.progressInMs)"
+        let progressGap = calculateProgressGap_debug(progressInMs: rawScoreData.progressInMs)
+        var displayText = "speakerPitch:\(rawScoreData.speakerPitch) \npitchScore:\(rawScoreData.pitchScore) \nprogressInMs:\(rawScoreData.progressInMs)"
         if (progressGap > 50) {
             displayText += "\nprogressGap:\(progressGap)"
         }
         if progressGap < 0 {
             displayText += "gap < 0!!!"
         }
-
-        logOnPitchInvokeGap_debug()
-        logNInvalidSpeakPitch_debug(data: data)
         
-        if data.speakerPitch < 0 {
+        logOnPitchInvokeGap_debug()
+        logInvalidSpeakPitch_debug(speakerPitch: Int(rawScoreData.speakerPitch))
+        
+        if rawScoreData.speakerPitch < 0 {
             return
         }
         
@@ -205,24 +187,22 @@ extension MainTestVCEx: MccManagerDelegateEx {
             guard let self = self else { return }
             mainView.setConsoleText(displayText)
         }
-
-        mainView.karaokeView.setPitch(speakerPitch: Double(data.speakerPitch),
-                                      progressInMs: UInt(data.progressInMs))
+        
+        mainView.karaokeView.setPitch(speakerPitch: Double(rawScoreData.speakerPitch),
+                                      progressInMs: UInt(rawScoreData.progressInMs),
+                                      score: UInt(rawScoreData.pitchScore))
     }
-
-    func onLineScore(_ songCode: Int, value: AgoraLineScoreDataEx) {
-        guard !noLyric else {
-            return
-        }
-        let score = Int(value.linePitchScore)
-        totalScore = UInt(value.performedTotalLines * 100)
+    
+    func onLineScore(_ songCode: Int, lineScoreData: AgoraLineScoreData) {
+        let score = Int(lineScoreData.pitchScore)
+        totalScore = UInt(lineScoreData.totalLines * 100)
         mainView.lineScoreView.showScoreView(score: score)
         mainView.incentiveView.show(score: score)
-        let cumulativeScore = lineScoreRecorder.setLineScore(index: value.performedLineIndex - 1, score: UInt(score))
+        let cumulativeScore = lineScoreRecorder.setLineScore(index: lineScoreData.index - 1, score: UInt(score))
         mainView.gradeView.setScore(cumulativeScore: Int(cumulativeScore),
                                     totalScore: Int(totalScore))
-        SVProgressHUD.setOffsetFromCenter(.init(horizontal: 0, vertical: 1 * (view.bounds.height/2 - 60)))
-        SVProgressHUD.showInfo(withStatus: "i:\(value.performedLineIndex - 1) s:\(score)")
+        mainView.lineScoreView.showScoreView(score: Int(lineScoreData.pitchScore))
+        mainView.incentiveView.show(score: Int(lineScoreData.pitchScore))
     }
 }
 
@@ -283,7 +263,7 @@ extension MainTestVCEx: MainViewDelegate, KaraokeDelegate {
             mccManager.stopMusic()
             resetView()
             songId = songIds[songSourceProvider.genNextIndex()]
-            mccManager.preload(songId: songId!)
+            mccManager.preload(songCode: "\(songId!)")
             break
         case .quick:
             Log.info(text: "quick", tag: self.logTag)
@@ -302,7 +282,7 @@ extension MainTestVCEx: MainViewDelegate, KaraokeDelegate {
         progressProvider.seek(position: position)
         let cumulativeScore = lineScoreRecorder.seek(position: position)
         mainView.gradeView.setScore(cumulativeScore: Int(cumulativeScore),
-                                    totalScore: Int(totalScore))
+                                    totalScore: lyricModel.lines.count * 100)
         isSeeking = false
     }
 }
@@ -321,6 +301,6 @@ extension MainTestVCEx: ParamSetVCDelegate {
         mainView.gradeView.reset()
         mainView.updateView(param: param)
         
-        mccManager.preload(songId: songId!)
+        mccManager.preload(songCode: "\(songId!)")
     }
 }
