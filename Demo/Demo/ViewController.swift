@@ -46,7 +46,6 @@ class ViewController: UIViewController {
                                             .init(title: "miniSize")]),
                 Section(title: "模块", rows: [.init(title: "FirstToneHintView"),
                                             .init(title: "纯音乐"),
-                                            .init(title: "歌词显示 mcc"),
                                             .init(title: "用AVPlayer测试"),
                                             .init(title: "Emitter测试"),
                                             .init(title: "得分动画测试"),
@@ -117,8 +116,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
             
             if indexPath.row == 3 { /** mini size 小视图 **/
-//                let vc = MiniSizeVC()
-//                navigationController?.pushViewController(vc, animated: true)
+                let vc = MiniSizeVC()
+                navigationController?.pushViewController(vc, animated: true)
                 return
             }
         }
@@ -131,60 +130,54 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
 
             if indexPath.row == 1 { /** 纯音乐 **/
-                let vc = NoLyricsTestVC()
-                navigationController?.pushViewController(vc, animated: true)
-                return
-            }
-
-            if indexPath.row == 2 { /** 歌词显示 **/
-//                let vc = LyricsTestVC()
+//                let vc = NoLyricsTestVC()
 //                navigationController?.pushViewController(vc, animated: true)
                 return
             }
 
-            if indexPath.row == 3 { /** 用AVPlayer测试 **/
+            if indexPath.row == 2 { /** 用AVPlayer测试 **/
                 let vc = AVPlayerTestVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }
 
-            if indexPath.row == 4 { /** Emitter测试 **/
+            if indexPath.row == 3 { /** Emitter测试 **/
                 let vc = EmitterVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }
 
-            if indexPath.row == 5 { /** 得分动画测试 **/
+            if indexPath.row == 4 { /** 得分动画测试 **/
                 let vc = ScoreAniVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }
 
-            if indexPath.row == 6 { /** 激励动画测试 **/
+            if indexPath.row == 5 { /** 激励动画测试 **/
                 let vc = IncentiveVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }
 
-            if indexPath.row == 7 { /** LyricLabel测试 **/
+            if indexPath.row == 6 { /** LyricLabel测试 **/
                 let vc = LyricLabelVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }
 
-            if indexPath.row == 8 { /** oc测试 **/
+            if indexPath.row == 7 { /** oc测试 **/
 //                let vc = OCVC()
 //                navigationController?.pushViewController(vc, animated: true)
                 return
             }
             
-            if indexPath.row == 9 { /** Profile **/
+            if indexPath.row == 8 { /** Profile **/
                 let vc = ProfileVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }
             
-            if indexPath.row == 10 { /** 下载 **/
+            if indexPath.row == 9 { /** 下载 **/
                 let vc = DownloadVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
@@ -193,8 +186,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         if indexPath.section == 3 {
             if indexPath.row == 0 {
-//                let vc = SelectedLyricVC()
-//                navigationController?.pushViewController(vc, animated: true)
+                let vc = SelectedLyricVC()
+                navigationController?.pushViewController(vc, animated: true)
                 return
             }
         }

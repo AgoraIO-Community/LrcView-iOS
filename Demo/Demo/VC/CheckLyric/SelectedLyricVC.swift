@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraMccExService
+import AgoraRtcKit
 import AgoraLyricsScore
 
 class SelectedLyricVC: UIViewController {
@@ -14,7 +14,6 @@ class SelectedLyricVC: UIViewController {
     let textField = UITextField()
     let confirmButton = UIButton()
     let logTag = "SelectedLyricVC"
-    private var songId: Int!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,29 +53,32 @@ class SelectedLyricVC: UIViewController {
         Log.info(text: "commonInit", tag: logTag)
         mccManager.delegate = self
         if let token = Config.token, let userId = Config.userId {
-            mccManager.initRtcEngine()
+            mccManager.initEngine()
             mccManager.joinChannel()
-            mccManager.initMccEx(pid: Config.pid,
-                                 pKey: Config.pKey,
-                                 token: token,
-                                 userId: userId)
+            mccManager.initMCC(pid: Config.pid,
+                               pKey: Config.pKey,
+                               token: token,
+                               userId: userId)
         }
         else {
-            AccessProvider.fetchAccessData { [weak self](userId, token, errorMsg) in
+            AccessProvider.fetchAccessData(url: Config.accessUrl) { [weak self](userId, token, errorMsg) in
                 guard let self = self else { return }
                 if let errorMsg = errorMsg  {
                     Log.errorText(text: errorMsg, tag: logTag)
                     showAlertVC()
                     return
                 }
-                mccManager.initRtcEngine()
+                mccManager.initEngine()
                 mccManager.joinChannel()
-                self.mccManager.initMccEx(pid: Config.pid,
-                                          pKey: Config.pKey,
-                                          token: token,
-                                          userId: userId)
+                self.mccManager.initMCC(pid: Config.pid,
+                                        pKey: Config.pKey,
+                                        token: token,
+                                        userId: userId)
             }
         }
+        
+        confirmButton.isEnabled = true
+        title = "init ok"
     }
     
     private func showAlertVC() {
@@ -93,41 +95,25 @@ class SelectedLyricVC: UIViewController {
     }
     
     @objc func confirmButtonClicked() {
-        guard let text = textField.text,
-              let songId = Int(text) else {
+        guard let songId = textField.text else {
             return
         }
         title = "loading"
-        self.songId = mccManager.getInternalSongCode(songId: songId)
-        mccManager.preload(songId: self.songId)
+        mccManager.preload(songCode: songId)
     }
 }
 // MARK: - RTCManagerDelegate
-extension SelectedLyricVC: MccManagerDelegateEx {
-    func onMccExInitialize(_ manager: MccManagerEx) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else {
-                return
-            }
-            self.confirmButton.isEnabled = true
-            title = "init ok"
-        }
-    }
-    
+extension SelectedLyricVC: MccManagerExDelegate {
     func onPreloadMusic(_ manager: MccManagerEx,
                         songId: Int,
+                        percent: Int,
                         lyricData: Data,
                         pitchData: Data,
-                        percent: Int,
                         lyricOffset: Int,
                         songOffsetBegin: Int,
-                        errMsg: String?) {
+                        errorMsg: String?) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            guard let text = textField.text,
-                  let songId = Int(text) else {
-                return
-            }
             title = "load ok"
             let vc = CheckLyricVC(krcFileData: lyricData,
                                   pitchFileData: pitchData,
@@ -137,9 +123,10 @@ extension SelectedLyricVC: MccManagerDelegateEx {
         }
     }
     
+    func onLyricResult(url: String) {}
     func onMccExScoreStart(_ manager: MccManagerEx) {}
     func onOpenMusic(_ manager: MccManagerEx) {}
-    func onPitch(_ songCode: Int, data: AgoraRawScoreDataEx) {}
-    func onLineScore(_ songCode: Int, value: AgoraLineScoreDataEx) {}
+    func onPitch(_ manager: MccManagerEx, rawScoreData: AgoraRawScoreData) {}
+    func onLineScore(_ songCode: Int, lineScoreData: AgoraLineScoreData) {}
 }
 

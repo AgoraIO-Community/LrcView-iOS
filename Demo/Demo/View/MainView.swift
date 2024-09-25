@@ -31,6 +31,7 @@ class MainView: UIView {
     let lineScoreView = LineScoreView()
     let gradeView = GradeView()
     let incentiveView = IncentiveView()
+    var karaokeViewWidthAnchor, karaokeViewHeightAnchor: NSLayoutConstraint?
     private let skipButton = UIButton()
     private let setButton = UIButton()
     private let quickButton = UIButton()
@@ -100,10 +101,12 @@ class MainView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         consoleView.translatesAutoresizingMaskIntoConstraints = false
         
-        karaokeView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        karaokeView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         karaokeView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
-        karaokeView.heightAnchor.constraint(equalToConstant: 350).isActive = true
+        karaokeView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        karaokeViewWidthAnchor = karaokeView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width)
+        karaokeViewWidthAnchor?.isActive = true
+        karaokeViewHeightAnchor = karaokeView.heightAnchor.constraint(equalToConstant: 350)
+        karaokeViewHeightAnchor?.isActive = true
         
         gradeView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: 15).isActive = true
         gradeView.leftAnchor.constraint(equalTo: karaokeView.leftAnchor, constant: 15).isActive = true
