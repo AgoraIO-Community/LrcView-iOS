@@ -54,7 +54,7 @@ class MainTestVCEx: UIViewController {
             mccManager.preload(songCode: "\(songIds.first!)")
         }
         else {
-            AccessProvider.fetchAccessData { [weak self](userId, token, errorMsg) in
+            AccessProvider.fetchAccessData(url: Config.accessUrl) { [weak self](userId, token, errorMsg) in
                 guard let self = self else { return }
                 if let errorMsg = errorMsg  {
                     Log.errorText(text: errorMsg, tag: logTag)
@@ -70,7 +70,6 @@ class MainTestVCEx: UIViewController {
                 self.mccManager.preload(songCode: "\(self.songIds.first!)")
             }
         }
-        
     }
     
     private func setupUI() {
