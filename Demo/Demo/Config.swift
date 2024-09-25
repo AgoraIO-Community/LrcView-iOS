@@ -28,5 +28,5 @@ struct Config {
     static var userId: String? = nil
     
     /// ysd test vars
-    static static let accessUrl = <#access url#>
+    static let accessUrl = <#access url#>
 }
