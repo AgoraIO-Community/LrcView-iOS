@@ -260,6 +260,7 @@ extension MainTestVCEx: MainViewDelegate, KaraokeDelegate {
             progressProvider.stop()
             mccManager.pauseScore()
             mccManager.stopMusic()
+            mccManager.stopScore()
             resetView()
             songId = songIds[songSourceProvider.genNextIndex()]
             mccManager.preload(songCode: "\(songId!)")
@@ -299,7 +300,7 @@ extension MainTestVCEx: ParamSetVCDelegate {
         mainView.incentiveView.reset()
         mainView.gradeView.reset()
         mainView.updateView(param: param)
-        
+        mccManager.setScoreLevel(level: param.karaoke.scoreLevel)
         mccManager.preload(songCode: "\(songId!)")
     }
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 import AgoraLyricsScore
+import AgoraRtcKit
 
 protocol ParamSetVCDelegate: NSObjectProtocol {
     func didSetParam(param: Param, noLyric: Bool, noPitchFile: Bool)
@@ -33,8 +34,7 @@ class ParamSetVC: UIViewController {
         list = [Section(title: "karaoke", rows: [.init(title: "backgroundImage"),
                                                  .init(title: "spacing"),
                                                  .init(title: "scoringEnabled"),
-                                                 .init(title: "打分难易程度（越大越难）"),
-                                                 .init(title: "打分分值补偿")]),
+                                                 .init(title: "打分难易程度（越大越难）")]),
                 Section(title: "Lyrics", rows: [.init(title: "隐藏等待开始圆点"),
                                                 .init(title: "等待开始圆点颜色"),
                                                 .init(title: "等待开始圆点大小"),
@@ -139,11 +139,7 @@ class ParamSetVC: UIViewController {
             }
             
             if indexPath.row == 3 {
-                cell.detailTextLabel?.text = "\(param.karaoke.scoreLevel)"
-            }
-            
-            if indexPath.row == 4 { /** karaokeView.scoringEnabled **/
-                cell.detailTextLabel?.text = "\(param.karaoke.scoreCompensationOffset)"
+                cell.detailTextLabel?.text = param.karaoke.scoreLevel.description
             }
         }
         
@@ -270,11 +266,9 @@ class ParamSetVC: UIViewController {
             }
             
             if indexPath.row == 3 {
-                param.karaoke.scoreLevel = genValue(current: param.karaoke.scoreLevel, ops: [0, 5, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 25, 30, 50, 70, 100])
-            }
-            
-            if indexPath.row == 4 { /** karaokeView.scoringEnabled **/
-                param.karaoke.scoreCompensationOffset = genValue(current: param.karaoke.scoreCompensationOffset, ops: [-100, -70, -10, 0, 10, 70, 100])
+                let ops = [Int(AgoraScoreLevel.normal.rawValue), Int(AgoraScoreLevel.easy.rawValue), Int(AgoraScoreLevel.hard.rawValue)]
+                let rawValue = genValue(current: Int(param.karaoke.scoreLevel.rawValue), ops: ops)
+                param.karaoke.scoreLevel = AgoraScoreLevel(rawValue: UInt(rawValue))!
             }
         }
         

@@ -49,6 +49,21 @@ extension AgoraMusicContentCenterState: CustomStringConvertible {
     }
 }
 
+extension AgoraScoreLevel: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .easy:
+            return "Easy"
+        case .hard:
+            return "Hard"
+        case .normal:
+            return "Normal"
+        @unknown default:
+            return "Unknow"
+        }
+    }
+}
+
 //extension AgoraMusicContentCenterExState: CustomStringConvertible {
 //    public var description: String {
 //        switch self {

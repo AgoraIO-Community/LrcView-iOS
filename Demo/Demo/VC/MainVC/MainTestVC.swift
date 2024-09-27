@@ -238,6 +238,7 @@ extension MainTestVC: ParamSetVCDelegate {
         progressProvider.stop()
         resetView()
         mainView.updateView(param: param)
+        mccManager.setScoreLevel(level: param.karaoke.scoreLevel)
         mccManager.preload(songCode: "\(song.id)")
     }
 }

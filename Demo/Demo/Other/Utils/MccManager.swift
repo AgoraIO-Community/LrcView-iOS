@@ -216,6 +216,16 @@ class MccManager: NSObject {
         return mcc.getCumulativeScoreData()
     }
     
+    func setScoreLevel(level: AgoraScoreLevel) {
+        let ret = mcc.setScoreLevel(level: .normal)
+        if ret != 0 {
+            Log.errorText(text: "setScoreLevel error \(ret)", tag: logTag)
+        }
+        else {
+            Log.info(text: "setScoreLevel \(level.rawValue) success", tag: logTag)
+        }
+    }
+    
     func getMPKCurrentPosition() -> Int {
         return mpk.getPosition()
     }

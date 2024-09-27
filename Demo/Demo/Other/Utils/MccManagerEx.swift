@@ -44,9 +44,10 @@ class MccManagerEx: NSObject {
         Log.info(text: "deinit", tag: logTag)
         agoraKit.disableAudio()
         mpk.stop()
-        mcc.register(nil)
         agoraKit.leaveChannel()
-        agoraKit.destroyMediaPlayer(mpk)
+        mcc.destroyMusicPlayer(mpk)
+        AgoraMusicContentCenter.destroy()
+        AgoraRtcEngineKit.destroy()
     }
     
     func initEngine() {
@@ -99,7 +100,6 @@ class MccManagerEx: NSObject {
         config.eventDelegate = self
         config.scoreEventDelegate = self
         mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
-        
         let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? UUID.init().uuidString
         let dict = ["appId" : pid,
                     "appKey": pKey,
@@ -149,7 +149,16 @@ class MccManagerEx: NSObject {
     }
     
     func pauseScore() {
-        mcc.stopScore()
+        mcc.pauseScore()
+    }
+    
+    func stopScore() {
+        let ret = mcc.stopScore()
+        if ret != 0 {
+            Log.errorText(text: "stopScore error \(ret)", tag: logTag)
+            return
+        }
+        Log.info(text: "stopScore success", tag: logTag)
     }
     
     func resumeScore() {
@@ -210,6 +219,16 @@ class MccManagerEx: NSObject {
     
     func getCumulativeScoreData() -> AgoraCumulativeScoreData {
         return mcc.getCumulativeScoreData()
+    }
+    
+    func setScoreLevel(level: AgoraScoreLevel) {
+        let ret = mcc.setScoreLevel(level: .normal)
+        if ret != 0 {
+            Log.errorText(text: "setScoreLevel error \(ret)", tag: logTag)
+        }
+        else {
+            Log.info(text: "setScoreLevel \(level.rawValue) success", tag: logTag)
+        }
     }
     
     func getMPKCurrentPosition() -> Int {
@@ -354,7 +373,7 @@ extension MccManagerEx: AgoraMusicContentCenterEventDelegate {
 
 extension MccManagerEx: AgoraMusicContentCenterScoreEventDelegate {
     func onPitch(_ songCode: Int, rawScoreData: AgoraRawScoreData) {
-//        Log.debug(text: "onPitch:\(rawScoreData.speakerPitch)", tag: logTag)
+        //        Log.debug(text: "onPitch:\(rawScoreData.speakerPitch)", tag: logTag)
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
                 return

@@ -16,6 +16,9 @@ extension MainTestVCEx { /** for debug **/
     }
     
     func calculateProgressGap_debug(progressInMs: UInt) -> Int {
+        if progressInMs > 3 * 60 * 60 * 1000 {
+            Log.errorText(text: "progressInMs is too max, it not expect for normal song's durations", tag: logTag)
+        }
         let progressGap = Int(progressInMs) - Int(MainTestVCEx.lastProgressInMs)
         MainTestVCEx.lastProgressInMs = progressInMs
         return progressGap
