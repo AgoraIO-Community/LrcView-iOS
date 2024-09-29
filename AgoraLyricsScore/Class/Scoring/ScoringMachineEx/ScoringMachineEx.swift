@@ -110,12 +110,16 @@ class ScoringMachineEx: ScoringMachineProtocol {
         handleProgress()
     }
     
+    var lastProgressInMs: UInt = 0
+    
     /// _setPitch
     /// - Parameters:
     ///   - speakerPitch: 0-100
     private func _setPitch(speakerPitch: Double,
                            progressInMs: UInt,
                            score: UInt) {
+        let progressGap = progressInMs - lastProgressInMs
+        lastProgressInMs = progressInMs
         guard !isDragging else { return }
         guard let model = lyricData, model.hasPitch else { return }
         
@@ -125,7 +129,7 @@ class ScoringMachineEx: ScoringMachineProtocol {
                                       pitch: speakerPitch,
                                       hitedInfo: nil,
                                       progress: progressInMs)
-            Log.debug(text: "_setPitch[0] porgress:\(progressInMs) speakerPitch:\(speakerPitch)", tag: logTag)
+            Log.debug(text: "_setPitch[0] porgress:\(progressInMs) speakerPitch:\(speakerPitch) progressGap:\(progressGap)", tag: logTag)
             ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
                                                             didUpdateCursor: y,
                                                             showAnimation: false,
@@ -136,7 +140,7 @@ class ScoringMachineEx: ScoringMachineProtocol {
         /** 1.get hitedInfo **/
         guard let hitedInfo = getHitedInfo(progress: progressInMs,
                                            currentVisiableInfos: currentVisiableInfos) else {
-            Log.debug(text: "_setPitch[1] progressInMs:\(progressInMs) speakerPitch:\(speakerPitch) progress:\(progress)", tag: logTag)
+            Log.debug(text: "_setPitch[1] progressInMs:\(progressInMs) speakerPitch:\(speakerPitch) progress:\(progress) progressGap:\(progressGap)", tag: logTag)
             return
         }
         
@@ -178,7 +182,7 @@ class ScoringMachineEx: ScoringMachineProtocol {
                                   pitch: speakerPitch,
                                   hitedInfo: hitedInfo,
                                   progress: progressInMs)
-        Log.debug(text: "_setPitch[2] porgress:\(progressInMs) speakerPitch:\(speakerPitch) yValue:\(yValue)", tag: logTag)
+        Log.debug(text: "_setPitch[2] porgress:\(progressInMs) speakerPitch:\(speakerPitch) yValue:\(yValue) progressGap:\(progressGap)", tag: logTag)
         ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
                                                         didUpdateCursor: yValue,
                                                         showAnimation: showAnimation,
