@@ -126,7 +126,7 @@ extension AgoraScoreLevel: CustomStringConvertible {
 //    }
 //}
 
-extension AgoraMusicContentCenterStatusCode: CustomStringConvertible {
+extension AgoraMusicContentCenterStateReason: CustomStringConvertible {
     public var description: String {
         switch self {
         case .OK:

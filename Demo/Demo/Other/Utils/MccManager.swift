@@ -274,7 +274,7 @@ extension MccManager: AgoraRtcEngineDelegate {
 }
 
 extension MccManager: AgoraMusicContentCenterEventDelegate {
-    func onStartScoreResult(_ internalSongCode: Int, state: AgoraMusicContentCenterState, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onStartScoreResult(_ internalSongCode: Int, state: AgoraMusicContentCenterState, reason: AgoraMusicContentCenterStateReason) {
         
     }
     
@@ -283,8 +283,8 @@ extension MccManager: AgoraMusicContentCenterEventDelegate {
                         percent: Int,
                         payload: String?,
                         state: AgoraMusicContentCenterState,
-                        errorCode: AgoraMusicContentCenterStatusCode) {
-        Log.debug(text: "onPreLoadEvent requestId:\(requestId) internalSongCode:\(internalSongCode) status:\(state) percent:\(percent) payload:\(payload ?? "nil") errorCode:\(errorCode)", tag: logTag)
+                        reason: AgoraMusicContentCenterStateReason) {
+        Log.debug(text: "onPreLoadEvent requestId:\(requestId) internalSongCode:\(internalSongCode) status:\(state) percent:\(percent) payload:\(payload ?? "nil") reason:\(reason)", tag: logTag)
         if state == .preloadOK { /** preload 成功 **/
             Log.info(text: "preload ok", tag: logTag)
             if let jsonString = payload, let jsonData = jsonString.data(using: .utf8) {
@@ -303,7 +303,7 @@ extension MccManager: AgoraMusicContentCenterEventDelegate {
         
         if state == .preloadFailed {
             Log.errorText(text: "onPreLoadEvent percent:\(percent) status:\(state.rawValue) lyricUrl:\(payload ?? "null")", tag: logTag)
-            if errorCode == .errorPermissionAndResource {
+            if reason == .errorPermissionAndResource {
                 Log.errorText(text: "歌曲下架")
             }
             invokeOnPreloadMusic(self, songId: internalSongCode, lyricsUrl: "", errorMsg: "preload error")
@@ -312,19 +312,19 @@ extension MccManager: AgoraMusicContentCenterEventDelegate {
     
     func onMusicChartsResult(_ requestId: String,
                              result: [AgoraMusicChartInfo],
-                             errorCode: AgoraMusicContentCenterStatusCode) {}
+                             reason: AgoraMusicContentCenterStateReason) {}
     func onMusicCollectionResult(_ requestId: String,
                                  result: AgoraMusicCollection,
-                                 errorCode: AgoraMusicContentCenterStatusCode) {}
+                                 reason: AgoraMusicContentCenterStateReason) {}
     func onSongSimpleInfoResult(_ requestId: String,
-                                songCode: Int,
+                                internalSongCode songCode: Int,
                                 simpleInfo: String?,
-                                errorCode: AgoraMusicContentCenterStatusCode) {}
+                                reason: AgoraMusicContentCenterStateReason) {}
     func onLyricResult(_ requestId: String,
                        internalSongCode: Int,
                        payload: String?,
-                       errorCode: AgoraMusicContentCenterStatusCode) {
-        Log.info(text: "onLyricResult requestId:\(requestId) internalSongCode:\(internalSongCode) payload:\(payload ?? "null") errorCode:\(errorCode)", tag: logTag)
+                       reason: AgoraMusicContentCenterStateReason) {
+        Log.info(text: "onLyricResult requestId:\(requestId) internalSongCode:\(internalSongCode) payload:\(payload ?? "null") reason:\(reason)", tag: logTag)
     }
 }
 
@@ -349,7 +349,7 @@ extension MccManager: AgoraMusicContentCenterScoreEventDelegate {
 }
 
 extension MccManager: AgoraRtcMediaPlayerDelegate {
-    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
+    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, reason: AgoraMediaPlayerReason) {
         if state == .openCompleted {
             Log.info(text: "openCompleted", tag: logTag)
             delegate?.onOpenMusic(self)
