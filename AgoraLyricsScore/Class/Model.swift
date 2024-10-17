@@ -146,3 +146,10 @@ public class ToneScoreModel: NSObject {
     case unknown = -1
 }
 
+struct PitchReplayInfo: Codable {
+    let speakerPitch: Double
+    let progressInMs: UInt
+    let hitedBeginTime: UInt
+    let hitedEndTime: UInt
+    let score: UInt
+}

@@ -18,6 +18,8 @@ class ScoringMachine: ScoringMachineProtocol {
     var hitScoreThreshold: Float = 0.7
     var scoreLevel = 15
     var scoreCompensationOffset = 0
+    /// no use in this class
+    var isSustainedPitchOptimizationEnabled: Bool = false
     var scoreAlgorithm: IScoreAlgorithm = ScoreAlgorithm()
     weak var delegate: ScoringMachineDelegate?
     
@@ -39,6 +41,7 @@ class ScoringMachine: ScoringMachineProtocol {
     fileprivate var isDragging = false
     fileprivate var voiceChanger = VoicePitchChanger()
     fileprivate let queue = DispatchQueue(label: "ScoringMachine")
+    fileprivate var pitchIsZeroCount = 0
     let logTag = "ScoringMachine"
     
     // MARK: - Internal
@@ -61,8 +64,17 @@ class ScoringMachine: ScoringMachineProtocol {
     func setPitch(speakerPitch: Double,
                   progressInMs: UInt,
                   score: UInt) {
-        queue.async { [weak self] in
-            self?._setPitch(pitch: speakerPitch)
+        if speakerPitch == 0 {
+            pitchIsZeroCount += 1
+        }
+        else {
+            pitchIsZeroCount = 0
+        }
+        if speakerPitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
+            pitchIsZeroCount = 0
+            queue.async { [weak self] in
+                self?._setPitch(pitch: speakerPitch, ignoreScoreAccumulation: false)
+            }
         }
     }
     
@@ -121,7 +133,7 @@ class ScoringMachine: ScoringMachineProtocol {
         handleProgress()
     }
     
-    private func _setPitch(pitch: Double) {
+    private func _setPitch(pitch: Double, ignoreScoreAccumulation: Bool) {
         guard !isDragging else { return }
         guard let model = lyricData, model.hasPitch else { return }
         
@@ -130,7 +142,9 @@ class ScoringMachine: ScoringMachineProtocol {
             let debugInfo = DebugInfo(originalPitch: pitch,
                                       pitch: pitch,
                                       hitedInfo: nil,
-                                      progress: progress)
+                                      progress: progress,
+                                      score: 0,
+                                      ignoreScoreAccumulation: ignoreScoreAccumulation)
             ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
                                                             didUpdateCursor: y,
                                                             showAnimation: false,
@@ -154,7 +168,9 @@ class ScoringMachine: ScoringMachineProtocol {
             let debugInfo = DebugInfo(originalPitch: pitch,
                                       pitch: pitch,
                                       hitedInfo: nil,
-                                      progress: progress)
+                                      progress: progress,
+                                      score: 0,
+                                      ignoreScoreAccumulation: ignoreScoreAccumulation)
             ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
                                                             didUpdateCursor: yValue,
                                                             showAnimation: false,
@@ -174,18 +190,20 @@ class ScoringMachine: ScoringMachineProtocol {
                                                  scoreCompensationOffset: scoreCompensationOffset)
         
         /** 4.save tone score  **/
-        var hitToneScore = toneScores.first(where: { $0.tone.beginTime == hitedInfo.beginTime })
-        if hitToneScore != nil {
-            hitToneScore!.addScore(score: score)
-        }
-        else { /** reresetToneScores while can not find a specific one  **/
-            resetToneScores(position: progress)
-            hitToneScore = toneScores.first(where: { $0.tone.beginTime == hitedInfo.beginTime })
+        if !ignoreScoreAccumulation {
+            var hitToneScore = toneScores.first(where: { $0.tone.beginTime == hitedInfo.beginTime })
             if hitToneScore != nil {
                 hitToneScore!.addScore(score: score)
             }
-            else {
-                Log.error(error: "ignore score \(score) progress: \(progress), beginTime: \(hitedInfo.beginTime), endTime: \(hitedInfo.endTime) \(toneScores.map({ "\($0.tone.beginTime)-" }).reduce("", +))", tag: logTag)
+            else { /** reresetToneScores while can not find a specific one  **/
+                resetToneScores(position: progress)
+                hitToneScore = toneScores.first(where: { $0.tone.beginTime == hitedInfo.beginTime })
+                if hitToneScore != nil {
+                    hitToneScore!.addScore(score: score)
+                }
+                else {
+                    Log.error(error: "ignore score \(score) progress: \(progress), beginTime: \(hitedInfo.beginTime), endTime: \(hitedInfo.endTime) \(toneScores.map({ "\($0.tone.beginTime)-" }).reduce("", +))", tag: logTag)
+                }
             }
         }
         
@@ -214,7 +232,9 @@ class ScoringMachine: ScoringMachineProtocol {
         let debugInfo = DebugInfo(originalPitch: pitch,
                                   pitch: voicePitch,
                                   hitedInfo: hitedInfo,
-                                  progress: progress)
+                                  progress: progress,
+                                  score: UInt(score),
+                                  ignoreScoreAccumulation: ignoreScoreAccumulation)
         ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
                                                         didUpdateCursor: yValue,
                                                         showAnimation: showAnimation,
@@ -274,6 +294,7 @@ class ScoringMachine: ScoringMachineProtocol {
         progress = 0
         minPitch = 0
         maxPitch = 0
+        pitchIsZeroCount = 0
         voiceChanger.reset()
     }
     

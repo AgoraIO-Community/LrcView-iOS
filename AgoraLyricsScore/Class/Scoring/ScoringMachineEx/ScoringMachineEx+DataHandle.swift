@@ -126,7 +126,7 @@ extension ScoringMachineEx {
                       currentVisiableInfos: [Info]) -> Info? {
         let pitchBeginTime = progress
         return currentVisiableInfos.first { info in
-            return pitchBeginTime >= info.drawBeginTime && pitchBeginTime <= info.endTime
+            return pitchBeginTime >= info.drawBeginTime && pitchBeginTime < info.endTime
         }
     }
     

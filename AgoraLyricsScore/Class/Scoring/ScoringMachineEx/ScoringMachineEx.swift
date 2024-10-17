@@ -15,6 +15,8 @@ class ScoringMachineEx: ScoringMachineProtocol {
     var movingSpeedFactor: CGFloat = 120
     /// 打分容忍度 范围：0-1
     var hitScoreThreshold: Float = 0.7
+    /// 是否开启“拖腔字”的优化
+    var isSustainedPitchOptimizationEnabled: Bool = false
     weak var delegate: ScoringMachineDelegate?
     
     /// no use
@@ -35,6 +37,8 @@ class ScoringMachineEx: ScoringMachineProtocol {
     fileprivate var lyricData: LyricModel?
     fileprivate var isDragging = false
     fileprivate let queue = DispatchQueue(label: "ScoringMachine")
+    fileprivate var pitchIsZeroCount = 0
+    fileprivate var lastNoZeroPitchReplayInfo: PitchReplayInfo?
     let logTag = "ScoringMachine"
     
     // MARK: - Internal
@@ -48,7 +52,7 @@ class ScoringMachineEx: ScoringMachineProtocol {
     }
     
     func setProgress(progress: UInt) {
-//        Log.debug(text: "progress: \(progress)", tag: "progress")
+        //        Log.debug(text: "progress: \(progress)", tag: "progress")
         queue.async { [weak self] in
             self?._setProgress(progress: progress)
         }
@@ -58,9 +62,11 @@ class ScoringMachineEx: ScoringMachineProtocol {
                   progressInMs: UInt,
                   score: UInt) {
         queue.async { [weak self] in
-            self?._setPitch(speakerPitch: speakerPitch,
-                            progressInMs: progressInMs,
-                            score: score)
+            guard let self = self else { return }
+            self._setPitchPreProcess(speakerPitch: speakerPitch,
+                                     progressInMs: progressInMs,
+                                     score: score)
+            
         }
     }
     
@@ -110,41 +116,125 @@ class ScoringMachineEx: ScoringMachineProtocol {
         handleProgress()
     }
     
-    var lastProgressInMs: UInt = 0
+    private func _setPitchPreProcess(speakerPitch: Double,
+                                     progressInMs: UInt,
+                                     score: UInt) {
+        if !isSustainedPitchOptimizationEnabled {
+            _setPitchPreProcess1(speakerPitch: speakerPitch,
+                                 progressInMs: progressInMs,
+                                 score: score)
+            return
+        }
+        
+        _setPitchPreProcess2(speakerPitch: speakerPitch,
+                             progressInMs: progressInMs,
+                             score: score)
+    }
+    
+    private func _setPitchPreProcess1(speakerPitch: Double,
+                                     progressInMs: UInt,
+                                     score: UInt) {
+        if speakerPitch == 0 {
+            pitchIsZeroCount += 1
+        }
+        else {
+            pitchIsZeroCount = 0
+        }
+        if speakerPitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
+            pitchIsZeroCount = 0
+            let _ = _setPitch(speakerPitch: speakerPitch,
+                              progressInMs: progressInMs,
+                              score: score,
+                              ignoreScoreAccumulation: false)
+        }
+    }
+    
+    private func _setPitchPreProcess2(speakerPitch: Double,
+                                     progressInMs: UInt,
+                                      score: UInt) {
+        /** using Sustained Pitch Optimization **/
+        
+        if speakerPitch == 0 {
+            pitchIsZeroCount += 1
+            if pitchIsZeroCount >= 10 { /** no need to replay **/
+                let _ = self._setPitch(speakerPitch: speakerPitch,
+                                       progressInMs: progressInMs,
+                                       score: score,
+                                       ignoreScoreAccumulation: false)
+                return
+            }
+            
+            if let replayInfo = lastNoZeroPitchReplayInfo {
+                if progressInMs >= replayInfo.hitedBeginTime, progressInMs < replayInfo.hitedEndTime {
+                    let _ = self._setPitch(speakerPitch: replayInfo.speakerPitch,
+                                           progressInMs: progressInMs,
+                                           score: replayInfo.score,
+                                           ignoreScoreAccumulation: true)
+                    return
+                }
+            }
+            
+            return
+        }
+        
+        pitchIsZeroCount = 0
+        /// can hit
+        if let hitedInfo = self._setPitch(speakerPitch: speakerPitch,
+                                          progressInMs: progressInMs,
+                                          score: score,
+                                          ignoreScoreAccumulation: false) {
+            lastNoZeroPitchReplayInfo = PitchReplayInfo(speakerPitch: speakerPitch,
+                                                        progressInMs: progressInMs,
+                                                        hitedBeginTime: hitedInfo.beginTime,
+                                                        hitedEndTime: hitedInfo.endTime,
+                                                        score: score)
+            return
+        }
+        
+        /// can not hit
+        lastNoZeroPitchReplayInfo = nil
+    }
+    
+    var lastProgressInMs: Int = 0
     
     /// _setPitch
     /// - Parameters:
     ///   - speakerPitch: 0-100
     private func _setPitch(speakerPitch: Double,
                            progressInMs: UInt,
-                           score: UInt) {
-        let progressGap = progressInMs - lastProgressInMs
-        lastProgressInMs = progressInMs
-        guard !isDragging else { return }
-        guard let model = lyricData, model.hasPitch else { return }
+                           score: UInt,
+                           ignoreScoreAccumulation: Bool) -> Info? {
+        let progressGap = Int(progressInMs) - lastProgressInMs
+        lastProgressInMs = Int(progressInMs)
+        guard !isDragging else { return nil  }
+        guard let model = lyricData, model.hasPitch else { return nil }
         
         if speakerPitch <= 0 {
             let y = canvasViewSize.height
             let debugInfo = DebugInfo(originalPitch: -1.0,
                                       pitch: speakerPitch,
                                       hitedInfo: nil,
-                                      progress: progressInMs)
+                                      progress: progressInMs,
+                                      score: score,
+                                      ignoreScoreAccumulation: ignoreScoreAccumulation)
             Log.debug(text: "_setPitch[0] porgress:\(progressInMs) speakerPitch:\(speakerPitch) progressGap:\(progressGap)", tag: logTag)
             ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
                                                             didUpdateCursor: y,
                                                             showAnimation: false,
                                                             debugInfo: debugInfo)
-            return
+            return nil
         }
         
         /** 1.get hitedInfo **/
         guard let hitedInfo = getHitedInfo(progress: progressInMs,
                                            currentVisiableInfos: currentVisiableInfos) else {
             Log.debug(text: "_setPitch[1] progressInMs:\(progressInMs) speakerPitch:\(speakerPitch) progress:\(progress) progressGap:\(progressGap)", tag: logTag)
-            return
+            return nil
         }
         
-        let actualSpeakerPitch = speakerPitch
+        if ignoreScoreAccumulation {
+            Log.debug(text: "only update ui", tag: logTag)
+        }
         
         /// 着色、动画开启与否
         var showAnimation = false
@@ -165,11 +255,11 @@ class ScoringMachineEx: ScoringMachineProtocol {
         
         /** 3.calculated ui info **/
         
-        if actualSpeakerPitch > maxPitch {
-            Log.errorText(text: "actualspeakerPitch > maxPitch, \(actualSpeakerPitch)", tag: logTag)
+        if speakerPitch > maxPitch {
+            Log.errorText(text: "speakerPitch > maxPitch, \(speakerPitch)", tag: logTag)
         }
         
-        let y = calculatedY(pitch: showAnimation ? hitedInfo.pitch : actualSpeakerPitch,
+        let y = calculatedY(pitch: showAnimation ? hitedInfo.pitch : speakerPitch,
                             viewHeight: canvasViewSize.height,
                             minPitch: minPitch,
                             maxPitch: maxPitch,
@@ -181,12 +271,16 @@ class ScoringMachineEx: ScoringMachineProtocol {
         let debugInfo = DebugInfo(originalPitch: hitedInfo.pitch,
                                   pitch: speakerPitch,
                                   hitedInfo: hitedInfo,
-                                  progress: progressInMs)
+                                  progress: progressInMs,
+                                  score: score,
+                                  ignoreScoreAccumulation: ignoreScoreAccumulation)
         Log.debug(text: "_setPitch[2] porgress:\(progressInMs) speakerPitch:\(speakerPitch) yValue:\(yValue) progressGap:\(progressGap)", tag: logTag)
         ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
                                                         didUpdateCursor: yValue,
                                                         showAnimation: showAnimation,
                                                         debugInfo: debugInfo)
+        
+        return hitedInfo
     }
     
     private func _dragBegain() {
@@ -207,6 +301,8 @@ class ScoringMachineEx: ScoringMachineProtocol {
         progress = 0
         minPitch = 0
         maxPitch = 0
+        lastNoZeroPitchReplayInfo = nil
+        pitchIsZeroCount = 0
     }
     
     private func handleProgress() {

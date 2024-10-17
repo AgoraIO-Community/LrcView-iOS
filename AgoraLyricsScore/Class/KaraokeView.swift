@@ -137,22 +137,13 @@ extension KaraokeView {
     /// - Parameter progressInMs: 当前得分。方式1、2给0。
     @objc public func setPitch(speakerPitch: Double, progressInMs: UInt, score: UInt) {
         guard scoringEnabled else { return }
-        let pitch  = speakerPitch
         if !Thread.isMainThread {
             Log.error(error: "invoke setPitch not isMainThread ", tag: logTag)
         }
-        if pitch < 0 { return }
+        if speakerPitch < 0 { return }
         guard isStart else { return }
-        if pitch == 0 {
-            pitchIsZeroCount += 1
-        }
-        else {
-            pitchIsZeroCount = 0
-        }
-        if pitch > 0 || pitchIsZeroCount >= 10 { /** 过滤10个0的情况* **/
-            pitchIsZeroCount = 0
-            scoringView.setPitch(speakerPitch: speakerPitch, progressInMs: progressInMs, score: score)
-        }
+        
+        scoringView.setPitch(speakerPitch: speakerPitch, progressInMs: progressInMs, score: score)
     }
     
     /// 设置当前歌曲的进度

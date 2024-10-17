@@ -23,6 +23,8 @@ protocol ScoringMachineProtocol {
     var hitScoreThreshold: Float { get set }
     var scoreLevel: Int { get set }
     var scoreCompensationOffset: Int { get set }
+    /// 是否开启“拖腔字”的优化
+    var isSustainedPitchOptimizationEnabled: Bool { get set }
     
     func setLyricData(data: LyricModel?)
     func setProgress(progress: UInt)

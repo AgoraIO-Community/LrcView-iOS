@@ -62,4 +62,6 @@ struct ScoringMachineDebugInfo {
     let pitch: Double
     let hitedInfo: ScoringMachineInfo?
     let progress: UInt
+    let score: UInt
+    let ignoreScoreAccumulation: Bool
 }

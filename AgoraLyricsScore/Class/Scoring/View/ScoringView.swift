@@ -35,6 +35,8 @@ public class ScoringView: UIView {
     @objc public var emitterImages: [UIImage]? { didSet { updateUI() } }
     /// 打分容忍度 范围：0-1
     @objc public var hitScoreThreshold: Float = 0.7 { didSet { updateUI() } }
+    /// 是否开启“拖腔字”的优化
+    @objc public var isSustainedPitchOptimizationEnabled: Bool = false { didSet { updateUI() } }
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
     
@@ -94,6 +96,7 @@ public class ScoringView: UIView {
         scoringMachine.hitScoreThreshold = hitScoreThreshold
         scoringMachine.scoreLevel = scoreLevel
         scoringMachine.scoreCompensationOffset = scoreCompensationOffset
+        scoringMachine.isSustainedPitchOptimizationEnabled = isSustainedPitchOptimizationEnabled
         scoringMachine.delegate = self
         scoringMachine.setLyricData(data: data)
     }
@@ -204,7 +207,7 @@ extension ScoringView: ScoringMachineDelegate {
         localPitchView.setIndicatedViewY(y: centerY)
         showAnimation ? localPitchView.startEmitter() : localPitchView.stopEmitter()
         if showDebugView {
-            let text = "y: \(Float(centerY)) \npitch: \(debugInfo.pitch.keep2) \nani: \(showAnimation) \nw:\(debugInfo.hitedInfo?.word ?? "") \nstd:\(debugInfo.hitedInfo?.pitch ?? 0) progress: \(debugInfo.progress)"
+            let text = "y: \(Float(centerY)) \npitch: \(debugInfo.pitch.keep2) \nani: \(showAnimation) \nw:\(debugInfo.hitedInfo?.word ?? "") \nstd:\(debugInfo.hitedInfo?.pitch ?? 0) \nprogress: \(debugInfo.progress) \nscore:\(debugInfo.score)"
             consoleView.set(text: text)
         }
     }
