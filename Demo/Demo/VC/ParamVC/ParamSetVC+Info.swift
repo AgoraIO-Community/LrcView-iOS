@@ -91,8 +91,10 @@ class ScoringViewParam {
     var emitterImages: [UIImage]?
     /// 打分容忍度 范围：0-1
     var hitScoreThreshold: Float = 0.7
+    /// 拖腔字优化
+    var isSustainedPitchOptimizationEnabled: Bool = false
     /// use for debug only
-    var showDebugView = false
+    var showDebugView = true
 }
 
 class OtherConfigParam {

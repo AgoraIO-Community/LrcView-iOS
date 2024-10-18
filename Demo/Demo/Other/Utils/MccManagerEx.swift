@@ -374,6 +374,11 @@ extension MccManagerEx: AgoraMusicContentCenterEventDelegate {
 extension MccManagerEx: AgoraMusicContentCenterScoreEventDelegate {
     func onPitch(_ songCode: Int, rawScoreData: AgoraRawScoreData) {
         //        Log.debug(text: "onPitch:\(rawScoreData.speakerPitch)", tag: logTag)
+        if rawScoreData.progressInMs > 3 * 60 * 60 * 1000 {
+            print("异常rawScoreData.progressInMs:\(rawScoreData.progressInMs)")
+            return
+        }
+        print("正常rawScoreData.progressInMs:\(rawScoreData.progressInMs)")
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
                 return

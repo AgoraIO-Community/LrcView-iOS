@@ -30,7 +30,7 @@ class MccManager: NSObject {
     fileprivate var songId: Int = 0
     fileprivate var isPause = false
     /// 1是原唱，0是伴奏，默认1
-    fileprivate var audioTrackIndex: Int32 = 0
+    fileprivate var audioTrackIndex: Int32 = 1
     
     private var lastPitchTime: CFAbsoluteTime = 0
     
@@ -140,7 +140,7 @@ class MccManager: NSObject {
             Log.errorText(text: "openMedia error \(ret)", tag: logTag)
             return
         }
-        Log.info(text: "openMedia success")
+        Log.info(text: "openMedia success", tag: logTag)
     }
     
     func startScore() {
@@ -172,7 +172,7 @@ class MccManager: NSObject {
             return
         }
         isPause = false
-        Log.info(text: "play success")
+        Log.info(text: "play success", tag: logTag)
     }
     
     func pauseMusic() {
@@ -250,7 +250,7 @@ extension MccManager {
         let gap = currentTime - lastPitchTime
         lastPitchTime = currentTime
         if gap > 50 {
-            Log.errorText(text: "gap:[\(gap.keep3)] \(pitch)")
+            Log.errorText(text: "gap:[\(gap.keep3)] \(pitch)", tag: logTag)
         }
     }
 }
@@ -290,13 +290,13 @@ extension MccManager: AgoraMusicContentCenterEventDelegate {
             if let jsonString = payload, let jsonData = jsonString.data(using: .utf8) {
                 do {
                     let dict = try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as! [String: Any]
-                    if let lyricUrl = dict["lyricUrl"] as? String {
-                        Log.debug(text: "lyricUrl:\(lyricUrl)", tag: logTag)
+                    if let lyricUrl = dict["lyricPath"] as? String {
+                        Log.debug(text: "lyricPath:\(lyricUrl)", tag: logTag)
                         invokeOnPreloadMusic(self, songId: songId, lyricsUrl: lyricUrl, errorMsg: nil)
                     }
                 }
                 catch {
-                    Log.errorText(text: "payload json解析失败", tag: logTag)
+                    Log.errorText(text: "payload json解析失败, jsonString:\(jsonString) jsonData.count:\(jsonData.count)", tag: logTag)
                 }
             }
         }
@@ -304,7 +304,7 @@ extension MccManager: AgoraMusicContentCenterEventDelegate {
         if state == .preloadFailed {
             Log.errorText(text: "onPreLoadEvent percent:\(percent) status:\(state.rawValue) lyricUrl:\(payload ?? "null")", tag: logTag)
             if reason == .errorPermissionAndResource {
-                Log.errorText(text: "歌曲下架")
+                Log.errorText(text: "歌曲下架", tag: logTag)
             }
             invokeOnPreloadMusic(self, songId: internalSongCode, lyricsUrl: "", errorMsg: "preload error")
         }

@@ -20,7 +20,6 @@ extension MainTestVC {
 }
 
 class MainTestVC: UIViewController {
-    let lyricsFileDownloader = LyricsFileDownloader()
     let mainView = MainView(frame: .zero)
     let mccManager = MccManager()
     private let songSourceProvider = SongSourceProvider(sourceType: .useForDefaultVendor)
@@ -57,7 +56,6 @@ class MainTestVC: UIViewController {
         song = songSourceProvider.getNextSong()
         mainView.delegate = self
         mainView.karaokeView.delegate = self
-        lyricsFileDownloader.delegate = self
         progressProvider.delegate = self
         mccManager.delegate = self
         mccManager.initEngine()
@@ -68,6 +66,7 @@ class MainTestVC: UIViewController {
     
     private func setLyricToView() {
         Log.info(text: "setLyricToView", tag: logTag)
+        mainView.karaokeView.lyricsView.lyricLineSpacing
         let model = self.lyricModel!
         if !self.noLyric {
             let canScoring = model.hasPitch
@@ -159,7 +158,17 @@ extension MainTestVC: MccManagerDelegate {
             SVProgressHUD.showError(withStatus: "preload: \(msg)")
             return
         }
-        let _ = lyricsFileDownloader.download(urlString: lyricsUrl)
+        
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: lyricsUrl))
+            let model = KaraokeView.parseLyricData(lyricFileData: data)!
+            lyricModel = model
+            setLyricToView()
+            mccManager.openMusic()
+        } catch let error {
+            Log.error(error: error.localizedDescription)
+        }
+        
     }
     
     func onLyricResult(url: String) {
@@ -189,23 +198,6 @@ extension MainTestVC: MccManagerDelegate {
         mainView.gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: Int(lineScoreData.totalLines) * 100)
         mainView.incentiveView.show(score: Int(lineScoreData.pitchScore))
     }
-}
-
-// MARK: - LyricsFileDownloaderDelegate
-extension MainTestVC: LyricsFileDownloaderDelegate {
-    func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
-        if let data = fileData {
-            let model = KaraokeView.parseLyricData(lyricFileData: data)!
-            lyricModel = model
-            setLyricToView()
-            mccManager.openMusic()
-        }
-        else {
-            Log.errorText(text: "onLyricsFileDownloadCompleted fail", tag: logTag)
-        }
-    }
-    
-    func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {}
 }
 
 // MARK: - ProgressProviderDelegate

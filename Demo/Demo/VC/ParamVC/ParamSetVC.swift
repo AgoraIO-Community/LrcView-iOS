@@ -60,6 +60,7 @@ class ParamSetVC: UIViewController {
                                                  .init(title: "使用图片创建粒子动画"),
                                                  .init(title: "打分容忍度 范围：0-1"),
                                                  .init(title: "showDebugView"),
+                                                 .init(title: "拖腔字优化")
                 ]),
                 Section(title: "非歌词组件配置", rows: [.init(title: "歌词类型")]),
         ]
@@ -242,6 +243,10 @@ class ParamSetVC: UIViewController {
             if indexPath.row == 10 {
                 cell.detailTextLabel?.text = "\(param.scoring.showDebugView)"
             }
+            
+            if indexPath.row == 11 {
+                cell.detailTextLabel?.text = param.scoring.isSustainedPitchOptimizationEnabled ? "开" : "关"
+            }
         }
         
         if indexPath.section == 3 {
@@ -370,12 +375,16 @@ class ParamSetVC: UIViewController {
             
             /// 打分容忍度 范围：0-1
             if indexPath.row == 9 {
-                param.scoring.hitScoreThreshold = genValue(current: param.scoring.hitScoreThreshold, ops: [0, 0.2, 0.5, 0.7, 1])
+                param.scoring.hitScoreThreshold = genValue(current: param.scoring.hitScoreThreshold, ops: [0, 0.2, 0.3, 0.4, 0.5, 0.55, 0.6, 0.65, 0.7, 1])
             }
             
             /// showDebugView
             if indexPath.row == 10 {
                 param.scoring.showDebugView = !param.scoring.showDebugView
+            }
+            
+            if indexPath.row == 11 {
+                param.scoring.isSustainedPitchOptimizationEnabled = !param.scoring.isSustainedPitchOptimizationEnabled
             }
         }
         
