@@ -287,7 +287,6 @@ class ScoringMachine: ScoringMachineProtocol {
         currentHighlightInfos = []
         dataList = []
         lineEndTimes = []
-        cumulativeScore = 0
         currentIndexOfLine = 0
         lineScores = []
         toneScores = []
