@@ -50,6 +50,7 @@
 		26D97F842CA401B900AE8C85 /* MiniSizeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269189BF2A8F749100F2B03C /* MiniSizeVC.swift */; };
 		26E211FE2B2AF84800297136 /* DownloadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E211FD2B2AF84800297136 /* DownloadVC.swift */; };
 		26E212002B2AF8AD00297136 /* DownloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E211FF2B2AF8AD00297136 /* DownloadView.swift */; };
+		26E314282CC6530D00ABC389 /* LyricLabelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E314272CC6530D00ABC389 /* LyricLabelVC.swift */; };
 		26E5BF7D2990D6B30051AF67 /* 235653.xml in Resources */ = {isa = PBXBuildFile; fileRef = 26E5BF7C2990D6B30051AF67 /* 235653.xml */; };
 		26E5BFBC29926F2D0051AF67 /* GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */; };
 		26E8030F298BAF1B00DBF23F /* OCVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E8030E298BAF1B00DBF23F /* OCVC.m */; };
@@ -107,6 +108,7 @@
 		26D97F802CA25EDB00AE8C85 /* MainTestVC+Debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainTestVC+Debug.swift"; sourceTree = "<group>"; };
 		26E211FD2B2AF84800297136 /* DownloadVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadVC.swift; sourceTree = "<group>"; };
 		26E211FF2B2AF8AD00297136 /* DownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadView.swift; sourceTree = "<group>"; };
+		26E314272CC6530D00ABC389 /* LyricLabelVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LyricLabelVC.swift; sourceTree = "<group>"; };
 		26E5BF7C2990D6B30051AF67 /* 235653.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 235653.xml; sourceTree = "<group>"; };
 		26E5BF7E299245E10051AF67 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		26E5BFBB29926F2D0051AF67 /* GCDTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDTimer.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 				26E8030E298BAF1B00DBF23F /* OCVC.m */,
 				269189BF2A8F749100F2B03C /* MiniSizeVC.swift */,
 				26E211FD2B2AF84800297136 /* DownloadVC.swift */,
+				26E314272CC6530D00ABC389 /* LyricLabelVC.swift */,
 			);
 			path = VC;
 			sourceTree = "<group>";
@@ -451,6 +454,7 @@
 				26AC90AD29EE72A900AB6EC5 /* SongListVC.swift in Sources */,
 				2602311E29C9DCDF0036F74A /* KTVView.swift in Sources */,
 				2643DDB829ACCB9600018224 /* ProfileVC.swift in Sources */,
+				26E314282CC6530D00ABC389 /* LyricLabelVC.swift in Sources */,
 				26D97F822CA3FE0600AE8C85 /* SelectedLyricVC.swift in Sources */,
 				26D97F7F2C9D612B00AE8C85 /* MainTestVCEx+Debug.swift in Sources */,
 				26D97F7E2C9D5F2D00AE8C85 /* MainTestVCEx.swift in Sources */,
