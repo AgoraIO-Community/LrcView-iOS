@@ -17,6 +17,7 @@ protocol MccManagerDelegateEx: NSObjectProtocol {
                         percent: Int,
                         lyricOffset: Int,
                         songOffsetBegin: Int,
+                        songOffsetEnd: Int,
                         errMsg: String?)
     func onOpenMusic(_ manager: MccManagerEx)
     func onMccExScoreStart(_ manager: MccManagerEx)
@@ -310,6 +311,7 @@ extension MccManagerEx: AgoraMusicContentCenterExEventDelegate {
                                      percent: percent,
                                      lyricOffset: lyricOffset,
                                      songOffsetBegin: songOffsetBegin,
+                                     songOffsetEnd: songOffsetEnd,
                                      errMsg: errMsg)
         }
     }
