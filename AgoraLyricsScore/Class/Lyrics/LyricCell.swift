@@ -93,10 +93,6 @@ class LyricCell: UITableViewCell {
     }
     
     func update(model: Model) {
-        if model.text.contains("我不会发现") {
-            print("contentView.bounds.width: \(contentView.bounds.width)")
-        }
-        
         label.text = model.text
         label.status = model.status
         label.progressRate = CGFloat(model.progressRate)

@@ -157,6 +157,8 @@ extension LyricsView {
     }
     
     fileprivate func commonInit() {
+        tableView.estimatedRowHeight = 35
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.register(LyricCell.self, forCellReuseIdentifier: "LyricsCell")
         tableView.delegate = self
         tableView.dataSource = self

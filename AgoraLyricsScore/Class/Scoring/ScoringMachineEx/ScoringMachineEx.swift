@@ -34,8 +34,8 @@ class ScoringMachineEx: ScoringMachineProtocol {
     fileprivate var canvasViewSize: CGSize = .zero
     fileprivate var lyricData: LyricModel?
     fileprivate var isDragging = false
-    fileprivate let queue = DispatchQueue(label: "ScoringMachine")
-    let logTag = "ScoringMachine"
+    fileprivate let queue = DispatchQueue(label: "ScoringMachineEx")
+    let logTag = "ScoringMachineEx"
     
     // MARK: - Internal
     
