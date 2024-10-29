@@ -71,8 +71,12 @@ class KRCParser {
                     /// key值，从第二个字符开始取，到“:”之前
                     let key = String(line[line.index(after: line.startIndex)..<range.lowerBound])
                     /// value值，“:”之后到“]”之前
-                    let value = String(line[range.upperBound..<line.index(before: line.endIndex)])
-                    metadata[key] = value
+                    if range.upperBound < line.index(before: line.endIndex) { /** Fix if line = "[ti:" */
+                        let value = String(line[range.upperBound..<line.index(before: line.endIndex)])
+                        metadata[key] = value
+                    } else {
+                        Log.errorText(text: "metadata value is empty, key:\(key)", tag: logTag)
+                    }
                 }
                 else {
                     if line.contains(">"),  line.contains("<") {
