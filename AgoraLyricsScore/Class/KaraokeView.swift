@@ -76,6 +76,7 @@ extension KaraokeView {
     /// - Parameters:
     ///   - lyricFileData: 歌词文件的内容（xml、krc、lrc）
     ///   - pitchFileData: pitch文件的内容
+    ///   - lyricOffset: krc歌曲和歌词进度的偏移
     ///   - includeCopyrightSentence: 句子是否需要包含版本信息(只在pitchFileData不为空，且krc类型歌词有效)
     /// - Returns: 歌词信息
     @objc public static func parseLyricData(lyricFileData: Data,
@@ -129,12 +130,10 @@ extension KaraokeView {
     }
     
     /// 设置实时音高
-    /// - Note: 获取方式1，从Agora RTC 回调方法`reportAudioVolumeIndicationOfSpeakers` 获取speakerPitch。
-    /// - Note: 获取方式2，可以从AgoraContentCenterEx回调方法 `onPitch`[该回调频率是50ms/次] 获取speakerPitch。
-    /// - note: 获取方式3，从mcc `OnPitch` 获取speakerPitch和score。
+    /// - Note: 从mcc `OnPitch`方法中，获取对应参数。
     /// - Parameter speakerPitch: 演唱者的实时音高值。
-    /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）.方式1给0.
-    /// - Parameter progressInMs: 当前得分。方式1、2给0。
+    /// - Parameter progressInMs: 当前音高、得分对应的实时进度（ms）.方式1给0。
+    /// - Parameter score: 当前得分。如`usingInternalScoring` = true 给 0。
     @objc public func setPitch(speakerPitch: Double, progressInMs: UInt, score: UInt) {
         guard scoringEnabled else { return }
         if !Thread.isMainThread {
@@ -147,7 +146,7 @@ extension KaraokeView {
     }
     
     /// 设置当前歌曲的进度
-    /// - Note: 可以获取播放器的当前进度进行设置
+    /// - Note: 要求频率 <= 20ms/次
     /// - Parameter progress: 歌曲进度 (ms)
     @objc public func setProgress(progress: UInt) {
         
@@ -164,7 +163,8 @@ extension KaraokeView {
     }
     
     /// 设置自定义分数计算对象
-    /// - Note: 如果不调用此方法，则内部使用默认计分规则
+    /// - Note: 前提条件：只在`usingInternalScoring = true` 时有效
+    /// - Note: 如果不调用此方法，则内部使用默认计分规则。
     /// - Parameter algorithm: 遵循`IScoreAlgorithm`协议实现的对象
     @objc public func setScoreAlgorithm(algorithm: IScoreAlgorithm) {
         if !Thread.isMainThread {
@@ -174,6 +174,7 @@ extension KaraokeView {
     }
     
     /// 设置打分难易程度(难度系数)
+    /// - Note: 前提条件：只在`usingInternalScoring = true` 时有效
     /// - Note: 值越小打分难度越小，值越高打分难度越大
     /// - Parameter level: 系数, 范围：[0, 100], 如不设置默认为15
     @objc public func setScoreLevel(level: Int) {
@@ -185,20 +186,6 @@ extension KaraokeView {
             return
         }
         scoringView.scoreLevel = level
-    }
-    
-    /// 设置打分分值补偿
-    /// - Note: 在计算分值的时候作为补偿
-    /// - Parameter offset: 分值补偿 [-100, 100], 如不设置默认为0
-    @objc public func setScoreCompensationOffset(offset: Int) {
-        if !Thread.isMainThread {
-            Log.error(error: "invoke setScoreCompensationOffset not isMainThread ", tag: logTag)
-        }
-        if offset < -100 || offset > 100 {
-            Log.error(error: "setScoreCompensationOffset out bounds \(offset), [-100, 100]", tag: logTag)
-            return
-        }
-        scoringView.scoreCompensationOffset = offset
     }
 }
 
