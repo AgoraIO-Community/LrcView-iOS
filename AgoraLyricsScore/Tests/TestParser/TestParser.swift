@@ -166,6 +166,17 @@ class TestParser: XCTestCase {
         XCTAssertTrue(model.hasPitch == false)
     }
     
+    func testKRCFile3() { /// will not crash #CSD-68440
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "krc-error-pattern", ofType: "krc")!)
+        let data = try! Data(contentsOf: url)
+        let p = KRCParser()
+        guard let model = p.parse(krcFileData: data, lyricOffset: 10) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count == 0)
+    }
+    
     func testPitchParser() {
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!)
         let data = try! Data(contentsOf: url)
