@@ -121,6 +121,7 @@ extension SelectedLyricVC: MccManagerDelegateEx {
                         percent: Int,
                         lyricOffset: Int,
                         songOffsetBegin: Int,
+                        songOffsetEnd: Int,
                         errMsg: String?) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }

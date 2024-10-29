@@ -147,6 +147,7 @@ extension MainTestVCEx: MccManagerDelegateEx {
                         percent: Int,
                         lyricOffset: Int,
                         songOffsetBegin: Int,
+                        songOffsetEnd: Int,
                         errMsg: String?) {
         let needPitch = !noPitchFile
         DispatchQueue.main.async { [weak self] in
