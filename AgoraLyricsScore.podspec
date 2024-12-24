@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "AgoraLyricsScore"
-  spec.version      = "2.1.1"
+  spec.version      = "2.1.2"
   spec.summary      = "AgoraLyricsScore"
   spec.description  = "AgoraLyricsScore"
 
