@@ -12,7 +12,13 @@ target 'Demo' do
   pod 'AgoraRtcEngine_Special_iOS', '4.1.1.24'
   pod 'AgoraMccExService', :path => "/Volumes/T5/PodSpec/AgoraMccExService/AgoraMccExService.podspec"
   pod "Zip"
-  pod "ScoreEffectUI", :path => "../../ScoringEffectUI/ScoreEffectUI/ScoreEffectUI.podspec", :testspecs => ['Tests']
+  pod "ScoreEffectUI", :path => "~/work/DevHistoryProject/ScoreEffectUI/ScoreEffectUI.podspec", :testspecs => ['Tests']
   pod 'AgoraComponetLog', '0.0.3'
   pod 'SVProgressHUD'
 end
+
+#post_install do |installer|
+#  installer.pods_project.build_configurations.each do |config|
+#    config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+#  end
+#end

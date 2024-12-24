@@ -177,6 +177,17 @@ class TestParser: XCTestCase {
         XCTAssert(model.lines.count == 0)
     }
     
+    func testKRCFile4() { /// will get more than 2 lines
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "7303315432472546953", ofType: "krc")!)
+        let data = try! Data(contentsOf: url)
+        let p = KRCParser()
+        guard let model = p.parse(krcFileData: data, lyricOffset: 0) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count == 55)
+    }
+    
     func testPitchParser() {
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "4875936889260991133.pitch", ofType: nil)!)
         let data = try! Data(contentsOf: url)
