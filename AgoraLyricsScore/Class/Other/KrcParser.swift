@@ -55,14 +55,12 @@ class KRCParser {
         var metadata: [String : String] = [:]
         var lineModels = [LyricLineModel]()
         
+        // 创建一个字符集，包含 '\r' 和 '\n'
+        let newlineCharacterSet = CharacterSet.newlines.union(CharacterSet(charactersIn: "\r"))
+        
         /** Fix KRC文件内容中，每一行的分隔符可能是"\n"，也可能是"\r\n"，所以需要判断分隔符 **/
         var lineStrings = [String]()
-        if content.contains("\r\n") {
-            lineStrings = content.components(separatedBy: "\r\n")
-        }
-        else {
-            lineStrings = content.components(separatedBy: "\n")
-        }
+        lineStrings = content.components(separatedBy: newlineCharacterSet)
         
         for line in lineStrings {
             /// 处理metadata部分：`[ti:星晴]`
@@ -173,7 +171,7 @@ class KRCParser {
 extension KRCParser {
     func getMostCloseToFirstPitchIndex(lineBegins: [UInt], firstPitchStartTime: UInt) -> Int {
         /**
-            用firstPitchStartTime，和lineBegins中的每一个进行对比，找到lineBegins中距离firstPitchStartTime最近的那个index
+         用firstPitchStartTime，和lineBegins中的每一个进行对比，找到lineBegins中距离firstPitchStartTime最近的那个index
          **/
         var minDiff = UInt.max
         var firstMinIndex = 0
