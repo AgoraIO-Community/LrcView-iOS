@@ -34,7 +34,7 @@ class MiniSizeVC: UIViewController {
     var mcc: AgoraMusicContentCenter!
     var mpk: AgoraMusicPlayerProtocol!
 //    var song = Item(code: 6246262727283870, isXML: false)
-    var song = Item(code: 6625526605291650, isXML: true)
+    var song = Item(code: 6625526605291650, isXML: false)
     /// 0：十年， 1: 王菲 2:晴天
     /// lrc: 6246262727283870、
     /// 6775664001035810 句子一开始为0
@@ -491,6 +491,7 @@ extension MiniSizeVC: AgoraRtcMediaPlayerDelegate {
 
 extension MiniSizeVC: KaraokeDelegate {
     func onKaraokeView(view: KaraokeView, didDragTo position: UInt) {
+        return
         /// drag正在进行的时候, 不会更新内部的progress, 这个时候设置一个last值，等到下一个定时时间到来的时候，把这个last的值-250后送入组建
         self.last = position + 250
         mpk.seek(toPosition: Int(position))

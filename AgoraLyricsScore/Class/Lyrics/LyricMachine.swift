@@ -10,7 +10,7 @@ import Foundation
 class LyricMachine {
     weak var delegate: LyricMachineDelegate?
     fileprivate var lyricData: LyricModel?
-    fileprivate var dataList = [LyricCell.Model]()
+    fileprivate var dataList = [LyricCellModel]()
     fileprivate var progress: UInt = 0
     fileprivate var currentIndex = 0
     fileprivate var ignoreAnimationAfterDrag = false
@@ -64,7 +64,7 @@ class LyricMachine {
         let isKrcType = data.lyricsType == .krc
         dataList = data.lines.map({ line in
             let duration = isKrcType ? line.tones.map({ $0.duration }).reduce(0, +) : line.duration
-            return LyricCell.Model(text: line.content,
+            return LyricCellModel(text: line.content,
                                    progressRate: 0,
                                    beginTime: line.beginTime,
                                    duration: duration,
@@ -159,7 +159,7 @@ extension LyricMachine {
     ///   - scrollByWord: 是否可以打分（数据源是lrc格式不可打分）
     /// - Returns: `nil` 表示无法计算, 其他： [0, 1]
     static func calculateProgressRate(progress: UInt,
-                                      model: LyricCell.Model,
+                                      model: LyricCellModel,
                                       scrollByWord: Bool) -> Double? {
         if scrollByWord {
             let toneCount = model.tones.filter({ $0.word.isEmpty == false }).count

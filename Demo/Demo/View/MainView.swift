@@ -19,6 +19,12 @@ extension MainView {
         case quick
         case changePlayMode
     }
+    
+    enum DisplayMode {
+        case normal
+        /// 窄宽度模式，用于测试歌曲换行/滚动
+        case narrow
+    }
 }
 
 protocol MainViewDelegate: NSObjectProtocol {
@@ -37,8 +43,11 @@ class MainView: UIView {
     private let changeButton = UIButton()
     private let pauseButton = UIButton()
     private let changePlayModeButton = UIButton()
+    private let changeDisplayModeButton = UIButton()
     private let label = UILabel()
     private let consoleView = ConsoleView()
+    var karaokeViewLeftConstraint, karaokeViewRightConstraint: NSLayoutConstraint!
+    private var displayMode: DisplayMode = .normal
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -63,11 +72,13 @@ class MainView: UIView {
         quickButton.setTitle("退出", for: .normal)
         pauseButton.setTitle("暂停/继续", for: .normal)
         changePlayModeButton.setTitle("原唱伴奏切换", for: .normal)
+        changeDisplayModeButton.setTitle("切换到窄显示", for: .normal)
         skipButton.backgroundColor = .red
         setButton.backgroundColor = .red
         changeButton.backgroundColor = .red
         quickButton.backgroundColor = .red
         changePlayModeButton.backgroundColor = .red
+        changeDisplayModeButton.backgroundColor = .red
         pauseButton.backgroundColor = .red
         label.textColor = .white
         label.backgroundColor = .red
@@ -82,6 +93,7 @@ class MainView: UIView {
         addSubview(quickButton)
         addSubview(pauseButton)
         addSubview(changePlayModeButton)
+        addSubview(changeDisplayModeButton)
         addSubview(lineScoreView)
         addSubview(label)
         addSubview(consoleView)
@@ -95,12 +107,15 @@ class MainView: UIView {
         quickButton.translatesAutoresizingMaskIntoConstraints = false
         pauseButton.translatesAutoresizingMaskIntoConstraints = false
         changePlayModeButton.translatesAutoresizingMaskIntoConstraints = false
+        changeDisplayModeButton.translatesAutoresizingMaskIntoConstraints = false
         lineScoreView.translatesAutoresizingMaskIntoConstraints = false
         label.translatesAutoresizingMaskIntoConstraints = false
         consoleView.translatesAutoresizingMaskIntoConstraints = false
         
-        karaokeView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        karaokeView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        karaokeViewLeftConstraint = karaokeView.leftAnchor.constraint(equalTo: leftAnchor)
+        karaokeViewLeftConstraint.isActive = true
+        karaokeViewRightConstraint = karaokeView.rightAnchor.constraint(equalTo: rightAnchor)
+        karaokeViewRightConstraint.isActive = true
         karaokeView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
         karaokeView.heightAnchor.constraint(equalToConstant: 350).isActive = true
         
@@ -135,6 +150,9 @@ class MainView: UIView {
         changePlayModeButton.leftAnchor.constraint(equalTo: quickButton.leftAnchor).isActive = true
         changePlayModeButton.topAnchor.constraint(equalTo: pauseButton.topAnchor).isActive = true
         
+        changeDisplayModeButton.leftAnchor.constraint(equalTo: pauseButton.leftAnchor).isActive = true
+        changeDisplayModeButton.topAnchor.constraint(equalTo: pauseButton.bottomAnchor, constant: 20).isActive = true
+        
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
@@ -151,6 +169,7 @@ class MainView: UIView {
         quickButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         pauseButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
         changePlayModeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
+        changeDisplayModeButton.addTarget(self, action: #selector(buttonTap(_:)), for: .touchUpInside)
     }
     
     func updateView(param: Param) {
@@ -174,6 +193,7 @@ class MainView: UIView {
         karaokeView.lyricsView.firstToneHintViewStyle.size = param.lyric.firstToneHintViewStyle.size
         karaokeView.lyricsView.firstToneHintViewStyle.bottomMargin = param.lyric.firstToneHintViewStyle.bottomMargin
         karaokeView.lyricsView.draggable = param.lyric.draggable
+        karaokeView.lyricsView.enableLineWrap = param.lyric.enableLineWrap
         karaokeView.setScoreLevel(level: param.karaoke.scoreLevel)
         karaokeView.setScoreCompensationOffset(offset: param.karaoke.scoreCompensationOffset)
         karaokeView.scoringView.particleEffectHidden = param.scoring.particleEffectHidden
@@ -208,6 +228,9 @@ class MainView: UIView {
         case changePlayModeButton:
             delegate?.mainView(self, onAction: .changePlayMode)
             return
+        case changeDisplayModeButton:
+            reservedDisplayMode()
+            return
         default:
             break
         }
@@ -215,6 +238,20 @@ class MainView: UIView {
     
     func setConsoleText(_ text: String) {
         consoleView.set(text: text)
+    }
+    
+    private func reservedDisplayMode() {
+        displayMode = displayMode == .normal ? .narrow : .normal
+        switch displayMode {
+        case .normal:
+            karaokeViewLeftConstraint.constant = 0
+            karaokeViewRightConstraint.constant = 0
+        case .narrow:
+            let space = UIScreen.main.bounds.width / 3
+            karaokeViewLeftConstraint.constant = UIScreen.main.bounds.width / 3
+            karaokeViewRightConstraint.constant = -1 * karaokeViewLeftConstraint.constant
+        }
+        layoutIfNeeded()
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  LyricsLabel.swift
+//  LyricLabelRoll.swift
 //  AgoraLyricsScore
 //
 //  Created by ZYP on 2022/12/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LyricLabel: UILabel {
+class LyricLabelRoll: UILabel, LysicLabelProtocol {
     /// [0, 1]
     var progressRate: CGFloat = 0 { didSet { setNeedsDisplay() } }
     /// 正常歌词颜色
@@ -21,7 +21,7 @@ class LyricLabel: UILabel {
     /// 高亮歌词文字大小
     var textHighlightFontSize: UIFont = .systemFont(ofSize: 18)
     
-    var status: Status = .normal { didSet { updateState() } }
+    var status: LysicLabelStatus = .normal { didSet { updateState() } }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -71,9 +71,3 @@ class LyricLabel: UILabel {
     }
 }
 
-extension LyricLabel {
-    enum Status {
-        case normal
-        case selectedOrHighlighted
-    }
-}

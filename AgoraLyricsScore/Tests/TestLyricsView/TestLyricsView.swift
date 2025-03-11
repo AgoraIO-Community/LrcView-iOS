@@ -26,7 +26,7 @@ class TestLyricsView: XCTestCase {
             return
         }
         
-        let dataList = model.lines.map({ LyricCell.Model(text: $0.content,
+        let dataList = model.lines.map({ LyricCellRoll.Model(text: $0.content,
                                                         progressRate: 0,
                                                         beginTime: $0.beginTime,
                                                         duration: $0.duration,

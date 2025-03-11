@@ -39,6 +39,8 @@ public class LyricsView: UIView {
     @objc public var draggable: Bool = false
     /// 活跃的歌词的位置
     @objc public var activeLinePosition: UITableView.ScrollPosition = .middle
+    /// 是否使用换行风格 （以歌曲为单位，不支持中途修改）
+    @objc public var enableLineWrap = false
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
     
@@ -49,12 +51,14 @@ public class LyricsView: UIView {
     fileprivate let noLyricTipsLabel = UILabel()
     fileprivate let tableView = UITableView()
     fileprivate let logTag = "LyricsView"
-    fileprivate var dataList = [LyricCell.Model]()
+    fileprivate var dataList = [LyricCellModel]()
     fileprivate var isNoLyric = false
     fileprivate let referenceLineView = UIView()
     fileprivate var isDragging = false { didSet { referenceLineView.isHidden = !isDragging } }
     fileprivate var tableViewTopConstraint: NSLayoutConstraint!, firstToneHintViewHeightConstraint: NSLayoutConstraint!
     fileprivate let lyricMachine = LyricMachine()
+    fileprivate var lyricsDataCanScrollByWord = false
+    fileprivate var useLineWrap = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -72,6 +76,22 @@ public class LyricsView: UIView {
     }
     
     func setLyricData(data: LyricModel?) {
+        lyricsDataCanScrollByWord = data?.lyricsType ?? .lrc != .lrc
+        /// 判断是否用换行显示
+        Log.debug(text: "enableLineWrap = \(enableLineWrap),lyricsDataCanScrollByWord = \(lyricsDataCanScrollByWord) ", tag: logTag)
+        
+        if enableLineWrap {
+            useLineWrap = true
+        }
+        else {
+            if lyricsDataCanScrollByWord {
+                useLineWrap = false
+            }
+            else {
+                useLineWrap = true
+            }
+        }
+        
         isNoLyric = data == nil
         updateUI()
         lyricMachine.setLyricData(data: data)
@@ -159,7 +179,8 @@ extension LyricsView {
     fileprivate func commonInit() {
         tableView.estimatedRowHeight = 35
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.register(LyricCell.self, forCellReuseIdentifier: "LyricsCell")
+        tableView.register(LyricCellRoll.self, forCellReuseIdentifier: LyricCellRoll.idf)
+        tableView.register(LyricCellLineWrap.self, forCellReuseIdentifier: LyricCellLineWrap.idf)
         tableView.delegate = self
         tableView.dataSource = self
         firstToneHintViewStyle.didUpdate = { [weak self] in
@@ -210,7 +231,8 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "LyricsCell", for: indexPath) as! LyricCell
+        let idf = useLineWrap ? LyricCellLineWrap.idf : LyricCellRoll.idf
+        let cell = tableView.dequeueReusableCell(withIdentifier: idf, for: indexPath) as! LyricCellProtocol
         cell.textNormalColor = inactiveLineTextColor
         cell.textSelectedColor = activeLineUpcomingTextColor
         cell.textHighlightedColor = activeLinePlayedTextColor
@@ -250,7 +272,7 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
 
 // MARK: - LyricMachineDelegate
 extension LyricsView: LyricMachineDelegate {
-    func lyricMachine(_ lyricMachine: LyricMachine, didSetLyricData datas: [LyricCell.Model]) {
+    func lyricMachine(_ lyricMachine: LyricMachine, didSetLyricData datas: [LyricCellModel]) {
         Log.debug(text: "set dataList \(datas.count)", tag: logTag)
         dataList = datas
         tableView.reloadData()
@@ -283,7 +305,7 @@ extension LyricsView: LyricMachineDelegate {
     }
     
     func lyricMachine(_ lyricMachine: LyricMachine, didUpdateLineAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: indexPath) as? LyricCell{
+        if let cell = tableView.cellForRow(at: indexPath) as? LyricCellProtocol {
             let model = dataList[indexPath.row]
             cell.update(model: model)
         }

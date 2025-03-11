@@ -1,5 +1,5 @@
 //
-//  LyricsCell.swift
+//  LyricCellRoll.swift
 //  AgoraLyricsScore
 //
 //  Created by ZYP on 2022/12/23.
@@ -7,8 +7,10 @@
 
 import UIKit
 
-class LyricCell: UITableViewCell {
-    private let label = LyricLabel()
+class LyricCellRoll: UITableViewCell, LyricCellProtocol {
+    static let idf = "LyricLabelRoll"
+    
+    private let label = LyricLabelRoll()
     /// 正常歌词背景色
     var textNormalColor: UIColor = .gray {
         didSet { updateUI() }
@@ -92,7 +94,7 @@ class LyricCell: UITableViewCell {
         label.textHighlightFontSize = textHighlightFontSize
     }
     
-    func update(model: Model) {
+    func update(model: LyricCellModel) {
         label.text = model.text
         label.status = model.status
         label.progressRate = CGFloat(model.progressRate)
@@ -100,7 +102,7 @@ class LyricCell: UITableViewCell {
         rollLabelIfNeed(model: model)
     }
     
-    private func rollLabelIfNeed(model: Model) {
+    private func rollLabelIfNeed(model: LyricCellModel) {
         if model.status == .normal { /** 不需要滚动 **/
             leftConstraint.constant = 0
             return
@@ -133,48 +135,4 @@ class LyricCell: UITableViewCell {
             }
         }
     }
-}
-
-extension LyricCell {
-    class Model {
-        let text: String
-        /// 进度 0-1
-        var progressRate: Double
-        /// 开始时间 单位为毫秒
-        let beginTime: UInt
-        /// 总时长 (ms)
-        let duration: UInt
-        /// 状态
-        var status: Status
-        
-        var tones: [LyricToneModel]
-        
-        init(text: String,
-             progressRate: Double,
-             beginTime: UInt,
-             duration: UInt,
-             status: Status,
-             tones: [LyricToneModel]) {
-            self.text = text
-            self.progressRate = progressRate
-            self.beginTime = beginTime
-            self.duration = duration
-            self.status = status
-            self.tones = tones
-        }
-        
-        func update(progressRate: Double) {
-            self.progressRate = progressRate
-        }
-        
-        func update(status: Status) {
-            self.status = status
-        }
-        
-        var endTime: UInt {
-            beginTime + duration
-        }
-    }
-    
-    typealias Status = LyricLabel.Status
 }

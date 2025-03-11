@@ -48,7 +48,8 @@ class ParamSetVC: UIViewController {
                                                 .init(title: "拖拽"),
                                                 .init(title: "无歌词提示文案"),
                                                 .init(title: "无歌词提示文字颜色"),
-                                                .init(title: "无歌词提示文字大小")]),
+                                                .init(title: "无歌词提示文字大小"),
+                                                .init(title: "歌词换行风格")]),
                 Section(title: "Scoring", rows: [.init(title: "评分视图高度"),
                                                  .init(title: "渲染视图到顶部的间距"),
                                                  .init(title: "游标的起始位置"),
@@ -193,6 +194,9 @@ class ParamSetVC: UIViewController {
                 cell.detailTextLabel?.text = "字体"
                 cell.detailTextLabel?.font = param.lyric.noLyricTipsFont
             }
+            if indexPath.row == 14 {
+                cell.detailTextLabel?.text = param.lyric.enableLineWrap ? "开" : "关"
+            }
         }
         
         if indexPath.section == 2 {
@@ -321,6 +325,9 @@ class ParamSetVC: UIViewController {
             }
             if indexPath.row == 13 {
                 param.lyric.noLyricTipsFont = UIFont(name: "PingFangSC-Semibold", size: .random(in: 5...25))!
+            }
+            if indexPath.row == 14 {
+                param.lyric.enableLineWrap = !param.lyric.enableLineWrap
             }
         }
         

@@ -10,7 +10,7 @@ import Foundation
 protocol LyricMachineDelegate: NSObjectProtocol {
     /// 在 `setLyricData` 完成后调用
     func lyricMachine(_ lyricMachine: LyricMachine,
-                      didSetLyricData datas: [LyricCell.Model])
+                      didSetLyricData datas: [LyricCellModel])
     
     /// 在 `setLyricData` 完成后调用
     /// - Parameters:
@@ -30,7 +30,7 @@ protocol LyricMachineDelegate: NSObjectProtocol {
 }
 
 extension LyricMachine { /** invoke **/
-    func invokeLyricMachine(didSetLyricData datas: [LyricCell.Model]) {
+    func invokeLyricMachine(didSetLyricData datas: [LyricCellModel]) {
         if Thread.isMainThread {
             delegate?.lyricMachine(self, didSetLyricData: datas)
             return

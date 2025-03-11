@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.homepage     = "https://github.com/AgoraIO-Community"
   spec.license      = "MIT"
   spec.author       = { "ZYQ" => "zhaoyongqiang@agora.io" }
-  spec.source       = { :git => "https://github.com/AgoraIO-Community/LrcView-iOS.git", :tag => '2.1.1' }
+  spec.source       = { :git => "https://github.com/AgoraIO-Community/LrcView-iOS.git", :tag => '2.1.2' }
   spec.source_files  = ["AgoraLyricsScore/Class/**/*.swift", "AgoraLyricsScore/Class/AL/*"]
   spec.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
   spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
@@ -24,6 +24,7 @@ spec.test_spec 'Tests' do |test_spec|
     test_spec.source_files = "AgoraLyricsScore/Tests/**/*.{swift}"
     test_spec.resource = "AgoraLyricsScore/Tests/Resource/*"
     test_spec.frameworks = 'UIKit','Foundation'
+    test_spec.dependency 'Zip', '2.1.2'
     test_spec.requires_app_host = true
 end
 end

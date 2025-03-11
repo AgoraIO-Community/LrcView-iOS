@@ -68,6 +68,8 @@ class LyricViewParam {
     var firstToneHintViewStyle: FirstToneHintViewStyle = .init()
     /// 是否开启拖拽
     var draggable: Bool = false
+    /// 是否打开换行风格
+    var enableLineWrap: Bool = false
 }
 
 class ScoringViewParam {
