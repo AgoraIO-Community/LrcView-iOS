@@ -177,6 +177,18 @@ class TestParser: XCTestCase {
         XCTAssert(model.lines.count == 0)
     }
     
+    func testKRCFile3_1() { /// has extra char
+        /// [570,270]<0,60,0>蓝<60,60,0>心<120,60,0>羽<180,90,0>:
+        let url = URL(fileURLWithPath: Bundle.current.path(forResource: "krc-error-pattern", ofType: "krc")!)
+        let data = try! Data(contentsOf: url)
+        let p = KRCParser()
+        guard let model = p.parse(krcFileData: data, lyricOffset: 10) else {
+            XCTFail()
+            return
+        }
+        XCTAssert(model.lines.count == 0)
+    }
+    
     func testKRCFile4() { /// will get more than 2 lines
         let url = URL(fileURLWithPath: Bundle.current.path(forResource: "7303315432472546953", ofType: "krc")!)
         let data = try! Data(contentsOf: url)
