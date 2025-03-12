@@ -164,13 +164,7 @@ extension LyricMachine {
         if scrollByWord {
             let toneCount = model.tones.filter({ $0.word.isEmpty == false }).count
             for (index, tone) in model.tones.enumerated() {
-                if progress >= tone.endTime {
-                    model.toneProgressItems[index].progressRate = 1.0
-                }
-                
                 if progress >= tone.beginTime, progress <= tone.beginTime + tone.duration {
-                    model.toneProgressItems[index].progressRate = Double(progress - tone.beginTime) / Double(tone.duration)
-                    
                     /// calculated whole sentence's progress
                     let progressRate = Double((progress - tone.beginTime)) / Double(tone.duration)
                     let total = (Double(index) + progressRate) / Double(toneCount)

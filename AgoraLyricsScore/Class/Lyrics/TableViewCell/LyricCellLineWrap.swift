@@ -94,7 +94,7 @@ class LyricCellLineWrap: UITableViewCell, LyricCellProtocol {
     func update(model: LyricCellModel) {
         label.text = model.text
         label.status = model.status
-        label.update(wordItems: model.toneProgressItems)
+        label.progressRate = model.progressRate
     }
 }
 
