@@ -75,7 +75,7 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
             context.setLineWidth(1.0)
             context.setLineCap(.butt)
             context.addPath(path)
-            context.fillPath()
+            context.clip()
             let _textColor = textColor
             textColor = textHighlightedColor
             super.draw(rect)
@@ -147,13 +147,13 @@ extension UILabel {
                 }
                 
                 let rect = CGRect(
-                    x: lineOrigin.x,
-                    y: lineOrigin.y,
-                    width: lineWidth,
+                    x: xPosition,
+                    y: lineOrigin.y - descent,
+                    width: width,
                     height: ascent + descent
                 ).applying(transform)
                 
-                return rect.offsetBy(dx: 0, dy: textInsets.top) // 与绘制边距保持一致
+                return rect.offsetBy(dx: 0, dy: 0)
             }
             
             currentIndex += lineRange.length
@@ -162,9 +162,6 @@ extension UILabel {
         return nil
     }
     
-    private var textInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-    }
     
     private func calculateXPosition(lineWidth: Double, xOffset: CGFloat, lineOrigin: CGPoint) -> CGFloat {
         switch textAlignment {
