@@ -40,7 +40,7 @@ public class LyricsView: UIView {
     /// 活跃的歌词的位置
     @objc public var activeLinePosition: UITableView.ScrollPosition = .middle
     /// 是否使用换行风格 （以歌曲为单位，不支持中途修改）
-    @objc public var enableLineWrap = false
+    @objc public var enableLineWrap = true
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
     

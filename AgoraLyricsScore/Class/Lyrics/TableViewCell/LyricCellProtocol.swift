@@ -37,6 +37,7 @@ class LyricCellModel {
     var status: Status
     
     var tones: [LyricToneModel]
+    var toneProgressItems: [ToneProgressItem]
     
     init(text: String,
          progressRate: Double,
@@ -50,6 +51,7 @@ class LyricCellModel {
         self.duration = duration
         self.status = status
         self.tones = tones
+        self.toneProgressItems = tones.map { ToneProgressItem(tone: $0) }
     }
     
     func update(progressRate: Double) {
@@ -62,6 +64,17 @@ class LyricCellModel {
     
     var endTime: UInt {
         beginTime + duration
+    }
+}
+
+/// 记录每个字的进度，用在换行类型的逐字歌词
+class ToneProgressItem {
+    let tone: LyricToneModel
+    /// 进度 [0, 1]，歌曲播放进度
+    var progressRate: Double = 0
+    
+    init(tone: LyricToneModel) {
+        self.tone = tone
     }
 }
 

@@ -24,13 +24,13 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
     public var status: LysicLabelStatus = .normal { didSet { updateState() } }
     
     
-    private var currentWordItems: [WordItem] = []
+    private var currentWordItems: [ToneProgressItem] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         numberOfLines = 0
         lineBreakMode = .byWordWrapping
-        textAlignment = .center
+        textAlignment = .left
     }
     
     required init?(coder: NSCoder) {
@@ -84,42 +84,18 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
         
     }
     
-    private func colorForWordItem(_ item: WordItem) -> UIColor {
+    private func colorForWordItem(_ item: ToneProgressItem) -> UIColor {
         // 删除原有颜色判断，颜色绘制逻辑现在在draw方法中处理
         return .clear // 此处颜色不再使用
     }
     
     /// 每次更新歌词进度时候调用
-    public func update(wordItems: [WordItem]) {
+    func update(wordItems: [ToneProgressItem]) {
         currentWordItems = wordItems
-        text = wordItems.map { $0.text }.joined()
         setNeedsDisplay()
     }
 }
 
-
-public extension LyricLabelLineWrap {
-    class WordItem {
-        /// 歌词
-        let text: String
-        /// 本“字”开始时间 ms
-        let startTime: Double
-        /// 本“字”结束时间 ms
-        let endTime: Double
-        /// 持续时长 ms
-        let duration: Double
-        /// 进度 [0, 1]，歌曲播放进度
-        public var progressRate: Double
-        
-        public init(text: String, startTime: Double, endTime: Double) {
-            self.text = text
-            self.startTime = startTime
-            self.endTime = endTime
-            self.duration = endTime - startTime
-            self.progressRate = 0
-        }
-    }
-}
 
 import CoreText
 
@@ -144,8 +120,6 @@ extension UILabel {
         var lineOrigin = CGPoint.zero
         var currentIndex = 0
         
-        
-        
         for (lineIndex, line) in lines.enumerated() {
             CTFrameGetLineOrigins(frame, CFRangeMake(lineIndex, 1), &lineOrigin)
             let lineRange = CTLineGetStringRange(line)
@@ -153,6 +127,7 @@ extension UILabel {
             if currentIndex + lineRange.length > index {
                 // 找到目标字符在行中的位置
                 let xOffset = CTLineGetOffsetForStringIndex(line, index, nil)
+                var width = CGFloat(CTLineGetOffsetForStringIndex(line, index + 1, nil) - xOffset)
                 
                 // 获取字形度量
                 var ascent: CGFloat = 0
@@ -166,17 +141,15 @@ extension UILabel {
                                                   xOffset: xOffset,
                                                   lineOrigin: lineOrigin)
                 
-                var width = CGFloat(CTLineGetOffsetForStringIndex(line, index + 1, nil) - xOffset)
-                
                 if width.isNaN {
                     // 处理换行导致的空白情况
                     width = 0
                 }
                 
                 let rect = CGRect(
-                    x: xPosition,
-                    y: lineOrigin.y + descent, // UIKit 坐标系调整
-                    width: width,
+                    x: lineOrigin.x,
+                    y: lineOrigin.y,
+                    width: lineWidth,
                     height: ascent + descent
                 ).applying(transform)
                 
