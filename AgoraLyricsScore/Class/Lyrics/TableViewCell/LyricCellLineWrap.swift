@@ -36,6 +36,10 @@ class LyricCellLineWrap: UITableViewCell, LyricCellProtocol {
         didSet { updateUI() }
     }
     
+    var useScrollByWord: Bool = false {
+        didSet { updateUI() }
+    }
+    
     private var hasSetupUI = false
     private var bottomConstraint, topConstraint: NSLayoutConstraint!
     
@@ -89,12 +93,15 @@ class LyricCellLineWrap: UITableViewCell, LyricCellProtocol {
         label.textHighlightedColor = textHighlightedColor
         label.textNormalFontSize = textNormalFontSize
         label.textHighlightFontSize = textHighlightFontSize
+        label.useScrollByWord = useScrollByWord
     }
     
     func update(model: LyricCellModel) {
         label.text = model.text
         label.status = model.status
-        label.progressRate = model.progressRate
+        if useScrollByWord {
+            label.progressRate = model.progressRate
+        }
     }
 }
 

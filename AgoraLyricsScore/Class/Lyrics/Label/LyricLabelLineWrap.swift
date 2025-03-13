@@ -9,7 +9,7 @@ import UIKit
 
 public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
     /// [0, 1]
-    var progressRate: CGFloat = 0 { didSet { dowkr() } }
+    var progressRate: CGFloat = 0 { didSet { doWork() } }
     /// 正常歌词颜色
     var textNormalColor: UIColor = .gray
     /// 选中的歌词颜色
@@ -20,6 +20,8 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
     var textNormalFontSize: UIFont = .systemFont(ofSize: 15)
     /// 高亮歌词文字大小
     var textHighlightFontSize: UIFont = .systemFont(ofSize: 18)
+    
+    var useScrollByWord: Bool = false
     
     let iView = UIView()
     
@@ -38,7 +40,11 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
     
     private func updateState() {
         if status == .selectedOrHighlighted {
-            textColor = textSelectedColor
+            /**
+             - 当需要逐字渲染的时候，设置成SelectedColor，后续在 draw 里面加一层HighlightedColor。
+             -  当不需要逐字渲染，直接显示HighlightedColor
+             */
+            textColor = useScrollByWord ? textSelectedColor : textHighlightedColor
             font = textHighlightFontSize
         }
         else {
@@ -49,24 +55,45 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
         layoutIfNeeded()
     }
     
-    func dowkr() {
-        if text!.contains("逗留"), progressRate > 0.9 {
-//            if !subviews.contains(iView) {
-//                addSubview(iView)
-//            }
-//            iView.backgroundColor = .red
-//            iView.frame = CGRect(x: 56, y: 25, width: 18, height: 25.2)
-            
+    func debug1() {
+        if text!.contains("逗留"), progressRate > 0.9 {/// debug code
+            if !subviews.contains(iView) {
+                addSubview(iView)
+            }
+            iView.backgroundColor = .red
+            iView.frame = CGRect(x: 56, y: 25, width: 18, height: 25.2)
             print("#progressRate: \(progressRate)")
         }
-        
+    }
+    
+    func debug2(text: String) {
+        if text.contains("逗留"), progressRate > 0.95 {/// debug code
+            let kks = getLinesWidths()
+            print("")
+        }
+    }
+    
+    func debug3(line: CTLine, text: String) {
+        if text.contains("泪流"), progressRate > 0.9 { /// debug code
+            /// 读取当前 line 的文字
+            let lineText = text as NSString
+            let lineRange = CTLineGetStringRange(line)
+            let lineTextRange = NSRange(location: lineRange.location, length: lineRange.length)
+            let lineTextContent = lineText.substring(with: lineTextRange)
+            print("#lineTextContent: \(lineTextContent)")
+        }
+    }
+    
+    func doWork() {
+        debug1()
         setNeedsDisplay()
     }
     
     public override func draw(_ rect: CGRect) {
         super.draw(rect)
     
-        guard let text = text, progressRate > 0 else { return }
+        
+        guard useScrollByWord, let text = text, progressRate > 0 else { return }
         
         // 新增：获取当前实际字体
         let currentFont = (status == .selectedOrHighlighted) ? textHighlightFontSize : textNormalFontSize
@@ -81,13 +108,11 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
             attributes: [
                 .font: currentFont, // 修改此处
                 .foregroundColor: textColor!,
-                .paragraphStyle: paragraphStyle
+                .paragraphStyle: paragraphStyle,
             ]
         )
         
-        if text.contains("逗留"), progressRate > 0.95 {
-            print("")
-        }
+        debug2(text: text)
         
         // Core Text 坐标系转换
         let transform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -bounds.height)
@@ -106,13 +131,8 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
         let totalProgress = Swift.max(Swift.min(progressRate, 1), 0)
         
         // 新增：计算总宽度和每行比例
-        var lineWidths = [CGFloat]()
-        var totalWidth: CGFloat = 0
-        for line in lines {
-            let width = CTLineGetTypographicBounds(line, nil, nil, nil)
-            lineWidths.append(CGFloat(width))
-            totalWidth += CGFloat(width)
-        }
+        let lineWidths = getLinesWidths()
+        let totalWidth: CGFloat = lineWidths.reduce(0, +)
         
         // 防止除零错误
         guard totalWidth > 0 else { return }
@@ -127,16 +147,10 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
             var ascent: CGFloat = 0
             var descent: CGFloat = 0
             var leading: CGFloat = 0
-            let lineWidth = CTLineGetTypographicBounds(line, &ascent, &descent, &leading)
+            let _ = CTLineGetTypographicBounds(line, &ascent, &descent, &leading)
+            let lineWidth = lineWidths[index]
             
-            if text.contains("逗留"), progressRate > 0.9 {
-                /// 读取当前 line 的文字
-                let lineText = text as NSString
-                let lineRange = CTLineGetStringRange(line)
-                let lineTextRange = NSRange(location: lineRange.location, length: lineRange.length)
-                let lineTextContent = lineText.substring(with: lineTextRange)
-                print("#lineTextContent: \(lineTextContent)")
-            }
+            debug3(line: line, text: text)
             
             // 计算行位置（考虑对齐方式）
             let rawLineOrigin = lineOrigins[index]
@@ -189,4 +203,75 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
         }
     }
 }
+
+import UIKit
+
+extension UILabel {
+    func getLinesWidths() -> [CGFloat] {
+        guard let text = self.text else { return [] }
+        
+        // 合并字体设置（修复问题1）
+        let currentFont = font!
+        
+        let attributedString = NSMutableAttributedString(string: text)
+        attributedString.addAttribute(.font, value: currentFont, range: NSRange(location: 0, length: text.count))
+        
+        // 统一容器宽度设置（修复问题2）
+        let containerWidth = preferredMaxLayoutWidth > 0 ? preferredMaxLayoutWidth : bounds.width
+        let textContainer = NSTextContainer(size: CGSize(
+            width: containerWidth,
+            height: .greatestFiniteMagnitude
+        ))
+        
+        textContainer.lineBreakMode = .byWordWrapping
+        textContainer.maximumNumberOfLines = numberOfLines
+        
+        let textStorage = NSTextStorage(attributedString: attributedString)
+        let layoutManager = NSLayoutManager()
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+        
+        // 统一使用enumerateLineFragments（修复问题3）
+        var lineWidths = [CGFloat]()
+        layoutManager.enumerateLineFragments(forGlyphRange: NSRange(location:0, length:text.count)) {
+            (rect, usedRect, _, _, _) in
+            lineWidths.append(usedRect.width)
+        }
+        
+        return lineWidths
+    }
+    
+    func getLineMinXs() -> [CGFloat] {
+        guard let text = self.text else { return [] }
+        
+        let currentFont = font!
+        
+        let attributedString = NSMutableAttributedString(string: text)
+        attributedString.addAttribute(.font, value: currentFont, range: NSRange(location: 0, length: text.count))
+        
+        let containerWidth = preferredMaxLayoutWidth > 0 ? preferredMaxLayoutWidth : bounds.width
+        let textContainer = NSTextContainer(size: CGSize(
+            width: containerWidth,
+            height: .greatestFiniteMagnitude
+        ))
+        
+        textContainer.lineBreakMode = .byWordWrapping
+        textContainer.maximumNumberOfLines = numberOfLines
+        
+        let textStorage = NSTextStorage(attributedString: attributedString)
+        let layoutManager = NSLayoutManager()
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+        
+        var lineMinXs = [CGFloat]()
+        layoutManager.enumerateLineFragments(forGlyphRange: NSRange(location:0, length:text.count)) {
+            (rect, _, _, _, _) in
+            // 获取每行的起始X坐标
+            lineMinXs.append(rect.minX)
+        }
+        
+        return lineMinXs
+    }
+}
+
 

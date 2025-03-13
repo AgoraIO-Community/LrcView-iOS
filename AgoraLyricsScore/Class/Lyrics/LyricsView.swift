@@ -39,8 +39,10 @@ public class LyricsView: UIView {
     @objc public var draggable: Bool = false
     /// 活跃的歌词的位置
     @objc public var activeLinePosition: UITableView.ScrollPosition = .middle
-    /// 是否使用换行风格 （以歌曲为单位，不支持中途修改）
-    @objc public var enableLineWrap = true
+    /// 是否使用换行风格 默认 false
+    ///  如果为 true, 所有类型的超长歌词都会自动「换行」显示。
+    ///  如果为 false, 逐字类型（xml\krc）的超长歌词会使用「滚动」显示。逐行类型(lrc)的歌词会「换行」显示。
+    @objc public var enableLineWrap = false
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
     
@@ -58,6 +60,7 @@ public class LyricsView: UIView {
     fileprivate var tableViewTopConstraint: NSLayoutConstraint!, firstToneHintViewHeightConstraint: NSLayoutConstraint!
     fileprivate let lyricMachine = LyricMachine()
     fileprivate var lyricsDataCanScrollByWord = false
+    /// 是否使用换行显示,内部使用
     fileprivate var useLineWrap = false
     
     override init(frame: CGRect) {
