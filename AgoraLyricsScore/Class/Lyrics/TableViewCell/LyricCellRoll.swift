@@ -35,7 +35,7 @@ class LyricCellRoll: UITableViewCell, LyricCellProtocol {
     var lyricLineSpacing: CGFloat = 10 {
         didSet { updateUI() }
     }
-    
+    /// not use this
     var useScrollByWord: Bool = false
     
     private var hasSetupUI = false

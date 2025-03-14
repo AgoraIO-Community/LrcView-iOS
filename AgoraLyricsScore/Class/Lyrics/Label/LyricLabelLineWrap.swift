@@ -81,7 +81,7 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
             return
         }
         if text.contains("逗留"), progressRate > 0.95 {/// debug code
-            let kks = getLinesWidths()
+            
             print("")
         }
     }
@@ -108,103 +108,45 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
     public override func draw(_ rect: CGRect) {
         super.draw(rect)
         
-        guard useScrollByWord, let text = text, progressRate > 0, let context = UIGraphicsGetCurrentContext() else { return }
         
-        // 新增：获取当前实际字体
-        let currentFont = textHighlightFontSize
-        
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = .byWordWrapping
-        paragraphStyle.alignment = textAlignment
-        paragraphStyle.lineBreakStrategy = .pushOut // 新增
-    
-        let attributedString = NSAttributedString(
-            string: text,
-            attributes: [
-                .font: currentFont, // 修改此处
-                .foregroundColor: textColor!,
-                .paragraphStyle: paragraphStyle,
-                .kern: 1,
-            ]
-        )
-        debug2(text: text)
-        
-        // Core Text 坐标系转换
-        let transform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -bounds.height)
-        
-        print("#Rect, transform height: \(bounds.height)")
-        
-        let containerWidth = preferredMaxLayoutWidth > 0 ? preferredMaxLayoutWidth : bounds.width
-        let framesetter = CTFramesetterCreateWithAttributedString(attributedString)
-        let path = CGPath(rect: .init(origin: .zero, size: .init(width: containerWidth, height: bounds.height)), transform: nil)
-        let frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, attributedString.length), path, nil) // 修改此处
-        
-        // 获取所有行信息
-        let lines = CTFrameGetLines(frame) as! [CTLine]
-        var lineOrigins = [CGPoint](repeating: .zero, count: lines.count)
-        CTFrameGetLineOrigins(frame, CFRangeMake(0, lines.count), &lineOrigins)
+        guard useScrollByWord, let _ = text, progressRate > 0, let context = UIGraphicsGetCurrentContext() else { return }
         
         let highlightPath = CGMutablePath()
         let totalProgress = Swift.max(Swift.min(progressRate, 1), 0)
         
-//        以下这个读取会有问题
-//        let lineWidths = getLinesWidths_bug(lines: lines)
-        let lineRects = getLinesWidths()
+        let lineRects = getLinesRects(thefont: textHighlightFontSize)
         let lineWidths = lineRects.map({ $0.width})
         let totalWidth: CGFloat = lineWidths.reduce(0, +)
         
-        getCTFrameSize(ctFrame: frame)
+        /// work around
+        let widthExtend: CGFloat = 10
         
         // 防止除零错误
         guard totalWidth > 0 else { return }
-        var totalHeight: CGFloat = 0
         var accumulatedProgress: CGFloat = 0
-        for (index, line) in lines.enumerated() {
-            let lineRatio = lineWidths[index] / totalWidth
+        for (_, rect) in lineRects.enumerated() {
+            let lineRatio = rect.width / totalWidth
             let lineStart = accumulatedProgress
             let lineEnd = accumulatedProgress + lineRatio
-            
-            // 获取行度量（保持原有位置计算逻辑）
-            var ascent: CGFloat = 0
-            var descent: CGFloat = 0
-            var leading: CGFloat = 0
-            let unusedWidth = CTLineGetTypographicBounds(line, &ascent, &descent, &leading)
-            let lineWidth = lineWidths[index]
-            totalHeight += ascent + descent + descent
-            
-            debug3(line: line, text: text)
-            
-            // 计算行位置（考虑对齐方式）
-            let rawLineOrigin = lineOrigins[index]
-            let lineHeight = ascent + descent
-            
-            /// work around
-            let widthExtend: CGFloat = 0
             
             // 对齐计算
             let xPosition: CGFloat = {
                 switch textAlignment {
-                case .left: return rawLineOrigin.x - widthExtend/2
-                case .center: return (bounds.width - CGFloat(lineWidth)) / 2 - widthExtend/2
-                case .right: return bounds.width - CGFloat(lineWidth) - widthExtend/2
-                default: return rawLineOrigin.x
+                case .left: return 0
+                case .center: return (bounds.width - 0 - CGFloat(rect.width)) / 2 - widthExtend/2
+                case .right: return bounds.width - 0 - CGFloat(rect.width) - widthExtend/2
+                default: return 0
                 }
             }()
-            
             // 转换坐标系
-            let beforeRect = CGRect(
+            let lineRect = CGRect(
                 x: xPosition,
-                y: rawLineOrigin.y - descent,
-                width: CGFloat(lineWidth) + widthExtend,
-                height: lineHeight
+                y: rect.minY,
+                width: rect.width + widthExtend,
+                height: rect.height
             )
-            print("#Line, ct ascent:\(ascent) descent:\(descent) leading:\(leading) width:\(unusedWidth)")
-            print("#Rect, ct beofe: \(beforeRect)")
-            let lineRect = beforeRect.applying(transform)
-            print("#Rect,ct after: \(lineRect)")
-            print("#Rect text kit: \(lineRects[index])")
             
-            // 高亮逻辑（改用实际比例）
+            // 高亮逻辑
             if totalProgress >= lineEnd {
                 highlightPath.addRect(lineRect)
             } else if totalProgress > lineStart {
@@ -231,22 +173,19 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
             textColor = _textColor
             context.restoreGState()
         }
+        
+        
     }
 }
 
-import CoreText
-
 extension UILabel {
-    func getLinesWidths() -> [CGRect] {
+    func getLinesRects(thefont: UIFont) -> [CGRect] {
         guard let text = self.text else { return [] }
         
-        // 合并字体设置（修复问题1）
-        let currentFont = font!
         
         let attributedString = NSMutableAttributedString(string: text)
-        attributedString.addAttribute(.font, value: currentFont, range: NSRange(location: 0, length: text.count))
+        attributedString.addAttribute(.font, value: thefont, range: NSRange(location: 0, length: text.count))
         
-        // 统一容器宽度设置（修复问题2）
         let containerWidth = preferredMaxLayoutWidth > 0 ? preferredMaxLayoutWidth : bounds.width
         let textContainer = NSTextContainer(size: CGSize(
             width: containerWidth,
@@ -255,7 +194,7 @@ extension UILabel {
         
         textContainer.lineBreakMode = .byWordWrapping
         textContainer.maximumNumberOfLines = numberOfLines
-        
+//        textContainer.lineFragmentPadding = 3
         let textStorage = NSTextStorage(attributedString: attributedString)
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(textContainer)
@@ -267,30 +206,9 @@ extension UILabel {
             (rect, usedRect, _, _, _) in
             lineRects.append(usedRect)
         }
+        
         return lineRects
     }
-    
-    func getLinesWidths_bug(lines: [CTLine]) -> [CGFloat] {
-        var lineWidths = [CGFloat]()
-        for (_, line) in lines.enumerated() {
-            var ascent: CGFloat = 0
-            var descent: CGFloat = 0
-            var leading: CGFloat = 0
-            let lineWidth = CTLineGetTypographicBounds(line, &ascent, &descent, &leading)
-            lineWidths.append(lineWidth)
-        }
-        return lineWidths
-    }
-    
-    func getCTFrameSize(ctFrame: CTFrame) {
-        // 获取 CTFrame 的布局路径
-        let path = CTFrameGetPath(ctFrame)
-        // 获取路径的边界（即容器尺寸）
-        let frameSize = path.boundingBoxOfPath.size
-        print("#容器尺寸: \(frameSize)")
-    }
-    
-    
 }
 
 

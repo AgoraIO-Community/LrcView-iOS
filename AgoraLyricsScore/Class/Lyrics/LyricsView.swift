@@ -59,9 +59,10 @@ public class LyricsView: UIView {
     fileprivate var isDragging = false { didSet { referenceLineView.isHidden = !isDragging } }
     fileprivate var tableViewTopConstraint: NSLayoutConstraint!, firstToneHintViewHeightConstraint: NSLayoutConstraint!
     fileprivate let lyricMachine = LyricMachine()
-    fileprivate var lyricsDataCanScrollByWord = false
-    /// 是否使用换行显示,内部使用
-    fileprivate var useLineWrap = false
+    /// 歌词是否支持逐字
+    fileprivate var lyricsDataSupportScrollByWord = false
+    /// 是否使用换行显示,内部使用。为了在运行中不受`enableLineWrap`的改变
+    fileprivate var enableLineWrapInternal = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -79,19 +80,19 @@ public class LyricsView: UIView {
     }
     
     func setLyricData(data: LyricModel?) {
-        lyricsDataCanScrollByWord = data?.lyricsType ?? .lrc != .lrc
+        lyricsDataSupportScrollByWord = data?.lyricsType ?? .lrc != .lrc
         /// 判断是否用换行显示
-        Log.debug(text: "enableLineWrap = \(enableLineWrap),lyricsDataCanScrollByWord = \(lyricsDataCanScrollByWord) ", tag: logTag)
+        Log.debug(text: "enableLineWrap = \(enableLineWrap),lyricsDataCanScrollByWord = \(lyricsDataSupportScrollByWord) ", tag: logTag)
         
         if enableLineWrap {
-            useLineWrap = true
+            enableLineWrapInternal = true
         }
         else {
-            if lyricsDataCanScrollByWord {
-                useLineWrap = false
+            if lyricsDataSupportScrollByWord {
+                enableLineWrapInternal = false
             }
             else {
-                useLineWrap = true
+                enableLineWrapInternal = true
             }
         }
         
@@ -234,7 +235,7 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let idf = useLineWrap ? LyricCellLineWrap.idf : LyricCellRoll.idf
+        let idf = enableLineWrapInternal ? LyricCellLineWrap.idf : LyricCellRoll.idf
         let cell = tableView.dequeueReusableCell(withIdentifier: idf, for: indexPath) as! LyricCellProtocol
         cell.textNormalColor = inactiveLineTextColor
         cell.textSelectedColor = activeLineUpcomingTextColor
@@ -242,7 +243,7 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
         cell.textNormalFontSize = inactiveLineFontSize
         cell.textHighlightFontSize = activeLineUpcomingFontSize
         cell.lyricLineSpacing = lyricLineSpacing
-        cell.useScrollByWord = useLineWrap
+        cell.useScrollByWord = lyricsDataSupportScrollByWord
         let model = dataList[indexPath.row]
         cell.update(model: model)
         return cell

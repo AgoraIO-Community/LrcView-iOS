@@ -47,7 +47,7 @@ class MainView: UIView {
     private let label = UILabel()
     private let consoleView = ConsoleView()
     var karaokeViewLeftConstraint, karaokeViewRightConstraint: NSLayoutConstraint!
-    private var displayMode: DisplayMode = .normal
+    private var displayMode: DisplayMode = .narrow
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -160,6 +160,10 @@ class MainView: UIView {
         consoleView.bottomAnchor.constraint(equalTo: karaokeView.bottomAnchor).isActive = true
         consoleView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         consoleView.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        
+        let space = UIScreen.main.bounds.width / 3
+        karaokeViewLeftConstraint.constant = UIScreen.main.bounds.width / 3
+        karaokeViewRightConstraint.constant = -1 * karaokeViewLeftConstraint.constant
     }
     
     func commonInit() {
