@@ -21,6 +21,8 @@ protocol LyricCellProtocol: UITableViewCell {
     /// 上下间距
     var lyricLineSpacing: CGFloat { get set}
     
+    var useScrollByWord: Bool { get set}
+    
     func update(model: LyricCellModel)
 }
 

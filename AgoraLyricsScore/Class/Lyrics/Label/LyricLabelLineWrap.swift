@@ -24,6 +24,7 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
     var useScrollByWord: Bool = false
     
     let iView = UIView()
+    let debug = false
     
     public var status: LysicLabelStatus = .normal { didSet { updateState() } }
     
@@ -32,6 +33,7 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
         numberOfLines = 0
         lineBreakMode = .byWordWrapping
         textAlignment = .center
+        sizeToFit()
     }
     
     required init?(coder: NSCoder) {
@@ -56,6 +58,9 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
     }
     
     func debug1() {
+        guard debug else {
+            return
+        }
         if text!.contains("逗留"), progressRate > 0.9 {/// debug code
             if !subviews.contains(iView) {
                 addSubview(iView)
@@ -67,6 +72,9 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
     }
     
     func debug2(text: String) {
+        guard debug else {
+            return
+        }
         if text.contains("逗留"), progressRate > 0.95 {/// debug code
             let kks = getLinesWidths()
             print("")
@@ -74,6 +82,9 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
     }
     
     func debug3(line: CTLine, text: String) {
+        guard debug else {
+            return
+        }
         if text.contains("泪流"), progressRate > 0.9 { /// debug code
             /// 读取当前 line 的文字
             let lineText = text as NSString
@@ -159,9 +170,9 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
             // 对齐计算
             let xPosition: CGFloat = {
                 switch textAlignment {
-                case .left: return rawLineOrigin.x
-                case .center: return (bounds.width - CGFloat(lineWidth)) / 2
-                case .right: return bounds.width - CGFloat(lineWidth)
+                case .left: return rawLineOrigin.x - 4
+                case .center: return (bounds.width - CGFloat(lineWidth)) / 2 - 4
+                case .right: return bounds.width - CGFloat(lineWidth) - 4
                 default: return rawLineOrigin.x
                 }
             }()
@@ -170,7 +181,7 @@ public class LyricLabelLineWrap: UILabel, LysicLabelProtocol {
             let lineRect = CGRect(
                 x: xPosition,
                 y: rawLineOrigin.y - descent,
-                width: CGFloat(lineWidth),
+                width: CGFloat(lineWidth) + 8,
                 height: lineHeight
             ).applying(transform)
             
@@ -239,38 +250,6 @@ extension UILabel {
         }
         
         return lineWidths
-    }
-    
-    func getLineMinXs() -> [CGFloat] {
-        guard let text = self.text else { return [] }
-        
-        let currentFont = font!
-        
-        let attributedString = NSMutableAttributedString(string: text)
-        attributedString.addAttribute(.font, value: currentFont, range: NSRange(location: 0, length: text.count))
-        
-        let containerWidth = preferredMaxLayoutWidth > 0 ? preferredMaxLayoutWidth : bounds.width
-        let textContainer = NSTextContainer(size: CGSize(
-            width: containerWidth,
-            height: .greatestFiniteMagnitude
-        ))
-        
-        textContainer.lineBreakMode = .byWordWrapping
-        textContainer.maximumNumberOfLines = numberOfLines
-        
-        let textStorage = NSTextStorage(attributedString: attributedString)
-        let layoutManager = NSLayoutManager()
-        layoutManager.addTextContainer(textContainer)
-        textStorage.addLayoutManager(layoutManager)
-        
-        var lineMinXs = [CGFloat]()
-        layoutManager.enumerateLineFragments(forGlyphRange: NSRange(location:0, length:text.count)) {
-            (rect, _, _, _, _) in
-            // 获取每行的起始X坐标
-            lineMinXs.append(rect.minX)
-        }
-        
-        return lineMinXs
     }
 }
 

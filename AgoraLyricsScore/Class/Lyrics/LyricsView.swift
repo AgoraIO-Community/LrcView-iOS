@@ -242,7 +242,7 @@ extension LyricsView: UITableViewDataSource, UITableViewDelegate {
         cell.textNormalFontSize = inactiveLineFontSize
         cell.textHighlightFontSize = activeLineUpcomingFontSize
         cell.lyricLineSpacing = lyricLineSpacing
-        
+        cell.useScrollByWord = useLineWrap
         let model = dataList[indexPath.row]
         cell.update(model: model)
         return cell

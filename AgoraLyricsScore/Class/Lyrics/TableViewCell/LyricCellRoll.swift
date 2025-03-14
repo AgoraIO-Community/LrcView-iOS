@@ -36,6 +36,8 @@ class LyricCellRoll: UITableViewCell, LyricCellProtocol {
         didSet { updateUI() }
     }
     
+    var useScrollByWord: Bool = false
+    
     private var hasSetupUI = false
     private var leftConstraint, rightConstraint, bottomConstraint, topConstraint: NSLayoutConstraint!
     
