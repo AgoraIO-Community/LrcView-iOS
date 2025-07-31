@@ -56,6 +56,10 @@ class ScoringMachineEx: ScoringMachineProtocol {
     
     func setPitch(speakerPitch: Double,
                   progressInMs: UInt) {
+        if speakerPitch > 100 {
+            Log.errorText(text: "speakerPitch > 100, current progress:\(progressInMs), speakerPitch:\(speakerPitch)", tag: logTag)
+            return
+        }
         queue.async { [weak self] in
             self?._setPitch(speakerPitch: UInt8(speakerPitch),
                             progressInMs: progressInMs)
