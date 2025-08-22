@@ -147,8 +147,9 @@ class ScoringMachineEx: ScoringMachineProtocol {
         
         let actualSpeakerPitch = Double(speakerPitch)
         
-        /// 着色、动画开启与否
-        let showAnimation = abs(Int32(speakerPitch) - Int32(hitedInfo.pitch)) <= 5
+        /// 着色、动画开启与否 - 使用新的分层打分逻辑
+        let score = calculateScoreAfterNormalization(speakerPitch: actualSpeakerPitch, refPitch: hitedInfo.pitch)
+        let showAnimation = score >= (Int(hitScoreThreshold) * 100)
         
         /** 2.update HighlightInfos **/
         if showAnimation {
@@ -183,6 +184,32 @@ class ScoringMachineEx: ScoringMachineProtocol {
                                                         showAnimation: showAnimation,
                                                         debugInfo: debugInfo)
     }
+
+    /// 计算分层分数
+    /// - Parameters:
+    ///   - speakerPitch: 说话者的音高
+    ///   - refPitch: 参考音高
+    /// - Returns: 标准化后的分数 (0-100)
+    private func calculateScoreAfterNormalization(speakerPitch: Double, refPitch: Double) -> Int {
+        let pitchDifference = abs(speakerPitch - refPitch)
+        
+        if speakerPitch == refPitch {
+            return 100
+        } else if pitchDifference <= 1 {
+            return 90
+        } else if pitchDifference <= 2 {
+            return 80
+        } else if pitchDifference <= 3 {
+            return 70
+        } else if pitchDifference <= 4 {
+            return 60
+        } else if pitchDifference <= 5 {
+            return 50
+        } else {
+            return 0
+        }
+    }
+
     
     private func _dragBegain() {
         isDragging = true

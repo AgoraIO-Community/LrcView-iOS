@@ -149,5 +149,41 @@ class TestScoringMachineEx: XCTestCase {
         XCTAssertEqual(vm.calculateActualSpeakerPitch(speakerPitch: 4, refPitch: 50), 50+1)
         XCTAssertEqual(vm.calculateActualSpeakerPitch(speakerPitch: 5, refPitch: 50), 50+2)
     }
+
+        /// 测试新的分层打分逻辑
+    func testCalculateScoreAfterNormalization() {
+        let vm = ScoringMachineEx()
+        
+        // 测试完全匹配的情况
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 100.0, refPitch: 100.0), 100)
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 50.0, refPitch: 50.0), 100)
+        
+        // 测试差异为1的情况
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 101.0, refPitch: 100.0), 90)
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 99.0, refPitch: 100.0), 90)
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 51.0, refPitch: 50.0), 90)
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 49.0, refPitch: 50.0), 90)
+        
+        // 测试差异为2的情况
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 102.0, refPitch: 100.0), 80)
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 98.0, refPitch: 100.0), 80)
+        
+        // 测试差异为3的情况
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 103.0, refPitch: 100.0), 70)
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 97.0, refPitch: 100.0), 70)
+        
+        // 测试差异为4的情况
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 104.0, refPitch: 100.0), 60)
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 96.0, refPitch: 100.0), 60)
+        
+        // 测试差异为5的情况
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 105.0, refPitch: 100.0), 50)
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 95.0, refPitch: 100.0), 50)
+        
+        // 测试差异大于5的情况
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 106.0, refPitch: 100.0), 0)
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 94.0, refPitch: 100.0), 0)
+        XCTAssertEqual(vm.calculateScoreAfterNormalization(speakerPitch: 200.0, refPitch: 100.0), 0)
+    }
 }
 
