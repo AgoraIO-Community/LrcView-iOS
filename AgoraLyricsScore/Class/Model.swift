@@ -7,10 +7,18 @@
 
 import Foundation
 
-struct KrcPitchData: Codable {
-    let pitch: Double
-    let startTime: UInt
-    let duration: UInt
+public class KrcPitchData: NSObject {
+    @objc public let pitch: Double
+    @objc public let startTime: UInt
+    @objc public let duration: UInt
+
+    @objc public init(pitch: Double,
+                      startTime: UInt,
+                      duration: UInt) {
+        self.pitch = pitch
+        self.startTime = startTime
+        self.duration = duration
+    }
 }
 
 @objc public enum LyricsType: Int8, CustomStringConvertible {
@@ -48,7 +56,7 @@ public class LyricModel: NSObject {
     
     @objc public var copyrightSentenceLineCount: UInt = 0
     
-    var pitchDatas: [KrcPitchData] = []
+    @objc public var pitchDatas: [KrcPitchData] = []
     
     @objc public init(name: String,
                       singer: String,

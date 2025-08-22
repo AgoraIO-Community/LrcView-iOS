@@ -120,6 +120,14 @@ class LyricsCutter {
             }
         }
         
+       var pitchDatas = [KrcPitchData]()
+       for pitchData in model.pitchDatas {
+           if pitchData.startTime >= startTime && pitchData.startTime + pitchData.duration <= endTime {
+               pitchDatas.append(pitchData)
+           }
+       }
+       model.pitchDatas = pitchDatas
+
         model.lines = lines
         model.preludeEndPosition = 0
         model.duration = (lines.last?.beginTime ?? 0) + (lines.last?.duration ?? 0)
