@@ -149,7 +149,7 @@ class ScoringMachineEx: ScoringMachineProtocol {
         
         /// 着色、动画开启与否 - 使用新的分层打分逻辑
         let score = calculateScoreAfterNormalization(speakerPitch: actualSpeakerPitch, refPitch: hitedInfo.pitch)
-        let showAnimation = score >= (Int(hitScoreThreshold) * 100)
+        let showAnimation = score >= Int(hitScoreThreshold * 100)
         
         /** 2.update HighlightInfos **/
         if showAnimation {
