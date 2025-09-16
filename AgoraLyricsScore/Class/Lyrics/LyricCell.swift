@@ -33,6 +33,10 @@ class LyricCell: UITableViewCell {
     var lyricLineSpacing: CGFloat = 10 {
         didSet { updateUI() }
     }
+    /// 歌词对齐方式
+    var lyricTextAlignment: NSTextAlignment = .center {
+        didSet { updateUI() }
+    }
     
     private var hasSetupUI = false
     private var leftConstraint, rightConstraint, bottomConstraint, topConstraint: NSLayoutConstraint!
@@ -90,6 +94,7 @@ class LyricCell: UITableViewCell {
         label.textHighlightedColor = textHighlightedColor
         label.textNormalFontSize = textNormalFontSize
         label.textHighlightFontSize = textHighlightFontSize
+        label.textAlignment = lyricTextAlignment
     }
     
     func update(model: Model) {
