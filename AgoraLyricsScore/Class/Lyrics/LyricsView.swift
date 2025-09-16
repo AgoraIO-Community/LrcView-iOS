@@ -41,7 +41,9 @@ public class LyricsView: UIView {
     @objc public var activeLinePosition: UITableView.ScrollPosition = .middle
     /// use for debug only
     @objc public var showDebugView = false { didSet { updateUI() } }
-    
+    /// 歌词对齐方式
+    @objc public var lyricTextAlignment: NSTextAlignment = .center  { didSet { updateUI() } }
+
     weak var delegate: LyricsViewDelegate?
     /// 倒计时view
     fileprivate let firstToneHintView = FirstToneHintView()
@@ -133,7 +135,9 @@ extension LyricsView {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         referenceLineView.translatesAutoresizingMaskIntoConstraints = false
         
-        noLyricTipsLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        noLyricTipsLabel.textAlignment = lyricTextAlignment
+        noLyricTipsLabel.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        noLyricTipsLabel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         noLyricTipsLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
         let topSpace: CGFloat = 5
@@ -172,6 +176,7 @@ extension LyricsView {
     fileprivate func updateUI() {
         noLyricTipsLabel.textColor = noLyricTipsColor
         noLyricTipsLabel.text = noLyricTipsText
+        noLyricTipsLabel.textAlignment = lyricTextAlignment
         noLyricTipsLabel.font = noLyricTipsFont
         noLyricTipsLabel.isHidden = !isNoLyric
         tableView.isHidden = isNoLyric

@@ -186,6 +186,7 @@ class MainView: UIView {
         karaokeView.scoringView.viewHeight = param.scoring.viewHeight
         karaokeView.scoringView.movingSpeedFactor = param.scoring.movingSpeedFactor
         karaokeView.scoringView.showDebugView = param.scoring.showDebugView
+        karaokeView.scoringView.hitScoreThreshold = param.scoring.hitScoreThreshold
     }
     
     @objc func buttonTap(_ sender: UIButton) {

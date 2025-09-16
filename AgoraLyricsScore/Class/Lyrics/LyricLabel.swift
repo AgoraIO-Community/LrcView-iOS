@@ -50,7 +50,9 @@ class LyricLabel: UILabel {
         }
         let textWidth = sizeThatFits(CGSize(width: CGFloat(MAXFLOAT),
                                            height: font.lineHeight)).width
-        let leftRightSpace = (bounds.width - textWidth) / 2
+        var leftRightSpace = (bounds.width - textWidth) / 2
+        if textAlignment == .left { leftRightSpace = 0.0 }
+        if textAlignment == .right { leftRightSpace = bounds.width - textWidth }
         let path = CGMutablePath()
         let fillRect = CGRect(x: leftRightSpace,
                               y: 0,
