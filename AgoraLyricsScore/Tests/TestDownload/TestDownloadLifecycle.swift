@@ -9,6 +9,17 @@ import XCTest
 @testable import AgoraLyricsScore
 
 final class TestDownloadLifecycle: XCTestCase {
+    private final class ImmediateFailureDownloader: Downloader {
+        override func download(url: URL,
+                               progress: @escaping DownloadProgressClosure,
+                               completion: @escaping DownloadCompletionClosure,
+                               fail: @escaping DownloadFailClosure) {
+            fail(DownloadError(domainType: .httpDownloadError,
+                               code: -1,
+                               msg: "test"))
+        }
+    }
+
     func testZipRequestMapsToExtractedXMLCacheName() {
         let url = URL(string: "https://example.com/path/1.zip?token=abc")!
 
@@ -43,6 +54,20 @@ final class TestDownloadLifecycle: XCTestCase {
 
         XCTAssertFalse(FileManager.default.fileExists(atPath: fileURL.path))
         XCTAssertTrue(FileManager.default.fileExists(atPath: rootURL.path))
+    }
+
+    func testManagerAllowsRetryAfterFailure() {
+        var createdCount = 0
+        let manager = DownloaderManager(makeDownloader: {
+            createdCount += 1
+            return ImmediateFailureDownloader()
+        })
+        let url = URL(string: "https://example.com/1.zip")!
+
+        manager.download(url: url, progress: { _ in }, completion: { _ in }, fail: { _ in })
+        manager.download(url: url, progress: { _ in }, completion: { _ in }, fail: { _ in })
+
+        XCTAssertEqual(createdCount, 2)
     }
 
     private func makeRootURL() throws -> URL {
