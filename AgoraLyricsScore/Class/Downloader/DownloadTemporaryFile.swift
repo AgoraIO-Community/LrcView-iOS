@@ -29,7 +29,8 @@ final class DownloadTemporaryFile {
          fileManager: FileManager = .default) throws {
         self.fileManager = fileManager
         directoryURL = rootURL.appendingPathComponent(identifier, isDirectory: true)
-        fileURL = directoryURL.appendingPathComponent(filename, isDirectory: false)
+        let safeFilename = URL(fileURLWithPath: filename).lastPathComponent
+        fileURL = directoryURL.appendingPathComponent(safeFilename, isDirectory: false)
         try fileManager.createDirectory(at: directoryURL,
                                         withIntermediateDirectories: true,
                                         attributes: nil)

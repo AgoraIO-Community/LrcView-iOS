@@ -33,6 +33,7 @@ struct DownloadTemporaryFileBehaviorTest {
         try testFilenameIsolation(rootURL: rootURL)
         try testCloseAndRemove(rootURL: rootURL)
         try testDownloadDirectoryUsesSystemTemporaryDirectory()
+        try testFilenameCannotEscapeTaskDirectory(rootURL: rootURL)
         try testCacheFilenameMapping()
         try testDownloadedItemCleanup(rootURL: rootURL)
         print("DownloadTemporaryFile behavior tests passed")
@@ -76,6 +77,15 @@ struct DownloadTemporaryFileBehaviorTest {
     private static func testDownloadDirectoryUsesSystemTemporaryDirectory() throws {
         try require(String.downloadedFloderPath() == DownloadTemporaryFile.defaultRootURL.path,
                     "download root must use FileManager.default.temporaryDirectory")
+    }
+
+    private static func testFilenameCannotEscapeTaskDirectory(rootURL: URL) throws {
+        let file = try DownloadTemporaryFile(filename: "../lyrics.zip", rootURL: rootURL)
+
+        try require(file.fileURL.deletingLastPathComponent() == file.directoryURL,
+                    "response filename must not escape its task directory")
+        try require(file.fileURL.lastPathComponent == "lyrics.zip",
+                    "response filename must keep only its last path component")
     }
 
     private static func testCacheFilenameMapping() throws {

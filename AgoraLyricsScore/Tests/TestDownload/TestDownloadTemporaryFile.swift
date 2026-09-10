@@ -70,6 +70,13 @@ final class TestDownloadTemporaryFile: XCTestCase {
     func testDownloadDirectoryUsesSystemTemporaryDirectory() {
         XCTAssertEqual(String.downloadedFloderPath(), DownloadTemporaryFile.defaultRootURL.path)
     }
+
+    func testFilenameCannotEscapeTaskDirectory() throws {
+        let temporaryFile = try DownloadTemporaryFile(filename: "../lyrics.zip", rootURL: rootURL)
+
+        XCTAssertEqual(temporaryFile.fileURL.deletingLastPathComponent(), temporaryFile.directoryURL)
+        XCTAssertEqual(temporaryFile.fileURL.lastPathComponent, "lyrics.zip")
+    }
 }
 
 #if STANDALONE_TEST
@@ -79,7 +86,8 @@ extension TestDownloadTemporaryFile {
         ("testSameFilenameUsesDifferentTaskDirectories", testSameFilenameUsesDifferentTaskDirectories),
         ("testRemoveDeletesWholeTaskDirectory", testRemoveDeletesWholeTaskDirectory),
         ("testClosePreservesCompletedFileUntilConsumerCleanup", testClosePreservesCompletedFileUntilConsumerCleanup),
-        ("testDownloadDirectoryUsesSystemTemporaryDirectory", testDownloadDirectoryUsesSystemTemporaryDirectory)
+        ("testDownloadDirectoryUsesSystemTemporaryDirectory", testDownloadDirectoryUsesSystemTemporaryDirectory),
+        ("testFilenameCannotEscapeTaskDirectory", testFilenameCannotEscapeTaskDirectory)
     ]
 }
 
