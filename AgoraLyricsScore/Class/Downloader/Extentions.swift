@@ -42,6 +42,15 @@ extension String {
     }
 }
 
+extension URL {
+    var lyricsCacheFileName: String {
+        if pathExtension.lowercased() == "zip" {
+            return deletingPathExtension().lastPathComponent + ".xml"
+        }
+        return lastPathComponent
+    }
+}
+
 extension FileManager {
     static func createDirectoryIfNeeded(atPath path: String) {
         let fileManager = FileManager.default
@@ -59,6 +68,26 @@ extension FileManager {
             } catch {
                 Log.errorText(text: "创建目录失败: \(error.localizedDescription)", tag: "Downloader Extension")
             }
+        }
+    }
+
+    static func removeDownloadedItem(atPath path: String,
+                                     downloadRoot: URL = DownloadTemporaryFile.defaultRootURL) {
+        let fileURL = URL(fileURLWithPath: path).standardizedFileURL
+        let rootURL = downloadRoot.standardizedFileURL
+        let parentURL = fileURL.deletingLastPathComponent()
+        let targetURL = parentURL == rootURL ? fileURL : parentURL
+
+        guard fileURL.path.hasPrefix(rootURL.path + "/"),
+              FileManager.default.fileExists(atPath: targetURL.path) else {
+            return
+        }
+
+        do {
+            try FileManager.default.removeItem(at: targetURL)
+        } catch {
+            Log.error(error: "remove downloaded item failed: \(error.localizedDescription)",
+                      tag: "Downloader Extension")
         }
     }
 }

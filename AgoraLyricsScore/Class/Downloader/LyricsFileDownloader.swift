@@ -104,7 +104,10 @@ public class LyricsFileDownloader: NSObject {
     // MARK: - Private Method - 0
     func fetchFromLocal(urlString: String) -> Data? {
         /** check if Exist **/
-        let fileName = urlString.fileName
+        guard let url = URL(string: urlString) else {
+            return nil
+        }
+        let fileName = url.lyricsCacheFileName
         if let path = FileCache.cacheFileExists(with: fileName) {
             let url = URL(fileURLWithPath: path)
             let data = try? Data(contentsOf: url)
@@ -127,9 +130,13 @@ public class LyricsFileDownloader: NSObject {
             invokeOnLyricsFileDownloadProgress(requestId: requestId, progress: progress)
         } completion: { [weak self](filePath) in
             guard let self = self else {
+                FileManager.removeDownloadedItem(atPath: filePath)
                 return
             }
             if filePath.split(separator: ".").last == "lrc" { /** lrc type **/
+                defer {
+                    FileManager.removeDownloadedItem(atPath: filePath)
+                }
                 let url = URL(fileURLWithPath: filePath)
                 var data: Data?
                 do {
@@ -151,8 +158,6 @@ public class LyricsFileDownloader: NSObject {
                         Log.debug(text: "file exist: \(filePath)")
                     }
                     try FileManager.default.copyItem(atPath: filePath, toPath: .cacheFolderPath() + "/" + url.lastPathComponent)
-                    Log.debug(text: "ready to removeItem: \(filePath)")
-                    try FileManager.default.removeItem(atPath: filePath)
                 } catch let error {
                     let logText = "get data from [\(url.path)] failed: \(error.localizedDescription)"
                     Log.errorText(text: logText, tag: logTag)
@@ -208,6 +213,9 @@ public class LyricsFileDownloader: NSObject {
     }
     
     private func _unzip(filePath: String, requestId: Int) {
+        defer {
+            FileManager.removeDownloadedItem(atPath: filePath)
+        }
         let fileName = filePath.fileName.components(separatedBy: ".").first ?? ""
         let zipFile = URL(fileURLWithPath: filePath)
         let destination = URL(fileURLWithPath: .cacheFolderPath())
@@ -304,10 +312,7 @@ public class LyricsFileDownloader: NSObject {
     private func _clearDownloadFloder() {
         Log.debug(text: "[DownloadFloder]clearDownloadFloder", tag: logTag)
         
-        guard let directoryURL = URL(string: String.downloadedFloderPath()) else {
-            return
-        }
-        
+        let directoryURL = DownloadTemporaryFile.defaultRootURL
         let fileManager = FileManager.default
         do {
             let directoryContents = try fileManager.contentsOfDirectory(at: directoryURL, includingPropertiesForKeys: [.creationDateKey], options: [.skipsHiddenFiles])
