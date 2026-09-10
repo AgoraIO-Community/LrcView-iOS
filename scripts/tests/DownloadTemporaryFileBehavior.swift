@@ -3,6 +3,8 @@ import Foundation
 enum Log {
     static func debug(text: String, tag: String = "") {}
     static func errorText(text: String, tag: String = "") {}
+    static func info(text: String, tag: String = "") {}
+    static func error(error: String, tag: String = "") {}
 }
 
 enum BehaviorTestError: Error, CustomStringConvertible {

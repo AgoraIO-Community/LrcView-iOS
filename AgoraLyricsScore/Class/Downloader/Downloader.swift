@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 typealias DownloadProgressClosure = ((_ progress:Float)->Void)
 typealias DownloadCompletionClosure = ((_ filePath: String)->Void)
@@ -18,9 +17,9 @@ class Downloader: NSObject {
     private var completion: DownloadCompletionClosure?
     private var progress: DownloadProgressClosure?
     private var downloadUrl: URL?
-    private var localUrl: URL?
     private var downloadSession: URLSession?
-    private var fileOutputStream: OutputStream?
+    private var temporaryFile: DownloadTemporaryFile?
+    private var writeError: Error?
     private var downloadLoop: CFRunLoop?
     private var currentLength: Float = 0.0
     static var requestTimeoutInterval: TimeInterval = 60
@@ -59,13 +58,13 @@ class Downloader: NSObject {
             request.cachePolicy = .reloadIgnoringLocalCacheData
             request.timeoutInterval = Downloader.requestTimeoutInterval
             // session会话
-            downloadSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+            self.downloadSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
             // 创建下载任务
             let downloadTask = self.downloadSession?.dataTask(with: request)
             // 开始下载
             downloadTask?.resume()
             // 当前运行循环
-            downloadLoop = CFRunLoopGetCurrent()
+            self.downloadLoop = CFRunLoopGetCurrent()
             CFRunLoopRun()
         }
         
@@ -73,13 +72,30 @@ class Downloader: NSObject {
     
     // 取消下载任务
     func cancel() {
-        downloadSession?.invalidateAndCancel()
+        removeTemporaryFile()
+        stopDownloadSession(cancelTasks: true)
+    }
+
+    private func stopDownloadSession(cancelTasks: Bool) {
+        if cancelTasks {
+            downloadSession?.invalidateAndCancel()
+        } else {
+            downloadSession?.finishTasksAndInvalidate()
+        }
         downloadSession = nil
-        fileOutputStream = nil
         // 结束下载的线程
         if (downloadLoop != nil) {
             CFRunLoopStop(downloadLoop)
         }
+    }
+
+    private func removeTemporaryFile() {
+        do {
+            try temporaryFile?.remove()
+        } catch {
+            Log.error(error: "remove temporary file failed: \(error.localizedDescription)", tag: logTag)
+        }
+        temporaryFile = nil
     }
     
     func resetEventCloure() {
@@ -109,21 +125,34 @@ extension Downloader: URLSessionDataDelegate {
         
         // file name of remote
         let filename = dataTask.response?.suggestedFilename ?? "unKnownFileTitle.tmp"
-        let downloadFloderURL = NSURL(fileURLWithPath: String.downloadedFloderPath())
-        FileManager.createDirectoryIfNeeded(atPath: downloadFloderURL.path!)
-        localUrl = downloadFloderURL.appendingPathComponent(filename)
-        Log.debug(text: "local path：\(self.localUrl?.path ?? "")", tag: logTag)
-        fileOutputStream = OutputStream(url: self.localUrl!, append: true)
-        fileOutputStream?.open()
-        completionHandler(.allow)
+        do {
+            let file = try DownloadTemporaryFile(filename: filename)
+            try file.open()
+            temporaryFile = file
+            Log.debug(text: "local path：\(file.fileURL.path)", tag: logTag)
+            completionHandler(.allow)
+        } catch {
+            let e = DownloadError(domainType: .general, error: error as NSError)
+            Log.errorText(text: e.description, tag: logTag)
+            fail?(e)
+            fail = nil
+            completionHandler(.cancel)
+            cancel()
+        }
     }
     
     /// didReceive
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         Log.debug(text: "didReceive...", tag: logTag)
-        data.withUnsafeBytes { bufferPointer in
-            guard let baseAddress = bufferPointer.baseAddress else { return }
-            self.fileOutputStream?.write(baseAddress, maxLength: bufferPointer.count)
+        do {
+            guard let temporaryFile = temporaryFile else {
+                throw DownloadTemporaryFileError.outputStreamNotOpen
+            }
+            try temporaryFile.write(data)
+        } catch {
+            writeError = error
+            dataTask.cancel()
+            return
         }
         currentLength += Float(data.count)
         // 这里有个问题 有些自己做的数据返回 header里面没有length 那就无法计算进度
@@ -138,16 +167,20 @@ extension Downloader: URLSessionDataDelegate {
     
     /// Complete
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        fileOutputStream?.close()
-        cancel()
-        if error != nil {
-            Log.errorText(text: "download fail: \(error!.localizedDescription)", tag: logTag)
-            let e = DownloadError(domainType: .httpDownloadError, error: error! as NSError)
+        temporaryFile?.close()
+        if let finalError = writeError ?? error {
+            removeTemporaryFile()
+            stopDownloadSession(cancelTasks: false)
+            Log.errorText(text: "download fail: \(finalError.localizedDescription)", tag: logTag)
+            let e = DownloadError(domainType: .httpDownloadError, error: finalError as NSError)
             fail?(e)
             fail = nil
         } else {
+            let filePath = temporaryFile?.fileURL.path ?? ""
+            temporaryFile = nil
+            stopDownloadSession(cancelTasks: false)
             Log.info(text: "download success", tag: logTag)
-            completion?(self.localUrl?.path ?? "")
+            completion?(filePath)
             completion = nil
         }
     }
