@@ -5,7 +5,7 @@
 //  Created by zhaoyongqiang on 2021/12/10.
 //
 
-import UIKit
+import Foundation
 
 extension String {
     // 获取时间格式
@@ -31,7 +31,7 @@ extension String {
     
     /// 下载目录
     static func downloadedFloderPath() -> String {
-        return NSHomeDirectory().appending("/tmp").appending("/LyricDownloadFiles")
+        return DownloadTemporaryFile.defaultRootURL.path
     }
 
     /**
