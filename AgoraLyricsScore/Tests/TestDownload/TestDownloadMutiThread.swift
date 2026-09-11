@@ -46,9 +46,9 @@ final class TestDownloadMutiThread: XCTestCase, LyricsFileDownloaderDelegate {
         let semp = DispatchSemaphore(value: 0)
         DispatchQueue.global().async { [weak self] in
             guard let self  = self else { return }
-            lyricsFileDownloader.maxFileAge = 5
-            lyricsFileDownloader.maxFileNum = 6
-            lyricsFileDownloader.cleanAll()
+            self.lyricsFileDownloader.maxFileAge = 5
+            self.lyricsFileDownloader.maxFileNum = 6
+            self.lyricsFileDownloader.cleanAll()
             semp.signal()
         }
         lyricsFileDownloader.delegate = self
@@ -90,7 +90,7 @@ final class TestDownloadMutiThread: XCTestCase, LyricsFileDownloaderDelegate {
         queue2.async { [weak self] in
             guard let self  = self else { return }
             semp.wait()
-            let _ = lyricsFileDownloader.cancelDownload(requestId: 0)
+            let _ = self.lyricsFileDownloader.cancelDownload(requestId: 0)
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
