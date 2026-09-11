@@ -190,7 +190,7 @@ class ScoringMachineEx: ScoringMachineProtocol {
     ///   - speakerPitch: 说话者的音高
     ///   - refPitch: 参考音高
     /// - Returns: 标准化后的分数 (0-100)
-    private func calculateScoreAfterNormalization(speakerPitch: Double, refPitch: Double) -> Int {
+    func calculateScoreAfterNormalization(speakerPitch: Double, refPitch: Double) -> Int {
         let pitchDifference = abs(speakerPitch - refPitch)
         
         if speakerPitch == refPitch {

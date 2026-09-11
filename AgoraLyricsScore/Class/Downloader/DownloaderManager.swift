@@ -13,6 +13,7 @@ class DownloaderManager: NSObject {
     // 下载缓存池
     private var downloadCache = SafeDictionary<String, Downloader>()
     private var failback: DownloadFailClosure?
+    private let makeDownloader: () -> Downloader
     private let logTag = "DownloaderManager"
     
     deinit {
@@ -22,6 +23,14 @@ class DownloaderManager: NSObject {
     }
     
     override init() {
+        makeDownloader = { Downloader() }
+        super.init()
+        Log.info(text: "init", tag: logTag)
+    }
+
+    init(makeDownloader: @escaping () -> Downloader) {
+        self.makeDownloader = makeDownloader
+        super.init()
         Log.info(text: "init", tag: logTag)
     }
     
@@ -40,15 +49,18 @@ class DownloaderManager: NSObject {
             self.failback?(e)
             return
         }
-        downloader = Downloader()
+        downloader = makeDownloader()
         downloadCache.set(value: downloader!, forkey: url.absoluteString)
         downloader?.download(url: url, progress: progress, completion: { [weak self](filePath) in
             guard let self = self else {
                 return
             }
-            downloadCache.removeValue(forkey: url.absoluteString)
+            self.downloadCache.removeValue(forkey: url.absoluteString)
             completion(filePath)
-        }, fail: fail)
+        }, fail: { [weak self](error) in
+            self?.downloadCache.removeValue(forkey: url.absoluteString)
+            fail(error)
+        })
     }
     
     func cancelTask(url: URL) {

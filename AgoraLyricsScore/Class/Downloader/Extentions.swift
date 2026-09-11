@@ -5,7 +5,7 @@
 //  Created by zhaoyongqiang on 2021/12/10.
 //
 
-import UIKit
+import Foundation
 
 extension String {
     // 获取时间格式
@@ -31,7 +31,7 @@ extension String {
     
     /// 下载目录
     static func downloadedFloderPath() -> String {
-        return NSHomeDirectory().appending("/tmp").appending("/LyricDownloadFiles")
+        return DownloadTemporaryFile.defaultRootURL.path
     }
 
     /**
@@ -39,6 +39,15 @@ extension String {
      */
     var fileName: String {
         components(separatedBy: "/").last ?? ""
+    }
+}
+
+extension URL {
+    var lyricsCacheFileName: String {
+        if pathExtension.lowercased() == "zip" {
+            return deletingPathExtension().lastPathComponent + ".xml"
+        }
+        return lastPathComponent
     }
 }
 
@@ -59,6 +68,26 @@ extension FileManager {
             } catch {
                 Log.errorText(text: "创建目录失败: \(error.localizedDescription)", tag: "Downloader Extension")
             }
+        }
+    }
+
+    static func removeDownloadedItem(atPath path: String,
+                                     downloadRoot: URL = DownloadTemporaryFile.defaultRootURL) {
+        let fileURL = URL(fileURLWithPath: path).standardizedFileURL
+        let rootURL = downloadRoot.standardizedFileURL
+        let parentURL = fileURL.deletingLastPathComponent()
+        let targetURL = parentURL == rootURL ? fileURL : parentURL
+
+        guard fileURL.path.hasPrefix(rootURL.path + "/"),
+              FileManager.default.fileExists(atPath: targetURL.path) else {
+            return
+        }
+
+        do {
+            try FileManager.default.removeItem(at: targetURL)
+        } catch {
+            Log.error(error: "remove downloaded item failed: \(error.localizedDescription)",
+                      tag: "Downloader Extension")
         }
     }
 }
