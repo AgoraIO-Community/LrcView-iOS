@@ -291,18 +291,27 @@ extension HostVC: LyricsFileDownloaderDelegate {
     }
     
     func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
-        if let data = fileData {
-            let model = KaraokeView.parseLyricData(lyricFileData: data)!
-            self.lyricModel = model
-            self.ktvView.karaokeView.setLyricData(data: model, usingInternalScoring: true)
-            self.ktvView.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-            self.mccPlay()
-            /// auto skip
-            let toPosition = max(model.preludeEndPosition - 2000, 0)
-            self.mpk.seek(toPosition: Int(toPosition))
+        if let error = error {
+            Log.errorText(text: "lyrics download failed requestId:\(requestId) error:\(error.description)",
+                          tag: "HostVC")
+            return
         }
-        else {
-            print("fect fail")
+        guard let data = fileData else {
+            Log.errorText(text: "lyrics download failed requestId:\(requestId) without error details",
+                          tag: "HostVC")
+            return
         }
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
+            Log.errorText(text: "parse downloaded lyrics failed requestId:\(requestId) dataSize:\(data.count)",
+                          tag: "HostVC")
+            return
+        }
+        self.lyricModel = model
+        self.ktvView.karaokeView.setLyricData(data: model, usingInternalScoring: true)
+        self.ktvView.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
+        self.mccPlay()
+        /// auto skip
+        let toPosition = max(model.preludeEndPosition - 2000, 0)
+        self.mpk.seek(toPosition: Int(toPosition))
     }
 }

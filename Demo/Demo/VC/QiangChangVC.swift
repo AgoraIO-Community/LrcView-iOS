@@ -522,27 +522,36 @@ extension QiangChangVC: LyricsFileDownloaderDelegate {
     }
     
     func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
-        if let data = fileData {
-            let model = KaraokeView.parseLyricData(lyricFileData: data)!
-            self.lyricModel = model
-            if !self.noLyric {
-                let canScoring = model.hasPitch
-                if canScoring { /** xml **/
-                    self.karaokeView.setLyricData(data: model, usingInternalScoring: true)
-                    self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
-                }
-                else {/** lrc **/
-                    self.karaokeView.setLyricData(data: model, usingInternalScoring: true)
-                }
+        if let error = error {
+            Log.errorText(text: "lyrics download failed requestId:\(requestId) error:\(error.description)",
+                          tag: "QiangChangVC")
+            return
+        }
+        guard let data = fileData else {
+            Log.errorText(text: "lyrics download failed requestId:\(requestId) without error details",
+                          tag: "QiangChangVC")
+            return
+        }
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
+            Log.errorText(text: "parse downloaded lyrics failed requestId:\(requestId) dataSize:\(data.count)",
+                          tag: "QiangChangVC")
+            return
+        }
+        self.lyricModel = model
+        if !self.noLyric {
+            let canScoring = model.hasPitch
+            if canScoring { /** xml **/
+                self.karaokeView.setLyricData(data: model, usingInternalScoring: true)
+                self.gradeView.setTitle(title: "\(model.name) - \(model.singer)")
             }
-            else {
-                self.karaokeView.setLyricData(data: nil, usingInternalScoring: true)
-                self.gradeView.isHidden = true
+            else {/** lrc **/
+                self.karaokeView.setLyricData(data: model, usingInternalScoring: true)
             }
-            self.mccPlay()
         }
         else {
-            print("fect fail")
+            self.karaokeView.setLyricData(data: nil, usingInternalScoring: true)
+            self.gradeView.isHidden = true
         }
+        self.mccPlay()
     }
 }

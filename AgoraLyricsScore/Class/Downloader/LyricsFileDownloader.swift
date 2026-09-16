@@ -41,6 +41,7 @@ public class LyricsFileDownloader: NSObject {
     /// - Returns: `requestId`, if rseult < 0, means fail, such as -1 means urlString not valid. if rseult >= 0, means success
     @objc public func download(urlString: String) -> Int {
         guard isValidURL(urlString: urlString) else {
+            Log.errorText(text: "download rejected invalid URL: \(urlString)", tag: logTag)
             return -1
         }
         
@@ -105,13 +106,18 @@ public class LyricsFileDownloader: NSObject {
     func fetchFromLocal(urlString: String) -> Data? {
         /** check if Exist **/
         guard let url = URL(string: urlString) else {
+            Log.errorText(text: "cache lookup failed invalid URL: \(urlString)", tag: logTag)
             return nil
         }
         let fileName = url.lyricsCacheFileName
         if let path = FileCache.cacheFileExists(with: fileName) {
-            let url = URL(fileURLWithPath: path)
-            let data = try? Data(contentsOf: url)
-            return data
+            let fileURL = URL(fileURLWithPath: path)
+            do {
+                return try Data(contentsOf: fileURL)
+            } catch {
+                Log.error(error: "read cached lyrics failed path:\(path) error:\(error.localizedDescription)",
+                          tag: logTag)
+            }
         }
         return nil
     }
@@ -119,6 +125,8 @@ public class LyricsFileDownloader: NSObject {
     func _startDownload(requestId: Int, urlString: String) {
         Log.debug(text: "_startDownload requestId:\(requestId)", tag: logTag)
         guard let url = URL(string: urlString) else {
+            Log.errorText(text: "start download failed requestId:\(requestId) invalid URL:\(urlString)",
+                          tag: logTag)
             _removeRequest(id: requestId)
             _resumeTaskIfNeeded()
             return
@@ -137,44 +145,44 @@ public class LyricsFileDownloader: NSObject {
                 defer {
                     FileManager.removeDownloadedItem(atPath: filePath)
                 }
-                let url = URL(fileURLWithPath: filePath)
-                var data: Data?
+                let sourceURL = URL(fileURLWithPath: filePath)
+                let cacheURL = URL(fileURLWithPath: .cacheFolderPath(), isDirectory: true)
+                    .appendingPathComponent(sourceURL.lastPathComponent, isDirectory: false)
                 do {
-                    data = try Data(contentsOf: url)
+                    let result = try DownloadedLyricsFile.consume(sourceURL: sourceURL,
+                                                                  cacheURL: cacheURL)
+                    if let cacheError = result.cacheError {
+                        Log.error(error: "cache downloaded lyrics failed requestId:\(requestId) source:\(filePath) cache:\(cacheURL.path) error:\(cacheError.localizedDescription)",
+                                  tag: self.logTag)
+                    }
                     self.removeRequest(id: requestId)
                     self.resumeTaskIfNeeded()
-                } catch let error {
-                    let logText = "get data from [\(url.path)] failed: \(error.localizedDescription)"
-                    Log.errorText(text: logText, tag: self.logTag)
+                    self.invokeOnLyricsFileDownloadCompleted(requestId: requestId,
+                                                             fileData: result.data,
+                                                             error: nil)
+                } catch {
+                    Log.error(error: "read downloaded lyrics failed requestId:\(requestId) path:\(filePath) error:\(error.localizedDescription)",
+                              tag: self.logTag)
+                    self.removeRequest(id: requestId)
+                    self.resumeTaskIfNeeded()
                     let e = DownloadError(domainType: .general, error: error as NSError)
                     self.invokeOnLyricsFileDownloadCompleted(requestId: requestId,
                                                              fileData: nil,
                                                              error: e)
                 }
-                
-                do {
-                    FileManager.createDirectoryIfNeeded(atPath: .cacheFolderPath())
-                    if FileManager.default.fileExists(atPath: filePath) {
-                        Log.debug(text: "file exist: \(filePath)")
-                    }
-                    try FileManager.default.copyItem(atPath: filePath, toPath: .cacheFolderPath() + "/" + url.lastPathComponent)
-                } catch let error {
-                    let logText = "get data from [\(url.path)] failed: \(error.localizedDescription)"
-                    Log.errorText(text: logText, tag: self.logTag)
-                }
-                
-                self.invokeOnLyricsFileDownloadCompleted(requestId: requestId,
-                                                         fileData: data,
-                                                         error: nil)
                 return
             }
             
-            /** xml type **/
-            self.unzip(filePath: filePath, requestId: requestId)
+            /** zip type **/
+            self.unzip(filePath: filePath,
+                       requestId: requestId,
+                       cacheFileName: url.lyricsCacheFileName)
         } fail: { [weak self](error) in
             guard let self = self else {
                 return
             }
+            Log.error(error: "download failed requestId:\(requestId) url:\(urlString) error:\(error.description)",
+                      tag: self.logTag)
             self.removeRequest(id: requestId)
             self.resumeTaskIfNeeded()
             self.invokeOnLyricsFileDownloadCompleted(requestId: requestId, fileData: nil, error: error)
@@ -203,33 +211,67 @@ public class LyricsFileDownloader: NSObject {
     
     // MARK: - Private Method
     
-    private func unzip(filePath: String, requestId: Int) {
+    private func unzip(filePath: String,
+                       requestId: Int,
+                       cacheFileName: String) {
         queue.async { [weak self] in
             guard let self = self else {
+                Log.errorText(text: "unzip canceled because downloader was released requestId:\(requestId) path:\(filePath)",
+                              tag: "LyricsFileDownloader")
+                FileManager.removeDownloadedItem(atPath: filePath)
                 return
             }
-            self._unzip(filePath: filePath, requestId: requestId)
+            self._unzip(filePath: filePath,
+                        requestId: requestId,
+                        cacheFileName: cacheFileName)
         }
     }
     
-    private func _unzip(filePath: String, requestId: Int) {
+    private func _unzip(filePath: String,
+                        requestId: Int,
+                        cacheFileName: String) {
         defer {
             FileManager.removeDownloadedItem(atPath: filePath)
         }
-        let fileName = filePath.fileName.components(separatedBy: ".").first ?? ""
         let zipFile = URL(fileURLWithPath: filePath)
-        let destination = URL(fileURLWithPath: .cacheFolderPath())
+        let destination = zipFile.deletingLastPathComponent()
+            .appendingPathComponent("extracted", isDirectory: true)
+        var step = LyricsArchiveProcessingStep.createExtractionDirectory
         do {
+            try FileManager.default.createDirectory(at: destination,
+                                                    withIntermediateDirectories: true,
+                                                    attributes: nil)
+
+            step = .unzipArchive
             try Zip.unzipFile(zipFile, destination: destination, overwrite: true, password: nil)
-            let path = destination.path + "/" + fileName + ".xml"
-            let url = URL(fileURLWithPath: path)
-            let data = try Data(contentsOf: url)
+
+            step = .selectLyricsFile
+            let lyricFile = try LyricsArchiveContent.onlyRegularFile(in: destination)
+
+            step = .readLyricsFile
+            let data = try Data(contentsOf: lyricFile)
+
+            let cacheDirectory = URL(fileURLWithPath: .cacheFolderPath(), isDirectory: true)
+            step = .createCacheDirectory
+            try FileManager.default.createDirectory(at: cacheDirectory,
+                                                    withIntermediateDirectories: true,
+                                                    attributes: nil)
+            let cacheFile = cacheDirectory.appendingPathComponent(cacheFileName,
+                                                                  isDirectory: false)
+
+            step = .writeCacheFile
+            try data.write(to: cacheFile, options: .atomic)
+
             removeRequest(id: requestId)
             resumeTaskIfNeeded()
             invokeOnLyricsFileDownloadCompleted(requestId: requestId,
                                                 fileData: data,
                                                 error: nil)
         } catch let error {
+            let logText = step.failureDescription(requestId: requestId,
+                                                  archivePath: filePath,
+                                                  error: error)
+            Log.error(error: logText, tag: logTag)
             removeRequest(id: requestId)
             resumeTaskIfNeeded()
             let e = DownloadError(domainType: .unzipFail,

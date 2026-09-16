@@ -150,6 +150,7 @@ extension Downloader: URLSessionDataDelegate {
             }
             try temporaryFile.write(data)
         } catch {
+            Log.error(error: "write download data failed: \(error.localizedDescription)", tag: logTag)
             writeError = error
             dataTask.cancel()
             return

@@ -44,6 +44,7 @@ class LrcParser {
         
         let pattern = "\\[[0-9][0-9]:[0-9][0-9].[0-9]{1,}\\]"
         guard let regular = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else {
+            Log.errorText(text: "create LRC timestamp regular expression failed", tag: logTag)
             return nil
         }
         for line in lrcConnectArray {
@@ -104,6 +105,7 @@ class LrcParser {
         }
         
         guard lines.count != 0, let preludeEndPosition = lines.first?.beginTime else {
+            Log.errorText(text: "parse LRC failed: no valid lyric lines", tag: logTag)
             return nil
         }
         let duration: UInt = lines.last?.endTime ?? 0
@@ -174,4 +176,3 @@ class LrcParser {
     }
     
 }
-

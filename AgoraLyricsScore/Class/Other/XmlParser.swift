@@ -32,6 +32,7 @@ class XmlParser: NSObject {
         }
         
         if song == nil {
+            Log.error(error: "parsing failed: XML does not contain a song element", tag: logTag)
             return nil
         }
         

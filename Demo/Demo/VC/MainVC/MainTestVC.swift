@@ -196,15 +196,24 @@ extension MainTestVC: MccManagerDelegate {
 // MARK: - LyricsFileDownloaderDelegate
 extension MainTestVC: LyricsFileDownloaderDelegate {
     func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
-        if let data = fileData {
-            let model = KaraokeView.parseLyricData(lyricFileData: data)!
-            lyricModel = model
-            setLyricToView()
-            mccManager.openMusic()
+        if let error = error {
+            Log.errorText(text: "lyrics download failed requestId:\(requestId) error:\(error.description)",
+                          tag: logTag)
+            return
         }
-        else {
-            Log.errorText(text: "onLyricsFileDownloadCompleted fail", tag: logTag)
+        guard let data = fileData else {
+            Log.errorText(text: "lyrics download failed requestId:\(requestId) without error details",
+                          tag: logTag)
+            return
         }
+        guard let model = KaraokeView.parseLyricData(lyricFileData: data) else {
+            Log.errorText(text: "parse downloaded lyrics failed requestId:\(requestId) dataSize:\(data.count)",
+                          tag: logTag)
+            return
+        }
+        lyricModel = model
+        setLyricToView()
+        mccManager.openMusic()
     }
     
     func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {}

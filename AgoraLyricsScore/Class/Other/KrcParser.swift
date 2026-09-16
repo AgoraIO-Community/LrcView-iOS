@@ -51,7 +51,10 @@ class KRCParser {
     }
     
     func parse(krcFileData: Data, lyricOffset: Int) -> LyricModel? {
-        let content = String(data: krcFileData, encoding: .utf8)!
+        guard let content = String(data: krcFileData, encoding: .utf8) else {
+            Log.errorText(text: "parse KRC failed: content is not valid UTF-8", tag: logTag)
+            return nil
+        }
         var metadata: [String : String] = [:]
         var lineModels = [LyricLineModel]()
         

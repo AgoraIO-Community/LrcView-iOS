@@ -70,6 +70,7 @@ class FileCache {
     func findFiles(inDirectory directoryPath: String) -> [ExistedFile] {
         let fileManager = FileManager.default
         guard let directoryURL = URL(string: directoryPath) else {
+            Log.errorText(text: "invalid cache directory path: \(directoryPath)", tag: logTag)
             return []
         }
         var files: [ExistedFile] = []
@@ -124,11 +125,14 @@ extension FileCache {
      */
     static func clearCache() -> Bool? {
         let manager = FileManager.default
-        
-        if let _ = try? manager.removeItem(atPath: String.cacheFolderPath()) {
+
+        do {
+            try manager.removeItem(atPath: String.cacheFolderPath())
             return true
+        } catch {
+            Log.error(error: "clear cache failed: \(error.localizedDescription)", tag: "FileCache")
+            return false
         }
-        return false
     }
     
     struct ExistedFile {

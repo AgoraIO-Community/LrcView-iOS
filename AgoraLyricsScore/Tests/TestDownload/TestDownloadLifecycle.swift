@@ -70,6 +70,50 @@ final class TestDownloadLifecycle: XCTestCase {
         XCTAssertEqual(createdCount, 2)
     }
 
+    func testDownloadedLyricsFileReadsAndCachesData() throws {
+        let rootURL = try makeRootURL()
+        defer { try? FileManager.default.removeItem(at: rootURL) }
+        let sourceURL = rootURL.appendingPathComponent("downloaded.lrc")
+        let cacheURL = rootURL.appendingPathComponent("cache/lyrics.lrc")
+        let expectedData = Data("[00:01.00]lyrics".utf8)
+        try expectedData.write(to: sourceURL)
+
+        let result = try DownloadedLyricsFile.consume(sourceURL: sourceURL,
+                                                      cacheURL: cacheURL)
+
+        XCTAssertEqual(result.data, expectedData)
+        XCTAssertNil(result.cacheError)
+        XCTAssertEqual(try Data(contentsOf: cacheURL), expectedData)
+    }
+
+    func testDownloadedLyricsFileThrowsWhenSourceCannotBeRead() throws {
+        let rootURL = try makeRootURL()
+        defer { try? FileManager.default.removeItem(at: rootURL) }
+
+        XCTAssertThrowsError(try DownloadedLyricsFile.consume(
+            sourceURL: rootURL.appendingPathComponent("missing.lrc"),
+            cacheURL: rootURL.appendingPathComponent("cache/lyrics.lrc")
+        ))
+    }
+
+    func testDownloadedLyricsFileReturnsCacheFailureWithoutDiscardingData() throws {
+        let rootURL = try makeRootURL()
+        defer { try? FileManager.default.removeItem(at: rootURL) }
+        let sourceURL = rootURL.appendingPathComponent("downloaded.lrc")
+        let cacheURL = rootURL.appendingPathComponent("cache-target", isDirectory: true)
+        let expectedData = Data("[00:01.00]lyrics".utf8)
+        try expectedData.write(to: sourceURL)
+        try FileManager.default.createDirectory(at: cacheURL,
+                                                withIntermediateDirectories: true,
+                                                attributes: nil)
+
+        let result = try DownloadedLyricsFile.consume(sourceURL: sourceURL,
+                                                      cacheURL: cacheURL)
+
+        XCTAssertEqual(result.data, expectedData)
+        XCTAssertNotNil(result.cacheError)
+    }
+
     private func makeRootURL() throws -> URL {
         let rootURL = FileManager.default.temporaryDirectory
             .appendingPathComponent("AgoraLyricsScoreLifecycleTests", isDirectory: true)

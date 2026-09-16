@@ -83,8 +83,16 @@ extension DownloadVC: DownloadViewDelegate, LyricsFileDownloaderDelegate {
     func onLyricsFileDownloadCompleted(requestId: Int,
                                        fileData: Data?,
                                        error: AgoraLyricsScore.DownloadError?) {
+        if let error = error {
+            Log.errorText(text: "lyrics download failed requestId:\(requestId) error:\(error.description)",
+                          tag: "DownloadVC")
+        }
+        else if fileData == nil {
+            Log.errorText(text: "lyrics download failed requestId:\(requestId) without error details",
+                          tag: "DownloadVC")
+        }
         if let item = downloadView.getInfo(requestId: requestId) {
-            item.state = fileData == nil ? .doneFail : .doneSuccess
+            item.state = error == nil && fileData != nil ? .doneSuccess : .doneFail
             downloadView.reloadData()
         }
     }
