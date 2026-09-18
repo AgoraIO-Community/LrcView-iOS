@@ -138,7 +138,8 @@ public class LyricsFileDownloader: NSObject {
             self.invokeOnLyricsFileDownloadProgress(requestId: requestId, progress: progress)
         } completion: { [weak self](filePath) in
             guard let self = self else {
-                FileManager.removeDownloadedItem(atPath: filePath)
+                // Test only: keep a completed download for diagnostics.
+                // FileManager.removeDownloadedItem(atPath: filePath)
                 return
             }
             if filePath.split(separator: ".").last == "lrc" { /** lrc type **/
@@ -218,7 +219,8 @@ public class LyricsFileDownloader: NSObject {
             guard let self = self else {
                 Log.errorText(text: "unzip canceled because downloader was released requestId:\(requestId) path:\(filePath)",
                               tag: "LyricsFileDownloader")
-                FileManager.removeDownloadedItem(atPath: filePath)
+                // Test only: keep the downloaded ZIP for diagnostics.
+                // FileManager.removeDownloadedItem(atPath: filePath)
                 return
             }
             self._unzip(filePath: filePath,
@@ -230,9 +232,10 @@ public class LyricsFileDownloader: NSObject {
     private func _unzip(filePath: String,
                         requestId: Int,
                         cacheFileName: String) {
-        defer {
-            FileManager.removeDownloadedItem(atPath: filePath)
-        }
+        // Test only: keep the downloaded ZIP whether archive processing succeeds or fails.
+        // defer {
+        //     FileManager.removeDownloadedItem(atPath: filePath)
+        // }
         let zipFile = URL(fileURLWithPath: filePath)
         let destination = zipFile.deletingLastPathComponent()
             .appendingPathComponent("extracted", isDirectory: true)
