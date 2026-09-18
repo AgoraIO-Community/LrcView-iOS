@@ -55,7 +55,8 @@ class DownloaderManager: NSObject {
             guard let self = self else {
                 Log.errorText(text: "download manager released before completion url:\(url.absoluteString) path:\(filePath)",
                               tag: "DownloaderManager")
-                FileManager.removeDownloadedItem(atPath: filePath)
+                // Test only: keep a completed download for diagnostics.
+                // FileManager.removeDownloadedItem(atPath: filePath)
                 return
             }
             self.downloadCache.removeValue(forkey: url.absoluteString)
