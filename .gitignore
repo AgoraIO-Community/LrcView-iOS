@@ -51,6 +51,7 @@ Pods/
 Podfile.lock
 .DS_Store
 Demo/Demo/Config.swift
+.worktrees/
 Demo/Demo/Other/Config.swift
 
 # End of https://www.gitignore.io/api/cocoapods
