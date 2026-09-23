@@ -22,8 +22,7 @@ The first version does not include online search, music charts, rooms, audience 
 - iPhone target only, with portrait as the primary orientation.
 - Existing local `AgoraLyricsScore` CocoaPod and its `Zip` and `AgoraComponetLog` dependencies.
 - Agora RTC SDK for microphone audio and local pitch callbacks.
-- `RTMTokenBuilder` for local Music Content Center token generation.
-- Agora's official C++ AccessToken2 (007) `AccessToken2` and `RtcTokenBuilder2` sources, pinned to a reviewed commit and exposed to Swift through a minimal Objective-C++ wrapper, for certificate-enabled RTC channel access.
+- `RTMTokenBuilder` 1.0.2 for local Music Content Center and RTC AccessToken2 (007) generation. Its public `TokenBuilder` API exposes both `buildRtmToken2` and `rtcToken2`, while the pod owns its C++/OpenSSL/zlib implementation details.
 
 Remove the non-portable `AgoraMccExService` and `ScoreEffectUI` dependencies, both of which currently reference developer-specific filesystem paths. Remove `SVProgressHUD` and replace its uses with UIKit-owned loading and error states. Remove the screens and source references that exist only for component, Ex-service, host, audience, and multi-user testing.
 
@@ -43,7 +42,7 @@ Xcode uses Automatic Signing. The repository must not pin a personal Development
 
 `CredentialsStore` is the only component that reads and writes Agora credentials. Its production implementation uses Keychain. It supports load, save, overwrite, and clear operations and never prints credential values.
 
-`TokenProvider` validates credentials and creates the short-lived RTC and Music Content Center tokens required for a session. The RTC channel name and random session user ID are inputs so that the token matches the actual join request. RTC token generation calls the vendored official C++ AccessToken2 implementation through Objective-C++; Music Content Center token generation continues to use the demo's existing `RTMTokenBuilder.buildRtmToken2` path. The vendored source retains its upstream license and commit reference.
+`TokenProvider` validates credentials and creates the short-lived RTC and Music Content Center tokens required for a session. The RTC channel name and random session user ID are inputs so that the token matches the actual join request. RTC token generation calls `TokenBuilder.rtcToken2`; Music Content Center token generation calls the demo's existing `TokenBuilder.buildRtmToken2` path.
 
 `SongCatalog` exposes the five existing songs as immutable application data:
 
@@ -124,7 +123,7 @@ Retries always clean up the previous session first. SDK error codes are retained
 Add an application unit-test target covering:
 
 - Keychain save, load, overwrite, and clear behavior.
-- Credential validation and deterministic token generation using fixed test inputs.
+- Credential validation, AccessToken2 `007` output shape, and generation of distinct RTC and Music Content Center tokens from fixed valid inputs.
 - All valid `KaraokeSession` state transitions, rejected invalid transitions, and repeated cleanup.
 - Fixed catalog content and next-song ordering.
 - Mapping Agora, download, parser, and player errors to user-facing categories.
