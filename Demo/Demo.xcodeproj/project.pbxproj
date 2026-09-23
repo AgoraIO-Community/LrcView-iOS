@@ -7,22 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0ED87222F5AE9767F76D22A8 /* AgoraCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60C69F39A1DB56670E147E7 /* AgoraCredentials.swift */; };
-		19D6F9EB1314D12C16540758 /* SongCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94952C2F3F32EB7E044DB63E /* SongCatalogTests.swift */; };
+		0993445E1BA6B1FC5EB42F47 /* ProjectSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B0E77F611D56C1B35E198 /* ProjectSmokeTests.swift */; };
+		11D5248902E65149F120EC55 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260942D82952B5050022A50D /* SceneDelegate.swift */; };
 		260942E32952B5060022A50D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 260942E12952B5060022A50D /* LaunchScreen.storyboard */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
-		398C3B3261334A65310A2B46 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260942D82952B5050022A50D /* SceneDelegate.swift */; };
-		3E90DFDECECF0753D9485154 /* CredentialsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D234EEB36FAD4FEA0377A4E /* CredentialsStore.swift */; };
-		540818A17D933C9A923D6F4E /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B311CA111F1AD6FFC8638 /* AppCoordinator.swift */; };
+		2E5AC0123A74FD795B703B88 /* KaraokeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84E75B760A36CE59684FE3D /* KaraokeError.swift */; };
+		459AAFD801BD52D61A5FF626 /* CredentialsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8B6F4CB47B33AD1EFC05D /* CredentialsStoreTests.swift */; };
+		4EEADEA747519432F6E78DF7 /* KaraokeSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27B85C8464F331713B9F976 /* KaraokeSession.swift */; };
 		58B5FA44D52EF25C14B26184 /* Pods_DemoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D90E768D15AE9F235798F81 /* Pods_DemoTests.framework */; };
-		6D2DF6FA1DDBFBADBC5F4FAB /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA713812FA1CF9568ECE0379 /* Song.swift */; };
-		6EFC08FD565A29339244E581 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260942D62952B5050022A50D /* AppDelegate.swift */; };
-		8483A0072F3F7532BE066FDA /* TokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEBEAE5CB6D3FE4965F8E7F /* TokenProvider.swift */; };
-		A1DADF1400B8CD3DC321B66A /* ProjectSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B0E77F611D56C1B35E198 /* ProjectSmokeTests.swift */; };
-		B8481479F6BE81BDB1243F36 /* AgoraCredentialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A195E37F5EAB7354E755E26 /* AgoraCredentialsTests.swift */; };
+		5BD656BA1619808E46E40DE9 /* AgoraCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60C69F39A1DB56670E147E7 /* AgoraCredentials.swift */; };
+		5C6A37E44893E85A39D08A1A /* TokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEBEAE5CB6D3FE4965F8E7F /* TokenProvider.swift */; };
+		675772F42805579B013142BD /* SongCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94952C2F3F32EB7E044DB63E /* SongCatalogTests.swift */; };
+		681778784A56F743F3392322 /* KaraokeErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEBF75ACFC7DB49C66C59E9A /* KaraokeErrorTests.swift */; };
+		A133893D14B13ACDBCF67BB0 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA713812FA1CF9568ECE0379 /* Song.swift */; };
+		C37769D8183AFEF818AE8EE3 /* AgoraCredentialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A195E37F5EAB7354E755E26 /* AgoraCredentialsTests.swift */; };
 		CAE3D915117A5C3314098CEA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F6E2C1FBF5AF0B2D431216 /* Foundation.framework */; };
-		CC32D05DFBB49DB364D5821F /* CredentialsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8B6F4CB47B33AD1EFC05D /* CredentialsStoreTests.swift */; };
-		E0C32D7CD6BE4DB0FF389CA9 /* TokenProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC93A1BB4D8C2B078F0A4B3 /* TokenProviderTests.swift */; };
+		CD901FE439CFA0703F422BBD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260942D62952B5050022A50D /* AppDelegate.swift */; };
+		CDEA6050D673FECAD892EDA2 /* TokenProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC93A1BB4D8C2B078F0A4B3 /* TokenProviderTests.swift */; };
+		E49235C426ECEC485EFA2570 /* CredentialsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D234EEB36FAD4FEA0377A4E /* CredentialsStore.swift */; };
+		EBB7A13B42667C946F65C406 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B311CA111F1AD6FFC8638 /* AppCoordinator.swift */; };
+		F45E4E1CCB34494BFA673AD9 /* KaraokeSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC10078D1FB88C5DDC1CA89 /* KaraokeSessionTests.swift */; };
 		F88793560A341F9CBCF66020 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -102,6 +106,7 @@
 		4C3D827176761E777289FD47 /* DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C749CB052D07703F78DD01A /* Pods-DemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DemoTests.release.xcconfig"; path = "Target Support Files/Pods-DemoTests/Pods-DemoTests.release.xcconfig"; sourceTree = "<group>"; };
 		7A195E37F5EAB7354E755E26 /* AgoraCredentialsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgoraCredentialsTests.swift; sourceTree = "<group>"; };
+		7CC10078D1FB88C5DDC1CA89 /* KaraokeSessionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KaraokeSessionTests.swift; sourceTree = "<group>"; };
 		7D90E768D15AE9F235798F81 /* Pods_DemoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DemoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		94952C2F3F32EB7E044DB63E /* SongCatalogTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SongCatalogTests.swift; sourceTree = "<group>"; };
 		97B9305873CDD18897DEA957 /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -110,6 +115,9 @@
 		B11BABF3447B1F591F0171BB /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
 		BFEBEAE5CB6D3FE4965F8E7F /* TokenProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenProvider.swift; path = Session/TokenProvider.swift; sourceTree = "<group>"; };
 		CA713812FA1CF9568ECE0379 /* Song.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Song.swift; path = Songs/Song.swift; sourceTree = "<group>"; };
+		D27B85C8464F331713B9F976 /* KaraokeSession.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KaraokeSession.swift; path = Session/KaraokeSession.swift; sourceTree = "<group>"; };
+		D84E75B760A36CE59684FE3D /* KaraokeError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KaraokeError.swift; path = Session/KaraokeError.swift; sourceTree = "<group>"; };
+		DEBF75ACFC7DB49C66C59E9A /* KaraokeErrorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KaraokeErrorTests.swift; sourceTree = "<group>"; };
 		F7D8B6F4CB47B33AD1EFC05D /* CredentialsStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CredentialsStoreTests.swift; sourceTree = "<group>"; };
 		F83B311CA111F1AD6FFC8638 /* AppCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -316,6 +324,8 @@
 				94952C2F3F32EB7E044DB63E /* SongCatalogTests.swift */,
 				F7D8B6F4CB47B33AD1EFC05D /* CredentialsStoreTests.swift */,
 				1EC93A1BB4D8C2B078F0A4B3 /* TokenProviderTests.swift */,
+				DEBF75ACFC7DB49C66C59E9A /* KaraokeErrorTests.swift */,
+				7CC10078D1FB88C5DDC1CA89 /* KaraokeSessionTests.swift */,
 			);
 			name = DemoTests;
 			path = DemoTests;
@@ -349,6 +359,8 @@
 				CA713812FA1CF9568ECE0379 /* Song.swift */,
 				2D234EEB36FAD4FEA0377A4E /* CredentialsStore.swift */,
 				BFEBEAE5CB6D3FE4965F8E7F /* TokenProvider.swift */,
+				D84E75B760A36CE59684FE3D /* KaraokeError.swift */,
+				D27B85C8464F331713B9F976 /* KaraokeSession.swift */,
 			);
 			name = App;
 			path = App;
@@ -518,13 +530,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6EFC08FD565A29339244E581 /* AppDelegate.swift in Sources */,
-				398C3B3261334A65310A2B46 /* SceneDelegate.swift in Sources */,
-				540818A17D933C9A923D6F4E /* AppCoordinator.swift in Sources */,
-				0ED87222F5AE9767F76D22A8 /* AgoraCredentials.swift in Sources */,
-				3E90DFDECECF0753D9485154 /* CredentialsStore.swift in Sources */,
-				8483A0072F3F7532BE066FDA /* TokenProvider.swift in Sources */,
-				6D2DF6FA1DDBFBADBC5F4FAB /* Song.swift in Sources */,
+				CD901FE439CFA0703F422BBD /* AppDelegate.swift in Sources */,
+				11D5248902E65149F120EC55 /* SceneDelegate.swift in Sources */,
+				EBB7A13B42667C946F65C406 /* AppCoordinator.swift in Sources */,
+				5BD656BA1619808E46E40DE9 /* AgoraCredentials.swift in Sources */,
+				E49235C426ECEC485EFA2570 /* CredentialsStore.swift in Sources */,
+				2E5AC0123A74FD795B703B88 /* KaraokeError.swift in Sources */,
+				4EEADEA747519432F6E78DF7 /* KaraokeSession.swift in Sources */,
+				5C6A37E44893E85A39D08A1A /* TokenProvider.swift in Sources */,
+				A133893D14B13ACDBCF67BB0 /* Song.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -532,11 +546,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8481479F6BE81BDB1243F36 /* AgoraCredentialsTests.swift in Sources */,
-				CC32D05DFBB49DB364D5821F /* CredentialsStoreTests.swift in Sources */,
-				A1DADF1400B8CD3DC321B66A /* ProjectSmokeTests.swift in Sources */,
-				19D6F9EB1314D12C16540758 /* SongCatalogTests.swift in Sources */,
-				E0C32D7CD6BE4DB0FF389CA9 /* TokenProviderTests.swift in Sources */,
+				C37769D8183AFEF818AE8EE3 /* AgoraCredentialsTests.swift in Sources */,
+				459AAFD801BD52D61A5FF626 /* CredentialsStoreTests.swift in Sources */,
+				681778784A56F743F3392322 /* KaraokeErrorTests.swift in Sources */,
+				F45E4E1CCB34494BFA673AD9 /* KaraokeSessionTests.swift in Sources */,
+				0993445E1BA6B1FC5EB42F47 /* ProjectSmokeTests.swift in Sources */,
+				675772F42805579B013142BD /* SongCatalogTests.swift in Sources */,
+				CDEA6050D673FECAD892EDA2 /* TokenProviderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
