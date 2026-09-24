@@ -7,36 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0077A3CD1850C58FC5933093 /* MicrophonePermissionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 546DD34BDCCB23CC2F7932CE /* MicrophonePermissionProvider.swift */; };
-		0232505A915D646600B3891E /* ConfigurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1DA013A96D5BA87418DE06 /* ConfigurationViewController.swift */; };
-		0A43CA16D9006F17B7411FDF /* KaraokeSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27B85C8464F331713B9F976 /* KaraokeSession.swift */; };
-		23957B252B7121962F58EA03 /* TokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEBEAE5CB6D3FE4965F8E7F /* TokenProvider.swift */; };
+		0366666B684E378AF64FDA4E /* KaraokeErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEBF75ACFC7DB49C66C59E9A /* KaraokeErrorTests.swift */; };
+		03A3AEBBA27F135B784EC48A /* KaraokeContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1934261AD7FA176A5CB60D5A /* KaraokeContentView.swift */; };
+		0F532217DB4F9F1632481327 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B311CA111F1AD6FFC8638 /* AppCoordinator.swift */; };
+		1979A16F043B63942CAD722E /* AgoraCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60C69F39A1DB56670E147E7 /* AgoraCredentials.swift */; };
+		251D6ECF5DB11732A3DD53E2 /* KaraokeViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5B6CDB3A81793124A927C9 /* KaraokeViewControllerTests.swift */; };
 		260942E32952B5060022A50D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 260942E12952B5060022A50D /* LaunchScreen.storyboard */; };
 		26485E5A299E57A000FE4CF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 260942DF2952B5060022A50D /* Assets.xcassets */; };
-		3073FBC4A758D1A19C6F5066 /* ProjectSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B0E77F611D56C1B35E198 /* ProjectSmokeTests.swift */; };
-		31FA4F7EFF1AAAA13F3320B4 /* AgoraCredentialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A195E37F5EAB7354E755E26 /* AgoraCredentialsTests.swift */; };
-		321B1D6957EA3DCC91132EA0 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA713812FA1CF9568ECE0379 /* Song.swift */; };
-		35961C49EFDADC24B1C9327E /* AgoraCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60C69F39A1DB56670E147E7 /* AgoraCredentials.swift */; };
-		3C5E7D0C49B25319BD0EE2F1 /* TokenProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC93A1BB4D8C2B078F0A4B3 /* TokenProviderTests.swift */; };
-		49EE6499D1FD7788E39A849B /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83B311CA111F1AD6FFC8638 /* AppCoordinator.swift */; };
-		581E464885791DDF28DF6DFC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260942D82952B5050022A50D /* SceneDelegate.swift */; };
+		3075F313B65772E42C14ECFB /* TokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEBEAE5CB6D3FE4965F8E7F /* TokenProvider.swift */; };
+		457FF4427D1A72A1EC28553F /* MicrophonePermissionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 546DD34BDCCB23CC2F7932CE /* MicrophonePermissionProvider.swift */; };
+		4994E21327660E63491AB18F /* CredentialsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8B6F4CB47B33AD1EFC05D /* CredentialsStoreTests.swift */; };
 		58B5FA44D52EF25C14B26184 /* Pods_DemoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D90E768D15AE9F235798F81 /* Pods_DemoTests.framework */; };
-		73028B4ED5A2FDE75558A7F5 /* KaraokeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92755A57CD088D778D2F3FB8 /* KaraokeViewController.swift */; };
-		76AA4CA6F2F4FA965915755D /* KaraokeSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC10078D1FB88C5DDC1CA89 /* KaraokeSessionTests.swift */; };
-		7DC0A1E9344D6E6561AA53E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260942D62952B5050022A50D /* AppDelegate.swift */; };
-		96B031F0087674E198FF1178 /* KaraokeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84E75B760A36CE59684FE3D /* KaraokeError.swift */; };
-		A38B14C52C87CCE8C5387110 /* CredentialsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D8B6F4CB47B33AD1EFC05D /* CredentialsStoreTests.swift */; };
-		BBA62825EF1F3C5A7BB38B76 /* MicrophonePermissionProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236AA39447A713B2487CE334 /* MicrophonePermissionProviderTests.swift */; };
-		C24A57B7605836D21813A0CD /* AgoraKaraokeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981CB068F814CCB051558921 /* AgoraKaraokeClient.swift */; };
-		C7D362CF17D8492B74FB6C0C /* AgoraKaraokeClientMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11468EE5F22D966825EF1CDF /* AgoraKaraokeClientMappingTests.swift */; };
+		77537F9EBEA63112BE0A476B /* KaraokeSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC10078D1FB88C5DDC1CA89 /* KaraokeSessionTests.swift */; };
+		8DC0812566C32D172EC5A313 /* KaraokeSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27B85C8464F331713B9F976 /* KaraokeSession.swift */; };
+		9297B383F297B9D3484044AC /* SongListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2DA130348BFC680DC0CEB3 /* SongListViewController.swift */; };
+		9855EC6AD24B2F35D5BA179C /* SongCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94952C2F3F32EB7E044DB63E /* SongCatalogTests.swift */; };
+		9D9DED04CB14FF1DC98FB403 /* KaraokeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84E75B760A36CE59684FE3D /* KaraokeError.swift */; };
+		A7670CF813E57E7D336449F7 /* AgoraKaraokeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981CB068F814CCB051558921 /* AgoraKaraokeClient.swift */; };
+		ABA62D13A0FAA164CEE00C14 /* AgoraCredentialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A195E37F5EAB7354E755E26 /* AgoraCredentialsTests.swift */; };
+		ADA724FE648A15F825BA8C8E /* AgoraKaraokeClientMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11468EE5F22D966825EF1CDF /* AgoraKaraokeClientMappingTests.swift */; };
+		B45273873780B2D07D5FE8F9 /* TokenProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC93A1BB4D8C2B078F0A4B3 /* TokenProviderTests.swift */; };
+		B7D63AEEF8719D51EC451029 /* ConfigurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1DA013A96D5BA87418DE06 /* ConfigurationViewController.swift */; };
+		C1B0DAD05082516CBCB29415 /* MicrophonePermissionProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236AA39447A713B2487CE334 /* MicrophonePermissionProviderTests.swift */; };
+		C2F607DEA5F06CDC27C8F06B /* CredentialsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D234EEB36FAD4FEA0377A4E /* CredentialsStore.swift */; };
 		CAE3D915117A5C3314098CEA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F6E2C1FBF5AF0B2D431216 /* Foundation.framework */; };
-		D12C7FE953E85D8D3978685C /* KaraokeViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5B6CDB3A81793124A927C9 /* KaraokeViewControllerTests.swift */; };
-		E59D8A0571987B33F67F1519 /* SongListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2DA130348BFC680DC0CEB3 /* SongListViewController.swift */; };
-		E91B8824B4E4F7F515953B7C /* SongCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94952C2F3F32EB7E044DB63E /* SongCatalogTests.swift */; };
-		EC6C0156DA9C845A21ACCAD5 /* KaraokeContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1934261AD7FA176A5CB60D5A /* KaraokeContentView.swift */; };
+		CF500E4D89F0A50ACEFC143C /* KaraokeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92755A57CD088D778D2F3FB8 /* KaraokeViewController.swift */; };
+		DFF082C56DC3D2854B86305C /* ProjectSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55B0E77F611D56C1B35E198 /* ProjectSmokeTests.swift */; };
+		E38BA73E944BC4E7FDCA19C7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260942D82952B5050022A50D /* SceneDelegate.swift */; };
+		E506BC5EEFD7F4B27937CC6A /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA713812FA1CF9568ECE0379 /* Song.swift */; };
 		F88793560A341F9CBCF66020 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */; };
-		F9AF622006A2B1B14EFBFC87 /* KaraokeErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEBF75ACFC7DB49C66C59E9A /* KaraokeErrorTests.swift */; };
-		FB1DFF160FEE8EB4272308AA /* CredentialsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D234EEB36FAD4FEA0377A4E /* CredentialsStore.swift */; };
+		FDB997A379B790FCF5A3A829 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260942D62952B5050022A50D /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -557,21 +557,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7DC0A1E9344D6E6561AA53E0 /* AppDelegate.swift in Sources */,
-				581E464885791DDF28DF6DFC /* SceneDelegate.swift in Sources */,
-				49EE6499D1FD7788E39A849B /* AppCoordinator.swift in Sources */,
-				35961C49EFDADC24B1C9327E /* AgoraCredentials.swift in Sources */,
-				0232505A915D646600B3891E /* ConfigurationViewController.swift in Sources */,
-				FB1DFF160FEE8EB4272308AA /* CredentialsStore.swift in Sources */,
-				EC6C0156DA9C845A21ACCAD5 /* KaraokeContentView.swift in Sources */,
-				73028B4ED5A2FDE75558A7F5 /* KaraokeViewController.swift in Sources */,
-				0077A3CD1850C58FC5933093 /* MicrophonePermissionProvider.swift in Sources */,
-				C24A57B7605836D21813A0CD /* AgoraKaraokeClient.swift in Sources */,
-				96B031F0087674E198FF1178 /* KaraokeError.swift in Sources */,
-				0A43CA16D9006F17B7411FDF /* KaraokeSession.swift in Sources */,
-				23957B252B7121962F58EA03 /* TokenProvider.swift in Sources */,
-				321B1D6957EA3DCC91132EA0 /* Song.swift in Sources */,
-				E59D8A0571987B33F67F1519 /* SongListViewController.swift in Sources */,
+				FDB997A379B790FCF5A3A829 /* AppDelegate.swift in Sources */,
+				E38BA73E944BC4E7FDCA19C7 /* SceneDelegate.swift in Sources */,
+				0F532217DB4F9F1632481327 /* AppCoordinator.swift in Sources */,
+				1979A16F043B63942CAD722E /* AgoraCredentials.swift in Sources */,
+				B7D63AEEF8719D51EC451029 /* ConfigurationViewController.swift in Sources */,
+				C2F607DEA5F06CDC27C8F06B /* CredentialsStore.swift in Sources */,
+				03A3AEBBA27F135B784EC48A /* KaraokeContentView.swift in Sources */,
+				CF500E4D89F0A50ACEFC143C /* KaraokeViewController.swift in Sources */,
+				457FF4427D1A72A1EC28553F /* MicrophonePermissionProvider.swift in Sources */,
+				A7670CF813E57E7D336449F7 /* AgoraKaraokeClient.swift in Sources */,
+				9D9DED04CB14FF1DC98FB403 /* KaraokeError.swift in Sources */,
+				8DC0812566C32D172EC5A313 /* KaraokeSession.swift in Sources */,
+				3075F313B65772E42C14ECFB /* TokenProvider.swift in Sources */,
+				E506BC5EEFD7F4B27937CC6A /* Song.swift in Sources */,
+				9297B383F297B9D3484044AC /* SongListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -579,16 +579,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31FA4F7EFF1AAAA13F3320B4 /* AgoraCredentialsTests.swift in Sources */,
-				C7D362CF17D8492B74FB6C0C /* AgoraKaraokeClientMappingTests.swift in Sources */,
-				A38B14C52C87CCE8C5387110 /* CredentialsStoreTests.swift in Sources */,
-				F9AF622006A2B1B14EFBFC87 /* KaraokeErrorTests.swift in Sources */,
-				76AA4CA6F2F4FA965915755D /* KaraokeSessionTests.swift in Sources */,
-				D12C7FE953E85D8D3978685C /* KaraokeViewControllerTests.swift in Sources */,
-				BBA62825EF1F3C5A7BB38B76 /* MicrophonePermissionProviderTests.swift in Sources */,
-				3073FBC4A758D1A19C6F5066 /* ProjectSmokeTests.swift in Sources */,
-				E91B8824B4E4F7F515953B7C /* SongCatalogTests.swift in Sources */,
-				3C5E7D0C49B25319BD0EE2F1 /* TokenProviderTests.swift in Sources */,
+				ABA62D13A0FAA164CEE00C14 /* AgoraCredentialsTests.swift in Sources */,
+				ADA724FE648A15F825BA8C8E /* AgoraKaraokeClientMappingTests.swift in Sources */,
+				4994E21327660E63491AB18F /* CredentialsStoreTests.swift in Sources */,
+				0366666B684E378AF64FDA4E /* KaraokeErrorTests.swift in Sources */,
+				77537F9EBEA63112BE0A476B /* KaraokeSessionTests.swift in Sources */,
+				251D6ECF5DB11732A3DD53E2 /* KaraokeViewControllerTests.swift in Sources */,
+				C1B0DAD05082516CBCB29415 /* MicrophonePermissionProviderTests.swift in Sources */,
+				DFF082C56DC3D2854B86305C /* ProjectSmokeTests.swift in Sources */,
+				9855EC6AD24B2F35D5BA179C /* SongCatalogTests.swift in Sources */,
+				B45273873780B2D07D5FE8F9 /* TokenProviderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
