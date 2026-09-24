@@ -36,6 +36,7 @@ final class AgoraKaraokeClient: NSObject, KaraokeClientProtocol {
     private var contentCenter: AgoraMusicContentCenter?
     private var player: AgoraMusicPlayerProtocol?
     private let lifecycle: AgoraSDKLifecycleManaging
+    private let callbackDispatcher: (@escaping () -> Void) -> Void
     private let lyricsDownloader = LyricsFileDownloader()
     private var preparationId: UUID?
     private var preloadRequestId: String?
@@ -47,13 +48,25 @@ final class AgoraKaraokeClient: NSObject, KaraokeClientProtocol {
     private var isPlaying = false
 
     override convenience init() {
-        self.init(lifecycle: AgoraSDKLifecycleManager())
+        self.init(lifecycle: AgoraSDKLifecycleManager(), callbackDispatcher: Self.dispatchOnMain)
     }
 
-    init(lifecycle: AgoraSDKLifecycleManaging) {
+    init(
+        lifecycle: AgoraSDKLifecycleManaging,
+        callbackDispatcher: @escaping (@escaping () -> Void) -> Void = AgoraKaraokeClient.dispatchOnMain
+    ) {
         self.lifecycle = lifecycle
+        self.callbackDispatcher = callbackDispatcher
         super.init()
         lyricsDownloader.delegate = self
+    }
+
+    private static func dispatchOnMain(_ work: @escaping () -> Void) {
+        if Thread.isMainThread {
+            work()
+        } else {
+            DispatchQueue.main.async(execute: work)
+        }
     }
 
     static func mapPreloadError(_ code: AgoraMusicContentCenterStatusCode) -> KaraokeError {
@@ -295,15 +308,18 @@ final class AgoraKaraokeClient: NSObject, KaraokeClientProtocol {
         }
     }
 
-    private func notify(_ callback: @escaping (KaraokeClientDelegate, AgoraKaraokeClient) -> Void) {
-        let work = { [weak self] in
-            guard let self, let delegate = self.delegate else { return }
-            callback(delegate, self)
+    func dispatchForCurrentPreparation(_ work: @escaping (AgoraKaraokeClient) -> Void) {
+        guard let preparationId else { return }
+        callbackDispatcher { [weak self] in
+            guard let self, self.preparationId == preparationId else { return }
+            work(self)
         }
-        if Thread.isMainThread {
-            work()
-        } else {
-            DispatchQueue.main.async(execute: work)
+    }
+
+    private func notify(_ callback: @escaping (KaraokeClientDelegate, AgoraKaraokeClient) -> Void) {
+        dispatchForCurrentPreparation { client in
+            guard let delegate = client.delegate else { return }
+            callback(delegate, client)
         }
     }
 }

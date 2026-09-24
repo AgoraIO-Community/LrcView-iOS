@@ -67,6 +67,24 @@ final class AgoraKaraokeClientMappingTests: XCTestCase {
         client.cleanup()
         XCTAssertEqual(lifecycle.destroyCount, 1)
     }
+
+    func testQueuedCallbackFromPreviousPreparationIsDiscardedAfterRestart() {
+        let lifecycle = FakeAgoraSDKLifecycle()
+        var queuedCallbacks: [() -> Void] = []
+        let client = AgoraKaraokeClient(
+            lifecycle: lifecycle,
+            callbackDispatcher: { queuedCallbacks.append($0) }
+        )
+        var callbackCount = 0
+        client.prepare(song: song, credentials: credentials, access: access)
+        client.dispatchForCurrentPreparation { _ in callbackCount += 1 }
+
+        client.cleanup()
+        client.prepare(song: song, credentials: credentials, access: access)
+        queuedCallbacks.removeFirst()()
+
+        XCTAssertEqual(callbackCount, 0)
+    }
 }
 
 private final class FakeAgoraSDKLifecycle: AgoraSDKLifecycleManaging {
