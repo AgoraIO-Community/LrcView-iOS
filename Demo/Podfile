@@ -1,21 +1,24 @@
-platform :ios, '13.0'
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
 
 target 'Demo' do
+  # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-
-  pod 'AgoraLyricsScore', :path => '../AgoraLyricsScore.podspec'
-  pod 'RTMTokenBuilder', :path => '../Vendor/RTMTokenBuilder-1.0.2'
+  source 'https://github.com/CocoaPods/Specs.git'
+  
+  pod "AgoraLyricsScore", :path => "../AgoraLyricsScore.podspec", :testspecs => ['Tests']
+  pod 'RTMTokenBuilder', "1.0.2"
+#  pod 'AgoraRtcEngine_iOS', '4.1.1'
   pod 'AgoraRtcEngine_Special_iOS', '4.1.1.24'
-
-  target 'DemoTests' do
-    inherit! :search_paths
-  end
+  pod 'AgoraMccExService', :path => "/Volumes/T5/PodSpec/AgoraMccExService/AgoraMccExService.podspec"
+  pod "Zip"
+  pod "ScoreEffectUI", :path => "~/work/DevHistoryProject/ScoreEffectUI/ScoreEffectUI.podspec", :testspecs => ['Tests']
+  pod 'AgoraComponetLog', '0.0.3'
+  pod 'SVProgressHUD'
 end
 
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
-    end
-  end
-end
+#post_install do |installer|
+#  installer.pods_project.build_configurations.each do |config|
+#    config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+#  end
+#end

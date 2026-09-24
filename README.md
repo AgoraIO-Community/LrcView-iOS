@@ -222,28 +222,11 @@ karaokeView.reset()
 
 
 
-## iPhone 在线 K 歌 Demo
+## 使用方式2: 配合AograMusicContentCenterEx
 
-Demo 使用 Agora RTC、Music Content Center 和本组件完成在线歌曲播放、实时音高与歌词评分。运行步骤如下：
+关于AograMusicContentCenterEx的集成，可以参考demo代码文件：`MccManagerEx.swift`
 
-1. 安装依赖：
-
-   ```bash
-   cd Demo
-   pod install
-   ```
-
-2. 用 Xcode 打开 `Demo/Demo.xcworkspace`，不要直接打开 `Demo.xcodeproj`。
-3. 在 Demo target 的 Signing & Capabilities 中选择可用的 Apple Development Team。
-4. 连接一台 iPhone，选择该设备后运行 Demo。
-5. 首次启动时输入团队共享的 Agora App ID 和 App Certificate。凭证会保存在设备 Keychain 中，也可以从“Agora 配置”页面清除。
-6. 在歌曲列表中选择当前 Agora 账号已授权的歌曲。
-7. 按系统提示允许麦克风访问，进入演唱页面。
-
-> [!WARNING]
-> 在设备端保存 App Certificate 仅适用于受控的内部演示。公开发布的应用不得内置、下发或持久化 App Certificate，必须通过受信任的 Token 服务端签发短期 RTC 与 Music Content Center Token。
-
-固定歌曲目录中的某首歌曲如果不可用，请先确认账号的 Music Content Center 授权，不要通过修改歌曲 ID 绕过授权限制。
+关于歌词组件`KaraokeView`可以参考demo代码文件：`MainView.swift`和`MainTestVC.swift`
 
 
 
