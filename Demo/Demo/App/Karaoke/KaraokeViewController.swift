@@ -72,7 +72,22 @@ final class KaraokeViewController: UIViewController, KaraokeDelegate {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        session.stop()
+        guard let transitionCoordinator else {
+            handleDisappearanceCompletion(wasCancelled: false)
+            return
+        }
+        let registered = transitionCoordinator.animate(alongsideTransition: nil) { [weak self] context in
+            self?.handleDisappearanceCompletion(wasCancelled: context.isCancelled)
+        }
+        if !registered {
+            handleDisappearanceCompletion(wasCancelled: false)
+        }
+    }
+
+    func handleDisappearanceCompletion(wasCancelled: Bool) {
+        if !wasCancelled {
+            session.stop()
+        }
     }
 
     private func requestPermissionAndStart() {

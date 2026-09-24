@@ -68,6 +68,33 @@ final class KaraokeSessionTests: XCTestCase {
         XCTAssertEqual(client.toggleCount, 1)
     }
 
+    func testSynchronousPauseFailureRemainsFailed() {
+        let client = FakeKaraokeClient()
+        client.pauseError = .playback(code: 7)
+        let session = KaraokeSession(client: client, tokenProvider: FakeTokenProvider(result: .success(access)))
+        session.start(song: song, credentials: credentials)
+        client.emitStarted()
+
+        session.pause()
+
+        XCTAssertEqual(session.state, .failed(song, .playback(code: 7)))
+        XCTAssertEqual(client.cleanupCount, 1)
+    }
+
+    func testSynchronousResumeFailureRemainsFailed() {
+        let client = FakeKaraokeClient()
+        client.resumeError = .playback(code: 8)
+        let session = KaraokeSession(client: client, tokenProvider: FakeTokenProvider(result: .success(access)))
+        session.start(song: song, credentials: credentials)
+        client.emitStarted()
+        session.pause()
+
+        session.resume()
+
+        XCTAssertEqual(session.state, .failed(song, .playback(code: 8)))
+        XCTAssertEqual(client.cleanupCount, 1)
+    }
+
     func testTokenFailureMovesSessionToCredentialsFailure() {
         let client = FakeKaraokeClient()
         let session = KaraokeSession(
@@ -137,6 +164,8 @@ private final class FakeKaraokeClient: KaraokeClientProtocol {
     var preparedSong: Song?
     var pauseCount = 0
     var resumeCount = 0
+    var pauseError: KaraokeError?
+    var resumeError: KaraokeError?
     var seekPosition: Int?
     var toggleCount = 0
     var cleanupCount = 0
@@ -145,8 +174,19 @@ private final class FakeKaraokeClient: KaraokeClientProtocol {
         preparedSong = song
     }
 
-    func pause() { pauseCount += 1 }
-    func resume() { resumeCount += 1 }
+    func pause() {
+        pauseCount += 1
+        if let pauseError {
+            delegate?.client(self, didFail: pauseError)
+        }
+    }
+
+    func resume() {
+        resumeCount += 1
+        if let resumeError {
+            delegate?.client(self, didFail: resumeError)
+        }
+    }
     func seek(milliseconds: Int) { seekPosition = milliseconds }
     func toggleAudioTrack() { toggleCount += 1 }
     func cleanup() { cleanupCount += 1 }

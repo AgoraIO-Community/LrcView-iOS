@@ -2,20 +2,56 @@ import AgoraLyricsScore
 import AgoraRtcKit
 import Foundation
 
+protocol AgoraSDKLifecycleManaging {
+    func replaceSharedInstances(then start: @escaping () -> Void)
+    func destroySharedInstances()
+}
+
+final class AgoraSDKLifecycleManager: AgoraSDKLifecycleManaging {
+    private static let queue = DispatchQueue(label: "io.agora.KLyricsDemo.sdk-lifecycle")
+
+    func replaceSharedInstances(then start: @escaping () -> Void) {
+        Self.queue.async {
+            Self.destroy()
+            DispatchQueue.main.sync(execute: start)
+        }
+    }
+
+    func destroySharedInstances() {
+        Self.queue.async {
+            Self.destroy()
+        }
+    }
+
+    private static func destroy() {
+        AgoraMusicContentCenter.destroy()
+        AgoraRtcEngineKit.destroy()
+    }
+}
+
 final class AgoraKaraokeClient: NSObject, KaraokeClientProtocol {
     weak var delegate: KaraokeClientDelegate?
 
     private var engine: AgoraRtcEngineKit?
     private var contentCenter: AgoraMusicContentCenter?
     private var player: AgoraMusicPlayerProtocol?
+    private let lifecycle: AgoraSDKLifecycleManaging
     private let lyricsDownloader = LyricsFileDownloader()
-    private var lyricsRequestId: Int?
+    private var preparationId: UUID?
+    private var preloadRequestId: String?
+    private var lyricResultRequestId: String?
+    private var lyricsDownloadRequestId: Int?
     private var progressTimer: Timer?
     private var currentSong: Song?
     private var audioTrackIndex: Int32 = 1
     private var isPlaying = false
 
-    override init() {
+    override convenience init() {
+        self.init(lifecycle: AgoraSDKLifecycleManager())
+    }
+
+    init(lifecycle: AgoraSDKLifecycleManaging) {
+        self.lifecycle = lifecycle
         super.init()
         lyricsDownloader.delegate = self
     }
@@ -39,12 +75,30 @@ final class AgoraKaraokeClient: NSObject, KaraokeClientProtocol {
         .playback(code: rawValue)
     }
 
+    static func matchesCallback(
+        requestId: String,
+        songCode: Int,
+        expectedRequestId: String?,
+        currentSong: Song?
+    ) -> Bool {
+        requestId == expectedRequestId && songCode == currentSong?.id
+    }
+
     func prepare(song: Song, credentials: AgoraCredentials, access: KaraokeAccess) {
-        cleanup()
+        cleanup(destroySharedInstances: false)
         currentSong = song
         audioTrackIndex = 1
         lyricsDownloader.delegate = self
 
+        let preparationId = UUID()
+        self.preparationId = preparationId
+        lifecycle.replaceSharedInstances { [weak self] in
+            guard let self, self.preparationId == preparationId else { return }
+            self.prepareSDK(song: song, credentials: credentials, access: access)
+        }
+    }
+
+    private func prepareSDK(song: Song, credentials: AgoraCredentials, access: KaraokeAccess) {
         let config = AgoraRtcEngineConfig()
         config.appId = credentials.appId
         config.audioScenario = .chorus
@@ -79,6 +133,7 @@ final class AgoraKaraokeClient: NSObject, KaraokeClientProtocol {
             return
         }
         self.contentCenter = contentCenter
+        contentCenter.enableMainQueueDispatch(true)
         contentCenter.register(self)
 
         guard let player = contentCenter.createMusicPlayer(delegate: self) else {
@@ -86,7 +141,12 @@ final class AgoraKaraokeClient: NSObject, KaraokeClientProtocol {
             return
         }
         self.player = player
-        contentCenter.preload(songCode: song.id)
+        let requestId = contentCenter.preload(songCode: song.id)
+        guard !requestId.isEmpty else {
+            fail(.network)
+            return
+        }
+        preloadRequestId = requestId
     }
 
     func pause() {
@@ -129,13 +189,20 @@ final class AgoraKaraokeClient: NSObject, KaraokeClientProtocol {
     }
 
     func cleanup() {
+        cleanup(destroySharedInstances: true)
+    }
+
+    private func cleanup(destroySharedInstances: Bool) {
         progressTimer?.invalidate()
         progressTimer = nil
         isPlaying = false
+        preparationId = nil
+        preloadRequestId = nil
+        lyricResultRequestId = nil
 
-        if let requestId = lyricsRequestId {
+        if let requestId = lyricsDownloadRequestId {
             lyricsDownloader.cancelDownload(requestId: requestId)
-            lyricsRequestId = nil
+            lyricsDownloadRequestId = nil
         }
         lyricsDownloader.delegate = nil
 
@@ -153,10 +220,20 @@ final class AgoraKaraokeClient: NSObject, KaraokeClientProtocol {
         contentCenter = nil
         engine = nil
         currentSong = nil
+
+        if destroySharedInstances {
+            lifecycle.destroySharedInstances()
+        }
     }
 
     private func requestLyrics(for songCode: Int) {
-        contentCenter?.getLyric(songCode: songCode, lyricType: 0)
+        guard let contentCenter else { return }
+        let requestId = contentCenter.getLyric(songCode: songCode, lyricType: 0)
+        guard !requestId.isEmpty else {
+            fail(.lyrics)
+            return
+        }
+        lyricResultRequestId = requestId
     }
 
     private func downloadLyrics(from url: String) {
@@ -165,7 +242,7 @@ final class AgoraKaraokeClient: NSObject, KaraokeClientProtocol {
             fail(Self.mapDownloadFailure())
             return
         }
-        lyricsRequestId = requestId
+        lyricsDownloadRequestId = requestId
     }
 
     private func openCurrentSong() {
@@ -240,9 +317,18 @@ extension AgoraKaraokeClient: AgoraMusicContentCenterEventDelegate {
         status: AgoraMusicContentCenterPreloadStatus,
         errorCode: AgoraMusicContentCenterStatusCode
     ) {
+        guard Self.matchesCallback(
+            requestId: requestId,
+            songCode: songCode,
+            expectedRequestId: preloadRequestId,
+            currentSong: currentSong
+        ) else { return }
+
         if status == .OK {
+            preloadRequestId = nil
             requestLyrics(for: songCode)
         } else if status == .error {
+            preloadRequestId = nil
             fail(Self.mapPreloadError(errorCode))
         }
     }
@@ -253,6 +339,14 @@ extension AgoraKaraokeClient: AgoraMusicContentCenterEventDelegate {
         lyricUrl: String?,
         errorCode: AgoraMusicContentCenterStatusCode
     ) {
+        guard Self.matchesCallback(
+            requestId: requestId,
+            songCode: songCode,
+            expectedRequestId: lyricResultRequestId,
+            currentSong: currentSong
+        ) else { return }
+        lyricResultRequestId = nil
+
         guard errorCode == .OK, let lyricUrl, !lyricUrl.isEmpty else {
             fail(errorCode == .OK ? .lyrics : Self.mapPreloadError(errorCode))
             return
@@ -284,8 +378,8 @@ extension AgoraKaraokeClient: LyricsFileDownloaderDelegate {
     func onLyricsFileDownloadProgress(requestId: Int, progress: Float) {}
 
     func onLyricsFileDownloadCompleted(requestId: Int, fileData: Data?, error: DownloadError?) {
-        guard requestId == lyricsRequestId else { return }
-        lyricsRequestId = nil
+        guard requestId == lyricsDownloadRequestId else { return }
+        lyricsDownloadRequestId = nil
         guard error == nil,
               let fileData,
               let lyrics = KaraokeView.parseLyricData(lyricFileData: fileData) else {
@@ -306,6 +400,7 @@ extension AgoraKaraokeClient: AgoraRtcMediaPlayerDelegate {
         didChangedTo state: AgoraMediaPlayerState,
         error: AgoraMediaPlayerError
     ) {
+        guard playerKit.getMediaPlayerId() == player?.getMediaPlayerId() else { return }
         switch state {
         case .openCompleted:
             notify { _, client in client.startPlayback() }
@@ -327,13 +422,14 @@ extension AgoraKaraokeClient: AgoraRtcEngineDelegate {
         reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo],
         totalVolume: Int
     ) {
-        guard isPlaying, let pitch = speakers.last?.voicePitch else { return }
+        guard engine === self.engine, isPlaying, let pitch = speakers.last?.voicePitch else { return }
         notify { delegate, client in
             delegate.client(client, didUpdatePitch: pitch)
         }
     }
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOccurError errorCode: AgoraErrorCode) {
+        guard engine === self.engine else { return }
         fail(.playback(code: Int(errorCode.rawValue)))
     }
 }

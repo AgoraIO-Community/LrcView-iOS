@@ -86,6 +86,16 @@ final class KaraokeViewControllerTests: XCTestCase {
         XCTAssertEqual(session.stopCount, 1)
     }
 
+    func testCancelledDisappearanceDoesNotStopSession() {
+        let session = FakeKaraokeSession(state: .playing(song))
+        let controller = makeController(session: session)
+
+        controller.handleDisappearanceCompletion(wasCancelled: true)
+
+        XCTAssertEqual(session.stopCount, 0)
+        XCTAssertEqual(session.state, .playing(song))
+    }
+
     func testSkipPreludeSeeksOneSecondBeforeFirstLyric() {
         let session = FakeKaraokeSession()
         let controller = makeController(session: session)

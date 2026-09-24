@@ -81,12 +81,14 @@ final class KaraokeSession: KaraokeSessionControlling {
     func pause() {
         guard case let .playing(song) = state else { return }
         client.pause()
+        guard state == .playing(song) else { return }
         changeState(to: .paused(song))
     }
 
     func resume() {
         guard case let .paused(song) = state else { return }
         client.resume()
+        guard state == .paused(song) else { return }
         changeState(to: .playing(song))
     }
 
