@@ -15,7 +15,7 @@ extension ScoringMachine {
         var array = [Info]()
         var lineEndTimes = [UInt]()
         var preEndTime: UInt = 0
-        for line in data.lines {
+        for line in data.scoringLines ?? data.lines {
             for tone in line.tones {
                 var beginTime = tone.beginTime
                 var duration = tone.duration
@@ -38,7 +38,7 @@ extension ScoringMachine {
                                 drawBeginTime: tone.beginTime,
                                 drawDuration: tone.duration)
                 
-                preEndTime = tone.endTime
+                preEndTime = data.scoringLines == nil ? tone.endTime : max(preEndTime, tone.endTime)
                 
                 array.append(info)
             }
@@ -146,10 +146,12 @@ extension ScoringMachine {
     
     /// 获取击中数据
     func getHitedInfo(progress: UInt,
-                      currentVisiableInfos: [Info]) -> Info? {
+                      currentVisiableInfos: [Info],
+                      includeEnd: Bool = true) -> Info? {
         let pitchBeginTime = progress
         return currentVisiableInfos.first { info in
-            return pitchBeginTime >= info.drawBeginTime && pitchBeginTime <= info.endTime
+            return pitchBeginTime >= info.drawBeginTime &&
+                   (includeEnd ? pitchBeginTime <= info.endTime : pitchBeginTime < info.endTime)
         }
     }
     

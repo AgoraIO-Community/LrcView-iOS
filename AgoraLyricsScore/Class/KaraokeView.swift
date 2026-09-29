@@ -88,6 +88,16 @@ extension KaraokeView {
                                      lyricOffset: lyricOffset,
                                      includeCopyrightSentence: includeCopyrightSentence)
     }
+
+    /// 将本地 TME 音高 JSON 和 LRC 歌词合并为可供内部打分的歌词模型。
+    @objc public static func parseTMEToneData(_ toneFilePath: String,
+                                               _ lyricFilePath: String) -> LyricModel? {
+        guard let tone = try? Data(contentsOf: URL(fileURLWithPath: toneFilePath)),
+              let lyric = try? Data(contentsOf: URL(fileURLWithPath: lyricFilePath)) else {
+            return nil
+        }
+        return TMEToneParser().parse(tone: tone, lyric: lyric)
+    }
     
     /// 设置歌词数据信息
     /// - Parameter data: 歌词信息 由 `parseLyricData(data: Data)` 生成. 如果纯音乐, 给 `nil`.

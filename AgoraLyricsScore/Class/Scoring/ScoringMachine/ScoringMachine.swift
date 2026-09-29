@@ -33,6 +33,7 @@ class ScoringMachine: ScoringMachineProtocol {
     fileprivate var canvasViewSize: CGSize = .zero
     fileprivate var toneScores = [ToneScoreModel]()
     fileprivate var lineScores = [Int]()
+    fileprivate var scoringLines = [LyricLineModel]()
     fileprivate var currentIndexOfLine = 0
     fileprivate var lyricData: LyricModel?
     fileprivate var cumulativeScore = 0
@@ -101,14 +102,15 @@ class ScoringMachine: ScoringMachineProtocol {
     private func _setLyricData(lyricData: LyricModel, size: CGSize) {
         canvasViewSize = size
         self.lyricData = lyricData
+        scoringLines = lyricData.scoringLines ?? lyricData.lines
         let (lineEnds, infos) = ScoringMachine.createData(data: lyricData)
         dataList = infos
         lineEndTimes = lineEnds
         let (min, max) = makeMinMaxPitch(dataList: dataList)
         minPitch = min
         maxPitch = max
-        toneScores = lyricData.lines[0].tones.map({ ToneScoreModel(tone: $0, score: 0) })
-        lineScores = .init(repeating: 0, count: lyricData.lines.count)
+        toneScores = scoringLines[0].tones.map({ ToneScoreModel(tone: $0, score: 0) })
+        lineScores = .init(repeating: 0, count: scoringLines.count)
         handleProgress()
     }
     
@@ -139,7 +141,8 @@ class ScoringMachine: ScoringMachineProtocol {
         
         /** 1.get hitedInfo **/
         guard let hitedInfo = getHitedInfo(progress: progress,
-                                           currentVisiableInfos: currentVisiableInfos) else {
+                                           currentVisiableInfos: currentVisiableInfos,
+                                           includeEnd: model.scoringLines == nil) else {
             let y = calculatedY(pitch: pitch,
                                 viewHeight: canvasViewSize.height,
                                 minPitch: minPitch,
@@ -233,8 +236,8 @@ class ScoringMachine: ScoringMachineProtocol {
         cumulativeScore = calculatedCumulativeScore(indexOfLine: indexOfLine, lineScores: lineScores)
         Log.debug(text: "== dragDidEnd cumulativeScore:\(cumulativeScore)", tag: "drag")
         
-        if index >= 0, index < lineEndTimes.count, let data = lyricData {
-            toneScores = data.lines[index].tones.map({ ToneScoreModel(tone: $0, score: 0) })
+        if index >= 0, index < lineEndTimes.count {
+            toneScores = scoringLines[index].tones.map({ ToneScoreModel(tone: $0, score: 0) })
             for offset in index..<lineEndTimes.count {
                 lineScores[offset] = 0
             }
@@ -249,8 +252,8 @@ class ScoringMachine: ScoringMachineProtocol {
         guard let index = findCurrentIndexOfLine(progress: position, lineEndTimes: lineEndTimes) else {
             return
         }
-        if index >= 0, index < lineEndTimes.count, let data = lyricData {
-            toneScores = data.lines[index].tones.map({ ToneScoreModel(tone: $0, score: 0) })
+        if index >= 0, index < lineEndTimes.count {
+            toneScores = scoringLines[index].tones.map({ ToneScoreModel(tone: $0, score: 0) })
             for offset in index..<lineEndTimes.count {
                 lineScores[offset] = 0
             }
@@ -269,6 +272,7 @@ class ScoringMachine: ScoringMachineProtocol {
         cumulativeScore = 0
         currentIndexOfLine = 0
         lineScores = []
+        scoringLines = []
         toneScores = []
         progress = 0
         minPitch = 0
@@ -305,7 +309,7 @@ class ScoringMachine: ScoringMachineProtocol {
     }
     
     private func didLineEnd(indexOfLineEnd: Int) {
-        guard let data = lyricData, indexOfLineEnd <= data.lines.count else {
+        guard indexOfLineEnd < scoringLines.count else {
             return
         }
         
@@ -316,14 +320,14 @@ class ScoringMachine: ScoringMachineProtocol {
                                                     lineScores: lineScores)
         Log.debug(text: "->>> score didLineEnd indexOfLineEnd: \(indexOfLineEnd) \(lineScore) \(lineScores) cumulativeScore:\(cumulativeScore)", tag: logTag)
         ScoringMachineEventInvoker.invokeScoringMachine(scoringMachine: self,
-                                                        didFinishLineWith: data.lines[indexOfLineEnd],
+                                                        didFinishLineWith: scoringLines[indexOfLineEnd],
                                                         score: lineScore,
                                                         cumulativeScore: cumulativeScore,
                                                         lineIndex: indexOfLineEnd,
-                                                        lineCount: data.lines.count)
+                                                        lineCount: scoringLines.count)
         let nextIndex = indexOfLineEnd + 1
-        if nextIndex < data.lines.count {
-            toneScores = data.lines[nextIndex].tones.map({ ToneScoreModel(tone: $0, score: 0) })
+        if nextIndex < scoringLines.count {
+            toneScores = scoringLines[nextIndex].tones.map({ ToneScoreModel(tone: $0, score: 0) })
         }
     }
 }

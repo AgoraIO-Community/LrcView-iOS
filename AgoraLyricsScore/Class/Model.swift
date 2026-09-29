@@ -57,6 +57,9 @@ public class LyricModel: NSObject {
     @objc public var copyrightSentenceLineCount: UInt = 0
     
     @objc public var pitchDatas: [KrcPitchData] = []
+
+    // Nil preserves the existing scoring behavior for XML, LRC and KRC models.
+    var scoringLines: [LyricLineModel]?
     
     @objc public init(name: String,
                       singer: String,
@@ -153,4 +156,3 @@ public class ToneScoreModel: NSObject {
     case en = 2
     case unknown = -1
 }
-
