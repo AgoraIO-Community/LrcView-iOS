@@ -462,14 +462,26 @@ import Foundation
         precondition(!tracker.consume("cancelled"))
         var deliveries: [String] = []
         tracker.set("success")
-        tracker.deliverIfCurrent("success") { deliveries.append("success") }
+        tracker.deliverIfCurrent("success") { _ in deliveries.append("success") }
         precondition(deliveries == ["success"])
         tracker.set("old")
         tracker.set("new")
-        tracker.deliverIfCurrent("old") { deliveries.append("stale") }
+        tracker.deliverIfCurrent("old") { _ in deliveries.append("stale") }
         precondition(deliveries == ["success"])
-        tracker.deliverIfCurrent("new") { deliveries.append("error") }
+        tracker.deliverIfCurrent("new") { _ in deliveries.append("error") }
         precondition(deliveries == ["success", "error"])
+        tracker.set("reentrant")
+        tracker.deliverIfCurrent("reentrant") { isStillCurrent in
+            deliveries.append("load")
+            tracker.set("retry")
+            if isStillCurrent() { deliveries.append("old-status") }
+        }
+        precondition(deliveries == ["success", "error", "load"])
+        tracker.set("stopping")
+        tracker.deliverIfCurrent("stopping") { isStillCurrent in
+            tracker.clear()
+            precondition(!isStillCurrent())
+        }
         print("TMEResponseTrackerTests passed")
     }
 }
@@ -483,9 +495,16 @@ import Foundation
 
 final class TMEResponseTracker {
     private var currentRequestId: String?
+    private var generation = 0
 
-    func set(_ requestId: String) { currentRequestId = requestId }
-    func clear() { currentRequestId = nil }
+    func set(_ requestId: String) {
+        generation &+= 1
+        currentRequestId = requestId
+    }
+    func clear() {
+        generation &+= 1
+        currentRequestId = nil
+    }
 
     func consume(_ requestId: String) -> Bool {
         guard currentRequestId == requestId else { return false }
@@ -493,9 +512,10 @@ final class TMEResponseTracker {
         return true
     }
 
-    func deliverIfCurrent(_ requestId: String, _ deliver: () -> Void) {
+    func deliverIfCurrent(_ requestId: String, _ deliver: (() -> Bool) -> Void) {
         guard consume(requestId) else { return }
-        deliver()
+        let acceptedGeneration = generation
+        deliver { [self] in generation == acceptedGeneration }
     }
 }
 ```
@@ -520,19 +540,20 @@ func onExtResponse(_ requestId: String, jsonOption: String, httpCode: Int, respo
 
 // 位于 extension TmeManager: TMEParserDelegate 中
 func onSongs(_ requestId: String, result: TMESongsResult) {
-    songsRequest.deliverIfCurrent(requestId) {
+    songsRequest.deliverIfCurrent(requestId) { isStillCurrent in
         let songs = Array(result.songList.filter { !$0.songId.isEmpty }.prefix(6)).map {
             TmeSong(id: $0.songId, name: $0.songName,
                     artist: $0.artistList?.first?.artistName ?? "")
         }
         delegate?.tmeManager(self, didLoad: songs)
+        guard isStillCurrent() else { return }
         delegate?.tmeManager(self, didUpdate: songs.isEmpty ? "暂无歌曲" : "请选择歌曲")
     }
 }
 
 func onParseError(_ requestId: String, jsonOption: String,
                   responseBody: String, error: TMEParseError) {
-    songsRequest.deliverIfCurrent(requestId) {
+    songsRequest.deliverIfCurrent(requestId) { _ in
         delegate?.tmeManager(self, didFail: "歌曲列表获取失败：\(error)")
     }
 }
