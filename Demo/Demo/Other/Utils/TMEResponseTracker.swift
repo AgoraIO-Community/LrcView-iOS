@@ -2,12 +2,15 @@ import Foundation
 
 final class TMEResponseTracker {
     private var currentRequestId: String?
+    private var generation = 0
 
     func set(_ requestId: String) {
+        generation &+= 1
         currentRequestId = requestId
     }
 
     func clear() {
+        generation &+= 1
         currentRequestId = nil
     }
 
@@ -17,8 +20,9 @@ final class TMEResponseTracker {
         return true
     }
 
-    func deliverIfCurrent(_ requestId: String, _ deliver: () -> Void) {
+    func deliverIfCurrent(_ requestId: String, _ deliver: (() -> Bool) -> Void) {
         guard consume(requestId) else { return }
-        deliver()
+        let acceptedGeneration = generation
+        deliver { [self] in generation == acceptedGeneration }
     }
 }
