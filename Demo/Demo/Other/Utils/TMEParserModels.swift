@@ -1,5 +1,10 @@
 import Foundation
 
+struct TMEAPIStatus: Decodable {
+    let code: Int
+    let msg: String?
+}
+
 struct TMEAPIEnvelope<DataType: Decodable>: Decodable {
     let code: Int
     let msg: String?

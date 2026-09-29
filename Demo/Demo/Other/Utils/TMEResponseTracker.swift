@@ -16,4 +16,9 @@ final class TMEResponseTracker {
         currentRequestId = nil
         return true
     }
+
+    func deliverIfCurrent(_ requestId: String, _ deliver: () -> Void) {
+        guard consume(requestId) else { return }
+        deliver()
+    }
 }

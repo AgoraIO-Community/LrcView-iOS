@@ -37,11 +37,6 @@ private struct TMERequestOption: Decodable {
     let actionType: String
 }
 
-private struct TMEAPIStatus: Decodable {
-    let code: Int
-    let msg: String?
-}
-
 private enum TMEParsedResponse {
     case songs(TMESongsResult)
     case searchSongs(TMESearchSongsResult)
@@ -58,11 +53,11 @@ final class TMEParser {
     private let queue = DispatchQueue(label: "com.klyrics.tme.parser", qos: .userInitiated)
 
     func parse(requestId: String, jsonOption: String, httpCode: Int, responseBody: String) {
-        queue.async { [weak self] in
+        queue.async { [self] in
             let parsed = Self.decode(jsonOption: jsonOption, httpCode: httpCode,
                                      responseBody: responseBody)
-            DispatchQueue.main.async { [weak self] in
-                guard let delegate = self?.delegate else { return }
+            DispatchQueue.main.async { [self] in
+                guard let delegate = delegate else { return }
                 switch parsed {
                 case .failure(let error):
                     delegate.onParseError(requestId, jsonOption: jsonOption,

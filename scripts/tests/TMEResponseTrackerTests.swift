@@ -13,6 +13,17 @@ struct TMEResponseTrackerTests {
         tracker.set("cancelled")
         tracker.clear()
         precondition(!tracker.consume("cancelled"))
+
+        var deliveries: [String] = []
+        tracker.set("success")
+        tracker.deliverIfCurrent("success") { deliveries.append("success") }
+        precondition(deliveries == ["success"])
+        tracker.set("old")
+        tracker.set("new")
+        tracker.deliverIfCurrent("old") { deliveries.append("stale") }
+        precondition(deliveries == ["success"])
+        tracker.deliverIfCurrent("new") { deliveries.append("error") }
+        precondition(deliveries == ["success", "error"])
         print("TMEResponseTrackerTests passed")
     }
 }

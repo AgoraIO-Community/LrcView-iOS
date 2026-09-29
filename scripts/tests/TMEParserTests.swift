@@ -131,6 +131,15 @@ struct TMEParserTests {
         precondition(probe.events.count == samples.count)
         waitUntil { probe.events.count == samples.count + 2 }
         precondition(Array(probe.events.suffix(2)) == ["empty:songs", "minimal:songs"])
+
+        do {
+            let transientParser = TMEParser()
+            transientParser.delegate = probe
+            transientParser.parse(requestId: "transient", jsonOption: valid, httpCode: 200,
+                                  responseBody: #"{"code":0,"data":{"songList":[]}}"#)
+        }
+        waitUntil { probe.events.count == samples.count + 3 }
+        precondition(probe.events.last == "transient:songs")
         print("TMEParserTests passed")
     }
 }
