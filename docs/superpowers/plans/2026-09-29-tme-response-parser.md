@@ -448,7 +448,7 @@ import Foundation
 }
 ```
 
-- [ ] **Step 2: 确认因缺少 tracker 而失败。** Run: `swiftc -module-cache-path /private/tmp/klyrics-tme-module-cache -o /private/tmp/klyrics-tracker-tests scripts/tests/TMEResponseTrackerTests.swift`；期望 `cannot find 'TMEResponseTracker' in scope`。
+- [ ] **Step 2: 确认因缺少 tracker 而失败。** Run: `swiftc -parse-as-library -module-cache-path /private/tmp/klyrics-tme-module-cache -o /private/tmp/klyrics-tracker-tests scripts/tests/TMEResponseTrackerTests.swift`；单个包含 `@main` 的 Swift 文件需要 `-parse-as-library`，期望 `cannot find 'TMEResponseTracker' in scope`。
 - [ ] **Step 3: 新增可独立编译的门闩。** `TMEResponseTracker.swift`：
 
 ```swift
@@ -527,5 +527,5 @@ A0C00000000000000000000A /* TMEParserModels.swift in Sources */,
 A0C00000000000000000000C /* TMEParser.swift in Sources */,
 A0C00000000000000000000E /* TMEResponseTracker.swift in Sources */,
 ```
-- [ ] **Step 6: 全量验证。** 运行三个独立 Swift 测试程序、`bash scripts/tests/tme_sdk_flow.sh`、`plutil -lint Demo/Demo.xcodeproj/project.pbxproj`、`git diff --check`。如具备模拟器依赖，还运行 `xcodebuild -project Demo/Demo.xcodeproj -scheme Demo -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath /private/tmp/klyrics-tme-parser-derived CODE_SIGNING_ALLOWED=NO -quiet build`；若缺少 `localConfig.swift` 或 Pods，记录实际阻碍，不创建或更改真实凭据文件。
+- [ ] **Step 6: 全量验证。** 运行三个独立 Swift 测试程序、`bash scripts/tests/tme_sdk_flow.sh`、`plutil -lint Demo/Demo.xcodeproj/project.pbxproj`、`git diff --check`。如具备模拟器依赖，还运行 `xcodebuild -workspace Demo/Demo.xcworkspace -scheme Demo -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath /private/tmp/klyrics-tme-parser-workspace-derived CODE_SIGNING_ALLOWED=NO -quiet build`；CocoaPods 提供的 `AgoraRtcKit` 必须通过 workspace 一并构建。若缺少 `localConfig.swift` 或 Pods，记录实际阻碍，不创建或更改真实凭据文件。
 - [ ] **Step 7: 仅提交本任务新增文件。** Run: `git add -- Demo/Demo/Other/Utils/TMEResponseTracker.swift scripts/tests/TMEResponseTrackerTests.swift`，然后 `git commit --only -m 'test: protect TME callbacks from stale requests' -- Demo/Demo/Other/Utils/TMEResponseTracker.swift scripts/tests/TMEResponseTrackerTests.swift`。`TmeManager.swift`、`TmeSongCatalog.swift` 和 `project.pbxproj` 当前包含用户尚未提交的工作，保留其工作区状态，不在无明确授权时把整个文件提交。
