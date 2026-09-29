@@ -52,6 +52,11 @@ precondition(decoded.data?.songList.first?.grantedAreaCodes == ["CN"])
 precondition(decoded.data?.songList.first?.duration == 220)
 let mapped = try TmeSongCatalog.parse(response: detailed, httpCode: 200)
 precondition(mapped.first?.artist == "歌手")
+do {
+    let failure = #"{"code":1,"msg":"denied","data":{"other":"value"}}"#
+    _ = try TmeSongCatalog.parse(response: failure, httpCode: 200)
+    fatalError("Business error must take precedence over invalid data")
+} catch TmeSongCatalog.ParseError.apiError(1, "denied") {}
 ```
 
 - [ ] **Step 2: 确认测试因新模型不存在而失败。** Run: `swiftc -module-cache-path /private/tmp/klyrics-tme-module-cache -o /private/tmp/klyrics-catalog-tests Demo/Demo/Other/Utils/TmeSongCatalog.swift scripts/tests/TmeSongCatalogTests.swift`；期望 `cannot find 'TMEAPIEnvelope' in scope`。
@@ -64,6 +69,11 @@ struct TMEAPIEnvelope<DataType: Decodable>: Decodable {
     let code: Int
     let msg: String?
     let data: DataType?
+}
+
+struct TMEAPIStatus: Decodable {
+    let code: Int
+    let msg: String?
 }
 
 struct TMEImagePath: Decodable { let key: String; let value: String }
@@ -147,14 +157,18 @@ enum TmeSongCatalog {
         guard (200..<300).contains(httpCode) else {
             throw ParseError.httpStatus(httpCode)
         }
-        guard let body = try? JSONDecoder().decode(TMEAPIEnvelope<TMESongsResult>.self,
-                                                   from: Data(response.utf8)) else {
+        let source = Data(response.utf8)
+        guard let status = try? JSONDecoder().decode(TMEAPIStatus.self, from: source) else {
             throw ParseError.invalidResponse
         }
-        guard body.code == 0 else {
-            throw ParseError.apiError(body.code, body.msg ?? "Unknown error")
+        guard status.code == 0 else {
+            throw ParseError.apiError(status.code, status.msg ?? "Unknown error")
         }
-        guard let data = body.data else { throw ParseError.invalidResponse }
+        guard let body = try? JSONDecoder().decode(TMEAPIEnvelope<TMESongsResult>.self,
+                                                   from: source),
+              let data = body.data else {
+            throw ParseError.invalidResponse
+        }
         return Array(data.songList.filter { !$0.songId.isEmpty }.prefix(6)).map {
             TmeSong(id: $0.songId, name: $0.songName,
                     artist: $0.artistList?.first?.artistName ?? "")
@@ -274,6 +288,14 @@ final class Probe: TMEParserDelegate {
         precondition(probe.events.count == samples.count)
         waitUntil { probe.events.count == samples.count + 2 }
         precondition(Array(probe.events.suffix(2)) == ["empty:songs", "minimal:songs"])
+        do {
+            let transientParser = TMEParser()
+            transientParser.delegate = probe
+            transientParser.parse(requestId: "transient", jsonOption: valid, httpCode: 200,
+                                  responseBody: #"{"code":0,"data":{"songList":[]}}"#)
+        }
+        waitUntil { probe.events.count == samples.count + 3 }
+        precondition(probe.events.last == "transient:songs")
         print("TMEParserTests passed")
     }
 }
@@ -322,11 +344,6 @@ private struct TMERequestOption: Decodable {
     let actionType: String
 }
 
-private struct TMEAPIStatus: Decodable {
-    let code: Int
-    let msg: String?
-}
-
 private enum TMEParsedResponse {
     case songs(TMESongsResult)
     case searchSongs(TMESearchSongsResult)
@@ -343,11 +360,11 @@ final class TMEParser {
     private let queue = DispatchQueue(label: "com.klyrics.tme.parser", qos: .userInitiated)
 
     func parse(requestId: String, jsonOption: String, httpCode: Int, responseBody: String) {
-        queue.async { [weak self] in
+        queue.async { [self] in
             let parsed = Self.decode(jsonOption: jsonOption, httpCode: httpCode,
                                      responseBody: responseBody)
-            DispatchQueue.main.async { [weak self] in
-                guard let delegate = self?.delegate else { return }
+            DispatchQueue.main.async { [self] in
+                guard let delegate = delegate else { return }
                 switch parsed {
                 case .failure(let error):
                     delegate.onParseError(requestId, jsonOption: jsonOption,
@@ -443,6 +460,16 @@ import Foundation
         tracker.set("cancelled")
         tracker.clear()
         precondition(!tracker.consume("cancelled"))
+        var deliveries: [String] = []
+        tracker.set("success")
+        tracker.deliverIfCurrent("success") { deliveries.append("success") }
+        precondition(deliveries == ["success"])
+        tracker.set("old")
+        tracker.set("new")
+        tracker.deliverIfCurrent("old") { deliveries.append("stale") }
+        precondition(deliveries == ["success"])
+        tracker.deliverIfCurrent("new") { deliveries.append("error") }
+        precondition(deliveries == ["success", "error"])
         print("TMEResponseTrackerTests passed")
     }
 }
@@ -464,6 +491,11 @@ final class TMEResponseTracker {
         guard currentRequestId == requestId else { return false }
         currentRequestId = nil
         return true
+    }
+
+    func deliverIfCurrent(_ requestId: String, _ deliver: () -> Void) {
+        guard consume(requestId) else { return }
+        deliver()
     }
 }
 ```
@@ -488,19 +520,21 @@ func onExtResponse(_ requestId: String, jsonOption: String, httpCode: Int, respo
 
 // 位于 extension TmeManager: TMEParserDelegate 中
 func onSongs(_ requestId: String, result: TMESongsResult) {
-    guard songsRequest.consume(requestId) else { return }
-    let songs = Array(result.songList.filter { !$0.songId.isEmpty }.prefix(6)).map {
-        TmeSong(id: $0.songId, name: $0.songName,
-                artist: $0.artistList?.first?.artistName ?? "")
+    songsRequest.deliverIfCurrent(requestId) {
+        let songs = Array(result.songList.filter { !$0.songId.isEmpty }.prefix(6)).map {
+            TmeSong(id: $0.songId, name: $0.songName,
+                    artist: $0.artistList?.first?.artistName ?? "")
+        }
+        delegate?.tmeManager(self, didLoad: songs)
+        delegate?.tmeManager(self, didUpdate: songs.isEmpty ? "暂无歌曲" : "请选择歌曲")
     }
-    delegate?.tmeManager(self, didLoad: songs)
-    status(songs.isEmpty ? "暂无歌曲" : "请选择歌曲")
 }
 
 func onParseError(_ requestId: String, jsonOption: String,
                   responseBody: String, error: TMEParseError) {
-    guard songsRequest.consume(requestId) else { return }
-    fail("歌曲列表获取失败：\(error)")
+    songsRequest.deliverIfCurrent(requestId) {
+        delegate?.tmeManager(self, didFail: "歌曲列表获取失败：\(error)")
+    }
 }
 ```
 
