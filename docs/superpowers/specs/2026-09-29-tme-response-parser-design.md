@@ -1,50 +1,50 @@
-# TME Response Parser Design
+# TME 响应解析器设计
 
-## Scope
+## 范围
 
-Add an iOS `TMEParser` for the Demo's Music Content Center `sendExtRequest` / `onExtResponse` flow. It dispatches by the original request's `jsonOption.actionType`, parses the response into typed results, and invokes a different success callback for each of the eight supported actions. Specify equivalent Android behavior, but do not add Android code or change unrelated Music Content Center clients.
+为 Demo 的 Music Content Center `sendExtRequest` / `onExtResponse` 流程增加 iOS `TMEParser`。解析器根据原请求中的 `jsonOption.actionType` 分派解析逻辑，将响应转换为类型明确的结果，并为八种支持的操作分别触发不同的成功回调。设计同时规定 Android 的对等行为，但本次不编写 Android 代码，也不改动无关的 Music Content Center 调用方。
 
-The existing `TmeManager` forwards the SDK callback's `requestId`, `jsonOption`, `httpCode`, and response body to the parser. `TMEParser.parse(requestId:jsonOption:httpCode:responseBody:)` returns immediately, including for invalid input. The parser is owned by `TmeManager`; it does not send requests or own SDK objects.
+现有 `TmeManager` 将 SDK 回调中的 `requestId`、`jsonOption`、`httpCode` 和响应正文转交解析器。`TMEParser.parse(requestId:jsonOption:httpCode:responseBody:)` 立即返回，即使输入无效也是如此。解析器由 `TmeManager` 持有，不负责发送请求，也不持有 SDK 对象。
 
-## Scheduling And Lifecycle
+## 线程调度与生命周期
 
-Parse all inputs on one dedicated serial background queue in arrival order. Deliver all success and error callbacks with `DispatchQueue.main.async`, never inline, including when parsing is called from the main thread or fails before response decoding. A parser instance retains a weak delegate, so it does not prolong the UI owner's lifetime. The serial queue provides deterministic callback order for inputs submitted to that instance; it does not imply that network requests finish in submission order.
+所有输入按进入解析器的顺序，在一个专用后台串行队列中解析。所有成功和失败回调都通过 `DispatchQueue.main.async` 投递，绝不在 `parse` 调用栈内直接触发；从主线程调用或在解码前发现错误时也一样。解析器弱引用其委托，避免延长 UI 持有者的生命周期。串行队列保证同一解析器收到的输入按入队顺序回调，但不保证网络请求按发送顺序完成。
 
-The parser reports every submitted response to its live delegate. `TmeManager` owns request validity: it compares returned `requestId` with the current outstanding request before updating its UI delegate, and clears its request ID when stopping or retrying. It also checks the ID for errors, so stale failures cannot overwrite a new screen state. No parsing or UI work blocks the SDK callback thread or the main thread.
+解析器会向仍存活的委托报告每个已提交的响应。`TmeManager` 负责判断请求是否仍有效：更新 UI 委托前比较返回的 `requestId` 与当前待完成请求，停止或重试时清除旧请求 ID。错误回调也执行同样的检查，避免旧错误覆盖新页面状态。解析和 UI 处理均不阻塞 SDK 回调线程或主线程。
 
-## Dispatch And Callbacks
+## 分派与回调
 
-The request must be a JSON object with `vendorId: 2` and a supported string `actionType`; `actionParameter` is not needed for response decoding. A dedicated `TMEParserDelegate` exposes these typed callbacks, each carrying the original `requestId`:
+请求必须是包含 `vendorId: 2` 和受支持的字符串 `actionType` 的 JSON 对象；解析响应不需要读取 `actionParameter`。专用的 `TMEParserDelegate` 提供以下类型明确的回调，每个成功回调都携带原始 `requestId`：
 
-| `actionType` | Success callback | Result |
+| `actionType` | 成功回调 | 结果 |
 | --- | --- | --- |
-| `songs` | `onSongs` | `TMESongsResult` (`songList`, optional `nextQueryInfo`) |
-| `search-song` | `onSearchSongs` | `TMESearchSongsResult` (`total`, `songList`) |
-| `song-info` | `onSongInfo` | `TMESongInfoResult` (`songList`) |
-| `song-url` | `onSongUrl` | `TMESongUrlResult` (`mediaList`) |
-| `songlist-page` | `onSonglistPage` | `TMEPageResult` (`total`, `list`) |
+| `songs` | `onSongs` | `TMESongsResult`（`songList`、可选的 `nextQueryInfo`） |
+| `search-song` | `onSearchSongs` | `TMESearchSongsResult`（`total`、`songList`） |
+| `song-info` | `onSongInfo` | `TMESongInfoResult`（`songList`） |
+| `song-url` | `onSongUrl` | `TMESongUrlResult`（`mediaList`） |
+| `songlist-page` | `onSonglistPage` | `TMEPageResult`（`total`、`list`） |
 | `songlist-detail` | `onSonglistDetail` | `TMEDetailResult` |
-| `ranklist-page` | `onRanklistPage` | `TMEPageResult` (`total`, `list`) |
+| `ranklist-page` | `onRanklistPage` | `TMEPageResult`（`total`、`list`） |
 | `ranklist-detail` | `onRanklistDetail` | `TMEDetailResult` |
 
-The four page/detail actions use shared data structures but remain separate callbacks. Every failed request calls exactly `onParseError(requestId, jsonOption, responseBody, error)` and no success callback. Preserve the exact original request and response strings, including malformed input. Do not log response bodies because song URLs can contain signed query parameters.
+歌单和榜单的四种分页/详情操作复用数据结构，但分别触发各自的回调。每个失败请求只触发 `onParseError(requestId, jsonOption, responseBody, error)`，不触发成功回调。即使输入格式有误，也要在错误回调中原样保留请求和响应字符串。歌曲 URL 可能包含签名参数，不得记录响应正文日志。
 
-## Data Models
+## 数据模型
 
-`songs`, `search-song`, and `song-info` decode the same complete song-detail model. Its required identity/display fields are `songId` and `songName`. Represent the remaining documented fields without silently discarding them: `version`, `duration`, `status`, `sequence`, `grantStatus`, `grantStartTime`, `publicTime`, `language`, `genre`, `grantedAreaCodes`, `pitchUrl`, `chorusStartMS`, `chorusEndMS`, `copyrightList` (`sceneId`, `terminalIdList`), `album` (`albumId`, `albumName`, `imagePathMapList` of `key`/`value`), `artistList` (`artistId`, `artistName`), and `lrcList` (`type`, `url`). Treat optional or absent metadata as optional so a valid song with fewer fields still decodes. Preserve strings such as dates and URLs verbatim; do not infer time zones or normalize signed URLs. Missing required fields or incorrect present field types are invalid responses.
+`songs`、`search-song` 和 `song-info` 使用同一种完整的歌曲详情模型。标识和展示所需的 `songId`、`songName` 为必填字段。其余已知字段也必须保留，不得静默丢弃：`version`、`duration`、`status`、`sequence`、`grantStatus`、`grantStartTime`、`publicTime`、`language`、`genre`、`grantedAreaCodes`、`pitchUrl`、`chorusStartMS`、`chorusEndMS`、`copyrightList`（`sceneId`、`terminalIdList`）、`album`（`albumId`、`albumName`，以及由 `key` / `value` 组成的 `imagePathMapList`）、`artistList`（`artistId`、`artistName`）和 `lrcList`（`type`、`url`）。允许可选元数据缺失，使字段较少的有效歌曲仍可解析。日期和 URL 等字符串保持原值，不推断时区，也不改写带签名的 URL。必填字段缺失或已提供字段类型错误时，判定响应无效。
 
-`song-url` decodes each media entry's `fileType`, `url`, and `expire` as strings. A page entry contains `code`, `title`, and optional `description`, `url`, `status`; a detail contains `code`, `title`, optional `description`, `status`, `imgUrl`, and a list of song references containing `songId`. Use the response's distinct `url` (page) and `imgUrl` (detail) keys as-is. Page `total` and the lists are required; other metadata is optional where omission is shown in the examples.
+`song-url` 将每个媒体条目的 `fileType`、`url` 和 `expire` 按字符串解析。分页条目包含必填的 `code`、`title`，以及可选的 `description`、`url`、`status`；详情包含必填的 `code`、`title`，可选的 `description`、`status`、`imgUrl`，以及包含 `songId` 的歌曲引用列表。分页中的 `url` 和详情中的 `imgUrl` 是不同的原始键名，应分别保留。分页的 `total` 和各列表为必填；样例中可能省略的其他元数据为可选。
 
-The parser returns all songs and media entries. The Demo's existing six-song display limit and conversion to lightweight `TmeSong` belong in `TmeManager`, preserving current UI behavior without truncating reusable parser results. Share song decoding with the existing `TmeSongCatalog` implementation instead of maintaining two incompatible interpretations of song identity, while retaining the existing synchronous catalog test API.
+解析器返回全部歌曲和媒体条目。Demo 现有的“最多展示六首”规则及轻量 `TmeSong` 的转换留在 `TmeManager`，既保持现有 UI 行为，也不截断通用解析结果。歌曲解码逻辑应与现有 `TmeSongCatalog` 共用，避免出现两套不一致的歌曲标识解析规则；同时保留现有供同步测试使用的曲库解析接口。
 
-## Errors
+## 错误处理
 
-The typed `error` distinguishes invalid request JSON or missing/incorrect request fields, unsupported `actionType`, non-2xx HTTP response (including `httpCode`), nonzero API `code` (including `code` and optional `msg`), and malformed or incomplete successful response. Validate request envelope first, then HTTP status, then the common API envelope, then action-specific `data`. Error delivery obeys the same main-queue asynchronous guarantee as successful delivery.
+具有明确类型的 `error` 区分以下情况：请求 JSON 无效或请求字段缺失、类型错误；`actionType` 不受支持；HTTP 状态不在 2xx 范围内（保留 `httpCode`）；业务 `code` 非零（保留 `code` 和可选的 `msg`）；成功响应格式错误或内容不完整。检查顺序为请求结构、HTTP 状态、通用业务响应结构，最后是对应操作的 `data`。错误回调与成功回调遵守相同的主线程异步投递规则。
 
-## Android Parity
+## Android 对等约定
 
-Android implements the same four-input contract, action names, result fields, error categories, request-ID correlation, and exactly-one-callback rule in native Kotlin. Use a dedicated single-thread executor for parsing and a main-looper handler to post callbacks. Java/Kotlin naming may follow platform conventions, but callback meaning and threading must match iOS. Neither platform shares binaries, introduces a cross-platform framework, or performs JSON decoding on the UI thread.
+Android 将来用原生 Kotlin 实现同样的四参数输入约定、操作名称、结果字段、错误类别、请求 ID 关联，以及“每次解析恰好触发一次回调”的规则。解析使用专用的单线程执行器，回调通过主线程 `Looper` 对应的 `Handler` 投递。Java/Kotlin 命名可遵循平台习惯，但回调含义和线程行为必须与 iOS 一致。两端不共用二进制、不引入跨平台框架，也不在 UI 线程进行 JSON 解码。
 
-## Verification
+## 验证
 
-Add local Swift tests with fixture bodies for all eight actions, nested song fields, empty lists, optional metadata, HTTP and API failures, invalid JSON, unsupported actions, and wrong field types. Verify callbacks are not inline, execute on the main thread, and arrive in input order. Add a manager-level test or focused harness for stale request IDs on both success and error paths. Run existing catalog and SDK-flow checks; the parser tests must not require real network access or SDK credentials.
+为八种操作、歌曲嵌套字段、空列表、可选元数据、HTTP 与业务错误、无效 JSON、未知操作和字段类型错误编写本地 Swift 测试。验证回调不会同步触发、一定在主线程执行，且按输入顺序到达。通过管理器级测试或专门的测试程序覆盖成功和失败两条路径的旧请求 ID 过滤。运行现有曲库及 SDK 流程检查；解析器测试不得依赖真实网络或 SDK 凭据。
