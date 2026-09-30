@@ -407,11 +407,13 @@ extension QiangChangVC: AgoraRtcEngineDelegate {
 }
 
 extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
-    func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], errorCode: AgoraMusicContentCenterStatusCode) {
+    func onExtResponse(_ requestId: String, jsonOption: String, httpCode: Int, response: String) {}
+
+    func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], reason errorCode: AgoraMusicContentCenterStatusCode) {
         
     }
     
-    func onMusicCollectionResult(_ requestId: String, result: AgoraMusicCollection, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onMusicCollectionResult(_ requestId: String, result: AgoraMusicCollection, reason errorCode: AgoraMusicContentCenterStatusCode) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return}
             let songs = result.musicList.map({ SongListVC.Song(name: $0.name, singer: $0.singer, code: $0.songCode, highStartTime: 0, highEndTime: 0) })
@@ -422,7 +424,7 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
         }
     }
     
-    func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, reason errorCode: AgoraMusicContentCenterStatusCode) {
         guard let lyricUrl = lyricUrl else {
             return
         }
@@ -442,11 +444,11 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
         let _ = lyricsFileDownloader.download(urlString: lyricUrl)
     }
     
-    func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, reason errorCode: AgoraMusicContentCenterStatusCode) {
         
     }
     
-    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, status: AgoraMusicContentCenterPreloadStatus, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, state status: AgoraMusicContentCenterPreloadStatus, reason errorCode: AgoraMusicContentCenterStatusCode) {
         guard let lyricUrl = lyricUrl else {
             return
         }
@@ -464,7 +466,7 @@ extension QiangChangVC: AgoraMusicContentCenterEventDelegate {
 
 
 extension QiangChangVC: AgoraRtcMediaPlayerDelegate {
-    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
+    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, reason error: AgoraMediaPlayerReason) {
         if state == .openCompleted {
             print("=== openCompleted")
             mccGetLrc()

@@ -202,6 +202,8 @@ extension HostVC: AgoraRtcEngineDelegate {
 }
 
 extension HostVC: AgoraMusicContentCenterEventDelegate {
+    func onExtResponse(_ requestId: String, jsonOption: String, httpCode: Int, response: String) {}
+
     func onMusicChartsResult(_ requestId: String, status: AgoraMusicContentCenterStatusCode, result: [AgoraMusicChartInfo]) {
         
     }
@@ -218,15 +220,15 @@ extension HostVC: AgoraMusicContentCenterEventDelegate {
         
     }
     
-    func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], errorCode: AgoraMusicContentCenterStatusCode) {
+    func onMusicChartsResult(_ requestId: String, result: [AgoraMusicChartInfo], reason errorCode: AgoraMusicContentCenterStatusCode) {
         
     }
     
-    func onMusicCollectionResult(_ requestId: String, result: AgoraMusicCollection, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onMusicCollectionResult(_ requestId: String, result: AgoraMusicCollection, reason errorCode: AgoraMusicContentCenterStatusCode) {
         
     }
     
-    func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onLyricResult(_ requestId: String, songCode: Int, lyricUrl: String?, reason errorCode: AgoraMusicContentCenterStatusCode) {
         guard let lyricUrl = lyricUrl else {
             return
         }
@@ -246,11 +248,11 @@ extension HostVC: AgoraMusicContentCenterEventDelegate {
         let _ = lyricsFileDownloader.download(urlString: lyricUrl)
     }
     
-    func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onSongSimpleInfoResult(_ requestId: String, songCode: Int, simpleInfo: String?, reason errorCode: AgoraMusicContentCenterStatusCode) {
         
     }
     
-    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, status: AgoraMusicContentCenterPreloadStatus, errorCode: AgoraMusicContentCenterStatusCode) {
+    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricUrl: String?, state status: AgoraMusicContentCenterPreloadStatus, reason errorCode: AgoraMusicContentCenterStatusCode) {
         print("== onPreLoadEvent \(status.rawValue) ")
         if status == .OK { /** preload 成功 **/
             print("== preload ok")
@@ -265,7 +267,7 @@ extension HostVC: AgoraMusicContentCenterEventDelegate {
 
 
 extension HostVC: AgoraRtcMediaPlayerDelegate {
-    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
+    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, reason error: AgoraMediaPlayerReason) {
         if state == .openCompleted {
             print("=== openCompleted")
             mccGetLrc()

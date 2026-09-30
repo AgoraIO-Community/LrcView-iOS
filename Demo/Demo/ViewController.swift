@@ -39,7 +39,7 @@ class ViewController: UIViewController {
 
     func createData() {
         list = [Section(title: "集成", rows: [.init(title: "内置打分"),
-                                            .init(title: "外置打分（Ex）")]),
+                                            .init(title: "TME测试")]),
                 Section(title: "体验", rows: [.init(title: "观众端"),
                                             .init(title: "主播端"),
                                             .init(title: "抢唱"),
@@ -54,8 +54,7 @@ class ViewController: UIViewController {
                                             .init(title: "LyricLabel测试"),
                                             .init(title: "OC"),
                                             .init(title: "profile"),
-                                            .init(title: "下载")]),
-                Section(title: "验证", rows: [.init(title: "krc查看")])]
+                                            .init(title: "下载")])]
     }
 }
 
@@ -90,7 +89,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             if indexPath.row == 1 {
-                let vc = MainTestVCEx()
+                let vc = TmeTestVC()
                 navigationController?.pushViewController(vc, animated: true)
                 return
             }
@@ -191,12 +190,5 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
         
-        if indexPath.section == 3 {
-            if indexPath.row == 0 {
-                let vc = SelectedLyricVC()
-                navigationController?.pushViewController(vc, animated: true)
-                return
-            }
-        }
     }
 }

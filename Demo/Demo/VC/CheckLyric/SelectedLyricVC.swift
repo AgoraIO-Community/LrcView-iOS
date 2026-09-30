@@ -65,12 +65,12 @@ class SelectedLyricVC: UIViewController {
             AccessProvider.fetchAccessData { [weak self](userId, token, errorMsg) in
                 guard let self = self else { return }
                 if let errorMsg = errorMsg  {
-                    Log.errorText(text: errorMsg, tag: logTag)
-                    showAlertVC()
+                    Log.errorText(text: errorMsg, tag: self.logTag)
+                    self.showAlertVC()
                     return
                 }
-                mccManager.initRtcEngine()
-                mccManager.joinChannel()
+                self.mccManager.initRtcEngine()
+                self.mccManager.joinChannel()
                 self.mccManager.initMccEx(pid: Config.pid,
                                           pKey: Config.pKey,
                                           token: token,
@@ -110,7 +110,7 @@ extension SelectedLyricVC: MccManagerDelegateEx {
                 return
             }
             self.confirmButton.isEnabled = true
-            title = "init ok"
+            self.title = "init ok"
         }
     }
     
@@ -125,11 +125,11 @@ extension SelectedLyricVC: MccManagerDelegateEx {
                         errMsg: String?) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            guard let text = textField.text,
+            guard let text = self.textField.text,
                   let songId = Int(text) else {
                 return
             }
-            title = "load ok"
+            self.title = "load ok"
             let vc = CheckLyricVC(krcFileData: lyricData,
                                   pitchFileData: pitchData,
                                   songId: songId,
@@ -143,4 +143,3 @@ extension SelectedLyricVC: MccManagerDelegateEx {
     func onPitch(_ songCode: Int, data: AgoraRawScoreDataEx) {}
     func onLineScore(_ songCode: Int, value: AgoraLineScoreDataEx) {}
 }
-

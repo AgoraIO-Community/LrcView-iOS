@@ -15,13 +15,19 @@ struct Config {
     static let playerUid: Int = 100
     static let mccUid: Int = 333
     
-    static let rtcAppId = <#rtcAppId without Token#>
-    static let mccAppId = <#mccAppId#>
-    static let mccCertificate = <#mccCertificate#>
+    static let rtcAppId = LocalMccConfig.rtcAppId
+    static let rtcCertificate = LocalMccConfig.rtcCertif
+    static let mccAppId = LocalMccConfig.mccAppId
+    static let mccCertificate = LocalMccConfig.mccCertif
+    static var mccDomain: String? {
+        let domain = LocalMccConfig.mccDomain.trimmingCharacters(in: .whitespacesAndNewlines)
+        return domain.isEmpty ? nil : domain
+    }
+    static let accessUrl = LocalMccConfig.accessUrl
     
     /// ysd important vars
-    static let pid = <#pid#>
-    static let pKey = <#pKey#>
+    static let pid = LocalMccConfig.pid
+    static let pKey = LocalMccConfig.pKey
     static var token: String? = nil
     static var userId: String? = nil
 }

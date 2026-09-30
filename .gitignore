@@ -51,6 +51,20 @@ Pods/
 Podfile.lock
 .DS_Store
 Demo/Demo/Config.swift
+
+# Local design previews and generated workspace checks
+.superpowers/
+IDEWorkspaceChecks.plist
+
+# Keep only the SDK frameworks used by the demo podspec
+Demo/Vendor/AgoraRtcEngine_iOS/libs/*
+!Demo/Vendor/AgoraRtcEngine_iOS/libs/AgoraRtcKit.xcframework/
+!Demo/Vendor/AgoraRtcEngine_iOS/libs/Agorafdkaac.xcframework/
+!Demo/Vendor/AgoraRtcEngine_iOS/libs/Agoraffmpeg.xcframework/
+!Demo/Vendor/AgoraRtcEngine_iOS/libs/AgoraSoundTouch.xcframework/
+!Demo/Vendor/AgoraRtcEngine_iOS/libs/aosl.xcframework/
+!Demo/Vendor/AgoraRtcEngine_iOS/libs/video_dec.xcframework/
+Demo/Demo/localConfig.swift
 .worktrees/
 Demo/Demo/Other/Config.swift
 

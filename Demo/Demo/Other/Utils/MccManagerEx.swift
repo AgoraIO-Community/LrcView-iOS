@@ -81,6 +81,7 @@ class MccManagerEx: NSObject {
                                                    token: token,
                                                    userId: userId,
                                                    deviceId: deviceId,
+                                                   roomId: "",
                                                    urlTokenExpireTime: 15*60,
                                                    chargeMode: .once)
         let config = AgoraMusicContentCenterExConfiguration.init(rtcEngine: agoraKit,
@@ -89,6 +90,7 @@ class MccManagerEx: NSObject {
                                                                  enableSaveLogToFile: true,
                                                                  logFilePath: "",
                                                                  maxCacheSize: 50,
+                                                                 audioParameter: nil,
                                                                  eventDelegate: self,
                                                                  scoreEventDelegate: self,
                                                                  audioFrameDelegate: nil)
@@ -283,7 +285,7 @@ extension MccManagerEx: AgoraMusicContentCenterEventDelegate {
 
 // MARK: - AgoraMusicContentCenterExEventDelegate
 extension MccManagerEx: AgoraMusicContentCenterExEventDelegate {
-    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricPath: String?, pitchPath: String?, songOffsetBegin: Int, songOffsetEnd: Int, lyricOffset: Int, state: AgoraMusicContentCenterExState, reason: AgoraMusicContentCenterExStateReason) {
+    func onPreLoadEvent(_ requestId: String, songCode: Int, percent: Int, lyricPath: String?, pitchPath: String?, songOffsetBegin: Int, songOffsetEnd: Int, lyricOffset: Int, state: AgoraMusicContentCenterExState, reason: AgoraMusicContentCenterExStateReason, errorCode: Int, errorMessage: String) {
         Log.info(text: "[MccEx]: onPreLoadEvent: \(requestId) songCode: \(songCode) percent: \(percent) lyricPath: \(lyricPath ?? "") pitchPath: \(pitchPath ?? "") state: \(state.rawValue) state: \(state.rawValue)", tag: self.logTag)
         
         if state == .preloading {
@@ -316,19 +318,21 @@ extension MccManagerEx: AgoraMusicContentCenterExEventDelegate {
         }
     }
     
-    func onLyricResult(_ requestId: String, songCode: Int, lyricPath: String?, songOffsetBegin: Int, songOffsetEnd: Int, lyricOffset: Int, reason: AgoraMusicContentCenterExStateReason) {
+    func onLyricResult(_ requestId: String, songCode: Int, lyricPath: String?, songOffsetBegin: Int, songOffsetEnd: Int, lyricOffset: Int, reason: AgoraMusicContentCenterExStateReason, errorCode: Int, errorMessage: String) {
         Log.info(text: "[MccEx]: onLyricResult: \(requestId) songCode: \(songCode) lyricPath: \(lyricPath ?? "") reason: \(reason.rawValue)", tag: self.logTag)
     }
     
     func onInitializeResult(_ state: AgoraMusicContentCenterExState,
-                            reason: AgoraMusicContentCenterExStateReason) {
+                            reason: AgoraMusicContentCenterExStateReason,
+                            errorCode: Int,
+                            errorMessage: String) {
         Log.info(text: "[MccEx]: onInitializeResult: \(state.rawValue) reason: \(reason.rawValue)", tag: self.logTag)
         if state == .initialized, reason == .OK {
             delegate?.onMccExInitialize(self)
         }
     }
     
-    func onStartScoreResult(_ songCode: Int, state: AgoraMusicContentCenterExState, reason: AgoraMusicContentCenterExStateReason) {
+    func onStartScoreResult(_ songCode: Int, state: AgoraMusicContentCenterExState, reason: AgoraMusicContentCenterExStateReason, errorCode: Int, errorMessage: String) {
         Log.info(text: "[MccEx]: onStartScoreResult: \(songCode) state: \(state.description) reason: \(reason.description)", tag: self.logTag)
         delegate?.onMccExScoreStart(self)
     }
@@ -338,7 +342,9 @@ extension MccManagerEx: AgoraMusicContentCenterExEventDelegate {
                        pitchPath: String?,
                        songOffsetBegin offsetBegin: Int,
                        songOffsetEnd offsetEnd: Int,
-                       reason: AgoraMusicContentCenterExStateReason) {}
+                       reason: AgoraMusicContentCenterExStateReason,
+                       errorCode: Int,
+                       errorMessage: String) {}
 }
 
 extension MccManagerEx: AgoraMusicContentCenterExScoreEventDelegate {
@@ -348,7 +354,7 @@ extension MccManagerEx: AgoraMusicContentCenterExScoreEventDelegate {
             guard let self = self else {
                 return
             }
-            delegate?.onPitch(songCode, data: data)
+            self.delegate?.onPitch(songCode, data: data)
         }
     }
     
@@ -358,7 +364,7 @@ extension MccManagerEx: AgoraMusicContentCenterExScoreEventDelegate {
             guard let self = self else {
                 return
             }
-            delegate?.onLineScore(songCode, value: value)
+            self.delegate?.onLineScore(songCode, value: value)
         }
     }
 }

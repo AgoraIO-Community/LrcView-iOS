@@ -62,12 +62,12 @@ class MainTestVCEx: UIViewController {
             AccessProvider.fetchAccessData { [weak self](userId, token, errorMsg) in
                 guard let self = self else { return }
                 if let errorMsg = errorMsg  {
-                    Log.errorText(text: errorMsg, tag: logTag)
-                    showAlertVC()
+                    Log.errorText(text: errorMsg, tag: self.logTag)
+                    self.showAlertVC()
                     return
                 }
-                mccManager.initRtcEngine()
-                mccManager.joinChannel()
+                self.mccManager.initRtcEngine()
+                self.mccManager.joinChannel()
                 self.mccManager.initMccEx(pid: Config.pid,
                                           pKey: Config.pKey,
                                           token: token,
@@ -128,15 +128,15 @@ extension MainTestVCEx: MccManagerDelegateEx {
             guard let self = self else {
                 return
             }
-            songIds = songIds.map({ [weak self] in
+            self.songIds = self.songIds.map({ [weak self] in
                 guard let self = self else {
                     return $0
                 }
                 return self.mccManager.getInternalSongCode(songId: $0)
             })
-            songId = songIds.first
-            mccManager.createMusicPlayer()
-            mccManager.preload(songId: songId!)
+            self.songId = self.songIds.first
+            self.mccManager.createMusicPlayer()
+            self.mccManager.preload(songId: self.songId!)
         }
     }
     
@@ -157,9 +157,9 @@ extension MainTestVCEx: MccManagerDelegateEx {
                                                    pitchFileData: needPitch ? pitchData : nil,
                                                    lyricOffset: lyricOffset,
                                                    includeCopyrightSentence: true)
-            lineScoreRecorder.setLyricData(data: model!)
+            self.lineScoreRecorder.setLyricData(data: model!)
             self.lyricModel = model
-            setLyricToView()
+            self.setLyricToView()
             if !self.noLyric {
                 manager.startScore(songId: songId)
             }
@@ -176,8 +176,8 @@ extension MainTestVCEx: MccManagerDelegateEx {
     func onOpenMusic(_ manager: MccManagerEx) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            canUseParamsSet = true
-            progressProvider.start()
+            self.canUseParamsSet = true
+            self.progressProvider.start()
             manager.playMusic()
         }
     }
@@ -204,7 +204,7 @@ extension MainTestVCEx: MccManagerDelegateEx {
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            mainView.setConsoleText(displayText)
+            self.mainView.setConsoleText(displayText)
         }
 
         mainView.karaokeView.setPitch(speakerPitch: Double(data.speakerPitch),

@@ -36,13 +36,13 @@ class ProgressProvider: NSObject {
             
             var current = self.lastPrpgress
             if time.truncatingRemainder(dividingBy: 1000) == 0 {
-                current = delegate!.progressProviderGetPlayerPosition(self) ?? current
-                delegate?.progressProvider(self, shouldSend: current + 20)
+                current = self.delegate!.progressProviderGetPlayerPosition(self) ?? current
+                self.delegate?.progressProvider(self, shouldSend: current + 20)
             }
             current += 20
 
             self.lastPrpgress = current
-            delegate?.progressProvider(self, didUpdate: current)
+            self.delegate?.progressProvider(self, didUpdate: current)
         }
     }
     

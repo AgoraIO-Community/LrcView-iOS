@@ -37,11 +37,13 @@ class MccManager: NSObject {
     
     deinit {
         Log.info(text: "deinit", tag: logTag)
-        agoraKit.disableAudio()
-        mpk.stop()
-        mcc.register(nil)
-        agoraKit.leaveChannel()
-        agoraKit.destroyMediaPlayer(mpk)
+        agoraKit?.disableAudio()
+        mpk?.stop()
+        mcc?.register(nil)
+        agoraKit?.leaveChannel()
+        if let mpk = mpk {
+            agoraKit?.destroyMediaPlayer(mpk)
+        }
     }
     
     func initEngine() {
@@ -56,17 +58,30 @@ class MccManager: NSObject {
         }
     }
     
-    func joinChannel() { /** 目的：发布mic流、接收音频流 **/
+    func joinChannel() -> Bool { /** 目的：发布mic流、接收音频流 **/
+        guard !Config.rtcAppId.isEmpty, !Config.rtcCertificate.isEmpty else {
+            Log.errorText(text: "RTC App ID or certificate is missing", tag: logTag)
+            return false
+        }
+        let token = TokenBuilder.rtcToken2(Config.rtcAppId,
+                                            appCertificate: Config.rtcCertificate,
+                                            uid: Int32(Config.hostUid),
+                                            channelName: Config.channelId)
+        guard !token.isEmpty else {
+            Log.errorText(text: "RTC token generation failed", tag: logTag)
+            return false
+        }
         agoraKit.enableAudioVolumeIndication(50, smooth: 3, reportVad: true)
         let option = AgoraRtcChannelMediaOptions()
         option.clientRoleType = .broadcaster
         agoraKit.enableAudio()
         agoraKit.setClientRole(.broadcaster)
-        let ret = agoraKit.joinChannel(byToken: nil,
+        let ret = agoraKit.joinChannel(byToken: token,
                                        channelId: Config.channelId,
                                        uid: Config.hostUid,
                                        mediaOptions: option)
         print("joinChannel ret \(ret)")
+        return ret == 0
     }
     
     func leaveChannel() {
@@ -82,10 +97,18 @@ class MccManager: NSObject {
         print("createDataStream ret \(ret)")
     }
     
-    func initMCC() {
+    func initMCC() -> Bool {
+        guard !Config.mccAppId.isEmpty, !Config.mccCertificate.isEmpty else {
+            Log.errorText(text: "MCC App ID or certificate is missing", tag: logTag)
+            return false
+        }
         let token = TokenBuilder.buildRtmToken2(Config.mccAppId,
                                                 appCertificate: Config.mccCertificate,
                                                 userUuid: "\(Config.mccUid)")
+        guard !token.isEmpty else {
+            Log.errorText(text: "MCC token generation failed", tag: logTag)
+            return false
+        }
         let config = AgoraMusicContentCenterConfig()
         config.rtcEngine = agoraKit
         config.mccUid = Config.mccUid
@@ -94,9 +117,18 @@ class MccManager: NSObject {
         if let mccDomain = Config.mccDomain {
             config.mccDomain = mccDomain
         }
-        mcc = AgoraMusicContentCenter.sharedContentCenter(config: config)
-        mcc.register(self)
-        mpk = mcc.createMusicPlayer(delegate: self)
+        guard let center = AgoraMusicContentCenter.sharedContentCenter(config: config) else {
+            Log.errorText(text: "MCC initialization failed", tag: logTag)
+            return false
+        }
+        mcc = center
+        guard let player = center.createMusicPlayer(delegate: self) else {
+            Log.errorText(text: "MCC music player creation failed", tag: logTag)
+            return false
+        }
+        mpk = player
+        center.register(self)
+        return true
     }
     
     func preload(songCode: Int) {
@@ -152,6 +184,7 @@ class MccManager: NSObject {
     }
     
     func stopMusic() {
+        guard let mpk = mpk else { return }
         let ret = mpk.stop()
         if ret != 0 {
             Log.errorText(text: "stop error \(ret)", tag: logTag)
@@ -224,12 +257,14 @@ extension MccManager: AgoraRtcEngineDelegate {
 }
 
 extension MccManager: AgoraMusicContentCenterEventDelegate {
+    func onExtResponse(_ requestId: String, jsonOption: String, httpCode: Int, response: String) {}
+
     func onPreLoadEvent(_ requestId: String,
                         songCode: Int,
                         percent: Int,
                         lyricUrl: String?,
-                        status: AgoraMusicContentCenterPreloadStatus,
-                        errorCode: AgoraMusicContentCenterStatusCode) {
+                        state status: AgoraMusicContentCenterPreloadStatus,
+                        reason errorCode: AgoraMusicContentCenterStatusCode) {
         Log.debug(text: "onPreLoadEvent requestId:\(requestId) songCode:\(songCode) status:\(status) percent:\(percent) lyricUrl:\(lyricUrl ?? "nil") errorCode:\(errorCode)", tag: logTag)
         if status == .OK { /** preload 成功 **/
             Log.info(text: "preload ok", tag: logTag)
@@ -247,18 +282,18 @@ extension MccManager: AgoraMusicContentCenterEventDelegate {
     
     func onMusicChartsResult(_ requestId: String,
                              result: [AgoraMusicChartInfo],
-                             errorCode: AgoraMusicContentCenterStatusCode) {}
+                             reason errorCode: AgoraMusicContentCenterStatusCode) {}
     func onMusicCollectionResult(_ requestId: String,
                                  result: AgoraMusicCollection,
-                                 errorCode: AgoraMusicContentCenterStatusCode) {}
+                                 reason errorCode: AgoraMusicContentCenterStatusCode) {}
     func onSongSimpleInfoResult(_ requestId: String,
                                 songCode: Int,
                                 simpleInfo: String?,
-                                errorCode: AgoraMusicContentCenterStatusCode) {}
+                                reason errorCode: AgoraMusicContentCenterStatusCode) {}
     func onLyricResult(_ requestId: String,
                        songCode: Int,
                        lyricUrl: String?,
-                       errorCode: AgoraMusicContentCenterStatusCode) {
+                       reason errorCode: AgoraMusicContentCenterStatusCode) {
         Log.info(text: "onLyricResult requestId:\(requestId) songCode:\(songCode) lyricUrl:\(lyricUrl ?? "null") errorCode:\(errorCode)", tag: logTag)
         if errorCode == .OK, let url = lyricUrl {
             delegate?.onLyricResult(url: url)
@@ -267,7 +302,7 @@ extension MccManager: AgoraMusicContentCenterEventDelegate {
 }
 
 extension MccManager: AgoraRtcMediaPlayerDelegate {
-    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
+    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, reason error: AgoraMediaPlayerReason) {
         if state == .openCompleted {
             Log.info(text: "openCompleted", tag: logTag)
             delegate?.onOpenMusic(self)

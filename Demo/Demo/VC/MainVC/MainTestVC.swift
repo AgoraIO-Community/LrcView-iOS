@@ -62,9 +62,26 @@ class MainTestVC: UIViewController {
         progressProvider.delegate = self
         mccManager.delegate = self
         mccManager.initEngine()
-        mccManager.joinChannel()
-        mccManager.initMCC()
+        guard mccManager.joinChannel() else {
+            showInitializationError("RTC 入会失败，请检查 rtcAppId、rtcCertif 和频道配置")
+            return
+        }
+        guard mccManager.initMCC() else {
+            showInitializationError("音乐内容中心初始化失败，请检查 MCC 配置和 domain")
+            return
+        }
         mccManager.preload(songCode: song.id)
+    }
+
+    private func showInitializationError(_ message: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let alert = UIAlertController(title: "初始化失败", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "返回", style: .default) { [weak self] _ in
+                self?.navigationController?.popViewController(animated: true)
+            })
+            self.present(alert, animated: true)
+        }
     }
     
     private func setLyricToView() {

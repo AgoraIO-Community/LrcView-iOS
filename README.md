@@ -4,6 +4,15 @@
 
 支持XML/LRC/KRC歌词解析,  可选择根据人声实时计算评分。
 
+## 运行 TME Demo
+
+1. 将 `Demo/Demo/localConfig.example.swift` 复制为同目录的 `localConfig.swift`，填写 RTC/MCC 的 App ID 和证书，以及需要的 MCC 域名。本地配置已加入 Git 忽略规则。
+2. 在 `Demo` 目录执行 `pod install`，然后用 Xcode 打开 `Demo/Demo.xcworkspace`，选择 `Demo` scheme。仓库包含当前 Demo 所需的 Agora SDK 框架。
+3. 真机测试时，在 Demo target 的 `Signing & Capabilities` 中选择自己的 Team；如果测试 Bundle ID 不可用，换成唯一的 ID，然后选择连接的 iPhone 并运行。
+4. 进入“集成 → TME测试”，允许麦克风权限，选歌后等待歌词和 pitch 下载完成。跟唱时，每句结束后更新本句和累计得分；拒绝授权时，页面会提示到系统设置允许麦克风后重试。
+
+评分接线和资料准备流程见 [Demo/TME_SCORING.md](Demo/TME_SCORING.md)。
+
 ## 使用方式1: 配合AograMusicContentCenter
 
 #### 1.初始化
