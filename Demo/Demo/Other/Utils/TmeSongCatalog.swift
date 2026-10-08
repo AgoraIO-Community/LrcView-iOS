@@ -1,4 +1,5 @@
 import Foundation
+import AgoraLyricsScore
 
 struct TmeSong {
     let id: String

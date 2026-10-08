@@ -58,10 +58,6 @@
 		A0C000000000000000000003 /* TmeSongCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C000000000000000000004 /* TmeSongCatalog.swift */; };
 		A0C000000000000000000005 /* TmeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C000000000000000000006 /* TmeManager.swift */; };
 		A0C000000000000000000007 /* TmeTestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C000000000000000000008 /* TmeTestVC.swift */; };
-		A0C00000000000000000000A /* TMEParserModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C000000000000000000009 /* TMEParserModels.swift */; };
-		A0C00000000000000000000C /* TMEParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C00000000000000000000B /* TMEParser.swift */; };
-		A0C00000000000000000000E /* TMEResponseTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C00000000000000000000D /* TMEResponseTracker.swift */; };
-		A0C000000000000000000010 /* TMEScoringPreparation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C00000000000000000000F /* TMEScoringPreparation.swift */; };
 		A0C000000000000000000012 /* TMEPlaybackGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C000000000000000000011 /* TMEPlaybackGate.swift */; };
 		A0C000000000000000000014 /* TmeSingingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C000000000000000000013 /* TmeSingingVC.swift */; };
 		A0C000000000000000000016 /* TMEMicrophonePermissionGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C000000000000000000015 /* TMEMicrophonePermissionGate.swift */; };
@@ -132,10 +128,6 @@
 		A0C000000000000000000004 /* TmeSongCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TmeSongCatalog.swift; sourceTree = "<group>"; };
 		A0C000000000000000000006 /* TmeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TmeManager.swift; sourceTree = "<group>"; };
 		A0C000000000000000000008 /* TmeTestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TmeTestVC.swift; sourceTree = "<group>"; };
-		A0C000000000000000000009 /* TMEParserModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMEParserModels.swift; sourceTree = "<group>"; };
-		A0C00000000000000000000B /* TMEParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMEParser.swift; sourceTree = "<group>"; };
-		A0C00000000000000000000D /* TMEResponseTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMEResponseTracker.swift; sourceTree = "<group>"; };
-		A0C00000000000000000000F /* TMEScoringPreparation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMEScoringPreparation.swift; sourceTree = "<group>"; };
 		A0C000000000000000000011 /* TMEPlaybackGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMEPlaybackGate.swift; sourceTree = "<group>"; };
 		A0C000000000000000000013 /* TmeSingingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TmeSingingVC.swift; sourceTree = "<group>"; };
 		A0C000000000000000000015 /* TMEMicrophonePermissionGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMEMicrophonePermissionGate.swift; sourceTree = "<group>"; };
@@ -242,10 +234,6 @@
 				266717B92C100E7000C88D79 /* MccManagerEx.swift */,
 				A0C000000000000000000004 /* TmeSongCatalog.swift */,
 				A0C000000000000000000006 /* TmeManager.swift */,
-				A0C000000000000000000009 /* TMEParserModels.swift */,
-				A0C00000000000000000000B /* TMEParser.swift */,
-				A0C00000000000000000000D /* TMEResponseTracker.swift */,
-				A0C00000000000000000000F /* TMEScoringPreparation.swift */,
 				A0C000000000000000000011 /* TMEPlaybackGate.swift */,
 				A0C000000000000000000015 /* TMEMicrophonePermissionGate.swift */,
 				26E314462CCA2FFE00ABC389 /* LyricsCutter.swift */,
@@ -469,10 +457,6 @@
 				260942DB2952B5050022A50D /* ViewController.swift in Sources */,
 				A0C000000000000000000003 /* TmeSongCatalog.swift in Sources */,
 				A0C000000000000000000005 /* TmeManager.swift in Sources */,
-				A0C00000000000000000000A /* TMEParserModels.swift in Sources */,
-				A0C00000000000000000000C /* TMEParser.swift in Sources */,
-				A0C00000000000000000000E /* TMEResponseTracker.swift in Sources */,
-				A0C000000000000000000010 /* TMEScoringPreparation.swift in Sources */,
 				A0C000000000000000000012 /* TMEPlaybackGate.swift in Sources */,
 				A0C000000000000000000016 /* TMEMicrophonePermissionGate.swift in Sources */,
 				A0C000000000000000000007 /* TmeTestVC.swift in Sources */,

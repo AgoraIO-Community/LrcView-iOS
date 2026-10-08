@@ -1,4 +1,5 @@
 import Foundation
+import AgoraLyricsScore
 
 @main
 struct TmeSongCatalogTests {

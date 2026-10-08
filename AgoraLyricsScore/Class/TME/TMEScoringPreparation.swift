@@ -3,18 +3,18 @@ import Foundation
 import FoundationNetworking
 #endif
 
-final class TMEScoringPreparation<Model> {
-    enum Status: Equatable {
+public final class TMEScoringPreparation<Model> {
+    public enum Status: Equatable {
         case requestingSongInfo, downloadingLyrics, lyricsDownloaded
         case downloadingPitch, pitchDownloaded, parsing
     }
 
-    enum PreparationError: Error, Equatable {
+    public enum PreparationError: Error, Equatable {
         case requestFailed, invalidSongInfo, invalidURL, downloadFailed, invalidFiles
     }
 
-    var onStatus: ((Status) -> Void)?
-    var onCompletion: ((Result<Model, PreparationError>) -> Void)?
+    public var onStatus: ((Status) -> Void)?
+    public var onCompletion: ((Result<Model, PreparationError>) -> Void)?
 
     private let session: URLSession
     private let parseModel: (String, String) -> Model?
@@ -29,14 +29,14 @@ final class TMEScoringPreparation<Model> {
     private var pitchPath: String?
     private var awaitingResponse = false
 
-    init(session: URLSession = .shared,
+    public init(session: URLSession = .shared,
          parseModel: @escaping (String, String) -> Model?) {
         self.session = session
         self.parseModel = parseModel
         parser.delegate = self
     }
 
-    func prepare(songId: String, sendRequest: (String) -> String?) {
+    public func prepare(songId: String, sendRequest: (String) -> String?) {
         precondition(Thread.isMainThread)
         cancel()
         self.songId = songId
@@ -64,7 +64,7 @@ final class TMEScoringPreparation<Model> {
     }
 
     @discardableResult
-    func handleResponse(requestId: String, jsonOption: String,
+    public func handleResponse(requestId: String, jsonOption: String,
                         httpCode: Int, response: String) -> Bool {
         precondition(Thread.isMainThread)
         guard requestId == self.requestId, awaitingResponse else { return false }
@@ -74,7 +74,7 @@ final class TMEScoringPreparation<Model> {
         return true
     }
 
-    func cancel() {
+    public func cancel() {
         precondition(Thread.isMainThread)
         parser.delegate = nil
         parser = TMEParser()
@@ -151,7 +151,7 @@ final class TMEScoringPreparation<Model> {
 }
 
 extension TMEScoringPreparation: TMEParserDelegate {
-    func onSongInfo(_ requestId: String, result: TMESongInfoResult) {
+    public func onSongInfo(_ requestId: String, result: TMESongInfoResult) {
         guard requestId == self.requestId, let songId = songId else { return }
         guard let detail = result.songList.first(where: { $0.songId == songId }),
               let pitch = detail.pitchUrl, !pitch.isEmpty,
@@ -181,7 +181,7 @@ extension TMEScoringPreparation: TMEParserDelegate {
         download(pitchURL, name: "song_pitch.json", generation: current, lyric: false)
     }
 
-    func onParseError(_ requestId: String, jsonOption: String,
+    public func onParseError(_ requestId: String, jsonOption: String,
                       responseBody: String, error: TMEParseError) {
         guard requestId == self.requestId else { return }
         finish(.failure(.invalidSongInfo))

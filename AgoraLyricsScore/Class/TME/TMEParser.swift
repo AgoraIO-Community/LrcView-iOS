@@ -1,6 +1,6 @@
 import Foundation
 
-enum TMEParseError: Error, Equatable {
+public enum TMEParseError: Error, Equatable {
     case invalidRequest
     case unsupportedAction(String)
     case httpStatus(Int)
@@ -8,7 +8,7 @@ enum TMEParseError: Error, Equatable {
     case invalidResponse
 }
 
-protocol TMEParserDelegate: AnyObject {
+public protocol TMEParserDelegate: AnyObject {
     func onSongs(_ requestId: String, result: TMESongsResult)
     func onSearchSongs(_ requestId: String, result: TMESearchSongsResult)
     func onSongInfo(_ requestId: String, result: TMESongInfoResult)
@@ -21,7 +21,7 @@ protocol TMEParserDelegate: AnyObject {
                       error: TMEParseError)
 }
 
-extension TMEParserDelegate {
+public extension TMEParserDelegate {
     func onSongs(_ requestId: String, result: TMESongsResult) {}
     func onSearchSongs(_ requestId: String, result: TMESearchSongsResult) {}
     func onSongInfo(_ requestId: String, result: TMESongInfoResult) {}
@@ -48,11 +48,13 @@ private enum TMEParsedResponse {
     case ranklistDetail(TMEDetailResult)
 }
 
-final class TMEParser {
-    weak var delegate: TMEParserDelegate?
+public final class TMEParser {
+    public weak var delegate: TMEParserDelegate?
     private let queue = DispatchQueue(label: "com.klyrics.tme.parser", qos: .userInitiated)
 
-    func parse(requestId: String, jsonOption: String, httpCode: Int, responseBody: String) {
+    public init() {}
+
+    public func parse(requestId: String, jsonOption: String, httpCode: Int, responseBody: String) {
         queue.async { [self] in
             let parsed = Self.decode(jsonOption: jsonOption, httpCode: httpCode,
                                      responseBody: responseBody)

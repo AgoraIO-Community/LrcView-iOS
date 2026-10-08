@@ -1,4 +1,5 @@
 import Foundation
+import AgoraLyricsScore
 
 final class Probe: TMEParserDelegate {
     var events: [String] = []

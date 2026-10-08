@@ -2,11 +2,15 @@
 
 本示例假定业务已经持有入会后的 RTC 引擎、以该 RTC 引擎初始化的 MCC、音乐播放器和 `KaraokeView`。`TmeManager` / `TmeSingingVC` 是可运行的 Demo 接线示例，不需要复制它们的账号配置、歌曲列表或导航代码。
 
-复制以下四个文件即可复用资料准备与播放门控：
+TME 解析和资料准备已经随 `AgoraLyricsScore` 公共组件提供，直接导入即可：
 
-- `Demo/Other/Utils/TMEParserModels.swift` 和 `TMEParser.swift`：解析 TME `song-info` 响应。
-- `Demo/Other/Utils/TMEScoringPreparation.swift`：发送请求、选取原始 songId 的 `pitchUrl` 与 `lrcList` 中 `type == "lrc"` 的 URL、下载到临时文件并解析模型。
-- `Demo/Other/Utils/TMEPlaybackGate.swift`：等待播放器 `openCompleted` 与模型准备成功/失败。
+```swift
+import AgoraLyricsScore
+```
+
+`TMEParser` 与响应模型、`TMEResponseTracker`、`TMEScoringPreparation` 的源码位于 `AgoraLyricsScore/Class/TME`，会由 podspec 包含并随组件发布，无需从 Demo 复制。资料准备器负责请求原始 songId 对应的 `pitchUrl`、LRC URL，下载到临时文件并解析模型；使用说明见 [组件 TME 接入](../AgoraLyricsScore/TME.md)。
+
+`Demo/Other/Utils/TMEPlaybackGate.swift` 是业务播放门控示例，负责等待播放器 `openCompleted` 与模型准备成功/失败。根据业务需要参考该文件接线，RTC/MCC 初始化、权限申请和播放控制仍由业务侧负责。
 
 业务侧保留选歌时的原始字符串 `songId`（不要以 MCC 的内部数值 `songCode` 代替）。MCC 预加载 `.OK` 后，通过绑定当前 RTC 的 MCC 通道发送 `song-info`，并打开播放器：
 
