@@ -34,7 +34,8 @@ rg -Fq 'speakers.first(where: { $0.uid == 0 })?.voicePitch' Demo/Demo/Other/Util
 rg -Fq 'if state == .failed' Demo/Demo/Other/Utils/TmeManager.swift
 rg -Fq '(playerKit as AnyObject) === (current as AnyObject)' Demo/Demo/Other/Utils/TmeManager.swift
 rg -Fq 'center.createMusicPlayer(delegate: self)' Demo/Demo/Other/Utils/TmeManager.swift
-rg -Fq 'karaokeView.lyricsView.activeLineUpcomingTextColor = .label' Demo/Demo/VC/MainVC/TmeSingingVC.swift
+rg -Fq 'KaraokePanelView(frame: .zero)' Demo/Demo/VC/MainVC/TmeSingingVC.swift
+rg -Fq 'KaraokePanelView(frame: .zero)' Demo/Demo/View/MainView.swift
 rg -q 'TMEMicrophonePermissionGate.swift in Sources' Demo/Demo.xcodeproj/project.pbxproj
 rg -q 'recordPermission' Demo/Demo/Other/Utils/TmeManager.swift
 rg -q 'requestRecordPermission' Demo/Demo/Other/Utils/TmeManager.swift

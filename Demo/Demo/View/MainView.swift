@@ -8,7 +8,6 @@
 import UIKit
 import AgoraLyricsScore
 import ScoreEffectUI
-import AgoraLyricsScore
 
 extension MainView {
     enum Action {
@@ -27,10 +26,11 @@ protocol MainViewDelegate: NSObjectProtocol {
 
 class MainView: UIView {
     weak var delegate: MainViewDelegate?
-    let karaokeView = KaraokeView(frame: .zero, loggers: [ConsoleLogger(), FileLogger()])
-    let lineScoreView = LineScoreView()
-    let gradeView = GradeView()
-    let incentiveView = IncentiveView()
+    private let karaokePanel = KaraokePanelView(frame: .zero)
+    var karaokeView: KaraokeView { karaokePanel.karaokeView }
+    var lineScoreView: LineScoreView { karaokePanel.lineScoreView }
+    var gradeView: GradeView { karaokePanel.gradeView }
+    var incentiveView: IncentiveView { karaokePanel.incentiveView }
     private let skipButton = UIButton()
     private let setButton = UIButton()
     private let quickButton = UIButton()
@@ -51,10 +51,6 @@ class MainView: UIView {
     }
     
     func setupUI() {
-        karaokeView.backgroundImage = UIImage(named: "ktv_top_bgIcon")
-        karaokeView.scoringView.viewHeight = 100
-        karaokeView.scoringView.topSpaces = 80
-        karaokeView.lyricsView.showDebugView = false
         karaokeView.lyricsView.draggable = true
         
         skipButton.setTitle("跳过前奏", for: .normal)
@@ -73,49 +69,30 @@ class MainView: UIView {
         label.backgroundColor = .red
         
         backgroundColor = .black
-        addSubview(karaokeView)
-        addSubview(gradeView)
-        addSubview(incentiveView)
+        addSubview(karaokePanel)
         addSubview(skipButton)
         addSubview(setButton)
         addSubview(changeButton)
         addSubview(quickButton)
         addSubview(pauseButton)
         addSubview(changePlayModeButton)
-        addSubview(lineScoreView)
         addSubview(label)
         addSubview(consoleView)
         
-        karaokeView.translatesAutoresizingMaskIntoConstraints = false
-        gradeView.translatesAutoresizingMaskIntoConstraints = false
-        incentiveView.translatesAutoresizingMaskIntoConstraints = false
+        karaokePanel.translatesAutoresizingMaskIntoConstraints = false
         skipButton.translatesAutoresizingMaskIntoConstraints = false
         setButton.translatesAutoresizingMaskIntoConstraints = false
         changeButton.translatesAutoresizingMaskIntoConstraints = false
         quickButton.translatesAutoresizingMaskIntoConstraints = false
         pauseButton.translatesAutoresizingMaskIntoConstraints = false
         changePlayModeButton.translatesAutoresizingMaskIntoConstraints = false
-        lineScoreView.translatesAutoresizingMaskIntoConstraints = false
         label.translatesAutoresizingMaskIntoConstraints = false
         consoleView.translatesAutoresizingMaskIntoConstraints = false
         
-        karaokeView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        karaokeView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        karaokeView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
-        karaokeView.heightAnchor.constraint(equalToConstant: 350).isActive = true
-        
-        gradeView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: 15).isActive = true
-        gradeView.leftAnchor.constraint(equalTo: karaokeView.leftAnchor, constant: 15).isActive = true
-        gradeView.rightAnchor.constraint(equalTo: karaokeView.rightAnchor, constant: -15).isActive = true
-        gradeView.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        incentiveView.centerYAnchor.constraint(equalTo: karaokeView.scoringView.centerYAnchor).isActive = true
-        incentiveView.centerXAnchor.constraint(equalTo: karaokeView.centerXAnchor, constant: -10).isActive = true
-        
-        lineScoreView.leftAnchor.constraint(equalTo: leftAnchor, constant: karaokeView.scoringView.defaultPitchCursorX).isActive = true
-        lineScoreView.topAnchor.constraint(equalTo: karaokeView.topAnchor, constant: karaokeView.scoringView.topSpaces).isActive = true
-        lineScoreView.heightAnchor.constraint(equalToConstant: karaokeView.scoringView.viewHeight).isActive = true
-        lineScoreView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        karaokePanel.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        karaokePanel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        karaokePanel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+        karaokePanel.heightAnchor.constraint(equalToConstant: KaraokePanelView.height).isActive = true
         
         skipButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 100).isActive = true
         skipButton.topAnchor.constraint(equalTo: karaokeView.bottomAnchor, constant: 30).isActive = true

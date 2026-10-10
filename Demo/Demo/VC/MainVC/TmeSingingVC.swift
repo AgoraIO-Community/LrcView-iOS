@@ -5,15 +5,15 @@ final class TmeSingingVC: UIViewController {
     private let song: TmeSong
     private let manager: TmeManager
     private let progressProvider = ProgressProvider()
-    private let karaokeView = KaraokeView(frame: .zero)
+    private let karaokePanel = KaraokePanelView(frame: .zero)
+    private var karaokeView: KaraokeView { karaokePanel.karaokeView }
+    private var karaokePanelHeightConstraint: NSLayoutConstraint?
     private let songLabel = UILabel()
     private let artistLabel = UILabel()
     private let playbackLabel = UILabel()
     private let lyricStatusLabel = UILabel()
     private let pitchStatusLabel = UILabel()
     private let fallbackLabel = UILabel()
-    private let lineScoreLabel = UILabel()
-    private let totalScoreLabel = UILabel()
     private let playPauseButton = UIButton(type: .system)
     private var hasModel = false
     private var playing = false
@@ -30,34 +30,31 @@ final class TmeSingingVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "演唱"
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .black
         progressProvider.delegate = self
         karaokeView.delegate = self
-        karaokeView.lyricsView.inactiveLineTextColor = .secondaryLabel
-        karaokeView.lyricsView.activeLineUpcomingTextColor = .label
-        karaokeView.lyricsView.activeLinePlayedTextColor = .systemPink
-        karaokeView.isHidden = true
+        karaokePanel.isHidden = true
+        karaokePanel.gradeView.setTitle(title: "\(song.name) - \(song.artist)")
 
         songLabel.text = song.name
         songLabel.font = .preferredFont(forTextStyle: .title2)
         songLabel.adjustsFontForContentSizeCategory = true
         songLabel.numberOfLines = 2
         artistLabel.text = song.artist
-        artistLabel.textColor = .secondaryLabel
+        artistLabel.textColor = .lightGray
         artistLabel.font = .preferredFont(forTextStyle: .subheadline)
         artistLabel.numberOfLines = 2
         playbackLabel.text = "正在预加载歌曲"
         lyricStatusLabel.text = "歌词：等待下载"
         pitchStatusLabel.text = "Pitch：等待下载"
         fallbackLabel.text = "计分资料不可用，继续播放"
-        fallbackLabel.textColor = .secondaryLabel
+        fallbackLabel.textColor = .lightGray
         fallbackLabel.isHidden = true
-        lineScoreLabel.text = "本句  --"
-        totalScoreLabel.text = "累计  0"
-        totalScoreLabel.textColor = .systemGreen
 
-        [playbackLabel, lyricStatusLabel, pitchStatusLabel, fallbackLabel,
-         lineScoreLabel, totalScoreLabel].forEach {
+        [songLabel, playbackLabel, lyricStatusLabel, pitchStatusLabel].forEach {
+            $0.textColor = .white
+        }
+        [playbackLabel, lyricStatusLabel, pitchStatusLabel, fallbackLabel].forEach {
             $0.font = .preferredFont(forTextStyle: .body)
             $0.adjustsFontForContentSizeCategory = true
             $0.numberOfLines = 0
@@ -66,38 +63,46 @@ final class TmeSingingVC: UIViewController {
                                                        lyricStatusLabel, pitchStatusLabel])
         heading.axis = .vertical
         heading.spacing = 8
-        let scores = UIStackView(arrangedSubviews: [lineScoreLabel, totalScoreLabel])
-        scores.axis = .horizontal
-        scores.distribution = .equalSpacing
-        scores.isHidden = true
-        let content = UIStackView(arrangedSubviews: [heading, fallbackLabel, karaokeView, scores])
+        let content = UIStackView(arrangedSubviews: [heading, fallbackLabel])
         content.axis = .vertical
         content.spacing = 18
-        view.addSubview(content)
+        let detailsScrollView = UIScrollView()
+        view.addSubview(karaokePanel)
+        view.addSubview(detailsScrollView)
+        detailsScrollView.addSubview(content)
+        detailsScrollView.translatesAutoresizingMaskIntoConstraints = false
         content.translatesAutoresizingMaskIntoConstraints = false
-        karaokeView.translatesAutoresizingMaskIntoConstraints = false
+        karaokePanel.translatesAutoresizingMaskIntoConstraints = false
 
         playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        playPauseButton.tintColor = .white
         playPauseButton.accessibilityLabel = "暂停播放"
         playPauseButton.isEnabled = false
         playPauseButton.addTarget(self, action: #selector(togglePlayback), for: .touchUpInside)
         view.addSubview(playPauseButton)
         playPauseButton.translatesAutoresizingMaskIntoConstraints = false
+        let panelHeight = karaokePanel.heightAnchor.constraint(equalToConstant: 0)
+        karaokePanelHeightConstraint = panelHeight
         NSLayoutConstraint.activate([
-            content.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            content.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            content.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            content.bottomAnchor.constraint(equalTo: playPauseButton.topAnchor, constant: -16),
+            karaokePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            karaokePanel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            karaokePanel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            panelHeight,
+            detailsScrollView.topAnchor.constraint(equalTo: karaokePanel.bottomAnchor, constant: 16),
+            detailsScrollView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
+            detailsScrollView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+            detailsScrollView.bottomAnchor.constraint(equalTo: playPauseButton.topAnchor, constant: -16),
+            content.topAnchor.constraint(equalTo: detailsScrollView.contentLayoutGuide.topAnchor),
+            content.leadingAnchor.constraint(equalTo: detailsScrollView.contentLayoutGuide.leadingAnchor),
+            content.trailingAnchor.constraint(equalTo: detailsScrollView.contentLayoutGuide.trailingAnchor),
+            content.bottomAnchor.constraint(equalTo: detailsScrollView.contentLayoutGuide.bottomAnchor),
+            content.widthAnchor.constraint(equalTo: detailsScrollView.frameLayoutGuide.widthAnchor),
             playPauseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             playPauseButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
             playPauseButton.widthAnchor.constraint(equalToConstant: 56),
             playPauseButton.heightAnchor.constraint(equalToConstant: 56)
         ])
-        // Keep the scoring row hidden together with the lyric view on an audio-only fallback.
-        scoreRow = scores
     }
-
-    private weak var scoreRow: UIStackView?
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -105,6 +110,8 @@ final class TmeSingingVC: UIViewController {
         progressProvider.stop()
         progressStarted = false
         karaokeView.reset()
+        karaokePanel.gradeView.reset()
+        karaokePanel.incentiveView.reset()
         manager.stopSong()
     }
 
@@ -163,15 +170,19 @@ extension TmeSingingVC: TmeManagerDelegate {
             progressProvider.stop()
             progressStarted = false
             karaokeView.reset()
-            karaokeView.isHidden = true
-            scoreRow?.isHidden = true
+            karaokePanel.isHidden = true
+            karaokePanelHeightConstraint?.constant = 0
+            karaokePanel.gradeView.reset()
+            karaokePanel.incentiveView.reset()
             fallbackLabel.isHidden = false
             return
         }
         hasModel = true
         fallbackLabel.isHidden = true
-        karaokeView.isHidden = false
-        scoreRow?.isHidden = false
+        karaokePanel.isHidden = false
+        karaokePanelHeightConstraint?.constant = KaraokePanelView.height
+        view.layoutIfNeeded()
+        karaokePanel.gradeView.setScore(cumulativeScore: 0, totalScore: model.lines.count * 100)
         karaokeView.setLyricData(data: model, usingInternalScoring: true)
         if playing {
             progressProvider.start()
@@ -223,7 +234,8 @@ extension TmeSingingVC: ProgressProviderDelegate {
 extension TmeSingingVC: KaraokeDelegate {
     func onKaraokeView(view: KaraokeView, didFinishLineWith model: LyricLineModel,
                        score: Int, cumulativeScore: Int, lineIndex: Int, lineCount: Int) {
-        lineScoreLabel.text = "本句  \(score)"
-        totalScoreLabel.text = "累计  \(cumulativeScore) / \(lineCount * 100)"
+        karaokePanel.lineScoreView.showScoreView(score: score)
+        karaokePanel.gradeView.setScore(cumulativeScore: cumulativeScore, totalScore: lineCount * 100)
+        karaokePanel.incentiveView.show(score: score)
     }
 }

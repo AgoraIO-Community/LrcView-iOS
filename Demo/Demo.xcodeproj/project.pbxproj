@@ -61,6 +61,7 @@
 		A0C000000000000000000012 /* TMEPlaybackGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C000000000000000000011 /* TMEPlaybackGate.swift */; };
 		A0C000000000000000000014 /* TmeSingingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C000000000000000000013 /* TmeSingingVC.swift */; };
 		A0C000000000000000000016 /* TMEMicrophonePermissionGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C000000000000000000015 /* TMEMicrophonePermissionGate.swift */; };
+		A0C000000000000000000018 /* KaraokePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C000000000000000000017 /* KaraokePanelView.swift */; };
 		F88793560A341F9CBCF66020 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 474DFADEE3894C5A8A1B3BC4 /* Pods_Demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -131,6 +132,7 @@
 		A0C000000000000000000011 /* TMEPlaybackGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMEPlaybackGate.swift; sourceTree = "<group>"; };
 		A0C000000000000000000013 /* TmeSingingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TmeSingingVC.swift; sourceTree = "<group>"; };
 		A0C000000000000000000015 /* TMEMicrophonePermissionGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMEMicrophonePermissionGate.swift; sourceTree = "<group>"; };
+		A0C000000000000000000017 /* KaraokePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KaraokePanelView.swift; sourceTree = "<group>"; };
 		B11BABF3447B1F591F0171BB /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -308,6 +310,7 @@
 				2602311D29C9DCDF0036F74A /* KTVView.swift */,
 				26E211FF2B2AF8AD00297136 /* DownloadView.swift */,
 				266717BD2C100FF500C88D79 /* MainView.swift */,
+				A0C000000000000000000017 /* KaraokePanelView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -470,6 +473,7 @@
 				26C762B32C0F0DF9008560BC /* CheckLyricVC.swift in Sources */,
 				26C762B42C0F0DF9008560BC /* Log.swift in Sources */,
 				266717BE2C100FF500C88D79 /* MainView.swift in Sources */,
+				A0C000000000000000000018 /* KaraokePanelView.swift in Sources */,
 				260942D72952B5050022A50D /* AppDelegate.swift in Sources */,
 				26C5452E2955B370009E0F37 /* AVPlayerTestVC.swift in Sources */,
 				2689ED3E298654C90012BC4D /* IncentiveVC.swift in Sources */,

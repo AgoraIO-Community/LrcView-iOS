@@ -1,5 +1,7 @@
 # TME 公共接口
 
+从 RTC/MCC 初始化到选歌、播放和计分的完整步骤见 [iOS TME 开发接入参考](../docs/tme-ios-integration-guide.md)。
+
 `TMEParser`、`TMEParserDelegate`、`TMEParseError`、全部 Decodable 响应模型、`TMEResponseTracker`、`TMEScoringPreparation` 已从 Demo 迁入 `AgoraLyricsScore/Class/TME`。CocoaPods 的 `Class/**/*.swift` 自动包含这些源码，Demo 通过本地 Pod 引用；对外发布包含此次变更的组件版本后，业务可直接导入使用。
 
 ## 解析 SDK 回包

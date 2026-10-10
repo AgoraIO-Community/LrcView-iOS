@@ -1,0 +1,172 @@
+{
+  "project": "LrcView-iOS",
+  "analyzedAt": "2026-09-30T12:24:41.486Z",
+  "gitCommitHash": "5454349aeab43d704554af93362ddc867a582307",
+  "analyzedWorkingTree": true,
+  "workingTreeChanges": [
+    "README.md"
+  ],
+  "sourceSnapshotHash": "f7195953a470c80c14483d2144d7dd1eca19d5f175a1a4f6af8c6e5ecefa15b0",
+  "stats": {
+    "analyzedFiles": 253,
+    "filesByCategory": {
+      "config": 61,
+      "code": 160,
+      "docs": 29,
+      "script": 3
+    },
+    "totalNodes": 852,
+    "totalEdges": 1424,
+    "totalLayers": 9,
+    "tourSteps": 15,
+    "nodeTypes": {
+      "config": 61,
+      "document": 29,
+      "file": 163,
+      "class": 147,
+      "function": 452
+    },
+    "edgeTypes": {
+      "documents": 91,
+      "depends_on": 377,
+      "contains": 599,
+      "exports": 48,
+      "calls": 152,
+      "implements": 10,
+      "imports": 1,
+      "configures": 66,
+      "tested_by": 80
+    }
+  },
+  "filteredByIgnore": 2,
+  "validationPassed": true,
+  "layers": [
+    {
+      "name": "TME 请求与播放协调",
+      "files": 9
+    },
+    {
+      "name": "歌词解析与共享模型",
+      "files": 12
+    },
+    {
+      "name": "歌词下载与缓存",
+      "files": 10
+    },
+    {
+      "name": "音准展示与计分引擎",
+      "files": 18
+    },
+    {
+      "name": "歌词视图与公共接口",
+      "files": 20
+    },
+    {
+      "name": "Demo 应用与演示界面",
+      "files": 59
+    },
+    {
+      "name": "行为测试与歌词样本",
+      "files": 96
+    },
+    {
+      "name": "接入文档与历史设计",
+      "files": 19
+    },
+    {
+      "name": "工程与依赖配置",
+      "files": 10
+    }
+  ],
+  "tour": [
+    "项目概览与接入目标",
+    "应用启动与功能入口",
+    "选歌请求与歌曲标识",
+    "业务响应解析与关联",
+    "预加载与计分资料准备",
+    "合并歌词与标准音高",
+    "播放启动的两个条件",
+    "歌词高亮与拖动同步",
+    "实时进度与人声音高",
+    "内部采样与句分累计",
+    "句末回调与分数展示",
+    "权限取消与旧会话隔离",
+    "主链回归与失败路径",
+    "通用下载器与缓存边界",
+    "接入指南与工程验证"
+  ],
+  "warnings": [
+    "当前技能不支持 Swift 静态导入提取；Swift 定义与调用关系由源码阅读补充，图谱不是编译器级精确调用图。",
+    "有 43 个节点没有关系边，详情见 orphanNodes。"
+  ],
+  "orphanNodes": [
+    "config:AgoraLyricsScore/Tests/Resource/147383.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/倒带.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/好久不见.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/容易受伤的女人.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/日不落.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/晴天.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/海盗.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/爱你.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/痴心绝对.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/稻香.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/荷塘月色.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/说爱你.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/迷宫.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/遇见.xml",
+    "config:AgoraLyricsScore/Tests/Resource/TestLogFile/xml/魔鬼中的天使.xml",
+    "config:Demo/Demo/Resource/105780.xml",
+    "config:Demo/Demo/Resource/123602.xml",
+    "config:Demo/Demo/Resource/146807.xml",
+    "config:Demo/Demo/Resource/235653.xml",
+    "document:docs/superpowers/plans/2026-09-23-iphone-online-karaoke.md",
+    "document:docs/superpowers/plans/2026-09-24-restore-legacy-demo.md",
+    "document:docs/superpowers/specs/2026-09-23-iphone-online-karaoke-design.md",
+    "document:docs/superpowers/specs/2026-09-24-restore-legacy-demo-design.md",
+    "config:745012-new.xml",
+    "config:AgoraLyricsScore/Resources/Media.xcassets/Contents.json",
+    "file:AgoraLyricsScore/Tests/Resource/kj5396d18ebe5811ed9efdb2f16c44e48f.lrc",
+    "document:AgoraLyricsScore/Tests/Resource/readme.txt",
+    "file:Demo/Demo.xcodeproj/project.xcworkspace/contents.xcworkspacedata",
+    "config:Demo/Demo/Assets.xcassets/AccentColor.colorset/Contents.json",
+    "config:Demo/Demo/Assets.xcassets/AppIcon.appiconset/Contents.json",
+    "config:Demo/Demo/Assets.xcassets/Contents.json",
+    "config:Demo/Demo/Assets.xcassets/star1.imageset/Contents.json",
+    "config:Demo/Demo/Assets.xcassets/star2.imageset/Contents.json",
+    "config:Demo/Demo/Assets.xcassets/star3.imageset/Contents.json",
+    "config:Demo/Demo/Assets.xcassets/star4.imageset/Contents.json",
+    "config:Demo/Demo/Assets.xcassets/star5.imageset/Contents.json",
+    "config:Demo/Demo/Assets.xcassets/star6.imageset/Contents.json",
+    "config:Demo/Demo/Assets.xcassets/star7.imageset/Contents.json",
+    "config:Demo/Demo/Assets.xcassets/star8.imageset/Contents.json",
+    "config:Demo/Demo/Assets.xcassets/t1.imageset/Contents.json",
+    "file:Demo/Demo/Base.lproj/LaunchScreen.storyboard",
+    "file:Demo/Demo/Base.lproj/Main.storyboard",
+    "file:Demo/Demo/Resource/lrc.lrc"
+  ],
+  "exclusions": [
+    "Pods",
+    "Vendor",
+    "构建产物",
+    "本地账号配置"
+  ],
+  "extractionLimitations": [
+    "Swift 静态导入映射为空，重要定义和关系按源码补充。"
+  ],
+  "assemblyReview": {
+    "fixedSectionOk": true,
+    "nodesRecovered": 0,
+    "edgesRestored": 80,
+    "crossBatchEdgesAdded": 0,
+    "typesRemapped": 0,
+    "complexityRemapped": 0,
+    "notes": [
+      "253 个扫描文件均有实际存在的文件级节点；852 个节点无需 ID、类型或复杂度修复，无悬空端点。",
+      "合并器测试路径识别器不支持 Swift/.sh，故将 85 条真实文件级 tested_by 误判为生产↔生产；按已有测试分析恢复 80 条生产 Swift→测试文件关系，新增 tested 标签。",
+      "其余 5 条工程或公开配置示例→shell 检查关系已有反向测试脚本→配置 depends_on，保留并去重，不作为运行时代码覆盖；没有测试↔测试、外部或虚构节点需要恢复。",
+      "按 importMap 验证跨批次导入，补加 0 条，Swift 同模块隐式引用已有语义 depends_on/calls，不虚构 importMap 条目。",
+      "经源码核对移除 2 条伪递归 calls：TMEParser.body 内调用的是 JSONDecoder.decode；TmeManager.stopSong 内 stop 接收者是播放器和播放门控，非 TmeManager.stop。",
+      "TME 请求→业务响应解析→资料准备→TMEToneParser→KaraokeView→ScoringMachine→逐句得分主链节点与依赖已存在；累计评分来自 ScoringMachine.lineScores，LineScoreRecorder 是独立工具。未读取排除目录或本地账号配置。"
+    ]
+  }
+}

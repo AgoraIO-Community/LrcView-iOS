@@ -1,6 +1,10 @@
 # 在已有 RTC/MCC/播放器中接入 TME 计分
 
+完整开发接入参考见 [iOS TME 歌曲播放、歌词与内置打分接入参考](../docs/tme-ios-integration-guide.md)，包含初始化、选歌请求、预加载、资料准备、播放门控、实时计分、UI、清理及错误处理。本文保留已有 RTC/MCC/player 场景下的简版接线。
+
 本示例假定业务已经持有入会后的 RTC 引擎、以该 RTC 引擎初始化的 MCC、音乐播放器和 `KaraokeView`。`TmeManager` / `TmeSingingVC` 是可运行的 Demo 接线示例，不需要复制它们的账号配置、歌曲列表或导航代码。
+
+Demo 的 TME 测试与内置打分共用 `KaraokePanelView`：KTV 背景、歌词字体与高亮、音高区域，以及 `GradeView`、`LineScoreView`、`IncentiveView` 的布局和动画来自同一套视图。TME 的播放和下载状态显示在演唱区域下方，计分资料不可用时整个演唱面板隐藏，继续保留播放和失败提示。TME 仍不启用歌词拖动。
 
 TME 解析和资料准备已经随 `AgoraLyricsScore` 公共组件提供，直接导入即可：
 
